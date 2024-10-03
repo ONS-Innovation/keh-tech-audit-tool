@@ -6,6 +6,13 @@ load-design-system-templates:
 run: load-design-system-templates
 	flask --app application run
 
+run-api:
+	poetry run python server/main.py
+
+run-api-test:
+	poetry run python server/unittest.py
+
+
 format-python:
 	poetry run isort .
 	poetry run black .
@@ -16,3 +23,5 @@ black:
 
 format:
 	npx prettier --write .
+run-tests:
+	poetry run pytest server/test.py

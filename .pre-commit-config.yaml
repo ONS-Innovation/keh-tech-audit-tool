@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/ambv/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        language_version: python3
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v4.0.0-alpha.8'
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.3.3
+          - 'prettier-plugin-jinja-template@1.4.1'
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort

@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "design-system-python-flask-demo"
+version = "0.1.0"
+description = "This project is a demo of design system implemented using Python and Flask."
+authors = ["ONSDigital"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Flask = "^3.0.3"
+python-frontmatter = "^1.1.0"
+flake8 = "^7.0.0"
+black = "^24.4.2"
+isort = "^5.13.2"
+pre-commit = "^3.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -11,5 +11,8 @@ format-python:
 	poetry run black .
 	poetry run flake8 .
 
+black:
+	poetry run black .
+
 format:
 	npx prettier --write .

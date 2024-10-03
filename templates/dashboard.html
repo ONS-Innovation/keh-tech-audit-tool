@@ -1,0 +1,36 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/password/_macro.njk" import onsPassword %}
+{% from "components/button/_macro.njk" import onsButton %}
+
+
+{%
+  set pageConfig = {
+      "header": {
+          "title": "Service name"
+      },
+      
+      "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+  }
+%}
+
+{% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  <ul class=flashes>
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+  {{ email }}
+  {{ password }}
+
+{% endblock %}

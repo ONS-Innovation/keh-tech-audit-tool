@@ -4,7 +4,7 @@ load-design-system-templates:
 	./scripts/load_release.sh onsdigital/design-system $(DESIGN_SYSTEM_VERSION)
 
 run: load-design-system-templates
-	flask --app application run
+	poetry run flask --app application run --debug
 
 format-python:
 	poetry run isort .

@@ -1,8 +1,12 @@
+import os
 import pytest
 import json
 from flask import Flask
 from flask.testing import FlaskClient
 from main import app, read_data, write_data
+
+# Set AWS_DEFAULT_REGION environment variable
+os.environ['AWS_DEFAULT_REGION'] = 'eu-west-2'
 
 @pytest.fixture
 def client():
@@ -12,7 +16,6 @@ def client():
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
-    print("sdads")
     data = {
         'projects': [
             {'name': 'Project1', 'owner_email': 'owner1@example.com'},

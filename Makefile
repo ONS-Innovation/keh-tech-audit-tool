@@ -23,5 +23,6 @@ black:
 
 format:
 	npx prettier --write .
-run-tests:
+
+run-api-tests:
 	poetry run pytest server/test.py

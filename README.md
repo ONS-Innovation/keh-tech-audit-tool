@@ -1,44 +1,84 @@
-# design-system-python-flask-demo
+# API_BRANCH
 
-This project is a demo of design system implemented in Python and Flask.
+To run API please import these credentials into the app:
 
-## Setup
-
-For setting up this project, run the below command. pyenv is a Python version management tool that allows switching between multiple Python versions. jq is a JSON preprocessor that is used to fetch the design system's templates using `scripts/load_release.sh`.
-
-```
-brew install pyenv jq
-```
-
-Install Python and initialise the virtual environment as shown below.
-Note: The Python version is specified in the .python-version file.
-
-```
-pyenv install
-python3 -m venv env && source env/bin/activate
+```bash
+export AWS_ACCESS_KEY_ID=<KEY_ID>
+export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
+export AWS_DEFAULT_REGION=eu-west-2
+export AWS_SECRET_NAME=github-tooling-suite/onsdigital
 ```
 
-Install Poetry, a dependency management and packaging tool, as shown below.
+*To run tests, import the same credentials into the test environment when running `make run-api-test`*
 
-```
-pip install -U pip setuptools
-pip install poetry
-```
+Then run to start the app on [localhost](http://127.0.0.1:5000).
 
-All the libraries declared are available in `pyproject.toml`. To install these defined dependencies, run `poetry install`. To add a new dependency, run `poetry add <dependency_name>`.
-
-Install pre-commit hooks, to automatically execute code checks and formatting tools before each commit as shown below.
-
-```
-poetry run pre-commit install
+```bash
+make run-api
 ```
 
-Install code formatter prettier and `prettier-plugin-jinja-template` plugin as shown below.
 
+## API Reference
+
+#### Get all user projects
+
+```http
+  GET /api/projects
 ```
-npm install
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `owner_email` | `string` | **Required**. Your owner_email |
+
+Get's the projects associated with `owner_email`.
+
+#### Get a specific user project
+
+```http
+  GET /api/projects/<project_name>
 ```
 
-## Running the Application
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `owner_email`      | `string` | **Required**. Your owner_email |
+| `<project_name>`      | `string` | **Required**. The project you want to get |
 
-For running this application, run `make run` which first executes `scripts/load_release.sh` script that downloads the Design System macros zip file from the github release and unzips them into a templates folder. Then, `flask --app application run ` renders all the example components as displayed in the Design System at `http://127.0.0.1:5000`. The CSS and JS are pulled in at runtime from the CDN.
+
+Get's a specific project from a user.
+
+#### Create a new project
+
+```http
+  POST /api/projects/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `owner_email`      | `string` | **Required**. Your owner_email |
+
+Send JSON in this format:
+```JSON
+{
+    "project_name": "PROJECT SHORT NAME (KEH)",
+    "project_long_name": "PROJECT LONG NAME (Knowledge Exchange Hub)",
+    "contact_email": "POINT OF CONTACT EMAIL USER@ons.gov.uk",
+    "owner_email": "OWNER'S EMAIL USER@ons.gov.uk",
+    "doc_link": "DOCUMENT LINK http://confluence.ons.gov.uk",
+    "IDE_arr": [
+        {
+            "name": "VSCODE"
+        }
+    ],
+    "lang_frame_arr": [
+        {
+            "name": "Python"
+        }
+    ],
+    "misc_arr": [
+        {
+            "name": "Slack"
+        }
+    ]
+}
+```
+Create's a project.

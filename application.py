@@ -5,6 +5,20 @@ app = Flask(__name__)
 app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
 app.jinja_env.undefined = ChainableUndefined
 
+project_dict = {
+        "project1": {
+            "name": "project1",
+            "description": "This is the first project"
+        },
+        "project2": {
+            "name": "project2",
+            "description": "This is the second project"
+        },
+        "project3": {
+            "name": "project3",
+            "description": "This is the third project"
+        }
+    }
 
 @app.route("/", methods=["GET"])
 def home():
@@ -27,9 +41,15 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
+    # api call here in place of dummy projects dict
 
-    return render_template("dashboard.html", email=session["email"], password=session["password"])
+    projects = [project for project in project_dict.values()]
+    return render_template("dashboard.html", email=session["email"], password=session["password"], projects=projects)
 
+@app.route("/project/<project_name>", methods=["GET"])
+def view_project(project_name):
+    # we make api call here innit
+    pass
 
 
 if __name__ == "__main__":

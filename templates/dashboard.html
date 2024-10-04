@@ -2,12 +2,15 @@
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/password/_macro.njk" import onsPassword %}
 {% from "components/button/_macro.njk" import onsButton %}
+{% from "components/table/_macro.njk" import onsTable %}
+{% from "components/tabs/_macro.njk" import onsTabs %}
+{% from "components/input/_macro.njk" import onsInput %}
 
 
 {%
   set pageConfig = {
       "header": {
-          "title": "Service name"
+          "title": "Audit Dashboard"
       },
       
       "footer": {
@@ -30,7 +33,56 @@
   </ul>
 {% endif %}
 {% endwith %}
-  {{ email }}
-  {{ password }}
+
+<section class="ons-tabs">
+    <h2 class="ons-tabs__title ons-u-fs-r--b
+          ons-u-mt-no ons-u-fs-m">Contents</h2>
+    <div>
+      <ul class="ons-tabs__list">
+        <!-- prettier-ignore-start -->
+        <li class="ons-tab__list-item"><a href="#ukis" class="ons-tab">Projects</a></li>
+        <li class="ons-tab__list-item"><a href="#vacancy-survey" class="ons-tab">Add Project</a></li>
+        <!-- prettier-ignore-end -->
+      </ul>
+    </div>
+    <section id="ukis" class="ons-tabs__panel">
+      <h2 id="ukis-content-title" class="ons-u-vh"></h2>
+      <table id="basic-table" class="ons-table ons-table--">
+        <caption class="ons-table__caption"> A basic table with a caption </caption>
+        <thead class="ons-table__head">
+          <tr class="ons-table__row">
+            <th scope="col" class="ons-table__header">
+              <span class="ons-table__header-text">Project Name</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="ons-table__body">
+            {% for project in projects %}
+                <tr class="ons-table__row">
+                    <td class="ons-table__cell"><a href="{{  url_for('view_project', project_name=project.name)  }}">{{ project.name }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+    </section>
+    <section id="vacancy-survey" class="ons-tabs__panel">
+      <h2 id="vacancy-survey-content-title" class="ons-u-vh">Vacancy survey</h2>
+        {{
+            onsInput({
+                "id": "project_name",
+                "label": {
+                    "text": "Project Name"
+                }
+            })
+        }}
+    </section>
+   
+    
+
+  </section>
+
+
+
 
 {% endblock %}

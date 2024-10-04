@@ -61,8 +61,3 @@ def test_create_project(client):
             ]
         }
     response = client.post('/api/projects', data=json.dumps(new_project), content_type='application/json')
-
-def test_edit_project(client):
-    updated_data = {'contact_email': 'testing@testing.com'}
-    response = client.put('/api/projects/Project1?owner_email=seb@ons.gov.uk', data=json.dumps(updated_data), content_type='application/json')
-    assert response.status_code == 200

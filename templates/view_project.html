@@ -32,21 +32,21 @@
   <h4>Languages and Frameworks used</h4>
   <ul>
     {% for lang in project.lang_frame_arr %}
-        <li>{{ lang }}</li>
+        <li>{{ lang.name }}</li>
     {% endfor %}
   </ul>
 
   <h4>IDEs used</h4>
   <ul>
     {% for IDE in project.IDE_arr %}
-        <li>{{  IDE  }}</li>
+        <li>{{  IDE.name  }}</li>
     {% endfor %}
   </ul>
     
   <h4>Miscellanous Tools</h4>
   <ul>
     {% for tool in project.misc_arr %}
-        <li>{{ tool }}</li>
+        <li>{{ tool.name }}</li>
     {% endfor %}
   </ul>
     

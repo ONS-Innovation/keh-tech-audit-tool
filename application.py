@@ -63,18 +63,31 @@ def add_project():
 
     print(project_name, project_long_name, contact_email, owner_email, doc_link, langframe_arr, ide_arr, misc_arr)
 
+    lang_frame_arr_temp = []
+    ide_arr_temp = []
+    misc_arr_temp = []
+
     if project_name == "":
         flash("Project name cannot be empty")
+
+    for lang_frame in langframe_arr:
+        lang_frame_arr_temp.append({"name": lang_frame})
+
+    for ide in  ide_arr:
+        ide_arr_temp.append({"name": ide})
     
+    for misc in misc_arr:
+        misc_arr_temp.append({"name": misc})
+
     project = {
         "project_name": project_name,
         "project_long_name": project_long_name,
         "contact_email": contact_email,
         "owner_email": owner_email,
         "doc_link": doc_link,
-        "lang_frame_arr": langframe_arr,
-        "IDE_arr": ide_arr,
-        "misc_arr": misc_arr
+        "lang_frame_arr": lang_frame_arr_temp,
+        "IDE_arr": ide_arr_temp,
+        "misc_arr": misc_arr_temp
     }
 
     requests.post("http://127.0.0.1:8000/api/projects", json=project, params={"owner_email": "seb@ons.gov.uk"})

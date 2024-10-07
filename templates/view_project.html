@@ -9,7 +9,7 @@
 {%
   set pageConfig = {
       "header": {
-          "title": "Service name"
+          "title": "Audit Dashboard"
       },
       
       "footer": {
@@ -24,6 +24,31 @@
 
 {% block main %}
 
-  {{ project.name }}
+  <h1>{{ project.project_name }}</h1>
+  <h3>{{ project.project_long_name }}</h3>
+  <p>Owner Email: {{ project.owner_email }}</p>
+  <p>Contact Email: {{ project.contact_email }}</p>
+
+  <h4>Languages and Frameworks used</h4>
+  <ul>
+    {% for lang in project.lang_frame_arr %}
+        <li>{{ lang }}</li>
+    {% endfor %}
+  </ul>
+
+  <h4>IDEs used</h4>
+  <ul>
+    {% for IDE in project.IDE_arr %}
+        <li>IDE</li>
+    {% endfor %}
+  </ul>
+    
+  <h4>Miscellanous Tools</h4>
+  <ul>
+    {% for tool in project.misc_arr %}
+        <li>{{ tool }}</li>
+    {% endfor %}
+  </ul>
+    
 
 {% endblock %}

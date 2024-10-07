@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, url_for, redirect, session, flash
 from jinja2 import ChainableUndefined
 
+import requests
+
 app = Flask(__name__)
 app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
 app.jinja_env.undefined = ChainableUndefined
@@ -39,17 +41,52 @@ def login():
     flash("You have successfully logged in")
     return redirect(url_for("dashboard"))
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET"])
 def dashboard():
     # api call here in place of dummy projects dict
+    projects = requests.get("http://127.0.0.1:8000/api/projects", params={"owner_email": "seb@ons.gov.uk"}).json()
 
-    projects = [project for project in project_dict.values()]
+    # projects = [project for project in project_dict.values()]
+
     return render_template("dashboard.html", email=session["email"], password=session["password"], projects=projects)
+
+@app.route("/dashboard", methods=["POST"])
+def add_project():
+    project_name = request.form["project_name"]
+    project_long_name = request.form["project_long_name"]
+    contact_email = request.form["contact_email"]
+    owner_email = request.form["owner_email"]
+    doc_link = request.form["doc_link"]
+    langframe_arr = request.form.getlist("con1[]")
+    ide_arr = request.form.getlist("con2[]")
+    misc_arr = request.form.getlist("con3[]")
+
+    print(project_name, project_long_name, contact_email, owner_email, doc_link, langframe_arr, ide_arr, misc_arr)
+
+    if project_name == "":
+        flash("Project name cannot be empty")
+    
+    project = {
+        "project_name": project_name,
+        "project_long_name": project_long_name,
+        "contact_email": contact_email,
+        "owner_email": owner_email,
+        "doc_link": doc_link,
+        "lang_frame_arr": langframe_arr,
+        "IDE_arr": ide_arr,
+        "misc_arr": misc_arr
+    }
+
+    requests.post("http://127.0.0.1:8000/api/projects", json=project, params={"owner_email": "seb@ons.gov.uk"})
+    
+    return redirect(url_for("dashboard"))
 
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # we make api call here innit
-    pass
+    project = requests.get(f"http://127.0.0.1:8000/api/projects/{project_name}", params={"owner_email": "seb@ons.gov.uk"}).json()
+    print(project)
+    return render_template("view_project.html", project=project)
 
 
 if __name__ == "__main__":

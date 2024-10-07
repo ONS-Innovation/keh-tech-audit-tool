@@ -3,15 +3,14 @@ DESIGN_SYSTEM_VERSION=`cat .design-system-version`
 load-design-system-templates:
 	./scripts/load_release.sh onsdigital/design-system $(DESIGN_SYSTEM_VERSION)
 
-run: load-design-system-templates
+run:
+	make -j 2 run-api run-ui
+
+run-ui:
 	poetry run flask --app application run --debug
 
 run-api:
 	poetry run python server/main.py
-
-run-api-test:
-	poetry run python server/unittest.py
-
 
 format-python:
 	poetry run isort .

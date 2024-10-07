@@ -9,7 +9,7 @@
 {%
   set pageConfig = {
       "header": {
-          "title": "Audit Dashboard"
+          "title": "Keh Tech Audit Tool"
       },
       
       "footer": {
@@ -29,26 +29,79 @@
   <p>Owner Email: {{ project.owner_email }}</p>
   <p>Contact Email: {{ project.contact_email }}</p>
 
-  <h4>Languages and Frameworks used</h4>
-  <ul>
-    {% for lang in project.lang_frame_arr %}
-        <li>{{ lang.name }}</li>
-    {% endfor %}
-  </ul>
+  <div class="ons-summary">
+    <div id="turnover" class="ons-summary__group">
+      <h2 class="ons-summary__group-title">Summary</h2>
+      <dl class="ons-summary__items">
+        <div id="sales-dates-row" class="ons-summary__item">
+          <div class="ons-summary__row ons-summary__row--has-values" id="sales-dates">
+            <dt class="ons-summary__item-title">
+              <div class="ons-summary__item--text">Languages and Frameworks</div>
+            </dt>
+            <dd class="ons-summary__values">
+              <span class="ons-summary__text">
+                <ul>
+                    {% for lang in project.lang_frame_arr %}
+                        <li>{{ lang.name }}</li>
+                    {% endfor %}
+                  </ul>                
+              </span>
+            </dd>
+            <dd class="ons-summary__actions">
+              <a href="#0" class="ons-summary__button">
+                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
+                <span class="ons-u-vh">Change answer</span>
+              </a>
+            </dd>
+          </div>
+        </div>
+        <div id="sales-value-row" class="ons-summary__item">
+          <div class="ons-summary__row ons-summary__row--has-values" id="sales-value">
+            <dt class="ons-summary__item-title">
+              <div class="ons-summary__item--text">IDEs Used</div>
+            </dt>
+            <dd class="ons-summary__values">
+              <span class="ons-summary__text">
+                <ul>
+                  {% for IDE in project.IDE_arr %}
+                      <li>{{  IDE.name  }}</li>
+                  {% endfor %}
+                </ul>
+              </span>
+            </dd>
+            <dd class="ons-summary__actions">
+              <a href="#0" class="ons-summary__button">
+                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
+                <span class="ons-u-vh">Change answer</span>
+              </a>
+            </dd>
+          </div>
+        </div>
+        <div id="sales-reasons-row" class="ons-summary__item">
+          <div class="ons-summary__row ons-summary__row--has-values" id="sales-reasons">
+            <dt class="ons-summary__item-title">
+              <div class="ons-summary__item--text">Misc. Tools</div>
+            </dt>
+            <dd class="ons-summary__values">
+                <ul>
+                    {% for tool in project.misc_arr %}
+                        <li>{{ tool.name }}</li>
+                    {% endfor %}
+                  </ul>
+            </dd>
+            <dd class="ons-summary__actions">
+              <a href="#0" class="ons-summary__button">
+                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
+                <span class="ons-u-vh">Change answer</span>
+              </a>
+            </dd>
+          </div>
+        </div>
 
-  <h4>IDEs used</h4>
-  <ul>
-    {% for IDE in project.IDE_arr %}
-        <li>{{  IDE.name  }}</li>
-    {% endfor %}
-  </ul>
-    
-  <h4>Miscellanous Tools</h4>
-  <ul>
-    {% for tool in project.misc_arr %}
-        <li>{{ tool.name }}</li>
-    {% endfor %}
-  </ul>
+        </div>
+      </dl>
+    </div>
+  </div>
     
 
 {% endblock %}

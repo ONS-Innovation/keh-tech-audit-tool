@@ -101,6 +101,9 @@ def view_project(project_name):
     print(project)
     return render_template("view_project.html", project=project)
 
+@app.route("/survey")
+def survey():
+    return render_template("survey.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

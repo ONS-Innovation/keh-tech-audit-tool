@@ -36,7 +36,107 @@
 {% endif %}
 {% endwith %}
 
+{% from "components/tabs/_macro.njk" import onsTabs %}
+
+
+{% set methodsTable = {
+    "id": "ready-table",
+    "variants": ["responsive"],
+    "tableClasses": "ons-u-mt-m",
+    "ths": [
+      {
+        "value": "Project Name"
+      },
+    ]
+  } %}
+  {% set methodsTableRows = [] %}
+  {% for project in projects %}
+    {% do methodsTableRows.append({
+      "tds": [
+        {
+            "value":'<a href="' + url_for("view_project", project_name=project.project_name) + '">' + project.project_name + '</a>'
+        },
+      ]
+    }) %}
+  {% endfor %}
+  {% do methodsTable.update({"trs": methodsTableRows}) %}
+  
+
+  <form action="{{ url_for('add_project') }}" method="POST">
+{{
+    onsTabs({
+        "title": 'Contents',
+        "titleClasses": 'ons-u-fs-m',
+        "tabs": [
+            {
+                "id": "ukis",
+                "title": 'Projects',
+                "showTitle": true,
+                "content": onsTable(methodsTable)
+                
+            },
+            {
+                "id": "vacancy-survey",
+                "title": 'Add Project',
+                "showTitle": true,
+                "content":
+                
+                        onsInput({
+                            "id": "project_name",
+                            "name": "project_name",
+                            "label": {
+                                "text": "Project Name"
+                            }
+                        }) +
+                        onsInput({
+                            "id": "project_long_name",
+                            "name": "project_long_name",
+                            "label": {
+                                "text": "Project Long Name"
+                            }
+                        }) +
+                            onsInput({
+                                "id": "Owner Email",
+                                "type": "email",
+                                "name": "owner_email",
+                                "autocomplete": "email",
+                                "label": {
+                                    "text": "Email address",
+                                    "description": ""
+                                }
+                            }) +
+                            onsInput({
+                                "id": "Contact Email",
+                                "type": "email",
+                                "name": "contact_email",
+                                "autocomplete": "email",
+                                "label": {
+                                    "text": "Contact Email Address",
+                                    "description": ""
+                                }
+                            }) +
+                            onsInput({
+                                "id": "doc_link",
+                                "name": "doc_link",
+                                "label": {
+                                    "text": "Document Link"
+                                }
+                            }) +
+                                onsButton({
+                                    "text": "Submit",
+                                })
+                        
+            },
+        ]
+    })
+}}
+
+</form>
+
+
+
 <section class="ons-tabs">
+
     <h2 class="ons-tabs__title ons-u-fs-r--b
           ons-u-mt-no ons-u-fs-m">Contents</h2>
     <div>

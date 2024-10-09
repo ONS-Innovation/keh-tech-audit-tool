@@ -6,6 +6,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
 app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
 
 project_dict = {
         "project1": {
@@ -45,7 +46,6 @@ def login():
 def dashboard():
     # api call here in place of dummy projects dict
     projects = requests.get("http://127.0.0.1:8000/api/projects", params={"owner_email": "seb@ons.gov.uk"}).json()
-
     # projects = [project for project in project_dict.values()]
 
     return render_template("dashboard.html", email=session["email"], password=session["password"], projects=projects)

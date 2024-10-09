@@ -6,6 +6,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
 app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
 
 project_dict = {
         "project1": {
@@ -101,9 +102,17 @@ def view_project(project_name):
     print(project)
     return render_template("view_project.html", project=project)
 
-@app.route("/survey")
+@app.route("/pre-survey", methods=['GET'])
+def pre_survey():
+    return render_template("pre-survey.html")
+
+@app.route("/survey", methods=['GET'])
 def survey():
     return render_template("survey.html")
+
+@app.route("/survey/you", methods=['GET'])
+def you():
+    return render_template("you.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

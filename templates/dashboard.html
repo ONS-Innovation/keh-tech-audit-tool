@@ -59,6 +59,11 @@
           </tr>
         </thead>
         <tbody class="ons-table__body">
+            {{
+                onsButton({
+                    "text": "Add Project",
+                })
+            }}
             {% for project in projects %}
                 <tr class="ons-table__row">
                     <td class="ons-table__cell"><a href="{{  url_for('view_project', project_name=project.project_name)  }}">{{ project.project_name }}</a></td>

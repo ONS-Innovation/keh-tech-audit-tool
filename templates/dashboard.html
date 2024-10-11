@@ -42,7 +42,7 @@
     "tableClasses": "ons-u-mt-m",
     "ths": [
       {
-        "value": "Project Name"
+        "value": "Projects"
       },
       {
         "value": onsButton({
@@ -54,14 +54,15 @@
   } %}
   {% set methodsTableRows = [] %}
   {% for project in projects %}
-    {% do methodsTableRows.append({
+  {% do methodsTableRows.append({
       "tds": [
         {
-            "value":'<a href="' + url_for("view_project", project_name=project.project_name) + '">' + project.project_name + '</a>'
+            "value": '<a href="' + url_for("view_project", project_name=project.details[0].name) + '">' + project.details[0].name + '</a>'
         },
       ]
-    }) %}
-  {% endfor %}
+  }) %}
+{% endfor %}
+
   {% do methodsTable.update({"trs": methodsTableRows}) %}
 
   {{

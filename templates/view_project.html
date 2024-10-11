@@ -24,8 +24,10 @@
 
 {% block main %}
 
-  <h1>{{ project.details[0].name }}</h1>
-  <h3>{{ project.details[0].short_name }}</h3>
+  <h1>{{ project.project_name }}</h1>
+  <h3>{{ project.project_long_name }}</h3>
+  <p>Owner Email: {{ project.owner_email }}</p>
+  <p>Contact Email: {{ project.contact_email }}</p>
 
   {% from "components/summary/_macro.njk" import onsSummary %}
 
@@ -41,13 +43,13 @@
                         "rows": [
                             {
                                 "id": "sales-dates-row",
-                                "rowTitle": project.user[0].email,
+                                "rowTitle": "Person Details",
                                 "rowItems": [
                                     {
                                         "id": "sales-dates",
                                         "valueList": [
                                             {
-                                                "text": project.user[0].roles[0]
+                                                "text": "1 January 2015 to 2 February 2017"
                                             }
                                         ],
                                         "actions": [

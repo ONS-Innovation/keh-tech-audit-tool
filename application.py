@@ -114,5 +114,41 @@ def survey():
 def you():
     return render_template("you.html")
 
+@app.route("/survey/project", methods=['GET'])
+def project():
+    return render_template("project.html")
+
+@app.route("/survey/developed", methods=['GET'])
+def developed():
+    return render_template("developed.html")
+
+@app.route("/survey/source_control", methods=['GET'])
+def source_control():
+    return render_template("source_control.html")
+
+@app.route("/survey/architecture", methods=['GET'])
+def architecture():
+    return render_template("architecture.html")
+
+@app.route("/survey/database", methods=['GET'])
+def database():
+    return render_template("database.html")
+
+@app.route("/survey/languages", methods=['GET'])
+def languages():
+    return render_template("languages.html")
+
+@app.route("/survey/frameworks", methods=['GET'])
+def frameworks():
+    return render_template("frameworks.html")
+
+@app.route("/survey/integration", methods=['GET'])
+def integration():
+    return render_template("integration.html")
+
+@app.route("/survey/infrastructure", methods=['GET'])
+def infrastructure():
+    return render_template("infrastructure.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

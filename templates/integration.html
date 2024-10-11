@@ -110,9 +110,9 @@
             data.role = otherRole;
         }
 
-        localStorage.setItem('you_data', JSON.stringify(data));
+        localStorage.setItem('data', JSON.stringify(data));
 
-        console.log(localStorage.getItem('you_data'));
+        console.log(localStorage.getItem('data'));
     }
 
     function loadData() {
@@ -121,7 +121,7 @@
             "SEO": "seo",
             "HEO": "heo"
         }
-        var data = JSON.parse(localStorage.getItem('you_data'));
+        var data = JSON.parse(localStorage.getItem('data'));
 
         if (data) {
             document.getElementById('contact-email').value = data.contactEmail;
@@ -129,13 +129,16 @@
 
             if (data.role != "Tech Lead" && data.role != "SEO" && data.role != "HEO") {
                 var option = "other";
-                document.getElementById('other-input').value = data.role;
             } else {
                 var option = obj[data.role];
             }
 
             document.getElementById(option).checked = true;
             console.log(option);
+
+            if (data.role) {
+                document.getElementById('other-input').value = data.role;
+            }
         }
     }
 

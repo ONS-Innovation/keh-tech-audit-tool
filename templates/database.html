@@ -18,27 +18,11 @@
 
 {% block main %}
 
-<h1>About You</h1>
+<h1>Database(s)</h1>
 
 <form action="{{ url_for('survey') }}" method="GET">
 
-{{
-    onsInput({
-        "id": "contact-email",
-        "label": {
-            "text": "Contact Email"
-        }
-    })
-}}
 
-{{
-    onsInput({
-        "id": "owner-email",
-        "label": {
-            "text": "Owner Email"
-        }
-    })
-}}
 
 {%
     call onsQuestion({
@@ -52,25 +36,32 @@
             "name": "role",
             "radios": [
                 {
-                    "id": "tech-lead",
+                    "id": "none",
                     "label": {
-                        "text": "Tech Lead"
+                        "text": "None"
                     },
-                    "value": "Tech Lead"
+                    "value": "None"
                 },
                 {
-                    "id": "seo",
+                    "id": "postgres",
                     "label": {
-                        "text": "SEO"
+                        "text": "Postgres"
                     },
-                    "value": "SEO"
+                    "value": "Postgres"
                 },
                 {
-                    "id": "heo",
+                    "id": "sqlserver",
                     "label": {
-                        "text": "HEO"
+                        "text": "SQLServer"
                     },
-                    "value": "HEO"
+                    "value": "SQLServer"
+                },
+                {
+                    "id": "mongodb",
+                    "label": {
+                        "text": "MongoDB"
+                    },
+                    "value": "MongoDB"
                 },
                 {
                     "id": "other",
@@ -82,7 +73,7 @@
                         "id": "other-input",
                         "name": "other",
                         "label": {
-                            "text": "Enter your role"
+                            "text": "Enter database software"
                         }
                     }
                 }
@@ -93,49 +84,47 @@
 
 <script>
     function storeData() {
-        var contactEmail = document.getElementById('contact-email').value;
-        var ownerEmail = document.getElementById('owner-email').value;
-        var role = document.querySelector('input[name="role"]:checked').value;
-        var otherRole = document.getElementById('other-input').value;
-        var completeAboutYou = true;
+        var database = document.querySelector('input[name="role"]:checked').value;
+        var otherDatabase = document.getElementById('other-input').value;
+        var complete = true;
 
         var data = {
-            "contactEmail": contactEmail,
-            "ownerEmail": ownerEmail,
-            "role": role,
-            "completeAboutYou": completeAboutYou
+            "database": database,
+            "complete": complete
         };
 
-        if (role === 'other') {
-            data.role = otherRole;
+        if (database === 'other') {
+            data.database = otherDatabase;
         }
 
-        localStorage.setItem('you_data', JSON.stringify(data));
+        localStorage.setItem('data-database', JSON.stringify(data));
 
-        console.log(localStorage.getItem('you_data'));
+        console.log(localStorage.getItem('data-database'));
     }
 
     function loadData() {
         var obj = {
-            "Tech Lead": "tech-lead",
-            "SEO": "seo",
-            "HEO": "heo"
+            "None": "none",
+            "Postgres": "postgres",
+            "MongoDB": "mongodb",
+            "SQLServer": "sqlserver"
         }
-        var data = JSON.parse(localStorage.getItem('you_data'));
+        var data = JSON.parse(localStorage.getItem('data-database'));
 
         if (data) {
-            document.getElementById('contact-email').value = data.contactEmail;
-            document.getElementById('owner-email').value = data.ownerEmail;
 
-            if (data.role != "Tech Lead" && data.role != "SEO" && data.role != "HEO") {
+            if (data.database != "None" && data.database != "Postgres" && data.database != "MongoDB" && data.database != "SQLServer") {
                 var option = "other";
-                document.getElementById('other-input').value = data.role;
             } else {
-                var option = obj[data.role];
+                var option = obj[data.database];
             }
 
             document.getElementById(option).checked = true;
             console.log(option);
+            console.log(data.database);
+            if (option === 'other') {
+                document.getElementById('other-input').value = data.database;
+            }
         }
     }
 

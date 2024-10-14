@@ -12,7 +12,7 @@ export AWS_SECRET_NAME=github-tooling-suite/onsdigital
 
 Then run to start the app on [http://localhost:8000](http://localhost:8000).
 
-**Important:** Make suer to run on **localhost:8000** specifically or else Cognito will not work.
+**Important:** Make to run on **localhost:8000** specifically or else Cognito will not work.
 
 ```bash
 make install
@@ -21,3 +21,5 @@ make install
 ```bash
 make run-ui
 ```
+
+There is not `make run/run-api`.

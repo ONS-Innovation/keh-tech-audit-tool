@@ -45,6 +45,7 @@ def home():
             flash("You have successfully logged in with Cognito")
             return redirect(url_for("dashboard"))
         else:
+            print(token_response)
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
     return render_template("index.html")
@@ -74,8 +75,13 @@ def exchange_code_for_tokens(code):
         logger.error(f"Error: {response.status_code}, {response.text}")
         raise Exception(f"Error: {response.status_code}, {response.text}")
     else:
+        if response.json()["id_token"]:
+            session["id_token"] = response.json()["id_token"]
+        else:
+            raise Exception("Failed to retrieve ID Token")
         headers = {"Authorization": f"{session['id_token']}"}
         user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
+        print(user_request.json())
         if user_request.status_code != 200:
             return {"error": "Failed to retrieve user information"}
         else:

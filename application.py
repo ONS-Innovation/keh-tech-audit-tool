@@ -142,6 +142,7 @@ def add_project():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     headers = {"Authorization": f"{session['id_token']}"}
+    print(project_name)
     projects = requests.get(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects/{project_name}", headers=headers).json()
     return render_template("view_project.html", project=projects)
 

@@ -1,0 +1,146 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+
+
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Hub example",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        }
+    }
+%}
+
+{% block main %}
+
+<h1>Where was this Software Developed?</h1>
+
+<form action="{{ url_for('survey') }}" method="GET">
+
+{%
+    call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    })
+%}
+    {{
+        onsRadios({
+            "dontWrap": true,
+            "name": "developed",
+            "radios": [
+                {
+                    "id": "in-house",
+                    "label": {
+                        "text": "In House"
+                    },
+                    "value": "In House"
+                },
+                {
+                    "id": "outsourced",
+                    "label": {
+                        "text": "Outsourced"
+                    },
+                    "value": "outsourced",
+                    "value": "Outsourced",
+                    "other": {
+                        "id": "other-input-1",
+                        "name": "other",
+                        "label": {
+                            "text": "Outsource Company"
+                        }
+                    }
+                },
+                {
+                    "id": "partnership",
+                    "label": {
+                        "text": "Partnership"
+                    },
+                    "value": "Partnership",
+                    "other": {
+                        "id": "other-input-2",
+                        "name": "other",
+                        "label": {
+                            "text": "Partnership Company"
+                        }
+                    }
+                }
+            ]
+        })
+    }}
+{% endcall %}
+
+<script>
+    function storeData() {
+        var developed = document.querySelector('input[name="developed"]:checked').value;
+        var outsource_company = document.getElementById('other-input-1').value;
+        var partnership_company = document.getElementById('other-input-2').value;
+        var complete = true;
+        var data = {
+            "outsource_company": outsource_company,
+            "partnership_company": partnership_company,
+            "developed": developed,
+            "complete": complete,
+
+        };
+
+        if (developed === "In House") {
+            data.partnership_company = null;
+            data.outsource_company = null;
+
+        } else if (developed === "Outsourced") {
+            data.partnership_company = null;
+            data.outsource_company = document.getElementById('other-input-1').value;
+
+        } else if (developed === "Partnership") {
+            data.outsource_company = null;
+            data.partnership_company = document.getElementById('other-input-2').value;
+        } else {
+            data.complete = false;
+        }
+
+        localStorage.setItem('data-developed', JSON.stringify(data));
+
+        console.log(localStorage.getItem('data-developed'));
+    }
+
+    function loadData() {
+        var obj = {
+            "Outsourced": "outsourced",
+            "Partnership": "partnership",
+            "In House": "in-house"
+        }
+        var data = JSON.parse(localStorage.getItem('data-developed'));
+
+        if (data) {
+            var option = obj[data.developed]
+
+            if (data.developed === "Outsourced") {
+                document.getElementById('other-input-1').value = data.outsource_company;
+            } else if (data.developed === "Partnership") {
+                document.getElementById('other-input-2').value = data.partnership_company;
+            }
+
+            document.getElementById(option).checked = true;
+            console.log(option);
+        }
+    }
+
+    loadData();
+</script>
+
+{{
+    onsButton({
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    })
+}}
+</form>
+
+{% endblock %}

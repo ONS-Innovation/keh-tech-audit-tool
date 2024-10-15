@@ -1,0 +1,81 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+
+
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Hub example",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        }
+    }
+%}
+
+{% block main %}
+
+<h1>About You</h1>
+
+{{
+    onsInput({
+        "id": "frameworks-input",
+        "class": "item-input",
+        "label": {
+            "text": "Enter frameworks"
+        },
+        "attributes": {
+            "onsubmit": "Enter frameworks"
+        }
+    })
+}}
+
+
+
+
+<br>
+
+<div id="con1" class="ons-field">
+
+</div>
+
+<script>localStorage.setItem("type", "frameworks");</script>
+<script src="{{ url_for('static', filename='scripts.js') }}">
+</script>
+
+<script>
+loadData();
+</script>
+
+
+{{
+    onsButton({
+        "id": "remove",
+        "type": "button",
+        "text": "Remove Last Item",
+        "variants": ['secondary', 'small'],
+        "attributes": {
+            "onclick": "removeData()"
+        }
+    })
+}}
+
+
+<br>
+<br>
+
+<form action="{{ url_for('survey') }}" method="GET">
+{{
+    onsButton({
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    })
+}}
+
+</form>
+{% endblock %}

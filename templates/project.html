@@ -1,0 +1,104 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+
+
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Hub example",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        }
+    }
+%}
+
+{% block main %}
+
+<h1>Project Details</h1>
+
+<form action="{{ url_for('survey') }}" method="GET">
+
+{{
+    onsInput({
+        "id": "project-name",
+        "label": {
+            "text": "Project Name"
+        }
+    })
+}}
+
+{{
+    onsInput({
+        "id": "project-long-name",
+        "label": {
+            "text": "Project Long Name"
+        }
+    })
+}}
+
+{{
+    onsInput({
+        "id": "documentation-link",
+        "label": {
+            "text": "Documentation link"
+        }
+    })
+}}
+
+{%
+    call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    })
+%}
+{% endcall %}
+
+<script>
+    function storeData() {
+        var project_name = document.getElementById('project-name').value;
+        var project_long_name = document.getElementById('project-long-name').value;
+        var doc_link = document.getElementById('documentation-link').value;
+
+        var data = {
+            "project_name": project_name,
+            "project_long_name": project_long_name,
+            "doc_link": doc_link,
+        };
+
+        localStorage.setItem('data', JSON.stringify(data));
+
+        console.log(localStorage.getItem('data'));
+    }
+
+    function loadData() {
+        var data = JSON.parse(localStorage.getItem('data'));
+        var project_name = data.project_name;
+        var project_long_name = data.project_long_name;
+        var doc_link = data.doc_link;
+
+        if (data) {
+            console.log('bumbaclaat');
+            document.getElementById('project-name').value = project_name;
+            document.getElementById('project-long-name').value = project_long_name;
+            document.getElementById('documentation-link').value = doc_link;
+        }
+    }
+
+    loadData();
+</script>
+
+{{
+    onsButton({
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    })
+}}
+</form>
+
+{% endblock %}

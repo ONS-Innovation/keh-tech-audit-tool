@@ -17,5 +17,5 @@ black:
 format:
 	npx prettier --write .
 
-install: 
-	poetry install --only main --no-root
+run-api-tests:
+	poetry run pytest server/test.py

@@ -88,56 +88,12 @@ def exchange_code_for_tokens(code):
 
     return response.json()
 
-
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", headers=headers).json()
 
     return render_template("dashboard.html", email=session["email"], projects=projects)
-
-@app.route("/dashboard", methods=["POST"])
-def add_project():
-    project_name = request.form["project_name"]
-    project_long_name = request.form["project_long_name"]
-    contact_email = request.form["contact_email"]
-    owner_email = request.form["owner_email"]
-    doc_link = request.form["doc_link"]
-    langframe_arr = request.form.getlist("con1[]")
-    ide_arr = request.form.getlist("con2[]")
-    misc_arr = request.form.getlist("con3[]")
-
-
-    lang_frame_arr_temp = []
-    ide_arr_temp = []
-    misc_arr_temp = []
-
-    if project_name == "":
-        flash("Project name cannot be empty")
-
-    for lang_frame in langframe_arr:
-        lang_frame_arr_temp.append({"name": lang_frame})
-
-    for ide in  ide_arr:
-        ide_arr_temp.append({"name": ide})
-    
-    for misc in misc_arr:
-        misc_arr_temp.append({"name": misc})
-
-    project = {
-        "project_name": project_name,
-        "project_long_name": project_long_name,
-        "contact_email": contact_email,
-        "owner_email": owner_email,
-        "doc_link": doc_link,
-        "lang_frame_arr": lang_frame_arr_temp,
-        "IDE_arr": ide_arr_temp,
-        "misc_arr": misc_arr_temp
-    }
-
-    requests.post("http://127.0.0.1:8000/api/projects", json=project, params={"owner_email": "seb@ons.gov.uk"})
-    
-    return redirect(url_for("dashboard"))
 
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
@@ -150,13 +106,88 @@ def view_project(project_name):
 def pre_survey():
     return render_template("pre-survey.html")
 
-@app.route("/survey", methods=['GET'])
+@app.route("/survey", methods=['GET', 'POST'])
 def survey():
+    if request.method == 'POST':
+        headers = {"Authorization": f"{session['id_token']}", "content-type": "application/json"}
+        test = request.form["TEST"]
+        print(test)
+        data = {
+            "user": [ 
+                {
+                    "email": "q",
+                    "roles": [
+                        "owner"
+                    ]
+                }
+            ],
+            "details": {
+                "name": "Project100",
+                "short_name": "This is project 100",
+                "documentation_link": "https://www.google.com",
+            },
+            "developed":[  
+                "Partnership",
+                ["ONS", "GDS"]
+            ],
+            "source_control":[
+                "GitHub"
+            ],
+            "architecture": {
+                "hosting": {"type": "Hybrid", "detail": []},
+                "database": {"main": "MongoDB", "others": []},
+                "languages": {"main": "Python", "others": ["JavaScript", "Java"]},
+                "frameworks": {"main": "React", "others": []},
+                "CICD": {"main": "Python", "others": ["JavaScript", "Java"]},
+                "infrastructure": {"main": "Python", "others": []}
+                }
+            }
+        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        print(projects.json())
+        return redirect(url_for("dashboard"))
+
     return render_template("survey.html")
 
 @app.route("/survey/you", methods=['GET'])
 def you():
     return render_template("you.html")
+
+@app.route("/survey/project", methods=['GET'])
+def project():
+    return render_template("project.html")
+
+@app.route("/survey/developed", methods=['GET'])
+def developed():
+    return render_template("developed.html")
+
+@app.route("/survey/source_control", methods=['GET'])
+def source_control():
+    return render_template("source_control.html")
+
+@app.route("/survey/architecture", methods=['GET'])
+def architecture():
+    return render_template("architecture.html")
+
+@app.route("/survey/database", methods=['GET'])
+def database():
+    return render_template("database.html")
+
+@app.route("/survey/languages", methods=['GET'])
+def languages():
+    return render_template("languages.html")
+
+@app.route("/survey/frameworks", methods=['GET'])
+def frameworks():
+    return render_template("frameworks.html")
+
+@app.route("/survey/integrations", methods=['GET'])
+def integrations():
+    return render_template("integrations.html")
+
+@app.route("/survey/infrastructure", methods=['GET'])
+def infrastructure():
+    return render_template("infrastructure.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

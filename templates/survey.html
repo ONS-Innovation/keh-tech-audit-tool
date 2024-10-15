@@ -174,14 +174,67 @@
         })
     }}
 
-    {{
-        onsButton({
-            "text": 'Continue',
-            "classes": 'ons-u-mb-m ons-u-mt-l',
-            "url": '/patterns/hub-and-spoke/examples/spoke-continue/',
-            "iconType": false
-        })
-    }}
+    <script>
+        var youData = localStorage.getItem('you_data');
+        var projectData = localStorage.getItem('data');
+        var developedData = localStorage.getItem('data-developed');
+        var sourceControlData = localStorage.getItem('data-source-control');
+        var frameworksData = localStorage.getItem('frameworks-data');
+        var infrastructureData = localStorage.getItem('infrastructure-data');
+        var integrationsData = localStorage.getItem('integrations-data');
+        var languagesData = localStorage.getItem('languages-data');
+        var architectureData = localStorage.getItem('architecture-data');
+        var databaseData = localStorage.getItem('database-data');
+
+        var finalData = {
+            "user": JSON.parse(youData),
+            "details": JSON.parse(projectData),
+            "developed": JSON.parse(developedData),
+            "source_control": JSON.parse(sourceControlData),
+            "architecture": {
+                "frameworks": JSON.parse(frameworksData),
+                "infrastructure": JSON.parse(infrastructureData),
+                "integrations": JSON.parse(integrationsData),
+                "languages": JSON.parse(languagesData),
+                "hosting": JSON.parse(architectureData),
+                "database": JSON.parse(databaseData),
+            },
+        }
+        console.log(finalData);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(finalData),
+        };
+    </script>
+   
+   <form action="{{ url_for('survey') }}" method="POST">
+    <input value="katon goukakyuu no jutsu!!!!!" name="TEST">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+    <input type="hidden" value="test">
+
+    
+        {{
+            onsButton({
+                "text": 'Continue',
+                "classes": 'ons-u-mb-m ons-u-mt-l',
+                "iconType": false,
+                "attributes": {
+                    "onclick": "localStorage.clear();"
+                }
+            })
+        }}
+    </form>
 {% endblock %}
 
       {% block scripts %}

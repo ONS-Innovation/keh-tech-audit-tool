@@ -3,8 +3,6 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
-{% from "components/checkboxes/_macro.njk" import onsCheckboxes %}
-{% from "components/question/_macro.njk" import onsQuestion %}
 
 
 {%
@@ -20,130 +18,52 @@
 
 {% block main %}
 
-<form action="{{ url_for('architecture') }}" method="GET">
-    {%
-        call onsQuestion({
-            "title": "Hosting",
-            "classes": "ons-u-mt-no",
-            "legendIsQuestionTitle": true
-        })
-    %}
-        {{
-            onsRadios({
-                "name": "hosting",
-                "dontWrap": true,
-                "radios": [
-                    {
-                        "id": "on-prem",
-                        "label": {
-                            "text": "On-Premises"
-                        },
-                        "value": "on-prem"
-                    },
-                    {
-                        "id": "cloud",
-                        "label": {
-                            "text": "Cloud"
-                        },
-                        "value": "cloud"
-                    },
-                    {
-                        "id": "hybrid",
-                        "label": {
-                            "text": "Hybrid"
-                        },
-                        "value": "hybrid"
-                    }
-                ]
-            })
-        }}
+<h1>About You</h1>
 
-        {{
-            onsCheckboxes({
-                "dontWrap": true,
-                "name": "platform",
-                "checkboxes": [
-                    {
-                        "id": "aws",
-                        "label": {
-                            "text": "AWS"
-                        },
-                        "value": "aws"
-                    },
-                    {
-                        "id": "azure",
-                        "label": {
-                            "text": "Azure"
-                        },
-                        "value": "azure"
-                    },
-                    {
-                        "id": "gcp",
-                        "label": {
-                            "text": "GCP"
-                        },
-                        "value": "gcp"
-                    },
-                ]
-            })
-        }}
-    {% endcall %}
-
-<script>
-    function storeData() {
-            var hosting = document.querySelector('input[name="hosting"]:checked').value;
-            var platform = document.querySelector('input[name="platform"]:checked'), values = [];
-            
-            console.log(platform)
-            var complete = true;
-
-            var data = {
-                "hosting": hosting,
-                "platform": platform,
-                "complete": complete
-            };
-
-            
-
-            localStorage.setItem('data', JSON.stringify(data));
-
-            console.log(localStorage.getItem('data'));
-        // var hosting = document.querySelector('input[name="platform"]:checked').value;
-        // var otherRole = document.getElementById('other-input').value;
-
-    }
-    /*
-    function loadData() {
-        var obj = {
-            "Tech Lead": "tech-lead",
-            "SEO": "seo",
-            "HEO": "heo"
+{{
+    onsInput({
+        "id": "architecture-input",
+        "class": "item-input",
+        "label": {
+            "text": "Enter Hosting Services"
+        },
+        "attributes": {
+            "onsubmit": "Enter frameworks"
         }
-        var data = JSON.parse(localStorage.getItem('data'));
+    })
+}}
 
-        if (data) {
-            document.getElementById('contact-email').value = data.contactEmail;
-            document.getElementById('owner-email').value = data.ownerEmail;
+<br>
 
-            if (data.role != "Tech Lead" && data.role != "SEO" && data.role != "HEO") {
-                var option = "other";
-            } else {
-                var option = obj[data.role];
-            }
+<div id="con1" class="ons-field">
 
-            document.getElementById(option).checked = true;
-            console.log(option);
+</div>
 
-            if (data.role) {
-                document.getElementById('other-input').value = data.role;
-            }
-        }
-    }
-    */
-
-    // loadData();
+<script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
+<script>
+loadData();
+</script>
+
+
+{{
+    onsButton({
+        "id": "remove",
+        "type": "button",
+        "text": "Remove Last Item",
+        "variants": ['secondary', 'small'],
+        "attributes": {
+            "onclick": "removeData()"
+        }
+    })
+}}
+
+
+<br>
+<br>
+
+<form action="{{ url_for('survey') }}" method="GET">
 {{
     onsButton({
         "text": "Save and continue",
@@ -152,6 +72,6 @@
         }
     })
 }}
-</form>
 
+</form>
 {% endblock %}

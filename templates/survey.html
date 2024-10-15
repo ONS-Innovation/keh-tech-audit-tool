@@ -1,0 +1,198 @@
+{% extends "layout/_template.njk" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/button/_macro.njk" import onsButton %}
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Hub example",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        }
+    }
+%}
+
+{% block main %}
+    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+
+    {{
+        onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "You",
+                                    "rowItems": [
+                                        {
+                                            "iconType": "check",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('you')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project",
+                                    "rowItems": [
+                                        {
+                                            "iconType": "check",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": "#0"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Developed",
+                                    "rowItems": [
+                                        {
+                                            "iconType": "check",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": "#0"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Source Control",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Continue with John Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-continue/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Architecture",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-start/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Database",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Mary Susannah Smith's section",
+                                                    "url": "#0"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Languages",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-start/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Frameworks",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-start/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "CI/CD",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-start/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Infrastructure",
+                                    "rowItems": [
+                                        {
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": "/patterns/hub-and-spoke/examples/spoke-start/"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                            ]
+                        }
+                    ]
+                }
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "url": '/patterns/hub-and-spoke/examples/spoke-continue/',
+            "iconType": false
+        })
+    }}
+{% endblock %}
+
+      {% block scripts %}
+
+        <style>
+          body {
+            height: auto;
+          }
+        </style>
+
+        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
+      {% endblock %}
+    

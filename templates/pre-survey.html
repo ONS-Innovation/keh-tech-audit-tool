@@ -1,0 +1,83 @@
+{% extends "layout/_template.njk" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% from "components/details/_macro.njk" import onsDetails %}
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Spoke example",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/patterns/hub-and-spoke/examples/hub/',
+                    "text": 'Back'
+                }
+            ]
+        }
+    }
+%}
+
+{% block main %}
+    <h1 class="ons-u-mt-m">Add a Project</h1>
+
+
+    <p>To complete this survey you will need to know details such as:</p>
+    {{
+        onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'Your email and role'
+                },
+                {
+                    "text": 'Project name and documentation URL'
+                },
+                {
+                    "text": 'Where the software was developed'
+                },
+                {
+                    "text": 'Source control of choice'
+                },
+                {
+                    "text": 'Which hosting platforms have been used'
+                },
+                {
+                    "text": 'What databases have bee used'
+                },
+                {
+                    "text": 'What languages have been used'
+                },
+                {
+                    "text": 'What CI/CD pipelining tools have been used'
+                },
+                {
+                    "text": 'What infrastructure the project uses'
+                }
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('survey')
+        })
+    }}
+{% endblock %}
+
+      {% block scripts %}
+
+        <style>
+          body {
+            height: auto;
+          }
+        </style>
+
+        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
+      {% endblock %}
+    

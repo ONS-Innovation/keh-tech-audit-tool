@@ -24,84 +24,201 @@
 
 {% block main %}
 
-  <h1>{{ project.project_name }}</h1>
-  <h3>{{ project.project_long_name }}</h3>
-  <p>Owner Email: {{ project.owner_email }}</p>
-  <p>Contact Email: {{ project.contact_email }}</p>
+  <h1>{{ project.details[0].name }}</h1>
+  <h3>{{ project.details[0].short_name }}</h3>
 
-  <div class="ons-summary">
-    <div id="turnover" class="ons-summary__group">
-      <h2 class="ons-summary__group-title">Summary</h2>
-      <dl class="ons-summary__items">
-        <div id="sales-dates-row" class="ons-summary__item">
-          <div class="ons-summary__row ons-summary__row--has-values" id="sales-dates">
-            <dt class="ons-summary__item-title">
-              <div class="ons-summary__item--text">Languages and Frameworks</div>
-            </dt>
-            <dd class="ons-summary__values">
-              <span class="ons-summary__text">
-                <ul>
-                    {% for lang in project.lang_frame_arr %}
-                        <li>{{ lang.name }}</li>
-                    {% endfor %}
-                  </ul>                
-              </span>
-            </dd>
-            <dd class="ons-summary__actions">
-              <a href="#0" class="ons-summary__button">
-                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
-                <span class="ons-u-vh">Change answer</span>
-              </a>
-            </dd>
-          </div>
-        </div>
-        <div id="sales-value-row" class="ons-summary__item">
-          <div class="ons-summary__row ons-summary__row--has-values" id="sales-value">
-            <dt class="ons-summary__item-title">
-              <div class="ons-summary__item--text">IDEs Used</div>
-            </dt>
-            <dd class="ons-summary__values">
-              <span class="ons-summary__text">
-                <ul>
-                  {% for IDE in project.IDE_arr %}
-                      <li>{{  IDE.name  }}</li>
-                  {% endfor %}
-                </ul>
-              </span>
-            </dd>
-            <dd class="ons-summary__actions">
-              <a href="#0" class="ons-summary__button">
-                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
-                <span class="ons-u-vh">Change answer</span>
-              </a>
-            </dd>
-          </div>
-        </div>
-        <div id="sales-reasons-row" class="ons-summary__item">
-          <div class="ons-summary__row ons-summary__row--has-values" id="sales-reasons">
-            <dt class="ons-summary__item-title">
-              <div class="ons-summary__item--text">Misc. Tools</div>
-            </dt>
-            <dd class="ons-summary__values">
-                <ul>
-                    {% for tool in project.misc_arr %}
-                        <li>{{ tool.name }}</li>
-                    {% endfor %}
-                  </ul>
-            </dd>
-            <dd class="ons-summary__actions">
-              <a href="#0" class="ons-summary__button">
-                <span class="ons-summary__button-text" aria-hidden="true">Change</span>
-                <span class="ons-u-vh">Change answer</span>
-              </a>
-            </dd>
-          </div>
-        </div>
+  {% from "components/summary/_macro.njk" import onsSummary %}
 
-        </div>
-      </dl>
-    </div>
-  </div>
+{{
+    onsSummary({
+        "summaries": [
+            {
+                "groups": [
+                    {
+                        "placeholderText": 'test',
+                        "id": "summary",
+                        "groupTitle": "Summary",
+                        "rows": [
+                            {
+                                "id": "sales-dates-row",
+                                "rowTitle": project.user[0].email,
+                                "rowItems": [
+                                    {
+                                        "id": "sales-dates",
+                                        "valueList": [
+                                            {
+                                                "text": project.user[0].roles[0]
+                                            }
+                                        ],
+                                        "actions": [
+                                            {
+                                                "text": "Change",
+                                                "visuallyHiddenText": "Change answer",
+                                                "url": "#0"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "rowTitle": "Project",
+                                "id": "sales-value-row",
+                                "rowItems": [
+                                    {
+                                        "id": "sales-value",
+                                        "valueList": [
+                                            {
+                                                "text": "£180,440"
+                                            }
+                                        ],
+                                        "actions": [
+                                            {
+                                                "text": "Change",
+                                                "visuallyHiddenText": "Change answer",
+                                                "url": "#0"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Developed",
+                                "rowItems": [
+                                    {
+                                        "id": "Source Control",
+                                        "valueList": [
+                                            {
+                                                "text": "Change in level of business activity"
+                                            },
+                                            {
+                                                "text": "Special/calendar events",
+                                                "other": "Some other value"
+                                            }
+                                        ],
+                                        "actions": [
+                                            {
+                                                "text": "Change",
+                                                "visuallyHiddenText": "Change answer",
+                                                "url": "#0"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "sales-detail-row",
+                                "rowTitle": "Architecture Hosting",
+                                "rowItems": [
+                                    {
+                                        "id": "sales-detail",
+                                        "valueList": [
+                                            {
+                                                "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                            }
+                                        ],
+                                        "actions": [
+                                            {
+                                                "text": "Change",
+                                                "visuallyHiddenText": "Change answer",
+                                                "url": "#0"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                              "id": "sales-detail-row",
+                              "rowTitle": "Database",
+                              "rowItems": [
+                                  {
+                                      "id": "sales-detail",
+                                      "valueList": [
+                                          {
+                                              "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                          }
+                                      ],
+                                      "actions": [
+                                          {
+                                              "text": "Change",
+                                              "visuallyHiddenText": "Change answer",
+                                              "url": "#0"
+                                          }
+                                      ]
+                                  }
+                              ]
+                          },
+                          {
+                            "id": "sales-detail-row",
+                            "rowTitle": "Languages",
+                            "rowItems": [
+                                {
+                                    "id": "sales-detail",
+                                    "valueList": [
+                                        {
+                                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                        }
+                                    ],
+                                    "actions": [
+                                        {
+                                            "text": "Change",
+                                            "visuallyHiddenText": "Change answer",
+                                            "url": "#0"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                          "id": "sales-detail-row",
+                          "rowTitle": "CI/CD",
+                          "rowItems": [
+                              {
+                                  "id": "sales-detail",
+                                  "valueList": [
+                                      {
+                                          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                      }
+                                  ],
+                                  "actions": [
+                                      {
+                                          "text": "Change",
+                                          "visuallyHiddenText": "Change answer",
+                                          "url": "#0"
+                                      }
+                                  ]
+                              }
+                          ]
+                      },
+                      {
+                        "id": "sales-detail-row",
+                        "rowTitle": "Infrastructure",
+                        "rowItems": [
+                            {
+                                "id": "sales-detail",
+                                "valueList": [
+                                    {
+                                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                    }
+                                ],
+                                "actions": [
+                                    {
+                                        "text": "Change",
+                                        "visuallyHiddenText": "Change answer",
+                                        "url": "#0"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                        ]
+                    }
+                ]
+            }
+        ]
+    })
+}}
+
     
 
 {% endblock %}

@@ -4,10 +4,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/list/_macro.njk" import onsList %}
-
-
-{%
-  set pageConfig = {
+{% set pageConfig = {
       "header": {
           "title": "Keh Tech Audit Tool"
       },
@@ -19,18 +16,14 @@
               "post": ", except where otherwise stated"
           }
       }
-  }
-%}
-
+  } %}
 {% block main %}
+    <h1>{{ project.details[0].name }}</h1>
+    <h3>{{ project.details[0].short_name }}</h3>
+    {{ project }}
 
-  <h1>{{ project.details[0].name }}</h1>
-  <h3>{{ project.details[0].short_name }}</h3>
-
-  {% from "components/summary/_macro.njk" import onsSummary %}
-
-{{
-    onsSummary({
+    {% from "components/summary/_macro.njk" import onsSummary %}
+    {{ onsSummary({
         "summaries": [
             {
                 "groups": [
@@ -68,7 +61,28 @@
                                         "id": "sales-value",
                                         "valueList": [
                                             {
-                                                "text": "£180,440"
+                                                "text": project.details[0].name
+                                            }
+                                        ],
+                                        "actions": [
+                                            {
+                                                "text": "Change",
+                                                "visuallyHiddenText": "Change answer",
+                                                "url": "#0"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "rowTitle": "Short Name",
+                                "id": "sales-value-row",
+                                "rowItems": [
+                                    {
+                                        "id": "sales-value",
+                                        "valueList": [
+                                            {
+                                                "text": project.details[0].short_name
                                             }
                                         ],
                                         "actions": [
@@ -86,14 +100,13 @@
                                 "rowTitle": "Developed",
                                 "rowItems": [
                                     {
-                                        "id": "Source Control",
+                                        "id": "developed",
                                         "valueList": [
                                             {
-                                                "text": "Change in level of business activity"
+                                                "text": project.developed[0]
                                             },
                                             {
-                                                "text": "Special/calendar events",
-                                                "other": "Some other value"
+                                                "text": project.developed[1]
                                             }
                                         ],
                                         "actions": [
@@ -107,14 +120,17 @@
                                 ]
                             },
                             {
-                                "id": "sales-detail-row",
+                                "id": "sales-reasons-row",
                                 "rowTitle": "Architecture Hosting",
                                 "rowItems": [
                                     {
-                                        "id": "sales-detail",
+                                        "id": "architecture-hosting",
                                         "valueList": [
                                             {
-                                                "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                                                "text": project.architecture.hosting.type
+                                            },
+                                            {
+                                                "text": project.developed.hosting.detail
                                             }
                                         ],
                                         "actions": [
@@ -128,97 +144,77 @@
                                 ]
                             },
                             {
-                              "id": "sales-detail-row",
-                              "rowTitle": "Database",
-                              "rowItems": [
-                                  {
-                                      "id": "sales-detail",
-                                      "valueList": [
-                                          {
-                                              "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                                          }
-                                      ],
-                                      "actions": [
-                                          {
-                                              "text": "Change",
-                                              "visuallyHiddenText": "Change answer",
-                                              "url": "#0"
-                                          }
-                                      ]
-                                  }
-                              ]
-                          },
-                          {
-                            "id": "sales-detail-row",
-                            "rowTitle": "Languages",
-                            "rowItems": [
-                                {
-                                    "id": "sales-detail",
-                                    "valueList": [
-                                        {
-                                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                                        }
-                                    ],
-                                    "actions": [
-                                        {
-                                            "text": "Change",
-                                            "visuallyHiddenText": "Change answer",
-                                            "url": "#0"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                          "id": "sales-detail-row",
-                          "rowTitle": "CI/CD",
-                          "rowItems": [
-                              {
-                                  "id": "sales-detail",
-                                  "valueList": [
-                                      {
-                                          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                                      }
-                                  ],
-                                  "actions": [
-                                      {
-                                          "text": "Change",
-                                          "visuallyHiddenText": "Change answer",
-                                          "url": "#0"
-                                      }
-                                  ]
-                              }
-                          ]
-                      },
-                      {
-                        "id": "sales-detail-row",
-                        "rowTitle": "Infrastructure",
-                        "rowItems": [
-                            {
-                                "id": "sales-detail",
-                                "valueList": [
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Database",
+                                "rowItems": [
                                     {
-                                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                                    }
-                                ],
-                                "actions": [
-                                    {
-                                        "text": "Change",
-                                        "visuallyHiddenText": "Change answer",
-                                        "url": "#0"
+                                        "id": "database",
+                                        "valueList": [
+                                            {
+                                                "text": project.architecture.database.main
+                                            },
+                                            {
+                                                "text": project.architecture.database.others
+                                            }
+                                        ]
                                     }
                                 ]
-                            }
-                        ]
-                    }
+                            },
+                          {
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Frameworks",
+                                "rowItems": [
+                                    {
+                                        "id": "frameworks",
+                                        "valueList": [
+                                            {
+                                                "text": project.architecture.frameworks.main
+                                            },
+                                            {
+                                                "text": project.architecture.frameworks.others
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                        {
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Languages",
+                                "rowItems": [
+                                    {
+                                        "id": "languages",
+                                        "valueList": [
+                                            {
+                                                "text": project.architecture.languages.main
+                                            },
+                                            {
+                                                "text": project.architecture.languages.others
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                      {
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Infrastructure",
+                                "rowItems": [
+                                    {
+                                        "id": "infrastructure",
+                                        "valueList": [
+                                            {
+                                                "text": project.architecture.infrastructure.main
+                                            },
+                                            {
+                                                "text": project.architecture.infrastructure.others
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
                         ]
                     }
                 ]
             }
         ]
-    })
-}}
-
-    
-
+    }) }}
 {% endblock %}

@@ -20,131 +20,54 @@
 
 <h1>About You</h1>
 
-<form action="{{ url_for('survey') }}" method="GET">
-
 {{
     onsInput({
-        "id": "contact-email",
+        "id": "frameworks-input",
+        "class": "item-input",
         "label": {
-            "text": "Contact Email"
+            "text": "Enter frameworks"
+        },
+        "attributes": {
+            "onsubmit": "Enter frameworks"
         }
     })
 }}
 
-{{
-    onsInput({
-        "id": "owner-email",
-        "label": {
-            "text": "Owner Email"
-        }
-    })
-}}
 
-{%
-    call onsQuestion({
-        "classes": "ons-u-mt-no",
-        "legendIsQuestionTitle": true
-    })
-%}
-    {{
-        onsRadios({
-            "dontWrap": true,
-            "name": "role",
-            "radios": [
-                {
-                    "id": "tech-lead",
-                    "label": {
-                        "text": "Tech Lead"
-                    },
-                    "value": "Tech Lead"
-                },
-                {
-                    "id": "seo",
-                    "label": {
-                        "text": "SEO"
-                    },
-                    "value": "SEO"
-                },
-                {
-                    "id": "heo",
-                    "label": {
-                        "text": "HEO"
-                    },
-                    "value": "HEO"
-                },
-                {
-                    "id": "other",
-                    "label": {
-                        "text": "Other"
-                    },
-                    "value": "other",
-                    "other": {
-                        "id": "other-input",
-                        "name": "other",
-                        "label": {
-                            "text": "Enter your role"
-                        }
-                    }
-                }
-            ]
-        })
-    }}
-{% endcall %}
 
-<script>
-    function storeData() {
-        var contactEmail = document.getElementById('contact-email').value;
-        var ownerEmail = document.getElementById('owner-email').value;
-        var role = document.querySelector('input[name="role"]:checked').value;
-        var otherRole = document.getElementById('other-input').value;
-        var completeAboutYou = true;
 
-        var data = {
-            "contactEmail": contactEmail,
-            "ownerEmail": ownerEmail,
-            "role": role,
-            "completeAboutYou": completeAboutYou
-        };
+<br>
 
-        if (role === 'other') {
-            data.role = otherRole;
-        }
+<div id="con1" class="ons-field">
 
-        localStorage.setItem('data', JSON.stringify(data));
+</div>
 
-        console.log(localStorage.getItem('data'));
-    }
-
-    function loadData() {
-        var obj = {
-            "Tech Lead": "tech-lead",
-            "SEO": "seo",
-            "HEO": "heo"
-        }
-        var data = JSON.parse(localStorage.getItem('data'));
-
-        if (data) {
-            document.getElementById('contact-email').value = data.contactEmail;
-            document.getElementById('owner-email').value = data.ownerEmail;
-
-            if (data.role != "Tech Lead" && data.role != "SEO" && data.role != "HEO") {
-                var option = "other";
-            } else {
-                var option = obj[data.role];
-            }
-
-            document.getElementById(option).checked = true;
-            console.log(option);
-
-            if (data.role) {
-                document.getElementById('other-input').value = data.role;
-            }
-        }
-    }
-
-    loadData();
+<script>localStorage.setItem("type", "frameworks");</script>
+<script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
+<script>
+loadData();
+</script>
+
+
+{{
+    onsButton({
+        "id": "remove",
+        "type": "button",
+        "text": "Remove Last Item",
+        "variants": ['secondary', 'small'],
+        "attributes": {
+            "onclick": "removeData()"
+        }
+    })
+}}
+
+
+<br>
+<br>
+
+<form action="{{ url_for('survey') }}" method="GET">
 {{
     onsButton({
         "text": "Save and continue",
@@ -153,6 +76,6 @@
         }
     })
 }}
-</form>
 
+</form>
 {% endblock %}

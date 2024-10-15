@@ -142,9 +142,9 @@ def languages():
 def frameworks():
     return render_template("frameworks.html")
 
-@app.route("/survey/integration", methods=['GET'])
-def integration():
-    return render_template("integration.html")
+@app.route("/survey/integrations", methods=['GET'])
+def integrations():
+    return render_template("integrations.html")
 
 @app.route("/survey/infrastructure", methods=['GET'])
 def infrastructure():

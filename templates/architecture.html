@@ -3,6 +3,8 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/checkboxes/_macro.njk" import onsCheckboxes %}
+{% from "components/question/_macro.njk" import onsQuestion %}
 
 
 {%
@@ -18,103 +20,99 @@
 
 {% block main %}
 
-<h1>About You</h1>
-
-<form action="{{ url_for('survey') }}" method="GET">
-
-{{
-    onsInput({
-        "id": "contact-email",
-        "label": {
-            "text": "Contact Email"
-        }
-    })
-}}
-
-{{
-    onsInput({
-        "id": "owner-email",
-        "label": {
-            "text": "Owner Email"
-        }
-    })
-}}
-
-{%
-    call onsQuestion({
-        "classes": "ons-u-mt-no",
-        "legendIsQuestionTitle": true
-    })
-%}
-    {{
-        onsRadios({
-            "dontWrap": true,
-            "name": "role",
-            "radios": [
-                {
-                    "id": "tech-lead",
-                    "label": {
-                        "text": "Tech Lead"
-                    },
-                    "value": "Tech Lead"
-                },
-                {
-                    "id": "seo",
-                    "label": {
-                        "text": "SEO"
-                    },
-                    "value": "SEO"
-                },
-                {
-                    "id": "heo",
-                    "label": {
-                        "text": "HEO"
-                    },
-                    "value": "HEO"
-                },
-                {
-                    "id": "other",
-                    "label": {
-                        "text": "Other"
-                    },
-                    "value": "other",
-                    "other": {
-                        "id": "other-input",
-                        "name": "other",
-                        "label": {
-                            "text": "Enter your role"
-                        }
-                    }
-                }
-            ]
+<form action="{{ url_for('architecture') }}" method="GET">
+    {%
+        call onsQuestion({
+            "title": "Hosting",
+            "classes": "ons-u-mt-no",
+            "legendIsQuestionTitle": true
         })
-    }}
-{% endcall %}
+    %}
+        {{
+            onsRadios({
+                "name": "hosting",
+                "dontWrap": true,
+                "radios": [
+                    {
+                        "id": "on-prem",
+                        "label": {
+                            "text": "On-Premises"
+                        },
+                        "value": "on-prem"
+                    },
+                    {
+                        "id": "cloud",
+                        "label": {
+                            "text": "Cloud"
+                        },
+                        "value": "cloud"
+                    },
+                    {
+                        "id": "hybrid",
+                        "label": {
+                            "text": "Hybrid"
+                        },
+                        "value": "hybrid"
+                    }
+                ]
+            })
+        }}
+
+        {{
+            onsCheckboxes({
+                "dontWrap": true,
+                "name": "platform",
+                "checkboxes": [
+                    {
+                        "id": "aws",
+                        "label": {
+                            "text": "AWS"
+                        },
+                        "value": "aws"
+                    },
+                    {
+                        "id": "azure",
+                        "label": {
+                            "text": "Azure"
+                        },
+                        "value": "azure"
+                    },
+                    {
+                        "id": "gcp",
+                        "label": {
+                            "text": "GCP"
+                        },
+                        "value": "gcp"
+                    },
+                ]
+            })
+        }}
+    {% endcall %}
 
 <script>
     function storeData() {
-        var contactEmail = document.getElementById('contact-email').value;
-        var ownerEmail = document.getElementById('owner-email').value;
-        var role = document.querySelector('input[name="role"]:checked').value;
-        var otherRole = document.getElementById('other-input').value;
-        var completeAboutYou = true;
+            var hosting = document.querySelector('input[name="hosting"]:checked').value;
+            var platform = document.querySelector('input[name="platform"]:checked'), values = [];
+            
+            console.log(platform)
+            var complete = true;
 
-        var data = {
-            "contactEmail": contactEmail,
-            "ownerEmail": ownerEmail,
-            "role": role,
-            "completeAboutYou": completeAboutYou
-        };
+            var data = {
+                "hosting": hosting,
+                "platform": platform,
+                "complete": complete
+            };
 
-        if (role === 'other') {
-            data.role = otherRole;
-        }
+            
 
-        localStorage.setItem('data', JSON.stringify(data));
+            localStorage.setItem('data', JSON.stringify(data));
 
-        console.log(localStorage.getItem('data'));
+            console.log(localStorage.getItem('data'));
+        // var hosting = document.querySelector('input[name="platform"]:checked').value;
+        // var otherRole = document.getElementById('other-input').value;
+
     }
-
+    /*
     function loadData() {
         var obj = {
             "Tech Lead": "tech-lead",
@@ -141,8 +139,9 @@
             }
         }
     }
+    */
 
-    loadData();
+    // loadData();
 </script>
 
 {{

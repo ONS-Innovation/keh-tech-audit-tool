@@ -43,7 +43,7 @@
                                     "rowTitle": "You",
                                     "rowItems": [
                                         {
-                                            "iconType": "check",
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -58,7 +58,7 @@
                                     "rowTitle": "Project",
                                     "rowItems": [
                                         {
-                                            "iconType": "check",
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -73,7 +73,7 @@
                                     "rowTitle": "Developed",
                                     "rowItems": [
                                         {
-                                            "iconType": "check",
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -88,6 +88,7 @@
                                     "rowTitle": "Source Control",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -99,9 +100,10 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Architecture",
+                                    "rowTitle": "Hosting",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -116,6 +118,7 @@
                                     "rowTitle": "Database",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -130,6 +133,7 @@
                                     "rowTitle": "Languages",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -143,6 +147,7 @@
                                     "rowTitle": "Frameworks",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -157,6 +162,7 @@
                                     "rowTitle": "CI/CD",
                                     "rowItems": [
                                         {
+                                            "iconType": "none",                                    
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -170,7 +176,9 @@
                                 {
                                     "rowTitle": "Infrastructure",
                                     "rowItems": [
-                                        {
+                                        {   
+                                            "id": "infrastructure-row",
+                                            "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -204,7 +212,7 @@
         onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": false,
+            "iconType": "chevron",
             attributes: {
                 onclick: "localStorage.clear();"
             }
@@ -225,6 +233,36 @@
             var languagesData = localStorage.getItem('languages-data');
             var architectureData = localStorage.getItem('architecture-data');
             var databaseData = localStorage.getItem('data-database');
+
+
+            if (youData && JSON.parse(youData).complete) {
+            }
+            if (projectData && JSON.parse(projectData).complete) {
+            }
+            if (developedData && JSON.parse(developedData).complete) {
+                // Do something
+            }
+            if (sourceControlData && JSON.parse(sourceControlData).complete) {
+                // Do something
+            }
+            if (frameworksData && JSON.parse(frameworksData).complete) {
+                // Do something
+            }
+            if (infrastructureData && JSON.parse(infrastructureData).complete) {
+                // Do something
+            }
+            if (integrationsData && JSON.parse(integrationsData).complete) {
+                // Do something
+            }
+            if (languagesData && JSON.parse(languagesData).complete) {
+                // Do something
+            }
+            if (architectureData && JSON.parse(architectureData).complete) {
+
+            }
+            if (databaseData && JSON.parse(databaseData).complete) {
+                // Do something
+            }
 
             var finalData = {
                 "user": JSON.parse(youData),
@@ -269,6 +307,5 @@
           }
         </style>
 
-        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
       {% endblock %}
     

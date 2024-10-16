@@ -45,9 +45,19 @@ function removeData() {
         console.log(list);
     }
 
+function showError() {
+    document.getElementById('error-panel').style.display = 'block';
+}
+
 document.getElementById(page + '-input').onkeydown = function(event) {
         if (event.keyCode === 13) {
             var lang = document.getElementById(page + '-input').value;
+
+            if (langArr.map(v => v.toLowerCase()).includes(lang.toLowerCase())) {
+                showError();
+                return;
+            }
+
             var langLink = document.createElement('a');
             langLink.classList.add("list-item");
             langLink.innerHTML = lang;
@@ -60,6 +70,7 @@ document.getElementById(page + '-input').onkeydown = function(event) {
 
             document.getElementById(page + '-input').value = "";
             console.log(langArr);
+            document.getElementById("error-panel").style.display = "none";
         }
     };
 

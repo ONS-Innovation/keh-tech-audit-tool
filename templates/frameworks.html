@@ -5,6 +5,7 @@
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
 
 {%
@@ -19,6 +20,20 @@
 %}
 
 {% block main %}
+
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/list/_macro.njk" import onsList %}
+
+{%
+    call onsPanel({
+        "id": "error-panel",
+        "title": 'Item already exists',
+        "variant": 'error',
+        "type": "error",
+    })
+%}
+
+{% endcall %}
 
 <h1>Frameworks</h1>
 
@@ -78,6 +93,7 @@
 
 <script>
 loadData();
+document.getElementById("error-panel").style.display = "none";
 </script>
 
 

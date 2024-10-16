@@ -37,7 +37,7 @@
 
 
 {% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/list/_macro.njk" import onsList %}
+{% from "components/label/_macro.njk" import onsLabel %}
 {%
     call onsPanel({
         "id": "error-panel",
@@ -119,6 +119,8 @@
 
 <script>
 loadData();
+document.getElementById("error-panel").style.display = "none";
+
 </script>
 
 

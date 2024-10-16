@@ -8,14 +8,31 @@
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
 {% from "components/label/_macro.njk" import onsLabel %}
 
-{% set pageConfig = {
+{%
+    set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
                 "text": "Save and sign out"
             }
-        }
-    } %}
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/survey',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
 {% block main %}
 
 {% from "components/panel/_macro.njk" import onsPanel %}

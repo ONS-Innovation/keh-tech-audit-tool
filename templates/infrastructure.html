@@ -4,35 +4,46 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
-{%
-    set pageConfig = {
+{% from "components/label/_macro.njk" import onsLabel %}
+
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
                 "text": "Save and sign out"
             }
-        },
-        "breadcrumbs": {
-            "itemsList": [
-                {
-                    "url": '/survey',
-                    "text": 'Back'
-                }
-            ]
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
+        }
+    } %}
 {% block main %}
-    <h1>Infrastructure</h1>
-    {{ onsAccordion({
+
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/list/_macro.njk" import onsList %}
+{%
+    call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    })
+%}
+
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    })
+}}
+{% endcall %}
+<br>
+
+
+<h1>Infrastructure</h1>
+
+{{
+    onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -40,8 +51,8 @@
                 "content": "<p>Enter details about the project's infrastructure such as Cognito, Secret Manager etc.</p>"
             }
         ]
-    }) }}
-    <h1>About You</h1>
+    })
+}}
     {{ onsAutosuggest({
         "id": "infrastructure-input",
         "input": {
@@ -50,7 +61,7 @@
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "infrastructure-input",
+            "id": "infrastructures-input",
             "class": "item-inputs",
             "attributes": {
                 "onsubmit": "Enter infrastructure",
@@ -84,6 +95,7 @@
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
         <script>
             loadData();
+            document.getElementById("error-panel").style.display = "none";
         </script>
         {{ onsButton({
         "id": "remove",

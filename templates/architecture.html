@@ -5,6 +5,7 @@
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
 {%
     set pageConfig = {
@@ -33,6 +34,28 @@
 %}
 
 {% block main %}
+
+
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/list/_macro.njk" import onsList %}
+{%
+    call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    })
+%}
+
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    })
+}}
+{% endcall %}
+<br>
 
 <h1>Hosting</h1>
 

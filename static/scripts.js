@@ -45,21 +45,25 @@ function removeData() {
         console.log(list);
     }
 
+function addData() {
+    var lang = document.getElementById(page + '-input').value;
+    var langLink = document.createElement('a');
+    langLink.classList.add("list-item");
+    langLink.innerHTML = lang;
+
+    document.getElementById('con1').appendChild(langLink);
+    langArr.push(lang);
+
+    document.getElementById('con1').appendChild(document.createElement('br'));
+    document.getElementById('con1').appendChild(document.createElement('br'));
+
+    document.getElementById(page + '-input').value = "";
+    console.log(langArr);
+}
+
 document.getElementById(page + '-input').onkeydown = function(event) {
-        if (event.keyCode === 13) {
-            var lang = document.getElementById(page + '-input').value;
-            var langLink = document.createElement('a');
-            langLink.classList.add("list-item");
-            langLink.innerHTML = lang;
-
-            document.getElementById('con1').appendChild(langLink);
-            langArr.push(lang);
-
-            document.getElementById('con1').appendChild(document.createElement('br'));
-            document.getElementById('con1').appendChild(document.createElement('br'));
-
-            document.getElementById(page + '-input').value = "";
-            console.log(langArr);
-        }
-    };
+    if (event.keyCode === 13) {
+        addLang();
+    }
+};
 

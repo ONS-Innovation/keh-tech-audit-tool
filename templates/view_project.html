@@ -3,30 +3,36 @@
 {% from "components/password/_macro.njk" import onsPassword %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/list/_macro.njk" import onsList %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{% set pageConfig = {
-      "header": {
-          "title": "Keh Tech Audit Tool"
-      },
-      
-      "footer": {
+{% from "components/list/_macro.njk" import onsList %}{% from "components/summary/_macro.njk" import onsSummary %}
+
+{%
+    set pageConfig = {
+        "header": {
+            "title": project.details[0].name,
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/dashboard',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
           "OGLLink": {
               "pre": "All content is available under the", "link": "Open Government Licence v3.0",
               "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
               "post": ", except where otherwise stated"
           }
       }
-  } %}
+    }
+%}
 {% block main %}
 
 {% set langs = [] %}
-
-
-  <h1>{{ project.project_name }}</h1>
-  <h3>{{ project.project_long_name }}</h3>
-
-  {% from "components/summary/_macro.njk" import onsSummary %}
 
     {{ onsSummary({
         "summaries": [

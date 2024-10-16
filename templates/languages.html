@@ -10,29 +10,52 @@
 {%
     set pageConfig = {
         "header": {
-            "title": "Hub example",
+            "title": "Create a project",
             "signoutButton": {
                 "text": "Save and sign out"
             }
-        }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/survey',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
     }
 %}
 
 {% block main %}
 
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/list/_macro.njk" import onsList %}
 
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
 {%
     call onsPanel({
         "id": "error-panel",
-        "title": 'Item already exists',
+        "title": 'Error',
         "variant": 'error',
         "type": "error",
     })
 %}
 
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    })
+}}
 {% endcall %}
+<br>
 
 
 <h1>Languages</h1>
@@ -54,7 +77,7 @@
         "id": "languages-input",
         "input": {
             "label": {
-                "text": "Enter language",
+                "text": "Enter languages",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
@@ -62,6 +85,14 @@
             "class": "item-inputs",
             "attributes": {
                 "onsubmit": "Enter languages",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": true,
+                "text": 'Search',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
             }
         },
         "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",

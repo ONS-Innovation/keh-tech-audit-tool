@@ -6,30 +6,56 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/label/_macro.njk" import onsLabel %}
 
-{% set pageConfig = {
+{%
+    set pageConfig = {
         "header": {
-            "title": "Hub example",
+            "title": "Create a project",
             "signoutButton": {
                 "text": "Save and sign out"
             }
-        }
-    } %}
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/survey',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
 {% block main %}
 
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/list/_macro.njk" import onsList %}
-
 {%
     call onsPanel({
         "id": "error-panel",
-        "title": 'Item already exists',
+        "title": 'Error',
         "variant": 'error',
         "type": "error",
     })
 %}
 
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    })
+}}
 {% endcall %}
+<br>
+
 
 <h1>Infrastructure</h1>
 
@@ -52,10 +78,18 @@
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "infrastructure-input",
+            "id": "infrastructures-input",
             "class": "item-inputs",
             "attributes": {
                 "onsubmit": "Enter infrastructure",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": true,
+                "text": 'Search',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
             }
         },
         "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
@@ -67,9 +101,10 @@
         "moreResults": "Continue entering to improve suggestions",
         "resultsTitle": "Suggestions",
         "resultsTitleId": "infrastructure-suggestions",
-        "autosuggestData": "/autocomplete/frameworks.json",
+        "autosuggestData": "/autocomplete/infrastructure.json",
         "noResults": "No suggestions found. You can enter your own answer",
         "typeMore": "Continue entering to get suggestions",
+        
 
     }) }}
     <br>

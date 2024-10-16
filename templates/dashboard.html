@@ -7,10 +7,8 @@
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
-
-
-{%
-  set pageConfig = {
+{% from "components/tabs/_macro.njk" import onsTabs %}
+{% set pageConfig = {
       "header": {
           "title": "Keh Tech Audit Tool"
       },
@@ -22,34 +20,33 @@
               "post": ", except where otherwise stated"
           }
       }
-  }
-%}
-
+  } %}
 {% block main %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-  <ul class=flashes>
-  {% for message in messages %}
-    <li>{{ message }}</li>
-  {% endfor %}
-  </ul>
-{% endif %}
-{% endwith %}
-
-{% set methodsTable = {
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+  {% set createTab = {
+      "id": "add-project",
+      "text": "Add Project",
+      "url": url_for("pre_survey")
+    
+  } %}
+  {% set methodsTable = {
     "id": "ready-table",
     "variants": ["responsive"],
     "tableClasses": "ons-u-mt-m",
     "ths": [
       {
-        "value": "Project Name"
-      },
-      {
-        "value": onsButton({
-            "text": "Add Project",
-            "url": url_for("pre_survey"),
-        })
+        "value": "Your Projects",
+
       }
+
     ]
   } %}
   {% set methodsTableRows = [] %}
@@ -63,9 +60,26 @@
     }) %}
   {% endfor %}
   {% do methodsTable.update({"trs": methodsTableRows}) %}
+  {{ onsTabs({
+        "title": 'Contents',
+        "titleClasses": 'ons-u-fs-m',
+        "tabs": [
+                    {
+                "id": "my-projects",
+                "title": 'View My Projects',
+                "showTitle": true,
+                "content":     onsTable(methodsTable)
 
-  {{
-    onsTable(methodsTable)
-  }}
+            },
+            {
+                "id": "add-projects",
+                "title": 'Create a Project',
+                "showTitle": true,
+                "content":   onsButton(createTab)
+
+            },
+          ]
+
+    }) }}
 
 {% endblock %}

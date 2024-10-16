@@ -3,7 +3,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
-
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 
 {%
     set pageConfig = {
@@ -18,7 +18,19 @@
 
 {% block main %}
 
-<h1>About You</h1>
+<h1>Integrations</h1>
+
+{{
+    onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter details about the project's frameworks such as Jenkins, Concourse etc.</p>"
+            }
+        ]
+    })
+}}
 
 {{
     onsInput({

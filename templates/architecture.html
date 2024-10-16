@@ -3,6 +3,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 
 
 {%
@@ -18,7 +19,19 @@
 
 {% block main %}
 
-<h1>About You</h1>
+<h1>Hosting</h1>
+
+{{
+    onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter the names of the hosting services used by the project.</p>"
+            }
+        ]
+    })
+}}
 
 {{
     onsInput({

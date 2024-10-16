@@ -3,6 +3,8 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+
 
 
 {%
@@ -19,6 +21,18 @@
 {% block main %}
 
 <h1>Project Details</h1>
+
+{{
+    onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "Enter details about the project such as: <ul><li>Project Name</li> <li>Shortened Project Name</li> <li>Documentation link for the project</li></ul>"
+            }
+        ]
+    })
+}}
 
 <form action="{{ url_for('survey') }}" method="GET">
 

@@ -9,15 +9,16 @@
 
 {%
     set pageConfig = {
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% set pageConfig = {
         "header": {
             "title": "Hub example",
             "signoutButton": {
                 "text": "Save and sign out"
             }
         }
-    }
-%}
-
+    } %}
+    }%}
 {% block main %}
 
 <h1>Infrastructure</h1>
@@ -33,36 +34,42 @@
         ]
     })
 }}
-
-{{
-    onsInput({
+    <h1>About You</h1>
+    {{ onsAutosuggest({
         "id": "infrastructure-input",
-        "class": "item-input",
-        "label": {
-            "text": "Enter Infrastructure"
+        "input": {
+            "label": {
+                "text": "Enter infrastructure",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "infrastructure-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter infrastructure",
+            }
         },
-        "attributes": {
-            "onsubmit": "Enter frameworks"
-        }
-    })
-}}
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "infrastructure-suggestions",
+        "autosuggestData": "/autocomplete/frameworks.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
 
-<br>
-
-<div id="con1" class="ons-field">
-
-</div>
-
-<script src="{{ url_for('static', filename='scripts.js') }}">
-</script>
-
-<script>
-loadData();
-</script>
-
-
-{{
-    onsButton({
+    }) }}
+    <br>
+        <div id="con1" class="ons-field"></div>
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <script>
+            loadData();
+        </script>
+        {{ onsButton({
         "id": "remove",
         "type": "button",
         "text": "Remove Last Item",
@@ -70,22 +77,15 @@ loadData();
         "attributes": {
             "onclick": "removeData()"
         }
-    })
-}}
-
-
-<br>
-<br>
-
-<form action="{{ url_for('survey') }}" method="GET">
-{{
-    onsButton({
+    }) }}
+        <br>
+            <br>
+                <form action="{{ url_for('survey') }}" method="GET">
+                    {{ onsButton({
         "text": "Save and continue",
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-</form>
-{% endblock %}
+    }) }}
+                </form>
+            {% endblock %}

@@ -4,6 +4,8 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+
 
 {%
     set pageConfig = {
@@ -32,19 +34,34 @@
     })
 }}
 
-{{
-    onsInput({
+{{ onsAutosuggest({
         "id": "integrations-input",
-        "class": "item-input",
-        "label": {
-            "text": "Enter CI/CD tools"
+        "input": {
+            "label": {
+                "text": "Enter CI/CD tools",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "integrations-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter integrations",
+            }
         },
-        "attributes": {
-            "onsubmit": "Enter frameworks"
-        }
-    })
-}}
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "integrations-suggestions",
+        "autosuggestData": "/autocomplete/cicd.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
 
+    }) }}
 
 
 

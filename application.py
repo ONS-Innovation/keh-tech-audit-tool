@@ -28,6 +28,17 @@ def read_client_keys():
             abort(500, description=f"Error reading client keys: {e}")
     return client_keys
 
+def read_auto_complete_data():
+    try:
+        response = s3.get_object(Bucket=bucket_name, Key="array_data.json")
+        array_data = json.loads(response['Body'].read().decode('utf-8'))
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            array_data = {}
+        else:
+            abort(500, description=f"Error reading client keys: {e}")
+    return array_data
+
 cognito_settings = read_client_keys()
 AWS_COGNITO_CLIENT_ID = cognito_settings["AWS_COGNITO_CLIENT_ID"]
 AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
@@ -49,7 +60,14 @@ def home():
             return redirect(url_for("home"))
     return render_template("index.html")
 
-
+@app.route("/autocomplete/<search>.json", methods=["GET"])
+def autocomplete(search):
+    array_data = read_auto_complete_data()
+    if search in array_data:
+        result = [{"en": language} for language in array_data[search]]
+        return json.dumps(result)
+    else:
+        abort(404, description=f"No autocomplete data found for type: {search}")
 
 def exchange_code_for_tokens(code):
     token_url = f"https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"

@@ -110,36 +110,55 @@ def pre_survey():
 def survey():
     if request.method == 'POST':
         headers = {"Authorization": f"{session['id_token']}", "content-type": "application/json"}
-        test = request.form["TEST"]
-        print(test)
+
+        user = json.loads(request.form["user"])
+        project = json.loads(request.form["project"])
+        developed = json.loads(request.form["developed"])
+        source_control = json.loads(request.form["source_control"])
+        hosting = json.loads(request.form["hosting"])
+        database = json.loads(request.form["database"])
+        languages = json.loads(request.form["languages"])
+        frameworks = json.loads(request.form["frameworks"])
+        integrations = json.loads(request.form["integrations"])
+        infrastructure = json.loads(request.form["infrastructure"])
+
+        if developed["developed"] == "Outsourced":
+            developed_company = developed["outsource_company"]
+        elif developed["developed"] == "Partnership":
+            developed_company = developed["partnership_company"]
+        else:
+            developed_company = None
+        
+        source_control = source_control["source_control"]
+        database = database["database"]
         data = {
             "user": [ 
                 {
                     "email": "q",
                     "roles": [
-                        "owner"
+                        user["role"]
                     ]
                 }
             ],
             "details": {
-                "name": "Project100",
-                "short_name": "This is project 100",
-                "documentation_link": "https://www.google.com",
+                "name": project["project_name"],
+                "short_name": project["project_long_name"],
+                "documentation_link": project["doc_link"],
             },
             "developed":[  
-                "Partnership",
-                ["ONS", "GDS"]
+                developed["developed"],
+                [developed_company]
             ],
             "source_control":[
-                "GitHub"
+                source_control
             ],
             "architecture": {
-                "hosting": {"type": "Hybrid", "detail": []},
-                "database": {"main": "MongoDB", "others": []},
-                "languages": {"main": "Python", "others": ["JavaScript", "Java"]},
-                "frameworks": {"main": "React", "others": []},
-                "CICD": {"main": "Python", "others": ["JavaScript", "Java"]},
-                "infrastructure": {"main": "Python", "others": []}
+                "hosting": {"type": "Cloud", "detail": hosting},
+                "database": {"main": database, "others": []},
+                "languages": {"main": "", "others": languages},
+                "frameworks": {"main": "", "others": frameworks},
+                "CICD": {"main": "", "others": integrations},
+                "infrastructure": {"main": "", "others": infrastructure}
                 }
             }
         projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)

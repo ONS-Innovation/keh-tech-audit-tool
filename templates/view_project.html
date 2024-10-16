@@ -18,14 +18,12 @@
       }
   } %}
 {% block main %}
-    <h1>{{ project.details[0].name }}</h1>
-    <h3>{{ project.details[0].short_name }}</h3>
-    {{ project }}
+
+{% set langs = [] %}
+
 
   <h1>{{ project.project_name }}</h1>
   <h3>{{ project.project_long_name }}</h3>
-  <p>Owner Email: {{ project.owner_email }}</p>
-  <p>Contact Email: {{ project.contact_email }}</p>
 
   {% from "components/summary/_macro.njk" import onsSummary %}
 
@@ -46,7 +44,7 @@
                                         "id": "sales-dates",
                                         "valueList": [
                                             {
-                                                "text": "1 January 2015 to 2 February 2017"
+                                                "text": project.user[0].email
                                             }
                                         ],
                                         "actions": [
@@ -136,7 +134,7 @@
                                                 "text": project.architecture.hosting.type
                                             },
                                             {
-                                                "text": project.developed.hosting.detail
+                                                "text": project.architecture.hosting.detail
                                             }
                                         ],
                                         "actions": [
@@ -159,9 +157,6 @@
                                             {
                                                 "text": project.architecture.database.main
                                             },
-                                            {
-                                                "text": project.architecture.database.others
-                                            }
                                         ]
                                     }
                                 ]
@@ -173,9 +168,6 @@
                                     {
                                         "id": "frameworks",
                                         "valueList": [
-                                            {
-                                                "text": project.architecture.frameworks.main
-                                            },
                                             {
                                                 "text": project.architecture.frameworks.others
                                             }
@@ -191,9 +183,6 @@
                                         "id": "languages",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.languages.main
-                                            },
-                                            {
                                                 "text": project.architecture.languages.others
                                             }
                                         ]
@@ -207,9 +196,6 @@
                                     {
                                         "id": "infrastructure",
                                         "valueList": [
-                                            {
-                                                "text": project.architecture.infrastructure.main
-                                            },
                                             {
                                                 "text": project.architecture.infrastructure.others
                                             }

@@ -174,67 +174,73 @@
         })
     }}
 
-    <script>
-        var youData = localStorage.getItem('you_data');
-        var projectData = localStorage.getItem('data');
-        var developedData = localStorage.getItem('data-developed');
-        var sourceControlData = localStorage.getItem('data-source-control');
-        var frameworksData = localStorage.getItem('frameworks-data');
-        var infrastructureData = localStorage.getItem('infrastructure-data');
-        var integrationsData = localStorage.getItem('integrations-data');
-        var languagesData = localStorage.getItem('languages-data');
-        var architectureData = localStorage.getItem('architecture-data');
-        var databaseData = localStorage.getItem('database-data');
-
-        var finalData = {
-            "user": JSON.parse(youData),
-            "details": JSON.parse(projectData),
-            "developed": JSON.parse(developedData),
-            "source_control": JSON.parse(sourceControlData),
-            "architecture": {
-                "frameworks": JSON.parse(frameworksData),
-                "infrastructure": JSON.parse(infrastructureData),
-                "integrations": JSON.parse(integrationsData),
-                "languages": JSON.parse(languagesData),
-                "hosting": JSON.parse(architectureData),
-                "database": JSON.parse(databaseData),
-            },
-        }
-        console.log(finalData);
-
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(finalData),
-        };
-    </script>
-   
-   <form action="{{ url_for('survey') }}" method="POST">
-    <input type="hidden" value="test value" name="TEST">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-    <input type="hidden" value="test">
-
+    <form action="{{ url_for('survey') }}" method="POST">
+        <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+        <input id="developed" type="hidden" name="developed">
+        <input id="source_control" type="hidden" name="source_control">
+        <input id="hosting" type="hidden" name="hosting">
+        <input id="database" type="hidden" name="database">
+        <input id="languages" type="hidden" name="languages">
+        <input id="frameworks" type="hidden" name="frameworks">
+        <input id="integrations" type="hidden" name="integrations">
+        <input id="infrastructure" type="hidden" name="infrastructure">
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": false,
+        })
+    }}
     
-        {{
-            onsButton({
-                "text": 'Continue',
-                "classes": 'ons-u-mb-m ons-u-mt-l',
-                "iconType": false,
-                "attributes": {
-                    "onclick": "localStorage.clear();"
-                }
-            })
-        }}
-    </form>
+</form>
+
+    <script>
+        function load_data() {
+            var youData = localStorage.getItem('you_data');
+            var projectData = localStorage.getItem('data');
+            var developedData = localStorage.getItem('data-developed');
+            var sourceControlData = localStorage.getItem('data-source-control');
+            var frameworksData = localStorage.getItem('frameworks-data');
+            var infrastructureData = localStorage.getItem('infrastructure-data');
+            var integrationsData = localStorage.getItem('integrations-data');
+            var languagesData = localStorage.getItem('languages-data');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('data-database');
+
+            var finalData = {
+                "user": JSON.parse(youData),
+                "details": JSON.parse(projectData),
+                "developed": JSON.parse(developedData),
+                "source_control": JSON.parse(sourceControlData),
+                "architecture": {
+                    "frameworks": JSON.parse(frameworksData),
+                    "infrastructure": JSON.parse(infrastructureData),
+                    "integrations": JSON.parse(integrationsData),
+                    "languages": JSON.parse(languagesData),
+                    "hosting": JSON.parse(architectureData),
+                    "database": JSON.parse(databaseData),
+                },
+            }
+            console.log(finalData);
+        
+            document.getElementById('user').value = JSON.stringify(finalData.user);
+            document.getElementById('project').value = JSON.stringify(finalData.details);
+            document.getElementById('developed').value = JSON.stringify(finalData.developed);
+            document.getElementById('source_control').value = JSON.stringify(finalData.source_control);
+            document.getElementById('hosting').value = JSON.stringify(finalData.architecture.hosting);
+            document.getElementById('database').value = JSON.stringify(finalData.architecture.database);
+            document.getElementById('languages').value = JSON.stringify(finalData.architecture.languages);
+            document.getElementById('frameworks').value = JSON.stringify(finalData.architecture.frameworks);
+            document.getElementById('integrations').value = JSON.stringify(finalData.architecture.integrations);
+            document.getElementById('infrastructure').value = JSON.stringify(finalData.architecture.infrastructure);
+
+            console.log(JSON.stringify(finalData.user));
+        }
+        load_data();
+</script>
+
+
 {% endblock %}
 
       {% block scripts %}

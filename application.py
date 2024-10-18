@@ -124,6 +124,18 @@ def view_project(project_name):
 def pre_survey():
     return render_template("pre-survey.html")
 
+@app.route("/pre-survey/project", methods=["GET"])
+def project_pre_survey():
+    return render_template("project-pre-survey.html")
+
+@app.route("/pre-survey/architecture", methods=["GET"])
+def architecture_pre_survey():
+    return render_template("architecture-pre-survey.html")
+
+@app.route("/pre-survey/technology", methods=["GET"])
+def tech_pre_survey():
+    return render_template("tech-pre-survey.html")
+
 @app.route("/survey", methods=['GET', 'POST'])
 def survey():
     if request.method == 'POST':
@@ -224,6 +236,10 @@ def integrations():
 @app.route("/survey/infrastructure", methods=['GET'])
 def infrastructure():
     return render_template("infrastructure.html")
+
+@app.route("/validate_details", methods=["GET"])
+def validate_details():
+    return render_template("validate_details.html")
 
 
 if __name__ == "__main__":

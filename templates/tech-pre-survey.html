@@ -1,0 +1,69 @@
+{% extends "layout/_template.njk" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% from "components/details/_macro.njk" import onsDetails %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Technology Details",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/dashboard',
+                    "text": 'Back'
+                }
+            ]
+        }
+    }
+%}
+
+{% block main %}
+    <h1 class="ons-u-mt-m">Technology Details</h1>
+
+
+    <p>To complete this survey you will need to know details such as:</p>
+    {{
+        onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'Languages used to build the project'
+                },
+                {
+                    "text": 'Frameworks used to build the project'
+                },
+                {
+                    "text": 'CI/CD tools used in the project'
+                },
+                {
+                    "text": 'Infrastructure used in the project'
+                },
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('languages')
+        })
+    }}
+{% endblock %}
+
+      {% block scripts %}
+
+        <style>
+          body {
+            height: auto;
+          }
+        </style>
+
+        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
+      {% endblock %}
+    

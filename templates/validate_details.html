@@ -1,0 +1,409 @@
+{% extends "layout/_template.njk" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/button/_macro.njk" import onsButton %}
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Create a project",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/dashboard',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
+
+{% block main %}
+    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+
+    {{
+        onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "You",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='user_details'></div>"
+                                                }
+                                            ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('you')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('project')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Developed",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='developed_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('developed')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Source Control",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='source_control_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Continue with John Smith's section",
+                                                    "url": url_for('source_control')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Hosting",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='hosting_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('architecture')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Database",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='database_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Mary Susannah Smith's section",
+                                                    "url": url_for('database')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Languages",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='languages_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('languages')                                              }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Frameworks",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='framework_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('frameworks')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "CI/CD",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='integration_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",                                    
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('integrations')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Infrastructure",
+                                    "rowItems": [
+                                        {   
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='infrastructure_details'></div>"
+                                            }
+                                        ],
+                                            "id": "infrastructure-row",
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('infrastructure')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                            ]
+                        }
+                    ]
+                }
+            ]
+        })
+    }}
+
+    <form action="{{ url_for('survey') }}" method="POST">
+        <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+        <input id="developed" type="hidden" name="developed">
+        <input id="source_control" type="hidden" name="source_control">
+        <input id="hosting" type="hidden" name="hosting">
+        <input id="database" type="hidden" name="database">
+        <input id="languages" type="hidden" name="languages">
+        <input id="frameworks" type="hidden" name="frameworks">
+        <input id="integrations" type="hidden" name="integrations">
+        <input id="infrastructure" type="hidden" name="infrastructure">
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "chevron",
+        })
+    }}
+    
+</form>
+
+    <script>
+        function arrToList(arr) {
+            var final = ""
+            for (let i = 0; i <= arr.length - 1; i++) {
+                if (i === 0) {
+                    final += `<ul>`
+                }
+                final += `<li>${arr[i]}</li>`;
+                if (i === arr.length - 1) {
+                    final += `</ul>`
+                }
+            }
+            return final;
+        }
+
+        function load_data() {
+            var youData = localStorage.getItem('you_data');
+            var projectData = localStorage.getItem('data');
+            var developedData = localStorage.getItem('data-developed');
+            var sourceControlData = localStorage.getItem('data-source-control');
+            var frameworksData = localStorage.getItem('frameworks-data');
+            var infrastructureData = localStorage.getItem('infrastructure-data');
+            var integrationsData = localStorage.getItem('integrations-data');
+            var languagesData = localStorage.getItem('languages-data');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('data-database');
+
+            if (youData && JSON.parse(youData).complete) {
+            }
+            if (projectData && JSON.parse(projectData).complete) {
+            }
+            if (developedData && JSON.parse(developedData).complete) {
+                // Do something
+            }
+            if (sourceControlData && JSON.parse(sourceControlData).complete) {
+                // Do something
+            }
+            if (frameworksData && JSON.parse(frameworksData).complete) {
+                // Do something
+            }
+            if (infrastructureData && JSON.parse(infrastructureData).complete) {
+                // Do something
+            }
+            if (integrationsData && JSON.parse(integrationsData).complete) {
+                // Do something
+            }
+            if (languagesData && JSON.parse(languagesData).complete) {
+                // Do something
+            }
+            if (architectureData && JSON.parse(architectureData).complete) {
+
+            }
+            if (databaseData && JSON.parse(databaseData).complete) {
+                // Do something
+            }
+
+            var finalData = {
+                "user": JSON.parse(youData),
+                "details": JSON.parse(projectData),
+                "developed": JSON.parse(developedData),
+                "source_control": JSON.parse(sourceControlData),
+                "architecture": {
+                    "frameworks": JSON.parse(frameworksData),
+                    "infrastructure": JSON.parse(infrastructureData),
+                    "integrations": JSON.parse(integrationsData),
+                    "languages": JSON.parse(languagesData),
+                    "hosting": JSON.parse(architectureData),
+                    "database": JSON.parse(databaseData),
+                },
+            }
+            console.log(finalData);
+
+            var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Owner Email: ${finalData.user.ownerEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
+            var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
+            if (finalData.developed.developed === "Outsourced") {
+                var company = finalData.developed.outsource_company;
+            } else if (finalData.developed.developed === "Partnership") {
+                var company = finalData.developed.partnership_company;
+            } else {
+                var company = "N/A";
+            }
+            var developed_details = `<ul><li>Developed By: ${finalData.developed.developed}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
+            var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
+            var hosting = finalData.architecture.hosting;
+            var languages = finalData.architecture.languages;
+            var frameworks = finalData.architecture.frameworks;
+            var integrations = finalData.architecture.integrations;
+            var infrastructure = finalData.architecture.infrastructure;
+            var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
+
+            var hosting_details = arrToList(hosting);
+            var languages_details = arrToList(languages);
+            var frameworks_details = arrToList(frameworks);
+            var integrations_details = arrToList(integrations);
+            var infrastructure_details = arrToList(infrastructure);
+
+            
+
+            console.log(JSON.stringify(user))
+            document.getElementById('user_details').innerHTML = user_details;
+            document.getElementById('project_details').innerHTML = project_details;
+            document.getElementById('developed_details').innerHTML = developed_details;
+            document.getElementById('source_control_details').innerHTML = source_control;
+            document.getElementById('hosting_details').innerHTML = hosting_details;
+            document.getElementById('database_details').innerHTML = database_details;
+            document.getElementById('languages_details').innerHTML = languages_details;
+            document.getElementById('framework_details').innerHTML = frameworks_details;
+            document.getElementById('integration_details').innerHTML = integrations_details;
+            document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
+        
+            document.getElementById('user').value = JSON.stringify(finalData.user);
+            document.getElementById('project').value = JSON.stringify(finalData.details);
+            document.getElementById('developed').value = JSON.stringify(finalData.developed);
+            document.getElementById('source_control').value = JSON.stringify(finalData.source_control);
+            document.getElementById('hosting').value = JSON.stringify(finalData.architecture.hosting);
+            document.getElementById('database').value = JSON.stringify(finalData.architecture.database);
+            document.getElementById('languages').value = JSON.stringify(finalData.architecture.languages);
+            document.getElementById('frameworks').value = JSON.stringify(finalData.architecture.frameworks);
+            document.getElementById('integrations').value = JSON.stringify(finalData.architecture.integrations);
+            document.getElementById('infrastructure').value = JSON.stringify(finalData.architecture.infrastructure);
+
+            console.log(JSON.stringify(finalData.user));
+        }
+        load_data();
+</script>
+
+
+{% endblock %}
+
+      {% block scripts %}
+
+        <style>
+          body {
+            height: auto;
+          }
+        </style>
+
+      {% endblock %}
+    

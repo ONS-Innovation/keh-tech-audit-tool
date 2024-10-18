@@ -64,7 +64,7 @@ def home():
 def autocomplete(search):
     array_data = read_auto_complete_data()
     if search in array_data:
-        result = [{"en": language} for language in array_data[search]]
+        result = [{"en": language.capitalize()} for language in array_data[search]]
         return json.dumps(result)
     else:
         abort(404, description=f"No autocomplete data found for type: {search}")

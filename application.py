@@ -60,6 +60,12 @@ def home():
             return redirect(url_for("home"))
     return render_template("index.html")
 
+@app.route("/sign-out", methods=["GET"])
+def sign_out():
+    session.clear()
+    flash("You have successfully logged out")
+    return redirect(url_for("home"))
+
 @app.route("/autocomplete/<search>.json", methods=["GET"])
 def autocomplete(search):
     array_data = read_auto_complete_data()

@@ -10,7 +10,11 @@
 {% from "components/tabs/_macro.njk" import onsTabs %}
 {% set pageConfig = {
       "header": {
-          "title": "Tech Audit Tool"
+          "title": "Tech Audit Tool",
+            "signoutButton": {
+                "text": "Save and sign out",
+                "url": "/sign-out"
+            }
       },
       
       "footer": {

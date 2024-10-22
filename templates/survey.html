@@ -1,8 +1,7 @@
 {% extends "layout/_template.njk" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
-{%
-    set pageConfig = {
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
@@ -24,18 +23,13 @@
               "post": ", except where otherwise stated"
           }
       }
-    }
-%}
-
+    } %}
 {% macro checkBox() %}
-check
+    check
 {%- endmacro %}
-
 {% block main %}
     <h1 class="ons-u-mt-m">Choose another section to complete</h1>
-
-    {{
-        onsSummary({
+    {{ onsSummary({
             "variant": "hub",
             "classes": "ons-u-mt-m",
             "summaries": [
@@ -52,12 +46,14 @@ check
                                                     "text": "<div id='user_details'></div>"
                                                 }
                                             ],
+                                          "id": "user-details",
+
                                             "iconType": "none",
                                             "actions": [
                                                 {
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for People who live here",
-                                                    "url": url_for('project_pre_survey')
+                                                    "url": url_for('project_pre_survey'),
                                                 }
                                             ]
                                         }
@@ -72,6 +68,7 @@ check
                                                 "text": "<div id='project_details'></div>"
                                             }
                                         ],
+                                        "id": "project-details",
                                             "iconType": "none", 
                                             "actions": [
                                                 {
@@ -92,6 +89,7 @@ check
                                                 "text": "<div id='developed_details'></div>"
                                             }
                                         ],
+                                        "id": "developed-details",
                                             "iconType": "none",
                                             "actions": [
                                                 {
@@ -108,21 +106,14 @@ check
                     ]
                 }
             ]
-        })
-    }}
-
-
-    {{
-        onsButton({
+        }) }}
+    {{ onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "iconType": "chevron",
             "url": url_for('validate_details')
-        })
-    }}
-
+        }) }}
     <script>
-
         function load_data() {
             var youData = localStorage.getItem('you_data');
             var projectData = localStorage.getItem('data');
@@ -134,50 +125,53 @@ check
             var languagesData = localStorage.getItem('languages-data');
             var architectureData = localStorage.getItem('architecture-data');
             var databaseData = localStorage.getItem('data-database');
-
-            if (youData && JSON.parse(youData).complete) {
-            }
-            if (projectData && JSON.parse(projectData).complete) {
+            console.log(
+                youData, projectData, developedData, sourceControlData, frameworksData, infrastructureData, integrationsData, languagesData, architectureData, databaseData
+            );
+            if (youData && JSON.parse(youData).completeAboutYou) {
+                var userDetails = document.getElementById('user-details');
+                if (userDetails) {
+                    var span = userDetails.querySelector('dt span');
+                    if (span) {
+                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
+                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
+                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
+                    }
+                }
             }
             if (developedData && JSON.parse(developedData).complete) {
-                // Do something
+                var userDetails = document.getElementById('project-details');
+                if (userDetails) {
+                    var span = userDetails.querySelector('dt span');
+                    if (span) {
+                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
+                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
+                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
+                    }
+                }
             }
-            if (sourceControlData && JSON.parse(sourceControlData).complete) {
-                // Do something
+            if (databaseData && JSON.parse(databaseData).complete) { 
+                var userDetails = document.getElementById('developed-details');
+                if (userDetails) {
+                    var span = userDetails.querySelector('dt span');
+                    if (span) {
+                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
+                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
+                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
+                    }
+                }
             }
-            if (frameworksData && JSON.parse(frameworksData).complete) {
-                // Do something
-            }
-            if (infrastructureData && JSON.parse(infrastructureData).complete) {
-                // Do something
-            }
-            if (integrationsData && JSON.parse(integrationsData).complete) {
-                // Do something
-            }
-            if (languagesData && JSON.parse(languagesData).complete) {
-                // Do something
-            }
-            if (architectureData && JSON.parse(architectureData).complete) {
-
-            }
-            if (databaseData && JSON.parse(databaseData).complete) {
-                // Do something
-            }
-
         }
         load_data();
-</script>
-
-
+    </script>
 {% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
+{% block scripts %}
+    <style>
+        body {
             height: auto;
-          }
-        </style>
-
-      {% endblock %}
-    
+        }
+    </style>
+{% endblock %}

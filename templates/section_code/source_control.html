@@ -5,6 +5,7 @@
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+{% from "components/label/_macro.njk" import onsLabel %}
 
 {%
     set pageConfig = {
@@ -42,7 +43,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's source control such e.g Github, Gitlab etc.</p>"
+                "content": "<p>Enter details about the project's source control such e.g Github, Gitlab etc.</p>",
             }
         ]
     })
@@ -56,6 +57,12 @@
         "legendIsQuestionTitle": true
     })
 %}
+{{ onsLabel({
+        "id": 'label',
+        "for": "label",
+        "text": 'What source control was used for this project?',
+
+    }) }}
     {{
         onsRadios({
             "dontWrap": true,

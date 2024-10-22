@@ -161,15 +161,9 @@ def survey():
         
         source_control = source_control["source_control"]
         database = database["database"]
+        print([u for u in user])
         data = {
-            "user": [ 
-                {
-                    "email": "q",
-                    "roles": [
-                        user["role"]
-                    ]
-                }
-            ],
+            "user": [u for u in user],
             "details": {
                 "name": project["project_name"],
                 "short_name": project["project_long_name"],

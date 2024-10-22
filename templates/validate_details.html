@@ -297,8 +297,10 @@
             ]
         })
     }}
+    {# onsubmit="localStorage.clear()" for time being #}
 
-    <form action="{{ url_for('survey') }}"  onsubmit="localStorage.clear()" method="POST">
+    <form action="{{ url_for('survey') }}"
+    method="POST">
         <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
         <input id="developed" type="hidden" name="developed">

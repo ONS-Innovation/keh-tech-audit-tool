@@ -167,24 +167,20 @@ def survey():
         elif developed["developed"] == "Partnership":
             developed_company = developed["partnership_company"]
         else:
-            developed_company = None
+            developed_company = ""
         
-        source_control = source_control["source_control"]
         data = {
-            "archived": False,
             "user": [u for u in user],
-            "details": {
+            "details": [{
                 "name": project["project_name"],
                 "short_name": project["project_long_name"],
                 "documentation_link": project["doc_link"],
-            },
+            }],
             "developed":[  
                 developed["developed"],
                 [developed_company]
             ],
-            "source_control":[
-                source_control
-            ],
+            "source_control": source_control,
             "architecture": {
                 "hosting": hosting,
                 "database": database,

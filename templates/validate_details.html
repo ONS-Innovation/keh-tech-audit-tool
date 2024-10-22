@@ -67,12 +67,12 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "Contacts",
+                                    "rowTitle": "Technical Contact",
                                     "rowItems": [
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='user_details'></div>"
+                                                    "text": "<div id='technical_contact'></div>"
                                                 }
                                             ],
                                             "iconType": "none",
@@ -81,6 +81,26 @@
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for People who live here",
                                                     "url": url_for('contact_tech'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Delivery Manager Contact",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='delivery_manager'></div>"
+                                                }
+                                            ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('contact_manager'),
                                                 }
                                             ]
                                         }
@@ -389,12 +409,12 @@
             }
             console.log(finalData);
 
-            var user_details = '<ul>';
-            finalData.user.forEach(function(user) {
-                user_details += `<li>${user.roles.join(', ')}: ${user.email} (${user.grade})</li>`;
-            });
-            user_details += '</ul>';
-            var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
+            var technical_contact = `<ul><li>${finalData.user[0].roles.join(', ')}: ${finalData.user[0].email} (${finalData.user[0].grade})</li></ul>`;
+            var delivery_manager = '';
+            if (finalData.user.length > 1) {
+                delivery_manager = `<ul><li>${finalData.user[1].roles.join(', ')}: ${finalData.user[1].email} (${finalData.user[1].grade})</li></ul>`;
+            }
+            var project_details = `<ul><li>Name: ${finalData.details.project_name}</li><li>Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
             if (finalData.developed.developed === "Outsourced") {
                 var company = finalData.developed.outsource_company;
             } else if (finalData.developed.developed === "Partnership") {
@@ -417,10 +437,8 @@
             var integrations_details = arrToList(integrations);
             var infrastructure_details = arrToList(infrastructure);
 
-            
-
-            console.log(JSON.stringify(user))
-            document.getElementById('user_details').innerHTML = user_details;
+            document.getElementById('technical_contact').innerHTML = technical_contact;
+            document.getElementById('delivery_manager').innerHTML = delivery_manager;
             document.getElementById('project_details').innerHTML = project_details;
             document.getElementById('developed_details').innerHTML = developed_details;
             document.getElementById('source_control_details').innerHTML = source_control;

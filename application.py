@@ -122,19 +122,19 @@ def view_project(project_name):
 
 @app.route("/pre-survey", methods=['GET'])
 def pre_survey():
-    return render_template("pre-survey.html")
+    return render_template("/pre_survey/pre-survey.html")
 
 @app.route("/pre-survey/project", methods=["GET"])
 def project_pre_survey():
-    return render_template("project-pre-survey.html")
+    return render_template("/pre_survey/project-pre-survey.html")
 
 @app.route("/pre-survey/architecture", methods=["GET"])
 def architecture_pre_survey():
-    return render_template("architecture-pre-survey.html")
+    return render_template("/pre_survey/architecture-pre-survey.html")
 
 @app.route("/pre-survey/technology", methods=["GET"])
 def tech_pre_survey():
-    return render_template("tech-pre-survey.html")
+    return render_template("/pre_survey/tech-pre-survey.html")
 
 @app.route("/survey", methods=['GET', 'POST'])
 def survey():
@@ -199,43 +199,43 @@ def survey():
 
 @app.route("/survey/you", methods=['GET'])
 def you():
-    return render_template("you.html")
+    return render_template("/section_project/you.html")
 
 @app.route("/survey/project", methods=['GET'])
 def project():
-    return render_template("project.html")
+    return render_template("/section_project/project.html")
 
 @app.route("/survey/developed", methods=['GET'])
 def developed():
-    return render_template("developed.html")
+    return render_template("/section_project/developed.html")
 
 @app.route("/survey/source_control", methods=['GET'])
 def source_control():
-    return render_template("source_control.html")
+    return render_template("/section_code/source_control.html")
 
 @app.route("/survey/architecture", methods=['GET'])
 def architecture():
-    return render_template("architecture.html")
+    return render_template("/section_code/architecture.html")
 
 @app.route("/survey/database", methods=['GET'])
 def database():
-    return render_template("database.html")
+    return render_template("/section_code/database.html")
 
 @app.route("/survey/languages", methods=['GET'])
 def languages():
-    return render_template("languages.html")
+    return render_template("/section_technology/languages.html")
 
 @app.route("/survey/frameworks", methods=['GET'])
 def frameworks():
-    return render_template("frameworks.html")
+    return render_template("/section_technology/frameworks.html")
 
 @app.route("/survey/integrations", methods=['GET'])
 def integrations():
-    return render_template("integrations.html")
+    return render_template("/section_technology/integrations.html")
 
 @app.route("/survey/infrastructure", methods=['GET'])
 def infrastructure():
-    return render_template("infrastructure.html")
+    return render_template("/section_technology/infrastructure.html")
 
 @app.route("/validate_details", methods=["GET"])
 def validate_details():

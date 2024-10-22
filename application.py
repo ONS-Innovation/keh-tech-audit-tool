@@ -173,6 +173,7 @@ def survey():
         database = database["database"]
         print([u for u in user])
         data = {
+            "archived": False,
             "user": [u for u in user],
             "details": {
                 "name": project["project_name"],

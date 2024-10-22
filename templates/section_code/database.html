@@ -16,9 +16,17 @@
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/architecture',
+                    "text": 'Architecture Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/source_control',
+                    "text": 'Source Control'
+                },
+                {
+                    "url": '/survey/architecture',
+                    "text": 'Hosting'
                 }
             ]
         },
@@ -116,7 +124,8 @@
 {{
     onsButton({
         "id": "save-values-button",
-        "text": "Save and continue",
+        "text": "Finish section",
+        "iconType": "check",
         "url": url_for('survey'),
         "attributes": {
             "onclick": "storeData();"

@@ -126,15 +126,15 @@ def pre_survey():
 
 @app.route("/pre-survey/project", methods=["GET"])
 def project_pre_survey():
-    return render_template("/pre_survey/project-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-project.html")
 
 @app.route("/pre-survey/architecture", methods=["GET"])
 def architecture_pre_survey():
-    return render_template("/pre_survey/architecture-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-architecture.html")
 
 @app.route("/pre-survey/technology", methods=["GET"])
 def tech_pre_survey():
-    return render_template("/pre_survey/tech-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-tech.html")
 
 @app.route("/survey", methods=['GET', 'POST'])
 def survey():
@@ -197,9 +197,13 @@ def survey():
 
     return render_template("survey.html")
 
-@app.route("/survey/you", methods=['GET'])
-def you():
-    return render_template("/section_project/you.html")
+@app.route("/survey/contact-tech", methods=['GET'])
+def contact_tech():
+    return render_template("/section_project/contact_tech.html")
+
+@app.route("/survey/contact-manager", methods=['GET'])
+def contact_manager():
+    return render_template("/section_project/contact_manager.html")
 
 @app.route("/survey/project", methods=['GET'])
 def project():

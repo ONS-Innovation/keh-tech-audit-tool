@@ -10,9 +10,13 @@
         },
         "breadcrumbs": {
             "itemsList": [
+                            {
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
+                },
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/pre-survey',
+                    "text": 'Pre-survey'
                 }
             ]
         },
@@ -110,7 +114,6 @@
     {{ onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
             "url": url_for('validate_details')
         }) }}
     <script>

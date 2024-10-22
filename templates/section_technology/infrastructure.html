@@ -18,9 +18,21 @@
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/technology',
+                    "text": 'Technology Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/languages',
+                    "text": 'Languages'
+                },
+                {
+                    "url": '/survey/frameworks',
+                    "text": 'Frameworks'
+                },
+                {
+                    "url": '/survey/integrations',
+                    "text": 'Integrations'
                 }
             ]
         },
@@ -125,7 +137,8 @@
                 <form action="{{ url_for('survey') }}" method="GET">
                         {{ onsButton({
                             "id": "save-values-button",
-                            "text": "Save and continue",
+                            "text": "Finish section",
+                            "iconType": "check",
                             "url": "/survey",
                             "attributes": {
                                 "onclick": "storeData();"

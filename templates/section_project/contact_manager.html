@@ -1,0 +1,169 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% set pageConfig = {
+        "header": {
+            "title": "Create a project",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/pre-survey/project',
+                    "text": 'Project Details'
+                },
+                {
+                    "url": '/survey/contact-tech',
+                    "text": 'Technical Contact'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    } %}
+{% block main %}
+    <h1>Point of Contact - Delivery Manager</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<div>Enter the information for the delivery manager. This is a person who can be contacted in regards to discussing the project.</div><br>"
+            }
+        ]
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsLabel({
+        "id": 'contact-email-label',
+        "for": "contact-email",
+        "text": 'Delivery Manager',
+        "description": 'Enter the information of the delivery manager for this project.'
+    }) }}
+        {{ onsInput({
+        "id": "contact-email",
+        "label": {
+            "text": "Email"
+        }
+    }) }}
+        {% call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    }) %}
+        {{ onsLabel({
+        "id": 'contact-grade-label',
+        "for": "contact-grade",
+        "text": 'Delivery Manager Grade',
+        "description": 'Select the grade of the delivery manager.'
+    }) }}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "role",
+            "radios": [
+                {
+                    "id": "Grade 6",
+                    "label": {
+                        "text": "Grade 6"
+                    },
+                    "value": "Grade 6"
+                },
+                                {
+                    "id": "Grade 7",
+                    "label": {
+                        "text": "Grade 7"
+                    },
+                    "value": "Grade 7"
+                },
+                {
+                    "id": "SEO",
+                    "label": {
+                        "text": "SEO"
+                    },
+                    "value": "SEO"
+                },
+                {
+                    "id": "HEO",
+                    "label": {
+                        "text": "HEO"
+                    },
+                    "value": "HEO"
+                },
+                {
+                    "id": "other",
+                    "label": {
+                        "text": "Other"
+                    },
+                    "value": "other",
+                    "other": {
+                        "id": "other-input",
+                        "name": "other",
+                        "label": {
+                            "text": "Enter your role"
+                        }
+                    }
+                }
+            ]
+        }) }}
+        {% endcall %}
+        {{ onsButton({
+        "id": 'save-values-button',
+        "text": "Save and continue",
+        "url": url_for('project'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <script>
+            function storeData() {
+                var contactEmail = document.getElementById('contact-email').value;
+                var role = document.querySelector('input[name="role"]:checked').value;
+                var otherRole = document.getElementById('other-input').value;
+                if (role === 'other') {
+                    role = otherRole;
+                }
+                let complete = false;
+                if (contactEmail && role) {
+                    complete = true;
+                }
+                var data = {
+                    "contactEmail": contactEmail,
+                    "role": role,
+                    "complete": complete
+                };
+                localStorage.setItem('contact-manager-data', JSON.stringify(data));
+                console.log(localStorage.getItem('contact-manager-data'));
+            }
+            function loadData() {
+                var obj = {
+                    "Tech Lead": "tech-lead",
+                    "SEO": "seo",
+                    "HEO": "heo"
+                }
+                var data = JSON.parse(localStorage.getItem('contact-manager-data'));
+                if (data) {
+                    document.getElementById('contact-email').value = data.contactEmail;
+                    try {
+                        document.getElementById(data.role).checked = true;
+                    } catch {
+                        document.getElementById("other").checked = true;
+                        document.getElementById('other-input').value = data.role;
+                    }
+                }
+            }
+            redirectToPrevious();
+            loadData();
+        </script>
+    </form>
+</form></form>{% endblock %}

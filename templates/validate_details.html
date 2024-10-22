@@ -14,8 +14,16 @@
         "breadcrumbs": {
             "itemsList": [
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
+                },
+                {
+                    "url": '/pre-survey',
+                    "text": 'Pre-survey'
+                },
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
                 }
             ]
         },
@@ -59,7 +67,7 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "You",
+                                    "rowTitle": "Contacts",
                                     "rowItems": [
                                         {
                                             "valueList": [
@@ -72,7 +80,7 @@
                                                 {
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for People who live here",
-                                                    "url": url_for('you'),
+                                                    "url": url_for('contact_tech'),
                                                 }
                                             ]
                                         }
@@ -279,10 +287,10 @@
         <input id="infrastructure" type="hidden" name="infrastructure">
     {{
         onsButton({
-            "text": 'Continue',
+            "text": 'Submit & Save Project',
             "id": "submit-button",
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
+            "iconType": "check",
         })
     }}
     
@@ -308,7 +316,8 @@
         }
 
         function load_data() {
-            var youData = localStorage.getItem('you_data');
+            var contactTechData = localStorage.getItem('contact-tech-data');
+            var contactManagerData = localStorage.getItem('contact-manager-data');
             var projectData = localStorage.getItem('data');
             var developedData = localStorage.getItem('data-developed');
             var sourceControlData = localStorage.getItem('data-source-control');
@@ -324,7 +333,7 @@
             document.getElementById('error-panel').style.display = 'none';
 
             try {
-                if (youData === null ||
+                if (contactTechData === null ||
                     projectData === null ||
                     developedData === null ||
                     sourceControlData === null ||
@@ -343,38 +352,29 @@
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('submit-button').style.display = 'none';
             }
+            var youData = [];
+            if (contactTechData) {
+                var techData = JSON.parse(contactTechData);
+                youData.push({
+                    "email": techData.contactEmail,
+                    "roles": ["Technical Contact"],
+                    "grade": techData.role
+                });
+            }
 
-            if (youData && JSON.parse(youData).complete) {
-            }
-            if (projectData && JSON.parse(projectData).complete) {
-            }
-            if (developedData && JSON.parse(developedData).complete) {
-                // Do something
-            }
-            if (sourceControlData && JSON.parse(sourceControlData).complete) {
-                // Do something
-            }
-            if (frameworksData && JSON.parse(frameworksData).complete) {
-                // Do something
-            }
-            if (infrastructureData && JSON.parse(infrastructureData).complete) {
-                // Do something
-            }
-            if (integrationsData && JSON.parse(integrationsData).complete) {
-                // Do something
-            }
-            if (languagesData && JSON.parse(languagesData).complete) {
-                // Do something
-            }
-            if (architectureData && JSON.parse(architectureData).complete) {
-
-            }
-            if (databaseData && JSON.parse(databaseData).complete) {
-                // Do something
+            if (contactManagerData) {
+                var managerData = JSON.parse(contactManagerData);
+                if (managerData.contactEmail) {
+                    youData.push({
+                        "email": managerData.contactEmail,
+                        "roles": ["Delivery Manager"],
+                        "grade": managerData.role
+                    });
+                }
             }
 
             var finalData = {
-                "user": JSON.parse(youData),
+                "user": (youData),
                 "details": JSON.parse(projectData),
                 "developed": JSON.parse(developedData),
                 "source_control": JSON.parse(sourceControlData),
@@ -389,7 +389,11 @@
             }
             console.log(finalData);
 
-            var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Owner Email: ${finalData.user.ownerEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
+            var user_details = '<ul>';
+            finalData.user.forEach(function(user) {
+                user_details += `<li>${user.roles.join(', ')}: ${user.email} (${user.grade})</li>`;
+            });
+            user_details += '</ul>';
             var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
             if (finalData.developed.developed === "Outsourced") {
                 var company = finalData.developed.outsource_company;

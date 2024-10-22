@@ -16,9 +16,21 @@
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/project',
+                    "text": 'Project Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/contact-tech',
+                    "text": 'Technical Contact'
+                },
+                {
+                    "url": '/survey/contact-manager',
+                    "text": 'Delivery Manager'
+                },
+                {
+                    "url": '/survey/project',
+                    "text": 'Project Details'
                 }
             ]
         },
@@ -106,7 +118,8 @@
 {{
     onsButton({
         "id": "save-values-button",
-        "text": "Save and continue",
+        "text": "Finish section",
+        "iconType": "check",
         "url": url_for('survey'),
         "attributes": {
             "onclick": "storeData();"

@@ -161,14 +161,7 @@
             return final;
         }
         function load_data() {
-            var youData = localStorage.getItem('you_data');
-            var projectData = localStorage.getItem('data');
-            var developedData = localStorage.getItem('data-developed');
             var sourceControlData = localStorage.getItem('data-source-control');
-            var frameworksData = localStorage.getItem('frameworks-data');
-            var infrastructureData = localStorage.getItem('infrastructure-data');
-            var integrationsData = localStorage.getItem('integrations-data');
-            var languagesData = localStorage.getItem('languages-data');
             var architectureData = localStorage.getItem('architecture-data');
             var databaseData = localStorage.getItem('data-database');
 
@@ -178,8 +171,8 @@
 
             try {
                 if (sourceControlData === null ||
-                    JSON.parse(frameworksData).length === 0 || 
-                    JSON.parse(infrastructureData).length === 0) {
+                    JSON.parse(architectureData).length === 0 || 
+                    JSON.parse(databaseData).length === 0) {
 
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';

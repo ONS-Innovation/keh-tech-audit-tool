@@ -138,8 +138,19 @@
             function updateSectionStatus(sectionId, dataItems) {
                 var sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
-                    var completedCount = dataItems.filter(item => item && JSON.parse(item).complete).length;
+                    var completedCount = dataItems.filter(item => {
+                        if (item) {
+                            var parsedItem = JSON.parse(item);
+                            if (Array.isArray(parsedItem)) {
+                                return parsedItem.length > 0;
+                            } else if (typeof parsedItem === 'object') {
+                                return parsedItem.complete === true;
+                            }
+                        }
+                        return false;
+                    }).length;
                     var totalCount = dataItems.length;
+                    console.log(sectionId, completedCount, totalCount);
 
                     var sectionIdWithDash = sectionId.replace(/_/g, '-');
                     var sectionElementWithDash = document.getElementById(sectionIdWithDash);

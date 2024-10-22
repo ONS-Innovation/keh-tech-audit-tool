@@ -325,6 +325,7 @@
             var final = ""
             try{
                 for (let i = 0; i <= arr.length - 1; i++) {
+                console.log(arr[i]);
                     if (i === 0) {
                         final += `<ul>`
                     }
@@ -340,18 +341,22 @@
         }
 
         function load_data() {
+            // Project Details
             var contactTechData = localStorage.getItem('contact-tech-data');
             var contactManagerData = localStorage.getItem('contact-manager-data');
             var projectData = localStorage.getItem('data');
             var developedData = localStorage.getItem('data-developed');
+
+            // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('database-data');
+
+            // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
-            var architectureData = localStorage.getItem('architecture-data');
-            var databaseData = localStorage.getItem('data-database');
-
             localStorage.setItem('validate', false);
 
             document.getElementById('error-panel').style.display = 'none';
@@ -411,6 +416,11 @@
                     "database": JSON.parse(databaseData),
                 },
             }
+
+            // Remove 'complete' key from details, developed, and source_control
+            delete finalData.details.complete;
+            delete finalData.developed.complete;
+            delete finalData.source_control.complete;
             console.log(finalData);
 
             var technical_contact = `<ul><li>${finalData.user[0].roles.join(', ')}: ${finalData.user[0].email} (${finalData.user[0].grade})</li></ul>`;
@@ -428,12 +438,12 @@
             }
             var developed_details = `<ul><li>Developed By: ${finalData.developed.developed}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
             var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
-            var hosting = finalData.architecture.hosting;
-            var languages = finalData.architecture.languages;
-            var frameworks = finalData.architecture.frameworks;
-            var integrations = finalData.architecture.integrations;
-            var infrastructure = finalData.architecture.infrastructure;
-            var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
+            var hosting = finalData.architecture.hosting.main.concat(finalData.architecture.hosting.others);
+            var languages = finalData.architecture.languages.main.concat(finalData.architecture.languages.others);
+            var frameworks = finalData.architecture.frameworks.main.concat(finalData.architecture.frameworks.others);
+            var integrations = finalData.architecture.integrations.main.concat(finalData.architecture.integrations.others);
+            var infrastructure = finalData.architecture.infrastructure.main.concat(finalData.architecture.infrastructure.others);
+            var database_details = arrToList(finalData.architecture.database.main.concat(finalData.architecture.database.others));
 
             var hosting_details = arrToList(hosting);
             var languages_details = arrToList(languages);

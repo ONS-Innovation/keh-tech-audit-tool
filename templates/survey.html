@@ -128,7 +128,7 @@
             // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
             var architectureData = localStorage.getItem('architecture-data');
-            var databaseData = localStorage.getItem('data-database');
+            var databaseData = localStorage.getItem('database-data');
 
             // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
@@ -145,7 +145,11 @@
                             if (Array.isArray(parsedItem)) {
                                 return parsedItem.length > 0;
                             } else if (typeof parsedItem === 'object') {
-                                return parsedItem.complete === true;
+                                if (parsedItem.complete === true) {
+                                    return true;
+                                } else if (parsedItem.main || parsedItem.others) {
+                                    return (parsedItem.main && parsedItem.main.length > 0) || (parsedItem.others && parsedItem.others.length > 0);
+                                }
                             }
                         }
                         return false;

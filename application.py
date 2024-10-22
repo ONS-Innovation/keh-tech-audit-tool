@@ -170,8 +170,6 @@ def survey():
             developed_company = None
         
         source_control = source_control["source_control"]
-        database = database["database"]
-        print([u for u in user])
         data = {
             "user": [u for u in user],
             "details": {
@@ -187,14 +185,16 @@ def survey():
                 source_control
             ],
             "architecture": {
-                "hosting": {"type": "Cloud", "detail": hosting},
-                "database": {"main": database, "others": []},
-                "languages": {"main": "", "others": languages},
-                "frameworks": {"main": "", "others": frameworks},
-                "CICD": {"main": "", "others": integrations},
-                "infrastructure": {"main": "", "others": infrastructure}
-                }
+                "hosting": hosting,
+                "database": database,
+                "languages": languages,
+                "frameworks": frameworks,
+                "CICD": integrations,
+                "infrastructure": infrastructure
+                },
+            "archived": False
             }
+        print(data)
         projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
         print(projects.json())
         return redirect(url_for("dashboard"))

@@ -6,9 +6,9 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-
-{%
-    set pageConfig = {
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
@@ -31,38 +31,23 @@
               "post": ", except where otherwise stated"
           }
       }
-    }
-%}
-
+    } %}
 {% block main %}
-
-
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
-{%
-    call onsPanel({
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
-    })
-%}
-
-{{
-    onsLabel({
+    }) %}
+    {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Item already added.'
-    })
-}}
-{% endcall %}
-<br>
-
-
-<h1>Languages</h1>
-
-{{
-    onsAccordion({
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Languages</h1>
+        {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -70,11 +55,8 @@
                 "content": "<p>Enter details about the project's languages such as Python, JavaScript etc.</p>"
             }
         ]
-    })
-}}
-
-
-{{ onsAutosuggest({
+    }) }}
+        {{ onsAutosuggest({
         "id": "languages-input",
         "input": {
             "label": {
@@ -88,8 +70,8 @@
                 "onsubmit": "Enter languages",
             },
             "searchButton": {
-                "visuallyHideButtonText": true,
-                "text": 'Search',
+                "visuallyHideButtonText": false,
+                "text": 'Add',
                 "iconType": 'check',
                 "attributes": {
                     "onclick": "addData()"
@@ -110,58 +92,46 @@
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-
-
-
-
-<br>
-
-<div id="con1" class="ons-field">
-
-</div>
-
-<script src="{{ url_for('static', filename='scripts.js') }}">
-</script>
-
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-{{
-    onsButton({
-        "id": "remove",
-        "type": "button",
-        "text": "Remove Last Item",
-        "variants": ['secondary', 'small'],
-        "attributes": {
-            "onclick": "removeData()"
-        }
-    })
-}}
-
-
-<br>
-<br>
-
-<form action="{{ url_for('survey') }}" method="GET">
-{{
-    onsButton({
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Language"
+            },
+            {
+                "value": "Type"
+            },
+            {
+                "value": "Actions"
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
         "url": url_for('frameworks'),
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-</form>
-
-
-<script>
-loadData();
-redirectToPrevious();
-document.getElementById("error-panel").style.display = "none";
-</script>
-
-
-
-{% endblock %}
+    }) }}
+            </form>
+            <script>
+                loadData();
+                redirectToPrevious();
+                document
+                    .getElementById("error-panel")
+                    .style
+                    .display = "none";
+            </script>
+        {% endblock %}

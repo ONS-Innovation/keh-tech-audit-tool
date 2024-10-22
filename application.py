@@ -60,6 +60,12 @@ def home():
             return redirect(url_for("home"))
     return render_template("index.html")
 
+@app.route("/sign-out", methods=["GET"])
+def sign_out():
+    session.clear()
+    flash("You have successfully logged out")
+    return redirect(url_for("home"))
+
 @app.route("/autocomplete/<search>.json", methods=["GET"])
 def autocomplete(search):
     array_data = read_auto_complete_data()
@@ -110,8 +116,12 @@ def exchange_code_for_tokens(code):
 def dashboard():
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", headers=headers).json()
-
-    return render_template("dashboard.html", email=session["email"], projects=projects)
+    try:
+        return render_template("dashboard.html", email=session["email"], projects=projects)
+    except Exception as error:
+        print(f"{error.__class__.__name__}: {error}")
+        flash("Failed to retrieve ID Token")
+        return redirect(url_for("home"))
 
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
@@ -122,19 +132,19 @@ def view_project(project_name):
 
 @app.route("/pre-survey", methods=['GET'])
 def pre_survey():
-    return render_template("pre-survey.html")
+    return render_template("/pre_survey/pre-survey.html")
 
 @app.route("/pre-survey/project", methods=["GET"])
 def project_pre_survey():
-    return render_template("project-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-project.html")
 
 @app.route("/pre-survey/architecture", methods=["GET"])
 def architecture_pre_survey():
-    return render_template("architecture-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-architecture.html")
 
 @app.route("/pre-survey/technology", methods=["GET"])
 def tech_pre_survey():
-    return render_template("tech-pre-survey.html")
+    return render_template("/pre_survey/pre-survey-tech.html")
 
 @app.route("/survey", methods=['GET', 'POST'])
 def survey():
@@ -161,15 +171,9 @@ def survey():
         
         source_control = source_control["source_control"]
         database = database["database"]
+        print([u for u in user])
         data = {
-            "user": [ 
-                {
-                    "email": "q",
-                    "roles": [
-                        user["role"]
-                    ]
-                }
-            ],
+            "user": [u for u in user],
             "details": {
                 "name": project["project_name"],
                 "short_name": project["project_long_name"],
@@ -197,45 +201,49 @@ def survey():
 
     return render_template("survey.html")
 
-@app.route("/survey/you", methods=['GET'])
-def you():
-    return render_template("you.html")
+@app.route("/survey/contact-tech", methods=['GET'])
+def contact_tech():
+    return render_template("/section_project/contact_tech.html")
+
+@app.route("/survey/contact-manager", methods=['GET'])
+def contact_manager():
+    return render_template("/section_project/contact_manager.html")
 
 @app.route("/survey/project", methods=['GET'])
 def project():
-    return render_template("project.html")
+    return render_template("/section_project/project.html")
 
 @app.route("/survey/developed", methods=['GET'])
 def developed():
-    return render_template("developed.html")
+    return render_template("/section_project/developed.html")
 
 @app.route("/survey/source_control", methods=['GET'])
 def source_control():
-    return render_template("source_control.html")
+    return render_template("/section_code/source_control.html")
 
 @app.route("/survey/architecture", methods=['GET'])
 def architecture():
-    return render_template("architecture.html")
+    return render_template("/section_code/architecture.html")
 
 @app.route("/survey/database", methods=['GET'])
 def database():
-    return render_template("database.html")
+    return render_template("/section_code/database.html")
 
 @app.route("/survey/languages", methods=['GET'])
 def languages():
-    return render_template("languages.html")
+    return render_template("/section_technology/languages.html")
 
 @app.route("/survey/frameworks", methods=['GET'])
 def frameworks():
-    return render_template("frameworks.html")
+    return render_template("/section_technology/frameworks.html")
 
 @app.route("/survey/integrations", methods=['GET'])
 def integrations():
-    return render_template("integrations.html")
+    return render_template("/section_technology/integrations.html")
 
 @app.route("/survey/infrastructure", methods=['GET'])
 def infrastructure():
-    return render_template("infrastructure.html")
+    return render_template("/section_technology/infrastructure.html")
 
 @app.route("/validate_details", methods=["GET"])
 def validate_details():

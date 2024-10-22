@@ -13,14 +13,19 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/technology',
+                    "text": 'Technology Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/languages',
+                    "text": 'Languages'
                 }
             ]
         },
@@ -76,7 +81,7 @@
         "id": "frameworks-input",
         "input": {
             "label": {
-                "text": "Enter frameworks",
+                "text": "What frameworks are used in the proejct?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
@@ -119,7 +124,6 @@
 </div>
 
 
-<script>localStorage.setItem("type", "frameworks");</script>
 <script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 

@@ -3,64 +3,51 @@
 {% from "components/list/_macro.njk" import onsList %}
 {% from "components/details/_macro.njk" import onsDetails %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{%
-    set pageConfig = {
+{% set pageConfig = {
         "header": {
-            "title": "Architecture Details",
+            "title": "Project Details",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/survey',
+                    "text": 'Survey'
                 }
             ]
         }
-    }
-%}
-
+    } %}
 {% block main %}
-    <h1 class="ons-u-mt-m">Architecture Details</h1>
-
-
+    <h1 class="ons-u-mt-m">Project Details</h1>
     <p>To complete this survey you will need to know details such as:</p>
-    {{
-        onsList({
+    {{ onsList({
             "classes": 'ons-u-mb-m',
             "itemsList": [
                 {
-                    "text": 'Source Control of choice'
+                    "text": 'Your email and role'
                 },
                 {
-                    "text": 'Which platform your project is hosted on'
+                    "text": 'Project name and documentation URL'
                 },
                 {
-                    "text": 'What databases have been used'
+                    "text": 'Where the software was developed'
                 },
             ]
-        })
-    }}
-
-    {{
-        onsButton({
+        }) }}
+    {{ onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mt-xl',
-            "url": url_for('source_control')
-        })
-    }}
+            "url": url_for('contact_tech')
+        }) }}
 {% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
+{% block scripts %}
+    <style>
+        body {
             height: auto;
-          }
-        </style>
-
-        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
-      {% endblock %}
-    
+        }
+    </style>
+    <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
+{% endblock %}

@@ -6,16 +6,17 @@
 {%
     set pageConfig = {
         "header": {
-            "title": "Add Project",
+            "title": "Technology Details",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/survey',
+                    "text": 'Survey'
                 }
             ]
         }
@@ -23,7 +24,7 @@
 %}
 
 {% block main %}
-    <h1 class="ons-u-mt-m">Add Project</h1>
+    <h1 class="ons-u-mt-m">Technology Details</h1>
 
 
     <p>To complete this survey you will need to know details such as:</p>
@@ -32,32 +33,17 @@
             "classes": 'ons-u-mb-m',
             "itemsList": [
                 {
-                    "text": 'Your email and role'
+                    "text": 'Languages used to build the project'
                 },
                 {
-                    "text": 'Project name and documentation URL'
+                    "text": 'Frameworks used to build the project'
                 },
                 {
-                    "text": 'Where the software was developed'
+                    "text": 'CI/CD tools used in the project'
                 },
                 {
-                    "text": 'Source control of choice'
+                    "text": 'Infrastructure used in the project'
                 },
-                {
-                    "text": 'Which hosting platforms have been used'
-                },
-                {
-                    "text": 'What databases have been used'
-                },
-                {
-                    "text": 'What languages have been used'
-                },
-                {
-                    "text": 'What CI/CD tools have been used'
-                },
-                {
-                    "text": 'What infrastructure the project uses'
-                }
             ]
         })
     }}
@@ -66,7 +52,7 @@
         onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mt-xl',
-            "url": url_for('survey')
+            "url": url_for('languages')
         })
     }}
 {% endblock %}

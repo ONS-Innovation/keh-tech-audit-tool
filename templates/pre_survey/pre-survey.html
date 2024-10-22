@@ -6,16 +6,17 @@
 {%
     set pageConfig = {
         "header": {
-            "title": "Project Details",
+            "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
                 }
             ]
         }
@@ -23,7 +24,7 @@
 %}
 
 {% block main %}
-    <h1 class="ons-u-mt-m">Project Details</h1>
+    <h1 class="ons-u-mt-m">Add Project</h1>
 
 
     <p>To complete this survey you will need to know details such as:</p>
@@ -40,6 +41,24 @@
                 {
                     "text": 'Where the software was developed'
                 },
+                {
+                    "text": 'Source control of choice'
+                },
+                {
+                    "text": 'Which hosting platforms have been used'
+                },
+                {
+                    "text": 'What databases have been used'
+                },
+                {
+                    "text": 'What languages have been used'
+                },
+                {
+                    "text": 'What CI/CD tools have been used'
+                },
+                {
+                    "text": 'What infrastructure the project uses'
+                }
             ]
         })
     }}
@@ -48,7 +67,7 @@
         onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mt-xl',
-            "url": url_for('you')
+            "url": url_for('survey')
         })
     }}
 {% endblock %}

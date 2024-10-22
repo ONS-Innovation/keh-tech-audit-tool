@@ -12,14 +12,19 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+                             {
+                    "url": '/pre-survey/architecture',
+                    "text": 'Architecture Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/source_control',
+                    "text": 'Source Control'
                 }
             ]
         },
@@ -57,8 +62,7 @@
 {% endcall %}
 <br>
 
-
-<h1>Languages</h1>
+<h1>Hosting</h1>
 
 {{
     onsAccordion({
@@ -66,25 +70,24 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's languages such as Python, JavaScript etc.</p>"
+                "content": "<p>Enter the names of the hosting services used by the project.</p>"
             }
         ]
     })
 }}
 
-
 {{ onsAutosuggest({
-        "id": "languages-input",
+        "id": "architecture-input",
         "input": {
             "label": {
-                "text": "Enter languages",
-                "description": "Enter your own answer or select from suggestions",
+                "text": "What hosting technology was used within this project?",
+                "description": "Enter your own answer or select from suggestions.",
             },
             "autocomplete": "on",
-            "id": "languages-input",
+            "id": "hosting-input",
             "class": "item-inputs",
             "attributes": {
-                "onsubmit": "Enter languages",
+                "onsubmit": "Enter hosting",
             },
             "searchButton": {
                 "visuallyHideButtonText": true,
@@ -103,15 +106,12 @@
         "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
         "moreResults": "Continue entering to improve suggestions",
         "resultsTitle": "Suggestions",
-        "resultsTitleId": "lanuages-suggestions",
-        "autosuggestData": "/autocomplete/languages.json",
+        "resultsTitleId": "hosting-suggestions",
+        "autosuggestData": "/autocomplete/hosting.json",
         "noResults": "No suggestions found. You can enter your own answer",
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-
-
-
 
 <br>
 
@@ -122,30 +122,26 @@
 <script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-{{
-    onsButton({
-        "id": "remove",
-        "type": "button",
-        "text": "Remove Last Item",
-        "variants": ['secondary', 'small'],
-        "attributes": {
-            "onclick": "removeData()"
-        }
-    })
-}}
-
-
-<br>
-<br>
 
 <form action="{{ url_for('survey') }}" method="GET">
+    {{
+        onsButton({
+            "id": "remove",
+            "type": "button",
+            "text": "Remove Last Item",
+            "variants": ['secondary', 'small'],
+            "attributes": {
+                "onclick": "removeData()"
+            }
+        })
+    }}
+<br>
+<br>    
 {{
     onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
-        "url": url_for('frameworks'),
+        "url": url_for('database'),
         "attributes": {
             "onclick": "storeData();"
         }
@@ -154,12 +150,16 @@
 
 </form>
 
+<script src="{{ url_for('static', filename='formScripts.js') }}">
+</script>
+
 
 <script>
 loadData();
-redirectToPrevious();
 document.getElementById("error-panel").style.display = "none";
+redirectToPrevious();
 </script>
+
 
 
 

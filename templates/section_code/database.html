@@ -5,20 +5,30 @@
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+{% from "components/label/_macro.njk" import onsLabel %}
 
 {%
     set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/architecture',
+                    "text": 'Architecture Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/source_control',
+                    "text": 'Source Control'
+                },
+                {
+                    "url": '/survey/architecture',
+                    "text": 'Hosting'
                 }
             ]
         },
@@ -59,6 +69,12 @@
         "legendIsQuestionTitle": true
     })
 %}
+{{ onsLabel({
+        "id": 'label',
+        "for": "label",
+        "text": 'What database was used for this project?',
+
+    }) }}
     {{
         onsRadios({
             "dontWrap": true,
@@ -116,8 +132,9 @@
 {{
     onsButton({
         "id": "save-values-button",
-        "text": "Save and continue",
         "url": url_for('architecture_summary'),
+        "text": "Finish section",
+        "iconType": "check",
         "attributes": {
             "onclick": "storeData();"
         }

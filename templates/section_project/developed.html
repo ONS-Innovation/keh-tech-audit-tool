@@ -11,14 +11,27 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/project',
+                    "text": 'Project Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/contact-tech',
+                    "text": 'Technical Contact'
+                },
+                {
+                    "url": '/survey/contact-manager',
+                    "text": 'Delivery Manager'
+                },
+                {
+                    "url": '/survey/project',
+                    "text": 'Project Details'
                 }
             ]
         },
@@ -106,8 +119,9 @@
 {{
     onsButton({
         "id": "save-values-button",
-        "text": "Save and continue",
         "url": url_for('project_summary'),
+        "text": "Finish section",
+        "iconType": "check",
         "attributes": {
             "onclick": "storeData();"
         }

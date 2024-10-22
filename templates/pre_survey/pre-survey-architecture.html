@@ -6,16 +6,17 @@
 {%
     set pageConfig = {
         "header": {
-            "title": "Technology Details",
+            "title": "Architecture Details",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/survey',
+                    "text": 'Survey'
                 }
             ]
         }
@@ -23,7 +24,7 @@
 %}
 
 {% block main %}
-    <h1 class="ons-u-mt-m">Technology Details</h1>
+    <h1 class="ons-u-mt-m">Architecture Details</h1>
 
 
     <p>To complete this survey you will need to know details such as:</p>
@@ -32,16 +33,13 @@
             "classes": 'ons-u-mb-m',
             "itemsList": [
                 {
-                    "text": 'Languages used to build the project'
+                    "text": 'Source Control of choice'
                 },
                 {
-                    "text": 'Frameworks used to build the project'
+                    "text": 'Which platform your project is hosted on'
                 },
                 {
-                    "text": 'CI/CD tools used in the project'
-                },
-                {
-                    "text": 'Infrastructure used in the project'
+                    "text": 'What databases have been used'
                 },
             ]
         })
@@ -51,7 +49,7 @@
         onsButton({
             "text": 'Continue',
             "classes": 'ons-u-mt-xl',
-            "url": url_for('languages')
+            "url": url_for('source_control')
         })
     }}
 {% endblock %}

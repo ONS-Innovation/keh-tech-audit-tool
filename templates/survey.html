@@ -5,14 +5,19 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+                            {
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
+                },
                 {
-                    "url": '/dashboard',
-                    "text": 'Back'
+                    "url": '/pre-survey',
+                    "text": 'Pre-survey'
                 }
             ]
         },
@@ -28,7 +33,7 @@
     check
 {%- endmacro %}
 {% block main %}
-    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+    <h1 class="ons-u-mt-m">Choose a section to complete</h1>
     {{ onsSummary({
             "variant": "hub",
             "classes": "ons-u-mt-m",
@@ -71,7 +76,7 @@
                                         "id": "project-details",
                                             "iconType": "none", 
                                             "actions": [
-                                                {
+                                                {   
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for Household accommodation",
                                                     "url": url_for('architecture_pre_survey')
@@ -108,62 +113,79 @@
             ]
         }) }}
     {{ onsButton({
-            "text": 'Continue',
+            "text": 'Continue to Submission',
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
             "url": url_for('validate_details')
         }) }}
     <script>
         function load_data() {
-            var youData = localStorage.getItem('you_data');
+            // Project Details
+            var contactTechData = localStorage.getItem('contact-tech-data');
+            var contactManagerData = localStorage.getItem('contact-manager-data');
             var projectData = localStorage.getItem('data');
             var developedData = localStorage.getItem('data-developed');
+
+            // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('data-database');
+
+            // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
-            var architectureData = localStorage.getItem('architecture-data');
-            var databaseData = localStorage.getItem('data-database');
-            console.log(
-                youData, projectData, developedData, sourceControlData, frameworksData, infrastructureData, integrationsData, languagesData, architectureData, databaseData
-            );
-            if (youData && JSON.parse(youData).completeAboutYou) {
-                var userDetails = document.getElementById('user-details');
-                if (userDetails) {
-                    var span = userDetails.querySelector('dt span');
-                    if (span) {
-                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+
+            function updateSectionStatus(sectionId, dataItems) {
+                var sectionElement = document.getElementById(sectionId);
+                if (sectionElement) {
+                    var completedCount = dataItems.filter(item => {
+                        if (item) {
+                            var parsedItem = JSON.parse(item);
+                            if (Array.isArray(parsedItem)) {
+                                return parsedItem.length > 0;
+                            } else if (typeof parsedItem === 'object') {
+                                return parsedItem.complete === true;
+                            }
+                        }
+                        return false;
+                    }).length;
+                    var totalCount = dataItems.length;
+                    console.log(sectionId, completedCount, totalCount);
+
+                    var sectionIdWithDash = sectionId.replace(/_/g, '-');
+                    var sectionElementWithDash = document.getElementById(sectionIdWithDash);
+                    var actionSpan = sectionElementWithDash.querySelectorAll('dd span')[1];
+
+                    if (completedCount === 0) {
+                        sectionElement.innerHTML = 'Not Started';
+                        if (actionSpan) {
+                            actionSpan.innerHTML = 'Start section';
+                        }
+                    } else if (completedCount < totalCount) {
+                        sectionElement.innerHTML = 'Partially completed';
+                        if (actionSpan) {
+                            actionSpan.innerHTML = 'Continue with section';
+                        }
+                    } else {
+                        sectionElement.innerHTML = 'Completed';
+                        if (actionSpan) {
+                            actionSpan.textContent = 'Change section';
+                        }
+                        var span = sectionElementWithDash.querySelector('dt span');
+                        if (span) {
+                            span.innerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
                                 ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
                                 'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
-                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
+                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>';
+                        }
                     }
                 }
             }
-            if (developedData && JSON.parse(developedData).complete) {
-                var userDetails = document.getElementById('project-details');
-                if (userDetails) {
-                    var span = userDetails.querySelector('dt span');
-                    if (span) {
-                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
-                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
-                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
-                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
-                    }
-                }
-            }
-            if (databaseData && JSON.parse(databaseData).complete) { 
-                var userDetails = document.getElementById('developed-details');
-                if (userDetails) {
-                    var span = userDetails.querySelector('dt span');
-                    if (span) {
-                        span.outerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
-                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
-                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
-                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>'
-                    }
-                }
-            }
+
+            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData]);
+            updateSectionStatus('project_details', [sourceControlData, architectureData, databaseData]);
+            updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();
     </script>

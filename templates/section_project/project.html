@@ -13,14 +13,23 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/project',
+                    "text": 'Project Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/contact-tech',
+                    "text": 'Technical Contact'
+                },
+                {
+                    "url": '/survey/contact-manager',
+                    "text": 'Delivery Manager'
                 }
             ]
         },
@@ -56,7 +65,7 @@
     onsInput({
         "id": "project-name",
         "label": {
-            "text": "Project Name"
+            "text": "What is the name of the project?"
         }
     })
 }}
@@ -65,7 +74,7 @@
     onsInput({
         "id": "project-long-name",
         "label": {
-            "text": "Project Short Name"
+            "text": "What is the short name of the project?"
         }
     })
 }}
@@ -74,7 +83,7 @@
     onsInput({
         "id": "documentation-link",
         "label": {
-            "text": "Documentation link"
+            "text": "Is there a link to the documentation for this project?"
         }
     })
 }}
@@ -87,7 +96,7 @@
         "width": "30",
         "label": {
             "text": "Project Description",
-            "description": "Please add additional details about this project"
+            "description": "What is the project about? What are the projects aims and objectives?"
         },
         "charCheckLimit": {
             "limit": 200,
@@ -124,11 +133,12 @@
         var project_name = document.getElementById('project-name').value;
         var project_long_name = document.getElementById('project-long-name').value;
         var doc_link = document.getElementById('documentation-link').value;
-
+        var complete = (project_name !== '' && project_long_name !== '' && doc_link !== '');
         var data = {
             "project_name": project_name,
             "project_long_name": project_long_name,
             "doc_link": doc_link,
+            "complete": complete
         };
 
         if (data['project_name'] != '' && data['project_long_name'] != '' && data['doc_link'] != '') {

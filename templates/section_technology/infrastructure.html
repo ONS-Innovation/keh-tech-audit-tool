@@ -13,14 +13,27 @@
         "header": {
             "title": "Create a project",
             "signoutButton": {
-                "text": "Save and sign out"
+                "text": "Save and sign out",
+                "url": "/sign-out"
             }
         },
         "breadcrumbs": {
             "itemsList": [
+{
+                    "url": '/pre-survey/technology',
+                    "text": 'Technology Details'
+                },
                 {
-                    "url": '/survey',
-                    "text": 'Back'
+                    "url": '/survey/languages',
+                    "text": 'Languages'
+                },
+                {
+                    "url": '/survey/frameworks',
+                    "text": 'Frameworks'
+                },
+                {
+                    "url": '/survey/integrations',
+                    "text": 'Integrations'
                 }
             ]
         },
@@ -74,7 +87,7 @@
         "id": "infrastructure-input",
         "input": {
             "label": {
-                "text": "Enter infrastructure",
+                "text": "What infrastructure is used in the project?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
@@ -125,8 +138,9 @@
                 <form action="{{ url_for('survey') }}" method="GET">
                         {{ onsButton({
                             "id": "save-values-button",
-                            "text": "Save and continue",
                             "url": url_for('tech_summary'),
+                            "text": "Finish section",
+                            "iconType": "check",
                             "attributes": {
                                 "onclick": "storeData();"
                             }

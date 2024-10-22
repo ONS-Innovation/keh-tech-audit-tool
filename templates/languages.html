@@ -122,11 +122,7 @@
 <script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
-<script>
-loadData();
-document.getElementById("error-panel").style.display = "none";
-</script>
-
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
 
 {{
     onsButton({
@@ -147,6 +143,7 @@ document.getElementById("error-panel").style.display = "none";
 <form action="{{ url_for('survey') }}" method="GET">
 {{
     onsButton({
+        "id": "save-values-button",
         "text": "Save and continue",
         "url": url_for('frameworks'),
         "attributes": {
@@ -156,4 +153,14 @@ document.getElementById("error-panel").style.display = "none";
 }}
 
 </form>
+
+
+<script>
+loadData();
+redirectToPrevious();
+document.getElementById("error-panel").style.display = "none";
+</script>
+
+
+
 {% endblock %}

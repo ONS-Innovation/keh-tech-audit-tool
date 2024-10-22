@@ -5,6 +5,8 @@
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+{% from "components/textarea/_macro.njk" import onsTextarea %}
+
 
 {%
     set pageConfig = {
@@ -63,7 +65,7 @@
     onsInput({
         "id": "project-long-name",
         "label": {
-            "text": "Project Long Name"
+            "text": "Project Short Name"
         }
     })
 }}
@@ -77,6 +79,25 @@
     })
 }}
 
+
+{{
+    onsTextarea({
+        "id": "project-description",
+        "name": "feedback-limited",
+        "width": "30",
+        "label": {
+            "text": "Project Description",
+            "description": "Please add additional details about this project"
+        },
+        "charCheckLimit": {
+            "limit": 200,
+            "charCountSingular": "You have {x} character remaining",
+            "charCountPlural": "You have {x} characters remaining"
+        }
+    })
+}}
+
+
 {%
     call onsQuestion({
         "classes": "ons-u-mt-no",
@@ -84,6 +105,19 @@
     })
 %}
 {% endcall %}
+
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+
+{{
+    onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": url_for('developed'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    })
+}}
 
 <script>
     function storeData() {
@@ -97,7 +131,9 @@
             "doc_link": doc_link,
         };
 
-        localStorage.setItem('data', JSON.stringify(data));
+        if (data['project_name'] != '' && data['project_long_name'] != '' && data['doc_link'] != '') {
+            localStorage.setItem('data', JSON.stringify(data));
+        }
 
         console.log(localStorage.getItem('data'));
     }
@@ -115,19 +151,11 @@
             document.getElementById('documentation-link').value = doc_link;
         }
     }
-
+    redirectToPrevious();
     loadData();
 </script>
 
-{{
-    onsButton({
-        "text": "Save and continue",
-        "url": url_for('developed'),
-        "attributes": {
-            "onclick": "storeData();"
-        }
-    })
-}}
+
 </form>
 
 {% endblock %}

@@ -27,6 +27,10 @@
     }
 %}
 
+{% macro checkBox() %}
+check
+{%- endmacro %}
+
 {% block main %}
     <h1 class="ons-u-mt-m">Choose another section to complete</h1>
 
@@ -68,7 +72,7 @@
                                                 "text": "<div id='project_details'></div>"
                                             }
                                         ],
-                                            "iconType": "none",
+                                            "iconType": "none", 
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -159,6 +163,7 @@
             if (databaseData && JSON.parse(databaseData).complete) {
                 // Do something
             }
+
         }
         load_data();
 </script>

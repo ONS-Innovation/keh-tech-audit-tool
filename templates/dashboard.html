@@ -23,6 +23,13 @@
   } %}
 {% block main %}
 
+{% macro header(text) %}
+  <h2>{{ text }}</h2>
+{%- endmacro %}
+
+{% macro desc(text) %}
+<p>{{ text }}</p>
+{%- endmacro %}
 
   {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -88,7 +95,7 @@
                 "id": "add-projects",
                 "title": 'Create a Project',
                 "showTitle": true,
-                "content": onsButton(createTab)
+                "content": header("Projects") + desc('Add a new project to record') + onsButton(createTab)
 
             },
           ]

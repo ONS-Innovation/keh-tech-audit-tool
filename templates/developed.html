@@ -101,6 +101,19 @@
     }}
 {% endcall %}
 
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+
+{{
+    onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": url_for('survey'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    })
+}}
+
 <script>
     function storeData() {
         var developed = document.querySelector('input[name="developed"]:checked').value;
@@ -156,19 +169,11 @@
             console.log(option);
         }
     }
-
+    redirectToPrevious();
     loadData();
 </script>
 
-{{
-    onsButton({
-        "text": "Save and continue",
-        "url": url_for('survey'),
-        "attributes": {
-            "onclick": "storeData();"
-        }
-    })
-}}
+
 </form>
 
 {% endblock %}

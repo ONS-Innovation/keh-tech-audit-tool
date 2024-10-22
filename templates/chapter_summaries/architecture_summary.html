@@ -1,0 +1,242 @@
+{% extends "layout/_template.njk" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/button/_macro.njk" import onsButton %}
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Create a project",
+            "signoutButton": {
+                "text": "Save and sign out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                {
+                    "url": '/dashboard',
+                    "text": 'Back'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
+
+{% block main %}
+{%
+    call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    })
+%}
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Please fill in missing data'
+    })
+}}
+
+{% endcall %}
+    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+
+    {{
+        onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Source Control",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='source_control_details'></div>"
+                                                }
+                                            ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('source_control'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Hosting",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='hosting_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('architecture')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Database",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='database_details'></div>"
+                                            }
+                                        ],
+                                            "iconType": "none",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('database')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+ 
+                            ]
+                        }
+                    ]
+                }
+            ]
+        })
+    }}
+
+        <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+        <input id="developed" type="hidden" name="developed">
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "id": "submit-button",
+            "url": url_for('survey'),
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "chevron",
+        })
+    }}
+    
+
+    <script>
+        function arrToList(arr) {
+            var final = ""
+            try{
+                for (let i = 0; i <= arr.length - 1; i++) {
+                    if (i === 0) {
+                        final += `<ul>`
+                    }
+                    final += `<li>${arr[i]}</li>`;
+                    if (i === arr.length - 1) {
+                        final += `</ul>`
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            }
+            return final;
+        }
+        function load_data() {
+            var youData = localStorage.getItem('you_data');
+            var projectData = localStorage.getItem('data');
+            var developedData = localStorage.getItem('data-developed');
+            var sourceControlData = localStorage.getItem('data-source-control');
+            var frameworksData = localStorage.getItem('frameworks-data');
+            var infrastructureData = localStorage.getItem('infrastructure-data');
+            var integrationsData = localStorage.getItem('integrations-data');
+            var languagesData = localStorage.getItem('languages-data');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('data-database');
+
+            localStorage.setItem('validate', false);
+
+            document.getElementById('error-panel').style.display = 'none';
+
+            try {
+                if (sourceControlData === null ||
+                    JSON.parse(frameworksData).length === 0 || 
+                    JSON.parse(infrastructureData).length === 0) {
+
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('submit-button').style.display = 'none';
+
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('submit-button').style.display = 'none';
+            }
+            
+            if (sourceControlData && JSON.parse(sourceControlData).complete) {
+                // Do something
+            }
+            if (architectureData && JSON.parse(architectureData).complete) {
+
+            }
+            if (databaseData && JSON.parse(databaseData).complete) {
+                // Do something
+            }
+
+            var finalData = {
+                "source_control": JSON.parse(sourceControlData),
+                "architecture": {
+                    "hosting": JSON.parse(architectureData),
+                    "database": JSON.parse(databaseData),
+                },
+            }
+            console.log(finalData);
+
+            var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
+            var hosting = finalData.architecture.hosting;
+            var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
+
+            var hosting_details = arrToList(hosting);
+
+            
+
+            console.log(JSON.stringify(user))
+            document.getElementById('source_control_details').innerHTML = source_control;
+            document.getElementById('hosting_details').innerHTML = hosting_details;
+            document.getElementById('database_details').innerHTML = database_details;
+
+            console.log(JSON.stringify(finalData.user));
+        }
+        load_data();
+</script>
+
+
+{% endblock %}
+
+      {% block scripts %}
+
+        <style>
+          body {
+            height: auto;
+          }
+        </style>
+
+      {% endblock %}
+    

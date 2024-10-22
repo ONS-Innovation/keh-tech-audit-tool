@@ -171,6 +171,7 @@ def survey():
         
         source_control = source_control["source_control"]
         data = {
+            "archived": False,
             "user": [u for u in user],
             "details": {
                 "name": project["project_name"],
@@ -248,6 +249,19 @@ def infrastructure():
 @app.route("/validate_details", methods=["GET"])
 def validate_details():
     return render_template("validate_details.html")
+
+@app.route("/survey/project_summary")
+def project_summary():
+    return render_template("chapter_summaries/project_summary.html")
+
+@app.route("/survey/architecture_summary")
+def architecture_summary():
+    return render_template("chapter_summaries/architecture_summary.html")
+
+@app.route("/survey/tech_summary")
+def tech_summary():
+    return render_template("chapter_summaries/tech_summary.html")
+
 
 
 if __name__ == "__main__":

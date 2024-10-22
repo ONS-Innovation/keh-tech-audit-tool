@@ -119,8 +119,9 @@
             <form action="{{ url_for('survey') }}" method="GET">
                 {{ onsButton({
         "id": "save-values-button",
-        "text": "Save and continue",
-        "url": url_for('survey'),
+        "url": url_for('architecture_summary'),
+        "text": "Finish section",
+        "iconType": "check",
         "attributes": {
             "onclick": "storeData();"
         }

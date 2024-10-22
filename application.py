@@ -110,8 +110,12 @@ def exchange_code_for_tokens(code):
 def dashboard():
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", headers=headers).json()
-
-    return render_template("dashboard.html", email=session["email"], projects=projects)
+    try:
+        return render_template("dashboard.html", email=session["email"], projects=projects)
+    except Exception as error:
+        print(f"{error.__class__.__name__}: {error}")
+        flash("Failed to retrieve ID Token")
+        return redirect(url_for("home"))
 
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):

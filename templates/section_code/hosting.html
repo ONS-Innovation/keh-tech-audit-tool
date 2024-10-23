@@ -1,0 +1,171 @@
+{% extends "layout/_template.njk" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{%
+    set pageConfig = {
+        "header": {
+            "title": "Create a project",
+            "signoutButton": {
+                "text": "Save and sign out",
+                "url": "/sign-out"
+            }
+        },
+        "breadcrumbs": {
+            "itemsList": [
+                             {
+                    "url": '/pre-survey/architecture',
+                    "text": 'Architecture Details'
+                },
+                {
+                    "url": '/survey/source_control',
+                    "text": 'Source Control'
+                }
+            ]
+        },
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
+
+{% block main %}
+
+
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{%
+    call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    })
+%}
+
+{{
+    onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    })
+}}
+{% endcall %}
+<br>
+
+<h1>Hosting</h1>
+
+{{
+    onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter the names of the hosting services used by the project.</p>"
+            }
+        ]
+    })
+}}
+        {{ onsLabel({
+        "id": 'contact-grade-label',
+        "for": "contact-grade",
+        "text": 'Hosting Type',
+        "description": 'Select the type of hosting.'
+    }) }}
+
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "role",
+            "radios": [
+                {
+                    "id": "On-premises",
+                    "label": {
+                        "text": "On-premises"
+                    },
+                    "value": "On-premises"
+                },
+                                {
+                    "id": "Cloud",
+                    "label": {
+                        "text": "Cloud"
+                    },
+                    "value": "Cloud"
+                },
+                {
+                    "id": "Hybrid",
+                    "label": {
+                        "text": "Hybrid"
+                    },
+                    "value": "Hybrid"
+                }
+                
+            ]
+        }) }}
+        <br>
+<script src="{{ url_for('static', filename='scripts.js') }}">
+</script>
+
+
+<form action="{{ url_for('survey') }}" method="GET"> 
+{{
+    onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": "#",
+        "attributes": {
+            "onclick": "storeHostingData();"
+        }
+    })
+}}
+
+</form>
+
+<script src="{{ url_for('static', filename='formScripts.js') }}">
+</script>
+
+<script>
+loadHostingData();
+document.getElementById("error-panel").style.display = "none";
+redirectToPrevious();
+
+function storeHostingData() {
+    var hostingType = document.querySelector('input[name="role"]:checked').value;
+
+    var data = {
+        "type": hostingType
+        };
+    localStorage.setItem('hosting-data', JSON.stringify(data));
+    console.log(localStorage.getItem('hosting-data'));
+
+    if (hostingType === "Hybrid" || hostingType === "Cloud") {
+        window.location.href = "/survey/hosting?stage=2";
+    } else {
+        window.location.href = "{{ url_for('database') }}";
+    }
+}
+
+function loadHostingData() {
+    var data = JSON.parse(localStorage.getItem('hosting-data'));
+    if (data) {
+        try {
+            document.getElementById(data.type).checked = true;
+        } catch {
+            console.error("Error loading hosting data");
+        }
+        console.log(data);
+    }
+}
+</script>
+
+
+
+{% endblock %}

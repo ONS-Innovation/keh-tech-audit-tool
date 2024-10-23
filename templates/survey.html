@@ -127,7 +127,7 @@
 
             // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
-            var architectureData = localStorage.getItem('architecture-data');
+            var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
 
             // Technology Details
@@ -188,7 +188,7 @@
             }
 
             updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData]);
-            updateSectionStatus('project_details', [sourceControlData, architectureData, databaseData]);
+            updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();

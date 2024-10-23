@@ -23,17 +23,33 @@ function renderData() {
     var tableBody = document.querySelector('#table-list tbody');
     tableBody.innerHTML = '';
 
-    [...langArr.main, ...langArr.others].forEach(lang => {
+    [...(langArr.main || []), ...(langArr.others || [])].forEach(lang => {
         var newRow = document.createElement('tr');
         newRow.classList.add('ons-table__row');
 
         newRow.innerHTML = `
             <td class="ons-table__cell">${lang}</td>
-            <td class="ons-table__cell">${langArr.main.includes(lang) ? 'Main' : 'Other'}</td>
+            ${path.includes('languages') ? `
+            <td class="ons-table__cell">
+                <div class="ons-input-items">
+                    <div class="ons-radios__items">
+                        <span class="ons-radios__item">
+                            <span class="ons-radio">
+                                <input type="radio" id="${lang}-main" class="ons-radio__input ons-js-radio" value="main" name="${lang}-role" ${langArr.main.includes(lang) ? 'checked' : ''}>
+                                <label class="ons-radio__label" for="${lang}-main">Yes</label>
+                            </span>
+                        </span>
+                        <span class="ons-radios__item">
+                            <span class="ons-radio">
+                                <input type="radio" id="${lang}-other" class="ons-radio__input ons-js-radio" value="other" name="${lang}-role" ${langArr.others.includes(lang) ? 'checked' : ''}>
+                                <label class="ons-radio__label" for="${lang}-other">No</label>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </td>
+            ` : ''}
             <td class="ons-table__cell" style='display:flex;justify-content: space-between;cursor: pointer;'>
-                <a onclick='changeListItemType("${lang}")' class="ons-summary__button">
-                    <span class="ons-summary__button-text" aria-hidden="true">Toggle Type</span>
-                </a>
                 <a onclick='removeData("${lang}")' class="ons-summary__button">
                     <span class="ons-summary__button-text" aria-hidden="true">Remove</span>
                 </a>
@@ -41,8 +57,30 @@ function renderData() {
         `;
 
         tableBody.appendChild(newRow);
+
+        if (path.includes('languages')) {
+            // Add event listeners for the radio buttons
+            document.getElementById(`${lang}-main`).addEventListener('change', () => changeListItemType(lang, 'main'));
+            document.getElementById(`${lang}-other`).addEventListener('change', () => changeListItemType(lang, 'other'));
+        }
     });
 }
+
+function changeListItemType(lang, type) {
+    if (type === 'main') {
+        langArr.main = langArr.main.filter(item => item !== lang);
+        langArr.others = langArr.others.filter(item => item !== lang);
+        langArr.main.push(lang);
+    } else {
+        langArr.main = langArr.main.filter(item => item !== lang);
+        langArr.others = langArr.others.filter(item => item !== lang);
+        langArr.others.push(lang);
+    }
+    storeData();
+    renderData();
+}
+
+
 
 function removeData(lang) {
     langArr.main = langArr.main.filter(item => item !== lang);
@@ -84,17 +122,7 @@ function addData(event) {
     document.getElementById("error-panel").style.display = "none";
 }
 
-function changeListItemType(lang) {
-    if (langArr.main.includes(lang)) {
-        langArr.main = langArr.main.filter(item => item !== lang);
-        langArr.others.push(lang);
-    } else {
-        langArr.others = langArr.others.filter(item => item !== lang);
-        langArr.main.push(lang);
-    }
-    storeData();
-    renderData();
-}
+
 
 document.getElementById(page + '-input').onkeydown = function(event) {
     if (event.key === 'Enter') {

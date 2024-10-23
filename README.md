@@ -24,3 +24,10 @@ make run-ui
 ```
 
 There is not `make run/run-api`.
+
+
+## Known future problems
+
+`## HOSTING NEEDS CHANGING IN FUTURE [DO NOT DELETE]`
+
+in application.py

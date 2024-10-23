@@ -186,7 +186,7 @@
                                                 {
                                                     "text": "Change",
                                                     "ariaLabel": "Start Billy Smith's section",
-                                                    "url": url_for('architecture')
+                                                    "url": url_for('hosting')
                                                 }
                                             ]
                                         }
@@ -351,7 +351,7 @@
 
             // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
-            var architectureData = localStorage.getItem('architecture-data');
+            var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
 
             // Technology Details
@@ -372,7 +372,7 @@
                 JSON.parse(infrastructureData).length === 0 ||
                 JSON.parse(integrationsData).length === 0 ||
                 JSON.parse(languagesData).length === 0 ||
-                JSON.parse(architectureData).length === 0 ||
+                JSON.parse(hostingData).length === 0 ||
                 JSON.parse(databaseData).length === 0) {
 
                     document.getElementById('error-panel').style.display = 'block';
@@ -449,7 +449,7 @@
                 "infrastructure": JSON.parse(infrastructureData),
                 "integrations": JSON.parse(integrationsData),
                 "languages": JSON.parse(languagesData),
-                "hosting": JSON.parse(architectureData),
+                "hosting": JSON.parse(hostingData),
                 "database": JSON.parse(databaseData),
             },
             }
@@ -514,7 +514,11 @@
             document.getElementById('project').value = JSON.stringify(finalData.details);
             document.getElementById('developed').value = JSON.stringify(finalData.developed);
             document.getElementById('source_control').value = JSON.stringify(finalData.source_control);
-            document.getElementById('hosting').value = JSON.stringify(finalData.architecture.hosting);
+            var hostingData = {
+                "type": [finalData.architecture.hosting.type],
+                "details": finalData.architecture.hosting.others
+            };
+            document.getElementById('hosting').value = JSON.stringify(hostingData);
             document.getElementById('database').value = JSON.stringify(finalData.architecture.database);
             document.getElementById('languages').value = JSON.stringify(finalData.architecture.languages);
             document.getElementById('frameworks').value = JSON.stringify(finalData.architecture.frameworks);

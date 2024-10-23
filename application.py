@@ -171,6 +171,8 @@ def survey():
         else:
             developed_company = ""
         
+
+        ## HOSTING NEEDS CHANGING IN FUTURE!
         data = {
             "user": [u for u in user],
             "details": [{
@@ -194,8 +196,8 @@ def survey():
             "archived": False
             }
         print(data)
-        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
-        print(projects.json())
+        # projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        # print(projects.json())
         return redirect(url_for("dashboard"))
 
     return render_template("survey.html")
@@ -220,9 +222,13 @@ def developed():
 def source_control():
     return render_template("/section_code/source_control.html")
 
-@app.route("/survey/architecture", methods=['GET'])
-def architecture():
-    return render_template("/section_code/architecture.html")
+@app.route("/survey/hosting", methods=['GET'])
+def hosting():
+    stage = request.args.get('stage')
+    if stage == '2':
+        return render_template("/section_code/hosting_select.html")
+    return render_template("/section_code/hosting.html")
+
 
 @app.route("/survey/database", methods=['GET'])
 def database():

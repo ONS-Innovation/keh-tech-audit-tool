@@ -216,10 +216,10 @@
             }
             console.log(finalData);
 
-            var languages_details = arrToList(finalData.architecture.languages.main) +  arrToList(finalData.architecture.languages.others);
-            var frameworks_details = arrToList(finalData.architecture.frameworks.main) + arrToList(finalData.architecture.frameworks.others);
-            var integrations_details = arrToList(finalData.architecture.integrations.main) + arrToList(finalData.architecture.integrations.others);
-            var infrastructure_details = arrToList(finalData.architecture.infrastructure.main) + arrToList(finalData.architecture.infrastructure.others);
+            var languages_details = "Main: " + arrToList(finalData.architecture.languages.main)  + "<br>Other: " +   arrToList(finalData.architecture.languages.others);
+            var frameworks_details = arrToList(finalData.architecture.frameworks.others);
+            var integrations_details = arrToList(finalData.architecture.integrations.others);
+            var infrastructure_details = arrToList(finalData.architecture.infrastructure.others);
 
             document.getElementById('languages_details').innerHTML = languages_details;
             document.getElementById('framework_details').innerHTML = frameworks_details;

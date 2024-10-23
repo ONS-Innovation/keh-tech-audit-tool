@@ -163,7 +163,7 @@
         function load_data() {
             var sourceControlData = localStorage.getItem('data-source-control');
             var architectureData = localStorage.getItem('architecture-data');
-            var databaseData = localStorage.getItem('data-database');
+            var databaseData = localStorage.getItem('database-data');
 
             localStorage.setItem('validate', false);
 
@@ -206,13 +206,13 @@
             var hosting = finalData.architecture.hosting;
             var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
 
-            var hosting_details = arrToList(hosting);
-
+            // var hosting_details = arrToList(hosting);
+            
             
 
             console.log(JSON.stringify(user))
             document.getElementById('source_control_details').innerHTML = source_control;
-            document.getElementById('hosting_details').innerHTML = hosting_details;
+            document.getElementById('hosting_details').innerHTML = JSON.stringify(hosting["others"]);
             document.getElementById('database_details').innerHTML = database_details;
 
             console.log(JSON.stringify(finalData.user));

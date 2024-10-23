@@ -90,8 +90,8 @@
                 "onsubmit": "Enter hosting",
             },
             "searchButton": {
-                "visuallyHideButtonText": true,
-                "text": 'Search',
+                "visuallyHideButtonText": false,
+                "text": 'Add',
                 "iconType": 'check',
                 "attributes": {
                     "onclick": "addData()"
@@ -113,30 +113,33 @@
 
     }) }}
 
-<br>
-
-<div id="con1" class="ons-field">
-
-</div>
-
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Hosting"
+            },
+            {
+                "value": "Type"
+            },
+            {
+                "value": "Actions"
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
 <script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
 
-<form action="{{ url_for('survey') }}" method="GET">
-    {{
-        onsButton({
-            "id": "remove",
-            "type": "button",
-            "text": "Remove Last Item",
-            "variants": ['secondary', 'small'],
-            "attributes": {
-                "onclick": "removeData()"
-            }
-        })
-    }}
-<br>
-<br>    
+<form action="{{ url_for('survey') }}" method="GET"> 
 {{
     onsButton({
         "id": "save-values-button",

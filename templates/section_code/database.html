@@ -6,7 +6,9 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/label/_macro.njk" import onsLabel %}
-
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{
 {%
     set pageConfig = {
         "header": {
@@ -44,93 +46,78 @@
 
 {% block main %}
 
-<h1>Database(s)</h1>
-
-
-{{
-    onsAccordion({
+<h1>Databases</h1>
+{{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's databases such as Postgres, SQLServer, MongoDB etc.</p>"
+                "content": "<p>Enter details about the project's languages such as Python, JavaScript etc.</p>"
             }
         ]
-    })
-}}
-
-<form action="{{ url_for('survey') }}" method="GET">
-
-
-
-{%
-    call onsQuestion({
-        "classes": "ons-u-mt-no",
-        "legendIsQuestionTitle": true
-    })
-%}
-{{ onsLabel({
-        "id": 'label',
-        "for": "label",
-        "text": 'What database was used for this project?',
+    }) }}
+        {{ onsAutosuggest({
+        "id": "database-input",
+        "input": {
+            "label": {
+                "text": "What databases are used in the project?",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "database-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter languages",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "lanuages-suggestions",
+        "autosuggestData": "/autocomplete/database.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
 
     }) }}
-    {{
-        onsRadios({
-            "dontWrap": true,
-            "name": "role",
-            "radios": [
-                {
-                    "id": "none",
-                    "label": {
-                        "text": "None"
-                    },
-                    "value": "None"
-                },
-                {
-                    "id": "postgres",
-                    "label": {
-                        "text": "Postgres"
-                    },
-                    "value": "Postgres"
-                },
-                {
-                    "id": "sqlserver",
-                    "label": {
-                        "text": "SQLServer"
-                    },
-                    "value": "SQLServer"
-                },
-                {
-                    "id": "mongodb",
-                    "label": {
-                        "text": "MongoDB"
-                    },
-                    "value": "MongoDB"
-                },
-                {
-                    "id": "other",
-                    "label": {
-                        "text": "Other"
-                    },
-                    "value": "other",
-                    "other": {
-                        "id": "other-input",
-                        "name": "other",
-                        "label": {
-                            "text": "Enter database software"
-                        }
-                    }
-                }
-            ]
-        })
-    }}
-{% endcall %}
-
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-{{
-    onsButton({
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Language"
+            },
+            {
+                "value": "Type"
+            },
+            {
+                "value": "Actions"
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
         "id": "save-values-button",
         "url": url_for('architecture_summary'),
         "text": "Finish section",
@@ -138,59 +125,14 @@
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-<script>
-    function storeData() {
-        var database = document.querySelector('input[name="role"]:checked').value;
-        var otherDatabase = document.getElementById('other-input').value;
-        var complete = true;
-
-        var data = {
-            "database": database,
-            "complete": complete
-        };
-
-        if (database === 'other') {
-            data.database = otherDatabase;
-        }
-
-        localStorage.setItem('data-database', JSON.stringify(data));
-
-        console.log(localStorage.getItem('data-database'));
-    }
-
-    function loadData() {
-        var obj = {
-            "None": "none",
-            "Postgres": "postgres",
-            "MongoDB": "mongodb",
-            "SQLServer": "sqlserver"
-        }
-        var data = JSON.parse(localStorage.getItem('data-database'));
-
-        if (data) {
-
-            if (data.database != "None" && data.database != "Postgres" && data.database != "MongoDB" && data.database != "SQLServer") {
-                var option = "other";
-            } else {
-                var option = obj[data.database];
-            }
-
-            document.getElementById(option).checked = true;
-            console.log(option);
-            console.log(data.database);
-            if (option === 'other') {
-                document.getElementById('other-input').value = data.database;
-            }
-        }
-    }
-    redirectToPrevious();
-    loadData();
-</script>
-
-
-</form>
-
-{% endblock %}
+    }) }}
+            </form>
+            <script>
+                loadData();
+                redirectToPrevious();
+                document
+                    .getElementById("error-panel")
+                    .style
+                    .display = "none";
+            </script>
+        {% endblock %}

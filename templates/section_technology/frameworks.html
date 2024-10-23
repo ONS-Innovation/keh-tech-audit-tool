@@ -85,14 +85,14 @@
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "infrastructure-input",
+            "id": "frameworks-input",
             "class": "item-inputs",
             "attributes": {
                 "onsubmit": "Enter frameworks",
             },
             "searchButton": {
-                "visuallyHideButtonText": true,
-                "text": 'Search',
+                "visuallyHideButtonText": false,
+                "text": 'Add',
                 "iconType": 'check',
                 "attributes": {
                     "onclick": "addData()"
@@ -117,32 +117,45 @@
 
 
 
+
 <br>
+{% from "components/table/_macro.njk" import onsTable %}
 
-<div id="con1" class="ons-field">
-
-</div>
-
-
+{{
+    onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Framework"
+            },
+            {
+                "value": "Type"
+            },
+            {
+                "value": "Actions"
+            }
+        ],
+        "trs": [
+            {
+                "tds": [
+                {
+                    "value": "Python"
+                },
+                {
+                    "value": "Backend"
+                },
+                {
+                    "value": "Edit"
+                }
+                ]
+            }
+        ]
+    })
+}}
 <script src="{{ url_for('static', filename='scripts.js') }}">
 </script>
 
-
-{{
-    onsButton({
-        "id": "remove",
-        "type": "button",
-        "text": "Remove Last Item",
-        "variants": ['secondary', 'small'],
-        "attributes": {
-            "onclick": "removeData()"
-        }
-    })
-}}
-
-
-<br>
-<br>
 
 <form action="{{ url_for('survey') }}" method="GET">
 {{

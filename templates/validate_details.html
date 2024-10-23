@@ -297,8 +297,10 @@
             ]
         })
     }}
+    {# onsubmit="localStorage.clear()" for time being #}
 
-    <form action="{{ url_for('survey') }}"  onsubmit="localStorage.clear()" method="POST">
+    <form action="{{ url_for('survey') }}"
+    method="POST">
         <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
         <input id="developed" type="hidden" name="developed">
@@ -325,6 +327,7 @@
             var final = ""
             try{
                 for (let i = 0; i <= arr.length - 1; i++) {
+                console.log(arr[i]);
                     if (i === 0) {
                         final += `<ul>`
                     }
@@ -340,33 +343,37 @@
         }
 
         function load_data() {
+            // Project Details
             var contactTechData = localStorage.getItem('contact-tech-data');
             var contactManagerData = localStorage.getItem('contact-manager-data');
             var projectData = localStorage.getItem('data');
             var developedData = localStorage.getItem('data-developed');
+
+            // Architecture Details 
             var sourceControlData = localStorage.getItem('data-source-control');
+            var architectureData = localStorage.getItem('architecture-data');
+            var databaseData = localStorage.getItem('database-data');
+
+            // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
-            var architectureData = localStorage.getItem('architecture-data');
-            var databaseData = localStorage.getItem('data-database');
-
             localStorage.setItem('validate', false);
 
             document.getElementById('error-panel').style.display = 'none';
 
             try {
-                if (contactTechData === null ||
-                    projectData === null ||
-                    developedData === null ||
-                    sourceControlData === null ||
-                    JSON.parse(frameworksData).length === 0 || 
-                    JSON.parse(infrastructureData).length === 0 ||
-                    JSON.parse(integrationsData).length === 0 ||
-                    JSON.parse(languagesData).length === 0 ||
-                    JSON.parse(architectureData).length === 0 ||
-                    JSON.parse(databaseData).length === 0) {
+            if (contactTechData === null ||
+                projectData === null ||
+                developedData === null ||
+                sourceControlData === null ||
+                JSON.parse(frameworksData).length === 0 || 
+                JSON.parse(infrastructureData).length === 0 ||
+                JSON.parse(integrationsData).length === 0 ||
+                JSON.parse(languagesData).length === 0 ||
+                JSON.parse(architectureData).length === 0 ||
+                JSON.parse(databaseData).length === 0) {
 
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';
@@ -392,44 +399,65 @@
 
                 }
             } catch (e) {
+
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('submit-button').style.display = 'none';
+
+            }
             }
             var youData = [];
             if (contactTechData) {
-                var techData = JSON.parse(contactTechData);
-                youData.push({
-                    "email": techData.contactEmail,
-                    "roles": ["Technical Contact"],
-                    "grade": techData.role
-                });
+            var techData = JSON.parse(contactTechData);
+            youData.push({
+                "email": techData.contactEmail,
+                "roles": ["Technical Contact"],
+                "grade": techData.role
+            });
             }
 
             if (contactManagerData) {
-                var managerData = JSON.parse(contactManagerData);
-                if (managerData.contactEmail) {
-                    youData.push({
-                        "email": managerData.contactEmail,
-                        "roles": ["Delivery Manager"],
-                        "grade": managerData.role
-                    });
-                }
+            var managerData = JSON.parse(contactManagerData);
+            if (managerData.contactEmail) {
+                youData.push({
+                "email": managerData.contactEmail,
+                "roles": ["Delivery Manager"],
+                "grade": managerData.role
+                });
             }
+            }
+            // NEEDS TO BE UPDATED WHEN SOURCE CONTROL IS CHANGEEDDDD
+            var sourceControlParsed = JSON.parse(sourceControlData);
+            var finalSourceControl = [
+            {
+                "type": sourceControlParsed.source_control,
+                "links": [
+                {
+                    "description": "Main Repository",
+                    "url": sourceControlParsed.other_source_control
+                }
+                ]
+            }
+            ];
 
             var finalData = {
-                "user": (youData),
-                "details": JSON.parse(projectData),
-                "developed": JSON.parse(developedData),
-                "source_control": JSON.parse(sourceControlData),
-                "architecture": {
-                    "frameworks": JSON.parse(frameworksData),
-                    "infrastructure": JSON.parse(infrastructureData),
-                    "integrations": JSON.parse(integrationsData),
-                    "languages": JSON.parse(languagesData),
-                    "hosting": JSON.parse(architectureData),
-                    "database": JSON.parse(databaseData),
-                },
+            "user": (youData),
+            "details": JSON.parse(projectData),
+            "developed": JSON.parse(developedData),
+            "source_control": finalSourceControl,
+            "architecture": {
+                "frameworks": JSON.parse(frameworksData),
+                "infrastructure": JSON.parse(infrastructureData),
+                "integrations": JSON.parse(integrationsData),
+                "languages": JSON.parse(languagesData),
+                "hosting": JSON.parse(architectureData),
+                "database": JSON.parse(databaseData),
+            },
             }
+
+            // Remove 'complete' key from details, developed, and source_control
+            delete finalData.details.complete;
+            delete finalData.developed.complete;
+            delete finalData.source_control.complete;
             console.log(finalData);
 
             var technical_contact = `<ul><li>${finalData.user[0].roles.join(', ')}: ${finalData.user[0].email} (${finalData.user[0].grade})</li></ul>`;
@@ -448,12 +476,13 @@
             try {
             var developed_details = `<ul><li>Developed By: ${finalData.developed.developed}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
             var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
-            var hosting = finalData.architecture.hosting;
-            var languages = finalData.architecture.languages;
-            var frameworks = finalData.architecture.frameworks;
-            var integrations = finalData.architecture.integrations;
-            var infrastructure = finalData.architecture.infrastructure;
-            var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
+
+            var hosting = finalData.architecture.hosting.main.concat(finalData.architecture.hosting.others);
+            var languages = finalData.architecture.languages.main.concat(finalData.architecture.languages.others);
+            var frameworks = finalData.architecture.frameworks.main.concat(finalData.architecture.frameworks.others);
+            var integrations = finalData.architecture.integrations.main.concat(finalData.architecture.integrations.others);
+            var infrastructure = finalData.architecture.infrastructure.main.concat(finalData.architecture.infrastructure.others);
+            var database_details = arrToList(finalData.architecture.database.main.concat(finalData.architecture.database.others));
             } catch (e) {
                 console.log(e);
             }
@@ -468,7 +497,12 @@
             document.getElementById('delivery_manager').innerHTML = delivery_manager;
             document.getElementById('project_details').innerHTML = project_details;
             document.getElementById('developed_details').innerHTML = developed_details;
-            document.getElementById('source_control_details').innerHTML = source_control;
+            var sourceControlDetails = `<ul><li>Type: ${finalData.source_control[0].type}</li>`;
+            finalData.source_control[0].links.forEach(link => {
+                sourceControlDetails += `<li>${link.description}: <a href="${link.url}">${link.url}</a></li>`;
+            });
+            sourceControlDetails += `</ul>`;
+            document.getElementById('source_control_details').innerHTML = sourceControlDetails;
             document.getElementById('hosting_details').innerHTML = hosting_details;
             document.getElementById('database_details').innerHTML = database_details;
             document.getElementById('languages_details').innerHTML = languages_details;

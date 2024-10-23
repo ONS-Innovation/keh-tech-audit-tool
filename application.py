@@ -167,35 +167,31 @@ def survey():
         elif developed["developed"] == "Partnership":
             developed_company = developed["partnership_company"]
         else:
-            developed_company = None
+            developed_company = ""
         
-        source_control = source_control["source_control"]
-        database = database["database"]
-        print([u for u in user])
         data = {
-            "archived": False,
             "user": [u for u in user],
-            "details": {
+            "details": [{
                 "name": project["project_name"],
                 "short_name": project["project_long_name"],
-                "documentation_link": project["doc_link"],
-            },
+                "documentation_link": [project["doc_link"]],
+            }],
             "developed":[  
                 developed["developed"],
                 [developed_company]
             ],
-            "source_control":[
-                source_control
-            ],
+            "source_control": source_control,
             "architecture": {
-                "hosting": {"type": "Cloud", "detail": hosting},
-                "database": {"main": database, "others": []},
-                "languages": {"main": "", "others": languages},
-                "frameworks": {"main": "", "others": frameworks},
-                "CICD": {"main": "", "others": integrations},
-                "infrastructure": {"main": "", "others": infrastructure}
-                }
+                "hosting": hosting,
+                "database": database,
+                "languages": languages,
+                "frameworks": frameworks,
+                "CICD": integrations,
+                "infrastructure": infrastructure
+                },
+            "archived": False
             }
+        print(data)
         projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
         print(projects.json())
         return redirect(url_for("dashboard"))

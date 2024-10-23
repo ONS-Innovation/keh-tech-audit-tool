@@ -132,16 +132,19 @@
     function storeData() {
         var project_name = document.getElementById('project-name').value;
         var project_long_name = document.getElementById('project-long-name').value;
+        var project_description = document.getElementById('project-description').value;
         var doc_link = document.getElementById('documentation-link').value;
         var complete = (project_name !== '' && project_long_name !== '' && doc_link !== '');
         var data = {
             "project_name": project_name,
             "project_long_name": project_long_name,
+            "project_description": project_description,
             "doc_link": doc_link,
             "complete": complete
         };
 
-        if (data['project_name'] != '' && data['project_long_name'] != '' && data['doc_link'] != '') {
+
+        if (data['project_name'] != '' && data['project_long_name'] != '' && data['doc_link'] != '' && data['project_description'] != '') {
             localStorage.setItem('data', JSON.stringify(data));
         }
 
@@ -152,14 +155,18 @@
         var data = JSON.parse(localStorage.getItem('data'));
         var project_name = data.project_name;
         var project_long_name = data.project_long_name;
+        var project_description = data.project_description;
         var doc_link = data.doc_link;
 
         if (data) {
             document.getElementById('project-name').value = project_name;
             document.getElementById('project-long-name').value = project_long_name;
             document.getElementById('documentation-link').value = doc_link;
+            document.getElementById('project-description').value = project_description;
+
         }
     }
+
     redirectToPrevious();
     loadData();
 </script>

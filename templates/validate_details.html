@@ -370,6 +370,25 @@
 
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';
+                    
+                if (contactTechData === null || contactTechData["contactEmail"] === '' || contactTechData["role"] === '') {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('submit-button').style.display = 'none';
+                }
+
+                if (contactManagerData === null || contactManagerData["contactEmail"] === '' || contactManagerData["role"] === '') {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('submit-button').style.display = 'none';
+                }
+
+                if (projectData === null || projectData["project_name"] === '' 
+                        || projectData["project_long_name"] === '' 
+                        || projectData["doc_link"] === '' 
+                        || projectData["project_description"] === '') {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('submit-button').style.display = 'none';
+                }
+                
 
                 }
             } catch (e) {
@@ -426,6 +445,7 @@
             } else {
                 var company = "N/A";
             }
+            try {
             var developed_details = `<ul><li>Developed By: ${finalData.developed.developed}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
             var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
             var hosting = finalData.architecture.hosting;
@@ -434,6 +454,9 @@
             var integrations = finalData.architecture.integrations;
             var infrastructure = finalData.architecture.infrastructure;
             var database_details = `<ul><li>${finalData.architecture.database.database}</li></ul>`;
+            } catch (e) {
+                console.log(e);
+            }
 
             var hosting_details = arrToList(hosting);
             var languages_details = arrToList(languages);

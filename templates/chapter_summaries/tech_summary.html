@@ -47,7 +47,7 @@
 }}
 
 {% endcall %}
-    <h1 class="ons-u-mt-m">Technology Details Summary</h1>
+    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
 
     {{
         onsSummary({
@@ -203,6 +203,7 @@
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('submit-button').style.display = 'none';
             }
+            
 
             var finalData = {
                 "architecture": {
@@ -212,8 +213,9 @@
                     "languages": JSON.parse(languagesData),
                 },
             }
+            console.log(finalData);
 
-            var languages_details = arrToList(finalData.architecture.languages.main) + arrToList(finalData.architecture.languages.others);
+            var languages_details = arrToList(finalData.architecture.languages.main) +  arrToList(finalData.architecture.languages.others);
             var frameworks_details = arrToList(finalData.architecture.frameworks.main) + arrToList(finalData.architecture.frameworks.others);
             var integrations_details = arrToList(finalData.architecture.integrations.main) + arrToList(finalData.architecture.integrations.others);
             var infrastructure_details = arrToList(finalData.architecture.infrastructure.main) + arrToList(finalData.architecture.infrastructure.others);

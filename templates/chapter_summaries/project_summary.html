@@ -47,7 +47,7 @@
 }}
 
 {% endcall %}
-    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+    <h1 class="ons-u-mt-m">Project Details Summary</h1>
 
     {{
         onsSummary({
@@ -162,8 +162,8 @@
         }
 
         function load_data() {
-            var youData = localStorage.getItem('you_data');
-            var projectData = localStorage.getItem('data');
+            var youData = localStorage.getItem('contact-tech-data');
+            var projectData = localStorage.getItem('contact-manager-data');
             var developedData = localStorage.getItem('data-developed');
 
             localStorage.setItem('validate', false);

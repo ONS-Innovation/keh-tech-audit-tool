@@ -174,7 +174,7 @@ def survey():
             "details": [{
                 "name": project["project_name"],
                 "short_name": project["project_long_name"],
-                "documentation_link": project["doc_link"],
+                "documentation_link": [project["doc_link"]],
             }],
             "developed":[  
                 developed["developed"],

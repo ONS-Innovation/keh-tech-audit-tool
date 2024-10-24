@@ -113,7 +113,8 @@
             ]
         }) }}
     {{ onsButton({
-            "text": 'Continue to Submission',
+            "id": "submit-btn",
+            "text": '<div id="submit-btn-text">Continue to Submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "url": url_for('validate_details')
         }) }}
@@ -135,6 +136,143 @@
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
+
+            function changeBtnURL() {
+                var submitBtn = document.getElementById('submit-btn');
+                console.log(JSON.parse(contactTechData));
+                try {
+                    if (!JSON.parse(contactTechData)["contactEmail"] || !JSON.parse(contactTechData)["role"]) {
+                        submitBtn.href = '/survey/contact-tech';
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                        return;
+                    }
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/pre-survey/project';
+                    console.log(e)
+                    return;
+                }
+
+                try {
+                    if (!JSON.parse(contactManagerData)["contactEmail"] || !JSON.parse(contactManagerData)["role"]) {
+                        submitBtn.href = '/survey/contact-manager';
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                        return;
+                    }
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/survey/contact-manager';
+                    console.log(e)
+                    return;
+                }
+                try {
+                    if (!JSON.parse(projectData)["project_name"] 
+                        || !JSON.parse(projectData)["project_long_name"] 
+                        || !JSON.parse(projectData)["project_description"] 
+                        || !JSON.parse(projectData)["doc_link"]) {
+                            submitBtn.href = '/survey/project';
+                            console.log("hello");
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/survey/project';
+                        console.log(e);
+                        return;
+                    }
+
+                try {
+                    if (!JSON.parse(sourceControlData)["source_control"]) {
+                            submitBtn.href = '/survey/source_control';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/pre-survey/architecture';
+                        console.log(e)
+                        return;
+                    }
+                
+                try {
+                    if (!JSON.parse(architectureData)["others"].length === 0) {
+                            submitBtn.href = '/survey/architecture';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/survey/architecture';
+                        console.log(e)
+                        return;
+                    }
+
+                try {
+                    if (!JSON.parse(databaseData)["others"].length === 0) {
+                            submitBtn.href = '/survey/database';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/survey/database';
+                        console.log(e);
+                        return;
+                    }
+                
+
+                try {
+                    if (!JSON.parse(languagesData)["others"].length === 0) {
+                            submitBtn.href = '/survey/languages';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/pre-survey/technology';
+                        console.log(e);
+                        return;
+                    }
+                
+                try {
+                    if (!JSON.parse(frameworksData)["others"].length === 0) {
+                            submitBtn.href = '/survey/frameworks';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                        submitBtn.href = '/survey/frameworks';
+                        console.log(e)
+                        return;
+                    }
+                
+                try {
+                    if (!JSON.parse(integrationsData)["others"].length === 0) {
+                            submitBtn.href = '/survey/integrations';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                        submitBtn.href = '/survey/integrations';
+                        console.log(e);
+                        return;
+                    }
+                
+                try {
+                    if (!JSON.parse(infrastructureData)["others"].length === 0) {
+                            submitBtn.href = '/survey/infrastructure';
+                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                        }
+                    } catch (e) {
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                        submitBtn.href = '/survey/infrastructure';
+                        console.log(e);
+                        return;
+                    }
+            }
 
             function updateSectionStatus(sectionId, dataItems) {
                 var sectionElement = document.getElementById(sectionId);
@@ -186,10 +324,10 @@
                     }
                 }
             }
-
-            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData]);
-            updateSectionStatus('project_details', [sourceControlData, architectureData, databaseData]);
-            updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+            changeBtnURL();
+            // updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData]);
+            // updateSectionStatus('project_details', [sourceControlData, architectureData, databaseData]);
+            // updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();
     </script>

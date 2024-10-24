@@ -265,6 +265,7 @@
                     if (!JSON.parse(infrastructureData)["others"].length === 0) {
                             submitBtn.href = '/survey/infrastructure';
                             document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                            return;
                         }
                     } catch (e) {
                         document.getElementById('submit-btn-text').innerHTML = 'Continue';

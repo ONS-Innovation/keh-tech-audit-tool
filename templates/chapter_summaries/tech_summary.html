@@ -47,7 +47,7 @@
 }}
 
 {% endcall %}
-    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+    <h1 class="ons-u-mt-m">Technology Details Summary</h1>
 
     {{
         onsSummary({
@@ -157,7 +157,8 @@
             "id": "submit-button",
             "url": url_for('survey'),
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
+            "iconType": "arrow-next",
+            "iconPosition": "after"
         })
     }}
     
@@ -191,7 +192,7 @@
             document.getElementById('error-panel').style.display = 'none';
             console.log(JSON.parse(languagesData)['others']);
             try {
-                if (JSON.parse(languagesData)['others'].length === 0 ||
+                if ((JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0 )||
                     JSON.parse(frameworksData)['others'].length === 0 || 
                     JSON.parse(infrastructureData)['others'].length === 0 ||
                     JSON.parse(integrationsData)['others'].length === 0) {

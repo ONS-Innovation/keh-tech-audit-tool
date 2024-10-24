@@ -104,7 +104,6 @@ def exchange_code_for_tokens(code):
             raise Exception("Failed to retrieve ID Token")
         headers = {"Authorization": f"{session['id_token']}"}
         user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
-        print(user_request.json())
         if user_request.status_code != 200:
             return {"error": "Failed to retrieve user information"}
         else:
@@ -120,7 +119,7 @@ def dashboard():
         return render_template("dashboard.html", email=session["email"], projects=projects)
     except Exception as error:
         print(f"{error.__class__.__name__}: {error}")
-        flash("Failed to retrieve ID Token")
+        flash("Please re-login to authenticate your account.")
         return redirect(url_for("home"))
 
 @app.route("/project/<project_name>", methods=["GET"])
@@ -196,8 +195,8 @@ def survey():
             "archived": False
             }
         print(data)
-        # projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
-        # print(projects.json())
+        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        print(projects.json())
         return redirect(url_for("dashboard"))
 
     return render_template("survey.html")
@@ -220,7 +219,11 @@ def developed():
 
 @app.route("/survey/source_control", methods=['GET'])
 def source_control():
+    stage = request.args.get('stage')
+    if stage == '2':
+        return render_template("/section_code/source_control_select.html")
     return render_template("/section_code/source_control.html")
+
 
 @app.route("/survey/hosting", methods=['GET'])
 def hosting():

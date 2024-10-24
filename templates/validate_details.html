@@ -341,7 +341,23 @@
             }
             return final;
         }
-
+        function arrToLinkList(arr) {
+            var final = ""
+            try {
+            for (let i = 0; i <= arr.length - 1; i++) {
+                if (i === 0) {
+                final += `<ul>`
+                }
+                final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
+                if (i === arr.length - 1) {
+                final += `</ul>`
+                }
+            }
+            } catch (e) {
+            console.log(e);
+            }
+            return final;
+        }
         function load_data() {
             // Project Details
             var contactTechData = localStorage.getItem('contact-tech-data');
@@ -350,7 +366,7 @@
             var developedData = localStorage.getItem('data-developed');
 
             // Architecture Details 
-            var sourceControlData = localStorage.getItem('data-source-control');
+            var sourceControlData = localStorage.getItem('source_control-data');
             var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
 
@@ -427,15 +443,12 @@
             }
             // NEEDS TO BE UPDATED WHEN SOURCE CONTROL IS CHANGEEDDDD
             var sourceControlParsed = JSON.parse(sourceControlData);
+            console.log(sourceControlParsed.links)
             var finalSourceControl = [
             {
                 "type": sourceControlParsed.source_control,
-                "links": [
-                {
-                    "description": "Main Repository",
-                    "url": sourceControlParsed.other_source_control
-                }
-                ]
+                "links": sourceControlParsed.links
+                
             }
             ];
 
@@ -475,7 +488,6 @@
             }
             try {
             var developed_details = `<ul><li>Developed By: ${finalData.developed.developed}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
-            var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
 
             var hosting = finalData.architecture.hosting.main.concat(finalData.architecture.hosting.others);
             var languages = finalData.architecture.languages.main.concat(finalData.architecture.languages.others);
@@ -497,11 +509,7 @@
             document.getElementById('delivery_manager').innerHTML = delivery_manager;
             document.getElementById('project_details').innerHTML = project_details;
             document.getElementById('developed_details').innerHTML = developed_details;
-            var sourceControlDetails = `<ul><li>Type: ${finalData.source_control[0].type}</li>`;
-            finalData.source_control[0].links.forEach(link => {
-                sourceControlDetails += `<li>${link.description}: <a href="${link.url}">${link.url}</a></li>`;
-            });
-            sourceControlDetails += `</ul>`;
+            var sourceControlDetails = `Type: ${finalData.source_control[0].type}<br>Link:` + arrToLinkList(finalData.source_control[0].links);
             document.getElementById('source_control_details').innerHTML = sourceControlDetails;
             document.getElementById('hosting_details').innerHTML = hosting_details;
             document.getElementById('database_details').innerHTML = database_details;

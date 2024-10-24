@@ -47,7 +47,7 @@
 }}
 
 {% endcall %}
-    <h1 class="ons-u-mt-m">Choose another section to complete</h1>
+    <h1 class="ons-u-mt-m">Code and Architecture Summary</h1>
 
     {{
         onsSummary({
@@ -137,7 +137,8 @@
             "id": "submit-button",
             "url": url_for('survey'),
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
+            "iconType": "arrow-next",
+            "iconPosition": "after"
         })
     }}
     
@@ -146,22 +147,40 @@
         function arrToList(arr) {
             var final = ""
             try{
-                for (let i = 0; i <= arr.length - 1; i++) {
-                    if (i === 0) {
-                        final += `<ul>`
-                    }
-                    final += `<li>${arr[i]}</li>`;
-                    if (i === arr.length - 1) {
-                        final += `</ul>`
-                    }
+            for (let i = 0; i <= arr.length - 1; i++) {
+                if (i === 0) {
+                final += `<ul>`
                 }
+                final += `<li>${arr[i]}</li>`;
+                if (i === arr.length - 1) {
+                final += `</ul>`
+                }
+            }
             } catch (e) {
-                console.log(e);
+            console.log(e);
+            }
+            return final;
+        }
+
+        function arrToLinkList(arr) {
+            var final = ""
+            try {
+            for (let i = 0; i <= arr.length - 1; i++) {
+                if (i === 0) {
+                final += `<ul>`
+                }
+                final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
+                if (i === arr.length - 1) {
+                final += `</ul>`
+                }
+            }
+            } catch (e) {
+            console.log(e);
             }
             return final;
         }
         function load_data() {
-            var sourceControlData = localStorage.getItem('data-source-control');
+            var sourceControlData = localStorage.getItem('source_control-data');
             var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
 
@@ -182,8 +201,11 @@
             }
 
             var hostingJSON = JSON.parse(hostingData);
+            console.log(sourceControlData);
+            var sourceControlDataJSON = JSON.parse(sourceControlData);
+            var sourceType = sourceControlDataJSON.source_control;
             var finalData = {
-                "source_control": JSON.parse(sourceControlData),
+                "source_control": [{"type": sourceType, "links": sourceControlDataJSON.links}],
                 "architecture": {
                     "hosting": {
                         "main": [hostingJSON.type],
@@ -194,7 +216,7 @@
             }
             console.log(finalData);
 
-            var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
+            var source_control = `Type: ${sourceType}<br>Link:` + arrToLinkList(finalData.source_control[0].links);
             var hosting_details = `Type: ${hostingJSON.type}<br>Services:` +arrToList(finalData.architecture.hosting.others);
             var database_details = arrToList(finalData.architecture.database.others) + arrToList(finalData.architecture.database.main);
 

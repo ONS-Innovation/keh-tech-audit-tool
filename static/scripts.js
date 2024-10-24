@@ -49,10 +49,10 @@ function renderData() {
                 </div>
             </td>
             ` : ''}
-            <td class="ons-table__cell" style='display:flex;justify-content: space-between;cursor: pointer;'>
-                <a onclick='removeData("${lang}")' class="ons-summary__button">
-                    <span class="ons-summary__button-text" aria-hidden="true">Remove</span>
-                </a>
+            <td class="ons-table__cell" >
+                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${lang}")'>
+  <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>
+</button>
             </td>
         `;
 

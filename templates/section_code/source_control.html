@@ -108,7 +108,7 @@
     onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
-        "url": url_for('hosting'),
+        "url": "/survey/source_control?stage=2",
         "attributes": {
             "onclick": "storeData();"
         }
@@ -121,19 +121,21 @@
         var other_source_control = document.getElementById('other-input').value;
         var complete = true;
 
-        var data = {
+        var newData = {
             "source_control": source_control,
-            "other_source_control": other_source_control,
             "complete": complete
         };
 
         if (source_control === 'other') {
-            data.source_control = other_source_control;
+            newData.source_control = other_source_control;
         }
 
-        localStorage.setItem('data-source-control', JSON.stringify(data));
+        var existingData = JSON.parse(localStorage.getItem('source_control-data')) || {};
 
-        console.log(localStorage.getItem('data-source-control'));
+        // Merge new data with existing data
+        var updatedData = { ...existingData, ...newData };
+
+        localStorage.setItem('source_control-data', JSON.stringify(updatedData));
     }
 
     function loadData() {
@@ -141,7 +143,7 @@
             "Github": "github",
             "Gitlab": "gitlab",
         }
-        var data = JSON.parse(localStorage.getItem('data-source-control'));
+        var data = JSON.parse(localStorage.getItem('source_control-data'));
 
         if (data) {
             if (data.source_control != "Github" && data.source_control != "Gitlab") {
@@ -158,7 +160,7 @@
             }
         }
     }
-    redirectToPrevious();
+    {# redirectToPrevious(); #}
     loadData();
 </script>
 

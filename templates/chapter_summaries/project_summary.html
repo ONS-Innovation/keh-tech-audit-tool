@@ -61,7 +61,7 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "You",
+                                    "rowTitle": "Contact",
                                     "rowItems": [
                                         {
                                             "valueList": [
@@ -139,7 +139,8 @@
             "id": "submit-button",
             "url": url_for('survey'),
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "chevron",
+            "iconType": "arrow-next",
+            "iconPosition": "after"
         })
     }}
     
@@ -165,10 +166,9 @@
 
         function load_data() {
 
-            var youData = localStorage.getItem('contact-tech-data');
+            var techContactData = localStorage.getItem('contact-tech-data');
             var projectData = localStorage.getItem('data');
             var managerData = localStorage.getItem('contact-manager-data');
-
             var developedData = localStorage.getItem('data-developed');
 
             localStorage.setItem('validate', false);
@@ -176,7 +176,7 @@
             document.getElementById('error-panel').style.display = 'none';
 
             try {
-                if (youData === null ||
+                if (techContactData === null ||
                     projectData === null ||
                     developedData === null) {
 
@@ -189,23 +189,14 @@
                 document.getElementById('submit-button').style.display = 'none';
             }
 
-            if (youData && JSON.parse(youData).complete) {
-            }
-            if (projectData && JSON.parse(projectData).complete) {
-            }
-            if (developedData && JSON.parse(developedData).complete) {
-                // Do something
-            }
-        
-
             var finalData = {
-                "user": JSON.parse(youData),
+                "user": JSON.parse(techContactData),
                 "details": JSON.parse(projectData),
                 "developed": JSON.parse(developedData),
             }
             console.log(finalData);
 
-            var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Owner Email: ${finalData.user.ownerEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
+            var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
             var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
 
             if (finalData.developed.developed === "Outsourced") {

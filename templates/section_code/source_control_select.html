@@ -79,7 +79,7 @@
     onsInput({
         "id": "source_control_link-input",
         "label": {
-            "text": "Do you have a link to your source control?"
+            "text": "Enter a link to source control"
         }
     })
 }}
@@ -163,9 +163,8 @@ function renderData() {
     });
 }
 
-function removeData(lang) {
-    langArr.main = langArr.main.filter(item => item !== lang);
-    langArr.others = langArr.others.filter(item => item !== lang);
+function removeData(link) {
+    langArr.links = langArr.links.filter(item => item.link !== link);
     storeData();
     renderData();
 }

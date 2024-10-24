@@ -195,8 +195,8 @@ def survey():
             "archived": False
             }
         print(data)
-        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
-        print(projects.json())
+        # projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        # print(projects.json())
         return redirect(url_for("dashboard"))
 
     return render_template("survey.html")

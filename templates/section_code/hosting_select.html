@@ -18,13 +18,25 @@
         },
         "breadcrumbs": {
             "itemsList": [
-                             {
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
+                },
+                {
                     "url": '/pre-survey/architecture',
                     "text": 'Architecture Details'
                 },
                 {
                     "url": '/survey/source_control',
-                    "text": 'Source Control'
+                    "text": 'Source Control (Part 1)'
+                },
+                {
+                    "url": '/survey/source_control?stage=2',
+                    "text": 'Source Control (Part 2)'
+                },
+                {
+                    "url": '/survey/hosting',
+                    "text": 'Hosting (Part 1)'
                 }
             ]
         },
@@ -70,7 +82,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter the names of the hosting services used by the project.</p>"
+                "content": "<p>Please specify how your solution is hosted by entering one or more cloud service providers (e.g., AWS, Azure, Google Cloud). If your project utilises multiple cloud platforms (e.g Azure for integrating authentication and GCP for application) you can add more than one service provider. </p>"
             }
         ]
     })
@@ -80,7 +92,7 @@
         "id": "hosting-input",
         "input": {
             "label": {
-                "text": "What hosting technology was used within this project?",
+                "text": "Which cloud service provider(s) host the solution?",
                 "description": "Enter your own answer or select from suggestions.",
             },
             "autocomplete": "on",

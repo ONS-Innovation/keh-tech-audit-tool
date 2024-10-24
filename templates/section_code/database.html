@@ -20,17 +20,26 @@
         },
         "breadcrumbs": {
             "itemsList": [
-{
+            { "url": '/survey', "text": 'Survey' },
+                {
                     "url": '/pre-survey/architecture',
                     "text": 'Architecture Details'
                 },
                 {
                     "url": '/survey/source_control',
-                    "text": 'Source Control'
+                    "text": 'Source Control (Part 1)'
                 },
                 {
-                    "url": '/survey/architecture',
-                    "text": 'Hosting'
+                    "url": '/survey/source_control?stage=2',
+                    "text": 'Source Control (Part 2)'
+                },
+                {
+                    "url": '/survey/hosting',
+                    "text": 'Hosting (Part 1)'
+                },
+                {
+                    "url": '/survey/hosting?stage=2',
+                    "text": 'Hosting (Part 2)'
                 }
             ]
         },
@@ -52,7 +61,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's languages such as Python, JavaScript etc.</p>"
+                "content": "<p>Please specify the database technologies used in your project (e.g. Postgres, DynamoDB, Microsoft SQL Server).  If multiple databases are used, include all relevant technologies to give a better understanding of your project's data architecture.</p>"
             }
         ]
     }) }}

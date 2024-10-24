@@ -18,13 +18,17 @@
         },
         "breadcrumbs": {
             "itemsList": [
-                             {
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
+                },
+                 {
                     "url": '/pre-survey/architecture',
                     "text": 'Architecture Details'
                 },
                 {
                     "url": '/survey/source_control',
-                    "text": 'Source Control'
+                    "text": 'Source Control (Part 1)'
                 }
             ]
         },
@@ -70,7 +74,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter the names of the hosting services used by the project.</p>"
+                "content": "<p>Please provide the link(s) to the repositories that host your code. You can also include a short description alongside each link to outline what component each repository is responsible for.</p>"
             }
         ]
     })
@@ -107,10 +111,10 @@
         "id": "table-list",
         "ths": [
             {
-                "value": "Description"
+                "value": "Link"
             },
             {
-                "value": "Link"
+                "value": "Description"
             },
             {
                 "value": ""
@@ -150,8 +154,8 @@ function renderData() {
         newRow.classList.add('ons-table__row');
 
         newRow.innerHTML = `
-            <td class="ons-table__cell">${item.description}</td>
             <td class="ons-table__cell">${item.link}</td>
+            <td class="ons-table__cell">${item.description}</td>
             <td class="ons-table__cell">
                 <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${item.link}")'>
                     <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>

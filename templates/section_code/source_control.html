@@ -6,9 +6,7 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/label/_macro.njk" import onsLabel %}
-
-{%
-    set pageConfig = {
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
@@ -18,6 +16,10 @@
         },
         "breadcrumbs": {
             "itemsList": [
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
+                },
                  {
                     "url": '/pre-survey/architecture',
                     "text": 'Architecture Details'
@@ -31,41 +33,30 @@
               "post": ", except where otherwise stated"
           }
       }
-    }
-%}
-
+    } %}
 {% block main %}
-
-<h1>Source Control</h1>
-
-{{
-    onsAccordion({
+    <h1>Source Control</h1>
+    {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's source control such e.g Github, Gitlab etc.</p>",
+                "content": "<p>Please specify where your software is stored by selecting your source control management system (e.g., GitHub, GitLab, or other SCM platforms). If you are using something other than Github or Gitlab, please provide its name.</p>"
             }
         ]
-    })
-}}
-
-<form action="{{ url_for('survey') }}" method="GET">
-
-{%
-    call onsQuestion({
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {% call onsQuestion({
         "classes": "ons-u-mt-no",
         "legendIsQuestionTitle": true
-    })
-%}
-{{ onsLabel({
+    }) %}
+        {{ onsLabel({
         "id": 'label',
         "for": "label",
         "text": 'What source control was used for this project?',
 
     }) }}
-    {{
-        onsRadios({
+        {{ onsRadios({
             "dontWrap": true,
             "name": "role",
             "radios": [
@@ -98,73 +89,60 @@
                     }
                 }
             ]
-        })
-    }}
-{% endcall %}
-
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-{{
-    onsButton({
+        }) }}
+        {% endcall %}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        {{ onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
         "url": "/survey/source_control?stage=2",
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-<script>
-    function storeData() {
-        var source_control = document.querySelector('input[name="role"]:checked').value;
-        var other_source_control = document.getElementById('other-input').value;
-        var complete = true;
-
-        var newData = {
-            "source_control": source_control,
-            "complete": complete
-        };
-
-        if (source_control === 'other') {
-            newData.source_control = other_source_control;
-        }
-
-        var existingData = JSON.parse(localStorage.getItem('source_control-data')) || {};
-
-        // Merge new data with existing data
-        var updatedData = { ...existingData, ...newData };
-
-        localStorage.setItem('source_control-data', JSON.stringify(updatedData));
-    }
-
-    function loadData() {
-        var obj = {
-            "Github": "github",
-            "Gitlab": "gitlab",
-        }
-        var data = JSON.parse(localStorage.getItem('source_control-data'));
-
-        if (data) {
-            if (data.source_control != "Github" && data.source_control != "Gitlab") {
-                var option = "other";
-            } else {
-                var option = obj[data.source_control];
+    }) }}
+        <script>
+            function storeData() {
+                var source_control = document.querySelector('input[name="role"]:checked').value;
+                var other_source_control = document.getElementById('other-input').value;
+                var complete = true;
+                var newData = {
+                    "source_control": source_control,
+                    "complete": complete
+                };
+                if (source_control === 'other') {
+                    newData.source_control = other_source_control;
+                }
+                var existingData = JSON.parse(localStorage.getItem('source_control-data')) || {};
+                // Merge new data with existing data
+                var updatedData = {
+                    ... existingData,
+                    ... newData
+                };
+                localStorage.setItem('source_control-data', JSON.stringify(updatedData));
             }
-
-            document.getElementById(option).checked = true;
-            console.log(option);
-
-            if (data.source_control) {
-                document.getElementById('other-input').value = data.source_control;
+            function loadData() {
+                var obj = {
+                    "Github": "github",
+                    "Gitlab": "gitlab"
+                }
+                var data = JSON.parse(localStorage.getItem('source_control-data'));
+                if (data) {
+                    if (data.source_control != "Github" && data.source_control != "Gitlab") {
+                        var option = "other";
+                    } else {
+                        var option = obj[data.source_control];
+                    }
+                    document.getElementById(option).checked = true;
+                    console.log(option);
+                    if (data.source_control) {
+                        document.getElementById('other-input').value = data.source_control;
+                    }
+                }
             }
-        }
-    }
-    {# redirectToPrevious(); #}
-    loadData();
-</script>
-
-
-</form>
-
+            {
+                # redirectToPrevious();
+                #
+            } loadData();
+        </script>
+    </form>
 {% endblock %}

@@ -18,13 +18,21 @@
         },
         "breadcrumbs": {
             "itemsList": [
-                             {
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
+                },
+                {
                     "url": '/pre-survey/architecture',
                     "text": 'Architecture Details'
                 },
                 {
                     "url": '/survey/source_control',
-                    "text": 'Source Control'
+                    "text": 'Source Control (Part 1)'
+                },
+                {
+                    "url": '/survey/source_control?stage=2',
+                    "text": 'Source Control (Part 2)'
                 }
             ]
         },
@@ -70,7 +78,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter the names of the hosting services used by the project.</p>"
+                "content": "<p>Please specify how your solution is hosted: on-premises (e.g as VMs on servers owned buy ONS), in the cloud, or hybrid. If your solution is hosted in the cloud or as a hybrid setup, you will be prompted to enter the cloud service providers used (e.g., AWS, Azure, Google Cloud). </p>"
             }
         ]
     })
@@ -78,7 +86,7 @@
         {{ onsLabel({
         "id": 'contact-grade-label',
         "for": "contact-grade",
-        "text": 'Hosting Type',
+        "text": 'Where is the solution hosted?',
         "description": 'Select the type of hosting.'
     }) }}
 

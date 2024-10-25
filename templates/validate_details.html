@@ -367,8 +367,8 @@
             var techData = JSON.parse(contactTechData);
 
             try {
-                if (JSON.parse(contactTechData)["contactEmail"] === '' 
-                    || JSON.parse(contactTechData)["role"] === '') {
+                if (!JSON.parse(contactTechData)["contactEmail"] 
+                    || !JSON.parse(contactTechData)["role"]) {
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';
                     document.getElementById('error-panel').style.display = 'block';
@@ -401,11 +401,10 @@
             }
 
             try {
-                if (JSON.parse(contactManagerData)["contactEmail"] === '' 
-                    || JSON.parse(contactManagerData)["role"] === '') {
+                if (!JSON.parse(contactManagerData)["contactEmail"] 
+                    || !JSON.parse(contactManagerData)["role"]) {
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';
-                    document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Delivery Manager' section is incomplete</li></ul>";
                     document.getElementById('submit-button').style.display = 'none';
                     youData.push({
@@ -416,13 +415,15 @@
                 } else {
                     if (managerTechData) {
                         youData.push({
-                            "email": managerData.contactEmail,
+                            "email": managerTechData.contactEmail,
                             "roles": ["Technical Contact"],
-                            "grade": managerData.role
+                            "grade": managerTechData.role
                         });
                     }
                 }
             } catch (e) {
+                console.log(e);
+
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('error-panel').innerHTML += "<ul><li>'Delivery Manager' section is incomplete</li></ul>";
                 document.getElementById('submit-button').style.display = 'none';
@@ -434,21 +435,6 @@
                         });
                     }
             }
-            
-
-            // NEEDS TO BE UPDATED WHEN SOURCE CONTROL IS CHANGEEDDDD
-            var sourceControlParsed = JSON.parse(sourceControlData);
-            var finalSourceControl = [
-            {
-                "type": sourceControlParsed.source_control,
-                "links": [
-                {
-                    "description": "Main Repository",
-                    "url": sourceControlParsed.other_source_control
-                }
-                ]
-            }
-            ];
 
             var finalData = {
             "user": (youData),
@@ -520,15 +506,147 @@
                 var company = '';
                 console.log(e);
             }
+            var sourceControlParsed = JSON.parse(sourceControlData);
+            var finalSourceControl = [
+            {
+                "type": sourceControlParsed.source_control,
+                "links": [
+                {
+                    "description": "Main Repository",
+                    "url": sourceControlParsed.other_source_control
+                }
+                ]
+            }
+            ];
+            var sourceControlDetails= '';
             try {
-                var source_control = `<ul><li>${finalData.source_control.source_control}</li></ul>`;
-                var hosting = finalData.architecture.hosting.main.concat(finalData.architecture.hosting.others);
-                var languages = finalData.architecture.languages.main.concat(finalData.architecture.languages.others);
-                var frameworks = finalData.architecture.frameworks.main.concat(finalData.architecture.frameworks.others);
-                var integrations = finalData.architecture.integrations.main.concat(finalData.architecture.integrations.others);
-                var infrastructure = finalData.architecture.infrastructure.main.concat(finalData.architecture.infrastructure.others);
-                var database_details = arrToList(finalData.architecture.database.main.concat(finalData.architecture.database.others));
+                if (!JSON.parse(sourceControlData)["source_control"]) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Source Control' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    sourceControlDetails = '';
+                } else {
+                    var source_control = JSON.parse(sourceControlData);
+                    source_control = `<ul><li>${source_control.source_control}</li></ul>`;
+                    source_control = finalSourceControl;
+                    sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
+                    source_control[0].links.forEach(link => {
+                    sourceControlDetails += `<li>${link.description}: <a href="${link.url}">${link.url}</a></li>`;
+                });
+                sourceControlDetails += `</ul>`;
+                }
             } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Source Control' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                sourceControlDetails = '';
+                console.log(e);
+            }
+
+            var hosting = '';
+            try {
+                hosting = JSON.parse(architectureData).main.concat(JSON.parse(architectureData).others);
+                if (!JSON.parse(architectureData).main || !JSON.parse(architectureData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                } else {
+                    hosting = JSON.parse(architectureData).main.concat(JSON.parse(architectureData).others);
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+            }
+
+            var languages = '';
+            try {
+                languages = JSON.parse(languagesData).main.concat(JSON.parse(languagesData).others)
+                if (!JSON.parse(languagesData).main || !JSON.parse(languagesData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Languages' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    langauges = '';
+                } else {
+                    languages = JSON.parse(languagesData).main.concat(JSON.parse(languagesData).others)
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Languages' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                languages = '';
+                console.log(e);
+            }
+
+            var frameworks = '';
+            try {
+                if (!JSON.parse(frameworksData).main || !JSON.parse(frameworksData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Frameworks' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    frameworks = '';
+                } else {
+                    frameworks = JSON.parse(frameworksData).main.concat(JSON.parse(frameworksData).others);
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Frameworks' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                frameworks = '';
+                console.log(e);
+            }
+
+            var integrations = '';
+            try {
+                if (!JSON.parse(integrationsData).main || !JSON.parse(integrationsData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'CI/CD' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    integrations = '';
+                } else {
+                    integrations = JSON.parse(integrationsData).main.concat(JSON.parse(integrationsData).others);
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'CI/CD' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                integrations = '';
+                console.log(e);
+            }
+
+            var infrastructure = '';
+            try {
+                if (!JSON.parse(infrastructureData).main || !JSON.parse(infrastructureData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Infrastructure' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    infrastructure = '';
+                } else {
+                    infrastructure = JSON.parse(infrastructureData).main.concat(JSON.parse(infrastructureData).others);
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Infrastructure' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                infrastructure = '';
+                console.log(e);
+            }
+
+            var database_details = '';
+            try {
+                if (!JSON.parse(databaseData).main || !JSON.parse(databaseData).others) {
+                    document.getElementById('error-panel').style.display = 'block';
+                    document.getElementById('error-panel').innerHTML += "<ul><li>'Database' section is incomplete</li></ul>";
+                    document.getElementById('submit-button').style.display = 'none';
+                    database_details = '';
+                } else {
+                    database_details = arrToList(JSON.parse(databaseData).main.concat(JSON.parse(databaseData).others));
+                }
+            } catch (e) {
+                document.getElementById('error-panel').style.display = 'block';
+                document.getElementById('error-panel').innerHTML += "<ul><li>'Database' section is incomplete</li></ul>";
+                document.getElementById('submit-button').style.display = 'none';
+                database_details = '';
                 console.log(e);
             }
 
@@ -541,11 +659,7 @@
             document.getElementById('technical_contact').innerHTML = technical_contact;
             document.getElementById('delivery_manager').innerHTML = delivery_manager;
             document.getElementById('developed_details').innerHTML = developed_details;
-            var sourceControlDetails = `<ul><li>Type: ${finalData.source_control[0].type}</li>`;
-            finalData.source_control[0].links.forEach(link => {
-                sourceControlDetails += `<li>${link.description}: <a href="${link.url}">${link.url}</a></li>`;
-            });
-            sourceControlDetails += `</ul>`;
+
             document.getElementById('source_control_details').innerHTML = sourceControlDetails;
             document.getElementById('hosting_details').innerHTML = hosting_details;
             document.getElementById('database_details').innerHTML = database_details;

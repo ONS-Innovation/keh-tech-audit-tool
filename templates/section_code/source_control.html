@@ -14,18 +14,6 @@
                 "url": "/sign-out"
             }
         },
-        "breadcrumbs": {
-            "itemsList": [
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                 {
-                    "url": '/pre-survey/architecture',
-                    "text": 'Architecture Details'
-                }
-            ]
-        },
               "footer": {
           "OGLLink": {
               "pre": "All content is available under the", "link": "Open Government Licence v3.0",
@@ -35,6 +23,23 @@
       }
     } %}
 {% block main %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+         "itemsList": [
+                {
+                    "url": '/survey',
+                    "text": 'Survey'
+                },
+                 {
+                    "url": '/pre-survey/architecture',
+                    "text": 'Architecture Details'
+                }
+            ]
+    })
+}}
     <h1>Source Control</h1>
     {{ onsAccordion({
         "id": "accordion-example",

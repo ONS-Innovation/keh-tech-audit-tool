@@ -11,19 +11,25 @@
                 "text": "Save and sign out",
                 "url": "/sign-out"
             }
-        },
-        "breadcrumbs": {
-            "itemsList": [
-                {
-                    "url": '/dashboard#add-projects',
-                    "text": 'Dashboard'
-                }
-            ]
         }
     }
 %}
 
 {% block main %}
+
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+         "itemsList": [
+                {
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
+                }
+            ]
+    })
+}}
     <h1 class="ons-u-mt-m">Pre-survey</h1>
 
 

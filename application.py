@@ -5,6 +5,7 @@ import requests
 import os
 import boto3
 import json
+from functools import wraps
 
 bucket_name = "keh-tech-audit-tool"
 region_name = os.getenv("AWS_DEFAULT_REGION")
@@ -45,20 +46,78 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
 REDIRECT_URI = "http://localhost:8000"
 
 
+items = [{"text": "", "iconType": "person" }, { "text": "Sign Out", "url": "/sign-out" }]
+items_none = []
+
+@app.context_processor
+def inject_header():
+    user_email = session.get('email', 'Not Logged In')
+    injected_items = items.copy()
+    injected_items[0]["text"] = user_email
+    return dict(items=items)
+
+
 @app.route("/", methods=["GET"])
 def home():
     code = request.args.get('code')
     if code:
         token_response = exchange_code_for_tokens(code)
-        if 'id_token' in token_response:
-            session['id_token'] = token_response['id_token']
+        if 'id_token' in token_response and 'refresh_token' in token_response:
+            session['id_token'], session['refresh_token'] = token_response['id_token'], token_response['refresh_token']
             flash("You have successfully logged in with Cognito")
             return redirect(url_for("dashboard"))
         else:
             print(token_response)
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
-    return render_template("index.html")
+    
+    # try:
+    #     print(refresh_tokens())
+    # except Exception as error:
+    #     print(error)
+        
+    return render_template("index.html", items=items_none)
+
+# from botocore.auth import SigV4Auth
+# from botocore.awsrequest import AWSRequest
+# from botocore.credentials import RefreshableCredentials
+# from botocore.session import get_session
+# def refresh_tokens():
+#     # Your AWS credentials
+#     session_token = boto3.Session()
+
+#     # Use boto3 to get credentials automatically from your environment (or configure manually)
+#     credentials = session_token.get_credentials()
+
+#     # Create a new request to be signed
+#     request = AWSRequest(
+#         method='POST',
+#         url="https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/refresh",
+#         data='{"refresh_token": "' + session['refresh_token'] + '"}',
+#         headers={
+#             "Content-Type": "application/json",
+#             "Authorization": session['id_token']
+#         }
+#     )
+
+#     # Sign the request using SigV4
+#     SigV4Auth(credentials, "execute-api", "eu-west-2").add_auth(request)
+
+#     # Send the request using `requests`
+#     response = requests.post(
+#         request.url,
+#         headers=dict(request.headers),
+#         data=request.body
+#     )
+
+#     # Handle the response
+#     if response.status_code == 200:
+#         tokens = response.json()
+#         session['id_token'] = tokens.get('id_token')
+#         session['refresh_token'] = tokens.get('refresh_token')
+#         return tokens
+#     else:
+#         raise Exception(f"Failed to refresh tokens: {response.status_code}, {response.text}")
 
 @app.route("/sign-out", methods=["GET"])
 def sign_out():
@@ -125,11 +184,11 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     headers = {"Authorization": f"{session['id_token']}"}
-    print(project_name)
     projects = requests.get(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects/{project_name}", headers=headers).json()
-    print(projects)
     # """https://confluence.ons.gov.uk/display/KEH/API"""
     return render_template("view_project.html", project=projects)
+
+
 
 @app.route("/pre-survey", methods=['GET'])
 def pre_survey():

@@ -17,8 +17,23 @@
                 "url": "/sign-out"
             }
         },
-        "breadcrumbs": {
-            "itemsList": [
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    }
+%}
+
+{% block main %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+         "itemsList": [
             {
                     "url": '/survey',
                     "text": 'Survey'
@@ -32,19 +47,8 @@
                     "text": 'Languages'
                 }
             ]
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
-{% block main %}
-
+    })
+}}
 
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}

@@ -14,14 +14,6 @@
                 "url": "/sign-out"
             }
         },
-        "breadcrumbs": {
-            "itemsList": [
-                {
-                    "url": '/dashboard',
-                    "text": 'Back'
-                }
-            ]
-        },
               "footer": {
           "OGLLink": {
               "pre": "All content is available under the", "link": "Open Government Licence v3.0",
@@ -32,6 +24,19 @@
     }
 %}
 {% block main %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+        "itemsList": [
+                {
+                    "url": '/dashboard',
+                    "text": 'Back'
+                }
+            ]
+    })
+}}
 
 {% set langs = [] %}
 

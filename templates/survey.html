@@ -9,18 +9,6 @@
                 "url": "/sign-out"
             }
         },
-        "breadcrumbs": {
-            "itemsList": [
-                            {
-                    "url": '/dashboard#add-projects',
-                    "text": 'Dashboard'
-                },
-                {
-                    "url": '/pre-survey',
-                    "text": 'Pre-survey'
-                }
-            ]
-        },
               "footer": {
           "OGLLink": {
               "pre": "All content is available under the", "link": "Open Government Licence v3.0",
@@ -33,6 +21,23 @@
     check
 {%- endmacro %}
 {% block main %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+        "itemsList": [
+                            {
+                    "url": '/dashboard#add-projects',
+                    "text": 'Dashboard'
+                },
+                {
+                    "url": '/pre-survey',
+                    "text": 'Pre-survey'
+                }
+            ]
+    })
+}}
     <h1 class="ons-u-mt-m">Choose a section to complete</h1>
     {{ onsSummary({
             "variant": "hub",
@@ -53,7 +58,7 @@
                                             ],
                                           "id": "user-details",
 
-                                            "iconType": "none",
+                                            "iconType": "chevron",
                                             "actions": [
                                                 {
                                                     "text": "Change",
@@ -74,7 +79,7 @@
                                             }
                                         ],
                                         "id": "project-details",
-                                            "iconType": "none", 
+                                            "iconType": "chevron", 
                                             "actions": [
                                                 {   
                                                     "text": "Change",
@@ -95,7 +100,7 @@
                                             }
                                         ],
                                         "id": "developed-details",
-                                            "iconType": "none",
+                                            "iconType": "chevron",
                                             "actions": [
                                                 {
                                                     "text": "Change",

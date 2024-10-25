@@ -11,9 +11,18 @@
                 "text": "Save and sign out",
                 "url": "/sign-out"
             }
-        },
-        "breadcrumbs": {
-            "itemsList": [
+        }
+    }
+%}
+
+{% block main %}
+
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+         "itemsList": [
                 {
                     "url": '/dashboard',
                     "text": 'Dashboard'
@@ -27,11 +36,8 @@
                     "text": 'Survey'
                 }
             ]
-        }
-    }
-%}
-
-{% block main %}
+    })
+}}
     <h1 class="ons-u-mt-m">Technology Details</h1>
 
 

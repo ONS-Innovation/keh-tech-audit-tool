@@ -14,8 +14,21 @@
                 "url": "/sign-out"
             }
         },
-        "breadcrumbs": {
-            "itemsList": [
+              "footer": {
+          "OGLLink": {
+              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "post": ", except where otherwise stated"
+          }
+      }
+    } %}
+{% block main %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
+{{
+    onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+         "itemsList": [
                {
                     "url": '/survey',
                     "text": 'Survey'
@@ -29,16 +42,8 @@
                     "text": 'Technical Contact'
                 }
             ]
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
-{% block main %}
+    })
+}}
     <h1>Point of Contact - Delivery Manager</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -58,8 +63,11 @@
     }) }}
         {{ onsInput({
         "id": "contact-email",
+        "type": "email",
+        "value": "@ons.gov.uk",
         "label": {
-            "text": "Email"
+            "text": "Email address",
+            "description": "This will be stored and used as a point of contact for the project."
         }
     }) }}
         {% call onsQuestion({

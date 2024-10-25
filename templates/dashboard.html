@@ -8,23 +8,7 @@
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/tabs/_macro.njk" import onsTabs %}
-{% set pageConfig = {
-      "header": {
-          "title": "Tech Audit Tool",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-      },
-      
-      "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-  } %}
+
 {% block main %}
 
 {% macro header(text) %}
@@ -99,7 +83,7 @@
                 "id": "add-projects",
                 "title": 'Create a Project',
                 "showTitle": true,
-                "content": header("Projects") + desc('Add a new project to record') + onsButton(createTab)
+                "content": header("Create a project") + desc('Record new data for an exisiting project.') + onsButton(createTab)
 
             },
           ]

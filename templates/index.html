@@ -4,16 +4,8 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/list/_macro.njk" import onsList %}
-
 {% set pageConfig = {
-      "header": {
-          "title": "Tech Audit Tool",
-          "signoutButton":{
-            "text": "Sign in with Cognito",
-            "url": "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/authorize?client_id=dm3289s0tqtsr5qn2qm5i9fql&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:8000",
-          }
- 
-      },
+
       
       "footer": {
           "OGLLink": {
@@ -33,16 +25,30 @@
     </ul>
   {% endif %}
   {% endwith %}
-
   <section id="section-content" class="ons-page__body">
-    <h2>What is the Tech Audit Tool</h2>
+    <h2>What is the Tech Radar Data Collection Tool?</h2>
     <p>
-      The Tech Audit Tool is used to collect data about various projects, which is then utilized by the Tech Radar Tool. This helps in assessing and visualizing the technology landscape within the organization, aiding in strategic decision-making and technology adoption.
+      This tool is used to collect data about various projects, which is then utilized by the Tech Radar Tool. This helps in
+      assessing and visualizing the technology landscape within the organization, aiding in strategic decision-making and
+      technology adoption.
     </p>
-
-  {{ onsButton({
+    <p>
+      Selected users can sign in to the tool using their Cognito credentials. Once signed in, they can create a project and view existing project data.
+    </p>
+    {{ onsButton({
             "text": "Sign in with Cognito",
             "url": "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/authorize?client_id=dm3289s0tqtsr5qn2qm5i9fql&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:8000"
-        }) }}
+    }) }}
+    {# <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit?</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec efficitur semper libero sit amet tincidunt. Proin eu enim
+      vulputate, porta risus vitae, congue nunc. Nulla porttitor ut risus vitae sodales. Vestibulum feugiat ante vel iaculis
+      accumsan. Ut pharetra lacus erat, congue facilisis justo rutrum non.
+    </p>
+    <p>
+      Mauris fermentum diam nec neque mattis, vehicula aliquam velit vulputate. Morbi fringilla dapibus neque, eu dictum nunc
+      consequat auctor. Curabitur dictum eu ipsum ut dignissim. Aliquam non lacinia augue. Duis convallis urna aliquet enim
+      consequat, nec malesuada lacus sodales.
+    </p> #}
   </section>
 {% endblock %}

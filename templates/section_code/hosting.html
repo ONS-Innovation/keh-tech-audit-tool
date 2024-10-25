@@ -152,9 +152,8 @@ redirectToPrevious();
 function storeHostingData() {
     var hostingType = document.querySelector('input[name="role"]:checked').value;
 
-    var data = {
-        "type": hostingType
-        };
+    var data = JSON.parse(localStorage.getItem('hosting-data')) || {};
+    data.type = hostingType;
     localStorage.setItem('hosting-data', JSON.stringify(data));
     console.log(localStorage.getItem('hosting-data'));
 

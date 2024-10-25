@@ -459,6 +459,15 @@
                     }
             }
 
+            var sourceControlParsed = JSON.parse(sourceControlData);
+            console.log(sourceControlParsed.links)
+            var finalSourceControl = [
+            {
+                "type": sourceControlParsed.source_control,
+                "links": sourceControlParsed.links
+            }
+            ];
+
             var finalData = {
             "user": (youData),
             "details": JSON.parse(projectData),
@@ -529,18 +538,7 @@
                 var company = '';
                 console.log(e);
             }
-            var sourceControlParsed = JSON.parse(sourceControlData);
-            var finalSourceControl = [
-            {
-                "type": sourceControlParsed.source_control,
-                "links": [
-                {
-                    "description": "Main Repository",
-                    "url": sourceControlParsed.other_source_control
-                }
-                ]
-            }
-            ];
+
             var sourceControlDetails= '';
             try {
                 if (!JSON.parse(sourceControlData)["source_control"]) {
@@ -568,13 +566,13 @@
 
             var hosting = '';
             try {
-                hosting = JSON.parse(architectureData).main.concat(JSON.parse(architectureData).others);
-                if (!JSON.parse(architectureData).main || !JSON.parse(architectureData).others) {
+                hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
+                if (!JSON.parse(hostingData).type || !JSON.parse(hostingData).others) {
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
                     document.getElementById('submit-button').style.display = 'none';
                 } else {
-                    hosting = JSON.parse(architectureData).main.concat(JSON.parse(architectureData).others);
+                    hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
                 }
             } catch (e) {
                 document.getElementById('error-panel').style.display = 'block';

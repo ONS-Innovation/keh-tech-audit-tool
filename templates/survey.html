@@ -200,18 +200,6 @@
                         return;
                     }
                 
-                try {
-                    if (!JSON.parse(architectureData)["others"].length === 0) {
-                            submitBtn.href = '/survey/architecture';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
-                        submitBtn.href = '/survey/architecture';
-                        console.log(e)
-                        return;
-                    }
 
                 try {
                     if (!JSON.parse(databaseData)["others"].length === 0) {

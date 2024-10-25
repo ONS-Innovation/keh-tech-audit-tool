@@ -4,5 +4,4 @@
 *.pyc
 env
 templates/components
-templates/layout
 node_modules

@@ -130,9 +130,8 @@
             }
         ]
     }) }}
-{# <script src="{{ url_for('static', filename='scripts.js') }}"> #}
     <script>
-var langArr = {"source_control":"","other_source_control":"","complete":null, "links": [{}]}
+var langArr = {"source_control":"","other_source_control":"","complete":null, "links": []}
 
 function storeData() {
     localStorage.setItem('source_control-data', JSON.stringify(langArr));
@@ -198,9 +197,14 @@ function addData(event) {
         langArr.links = [];
     }
 
-    if (langArr.links.some(item => item.link.toLowerCase() === link_value.toLowerCase())) {
-        showError();
-        return;
+    try {
+
+        if (langArr.links.some(item => item.link.toLowerCase() === link_value.toLowerCase())) {
+            showError();
+            return;
+        }
+    } catch (e) {
+        console.log(e);
     }
 
     langArr.links.push({ link: link_value, description: desc_value });

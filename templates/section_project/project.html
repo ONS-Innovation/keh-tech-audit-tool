@@ -74,13 +74,14 @@
         "id": "project-name",
         "label": {
             "text": "What is the name of the project?"
-        }
+        },
+        
     })
 }}
 
 {{
     onsInput({
-        "id": "project-long-name",
+        "id": "project-short-name",
         "label": {
             "text": "What is the short name of the project?"
         }
@@ -139,42 +140,36 @@
 <script>
     function storeData() {
         var project_name = document.getElementById('project-name').value;
-        var project_long_name = document.getElementById('project-long-name').value;
+        var project_short_name = document.getElementById('project-short-name').value;
         var project_description = document.getElementById('project-description').value;
         var doc_link = document.getElementById('documentation-link').value;
-        var complete = (project_name !== '' && project_long_name !== '' && doc_link !== '');
+        var complete = (project_name !== '' && project_short_name !== '');
         var data = {
             "project_name": project_name,
-            "project_long_name": project_long_name,
+            "project_short_name": project_short_name,
             "project_description": project_description,
             "doc_link": doc_link,
             "complete": complete
         };
 
+        // && data['doc_link'] != '' && data['project_description'] != ''
+        // if required^
 
-        if (data['project_name'] != '' && data['project_long_name'] != '' && data['doc_link'] != '' && data['project_description'] != '') {
-            localStorage.setItem('data', JSON.stringify(data));
-        }
+        // only project_name and short_name are required - although this then means that nothing is saved if its missing the name or short name
+        // if (data['project_name'] != '' && data['project_short_name'] != '' ) {}
 
-        console.log(localStorage.getItem('data'));
+        localStorage.setItem('data', JSON.stringify(data));
     }
 
     function loadData() {
         var data = JSON.parse(localStorage.getItem('data'));
-        var project_name = data.project_name;
-        var project_long_name = data.project_long_name;
-        var project_description = data.project_description;
-        var doc_link = data.doc_link;
-
         if (data) {
-            document.getElementById('project-name').value = project_name;
-            document.getElementById('project-long-name').value = project_long_name;
-            document.getElementById('documentation-link').value = doc_link;
-            document.getElementById('project-description').value = project_description;
-
+            document.getElementById('project-name').value = data.project_name;
+            document.getElementById('project-short-name').value = data.project_short_name;
+            document.getElementById('documentation-link').value = data.doc_link;
+            document.getElementById('project-description').value = data.project_description;
         }
     }
-
     redirectToPrevious();
     loadData();
 </script>

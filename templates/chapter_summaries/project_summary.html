@@ -220,7 +220,7 @@
             console.log(finalData);
 
             var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
-            var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_long_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
+            var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_short_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
 
             if (finalData.developed.developed === "Outsourced") {
                 var company = finalData.developed.outsource_company;

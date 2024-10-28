@@ -49,12 +49,94 @@ REDIRECT_URI = "http://localhost:8000"
 items = [{"text": "", "iconType": "person" }, { "text": "Sign Out", "url": "/sign-out" }]
 items_none = []
 
+mainNavItems = [{"text": 'Dashboard', "url": '/dashboard'},{"text": 'Pre-Survey', "url": '/pre-survey'},{"text": 'Survey', "url": '/survey'}]
+
+projectNavItems = [
+    {
+        "text": 'Survey',
+        "url": '/survey'
+    },
+    {
+        "text": 'Pre-Survey',
+        "url": '/pre-survey/project'
+    },
+    {
+        "text": 'Technical Contact',
+        "url": '/survey/contact-tech'
+    },
+    {
+        "text": 'Delivery Contact',
+        "url": '/survey/contact-manager'
+    },
+    {
+        "text": 'Details',
+        "url": '/survey/project'
+    },
+    {
+        "text": 'Developed',
+        "url": '/survey/developed'
+    },
+    {
+        "text": 'Summary',
+        "url": '/survey/project_summary'
+    }
+]
+
+codeNavItems = [{
+    "text": 'Survey',
+    "url": '/survey'
+    },
+    {
+        "text": 'Pre-survey',
+        "url": '/pre-survey/architecture'
+    },
+    {
+        "text": 'Source Control',
+        "url": '/survey/source_control'
+    },
+    {
+        "text": 'Hosting',
+        "url": '/survey/hosting'
+    },
+    {
+        "text": 'Database',
+        "url": '/survey/database'
+    },
+    {
+        "text": 'Summary',
+        "url": '/survey/architecture_summary'
+    }
+]
+
+techNavItems = [
+    {"text": 'Survey', "url": '/survey'},
+    {"text": 'Pre-Survey', "url": '/pre-survey'},
+    {"text": 'Languages', "url": '/survey/languages'},
+    {"text": 'Frameworks', "url": '/survey/frameworks'},
+    {"text": 'Integrations', "url": '/survey/integrations'},
+    {"text": 'Infrastructure', "url": '/survey/infrastructure'},
+    {"text": 'Summary', "url": '/survey/tech_summary'}
+]
 @app.context_processor
 def inject_header():
     user_email = session.get('email', 'Not Logged In')
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
-    return dict(items=items)
+    current_url = request.path
+    if current_url == "/dashboard":
+        navItems = []
+    elif current_url in [item["url"] for item in mainNavItems]:
+        navItems = mainNavItems
+    elif current_url in [item["url"] for item in projectNavItems]:
+        navItems = projectNavItems
+    elif current_url in [item["url"] for item in codeNavItems]:
+        navItems = codeNavItems
+    elif current_url in [item["url"] for item in techNavItems]:
+        navItems = techNavItems
+    else:
+        navItems = []
+    
+    return dict(items=injected_items, currentPath=[str(current_url)], navItems=navItems)
 
 
 @app.route("/", methods=["GET"])

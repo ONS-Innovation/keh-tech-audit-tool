@@ -21,23 +21,6 @@
     check
 {%- endmacro %}
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-        "itemsList": [
-                            {
-                    "url": '/dashboard#add-projects',
-                    "text": 'Dashboard'
-                },
-                {
-                    "url": '/pre-survey',
-                    "text": 'Pre-survey'
-                }
-            ]
-    })
-}}
     <h1 class="ons-u-mt-m">Choose a section to complete</h1>
     {{ onsSummary({
             "variant": "hub",

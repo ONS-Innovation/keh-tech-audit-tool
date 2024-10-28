@@ -2,7 +2,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/list/_macro.njk" import onsList %}
 {% from "components/details/_macro.njk" import onsDetails %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {% set pageConfig = {
         "header": {
             "title": "Project Details",
@@ -14,27 +14,7 @@
     } %}
 {% block main %}
 
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/dashboard',
-                    "text": 'Dashboard'
-                },
-                {
-                    "url": '/pre-survey',
-                    "text": 'Pre-survey'
-                },
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                }
-            ]
-    })
-}}
     <h1 class="ons-u-mt-m">Project Details</h1>
     <p>To complete this survey you will need to know details such as:</p>
     {{ onsList({

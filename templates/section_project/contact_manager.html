@@ -4,7 +4,7 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {% from "components/label/_macro.njk" import onsLabel %}
 {% set pageConfig = {
         "header": {
@@ -23,27 +23,7 @@
       }
     } %}
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-               {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                {
-                    "url": '/pre-survey/project',
-                    "text": 'Project Details'
-                },
-                {
-                    "url": '/survey/contact-tech',
-                    "text": 'Technical Contact'
-                }
-            ]
-    })
-}}
     <h1>Point of Contact - Delivery Manager</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -58,17 +38,18 @@
         {{ onsLabel({
         "id": 'contact-email-label',
         "for": "contact-email",
-        "text": 'Delivery Manager',
+        "text": 'Delivery Manager Information',
         "description": 'Enter the information of the delivery manager for this project.'
     }) }}
         {{ onsInput({
         "id": "contact-email",
         "type": "email",
-        "value": "@ons.gov.uk",
+        "autocomplete": "email",
         "label": {
-            "text": "Email address",
-            "description": "This will be stored and used as a point of contact for the project."
-        }
+            "text": "Email address (@ons.gov.uk)",
+        },
+         "accessiblePlaceholder": true,
+
     }) }}
         {% call onsQuestion({
         "classes": "ons-u-mt-no",

@@ -4,7 +4,6 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/textarea/_macro.njk" import onsTextarea %}
 
 
@@ -28,31 +27,7 @@
 %}
 
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-{
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                {
-                    "url": '/pre-survey/project',
-                    "text": 'Project Details'
-                },
-                {
-                    "url": '/survey/contact-tech',
-                    "text": 'Technical Contact'
-                },
-                {
-                    "url": '/survey/contact-manager',
-                    "text": 'Delivery Contact'
-                }
-            ]
-    })
-}}
 <h1>Project Details</h1>
 
 {{

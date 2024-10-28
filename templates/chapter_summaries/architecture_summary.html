@@ -23,43 +23,6 @@
 
 {% block main %}
 
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                {
-                    "url": '/pre-survey/architecture',
-                    "text": 'Architecture Details'
-                },
-                {
-                    "url": '/survey/source_control',
-                    "text": 'Source Control (Part 1)'
-                },
-                {
-                    "url": '/survey/source_control?stage=2',
-                    "text": 'Source Control (Part 2)'
-                },
-                {
-                    "url": '/survey/hosting',
-                    "text": 'Hosting (Part 1)'
-                },
-                {
-                    "url": '/survey/hosting?stage=2',
-                    "text": 'Hosting (Part 2)'
-                },
-                {
-                    "url": '/survey/database',
-                    "text": 'Database',
-                }
-            ]
-    })
-}}
 {%
     call onsPanel({
         "id": "error-panel",

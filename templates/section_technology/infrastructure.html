@@ -4,7 +4,6 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% set pageConfig = {
@@ -24,35 +23,7 @@
       }
     } %}
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-            {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                {
-                    "url": '/pre-survey/technology',
-                    "text": 'Technology Details'
-                },
-                {
-                    "url": '/survey/languages',
-                    "text": 'Languages'
-                },
-                {
-                    "url": '/survey/frameworks',
-                    "text": 'Frameworks'
-                },
-                {
-                    "url": '/survey/integrations',
-                    "text": 'Integrations'
-                }
-            ]
-    })
-}}
     {% from "components/panel/_macro.njk" import onsPanel %}
     {% from "components/list/_macro.njk" import onsList %}
     {% call onsPanel({

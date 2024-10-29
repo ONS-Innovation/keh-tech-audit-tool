@@ -2,7 +2,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/list/_macro.njk" import onsList %}
 {% from "components/details/_macro.njk" import onsDetails %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {%
     set pageConfig = {
         "header": {
@@ -17,19 +17,7 @@
 
 {% block main %}
 
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/dashboard#add-projects',
-                    "text": 'Dashboard'
-                }
-            ]
-    })
-}}
     <h1 class="ons-u-mt-m">Pre-survey</h1>
 
 

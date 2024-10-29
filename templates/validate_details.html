@@ -24,27 +24,7 @@
 %}
 
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-        "itemsList": [
-                {
-                    "url": '/dashboard#add-projects',
-                    "text": 'Dashboard'
-                },
-                {
-                    "url": '/pre-survey',
-                    "text": 'Pre-survey'
-                },
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                }
-            ]
-    })
-}}
 {%
     call onsPanel({
         "id": "error-panel",
@@ -493,12 +473,12 @@
 
             try {
                 var details = JSON.parse(projectData);
-                if (details["project_name"] === '' || details["project_long_name"] === '' || details["doc_link"] === '') {
+                if (details["project_name"] === '' || details["project_short_name"] === '' || details["doc_link"] === '') {
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Project' section is incomplete</li></ul>";
                     document.getElementById('submit-button').style.display = 'none';
                 } else {
-                    project_details = `<ul><li>Name: ${details.project_name}</li><li>Short Name: ${details.project_long_name}</li><li>Documentation Link: ${details.doc_link}</li></ul>`;
+                    project_details = `<ul><li>Name: ${details.project_name}</li><li>Short Name: ${details.project_short_name}</li><li>Documentation Link: ${details.doc_link}</li></ul>`;
                     document.getElementById('project_details').innerHTML = project_details; 
                 }             
             } catch (e) {

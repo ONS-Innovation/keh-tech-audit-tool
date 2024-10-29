@@ -2,7 +2,7 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/list/_macro.njk" import onsList %}
 {% from "components/details/_macro.njk" import onsDetails %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {%
     set pageConfig = {
         "header": {
@@ -17,27 +17,7 @@
 
 {% block main %}
 
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/dashboard',
-                    "text": 'Dashboard'
-                },
-                {
-                    "url": '/pre-survey',
-                    "text": 'Pre-survey'
-                },
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                }
-            ]
-    })
-}}
     <h1 class="ons-u-mt-m">Technology Details</h1>
 
 

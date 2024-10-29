@@ -4,7 +4,7 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {% from "components/label/_macro.njk" import onsLabel %}
 {% set pageConfig = {
         "header": {
@@ -23,23 +23,7 @@
       }
     } %}
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                 {
-                    "url": '/pre-survey/architecture',
-                    "text": 'Architecture Details'
-                }
-            ]
-    })
-}}
     <h1>Source Control</h1>
     {{ onsAccordion({
         "id": "accordion-example",

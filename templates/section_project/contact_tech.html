@@ -6,40 +6,55 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/section-navigation/_macro.njk" import onsSectionNavigation %}
 {% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
                 "text": "Save and sign out",
                 "url": "/sign-out"
-            }
-        },
+            },
+            "navigation": {
+                "id": 'main-nav',
+                "ariaLabel": 'Main menu',
+                "currentPath": [ '#design-system', '#patterns', '#access-codes' ],
+                "currentPageTitle": 'Design system',
+                "itemsList": [
+                    {
+                        "text": 'Service standard',
+                        "url": '#0'
+                    },
+                    {
+                        "text": 'Design system',
+                        "url": '#design-system'
+                    },
+                    {
+                        "text": 'Accessibility',
+                        "url": '#0'
+                    },
+                    {
+                        "text": 'Brand guidelines',
+                        "url": '#0'
+                    },
+                    {
+                        "text": 'Content style guide',
+                        "url": '#0'
+                    }
+                ],
+                "toggleNavigationButton": {
+                    "text": 'Menu',
+                    "ariaLabel": 'Toggle menu' 
+                }
+            },
               "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
+            "OGLLink": {
+                "pre": "All content is available under the", "link": "Open Government Licence v3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "post": ", except where otherwise stated"
+            } }}
     } %}
 {% block main %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
-{{
-    onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-         "itemsList": [
-                {
-                    "url": '/survey',
-                    "text": 'Survey'
-                },
-                {
-                    "url": '/pre-survey/project',
-                    "text": 'Project Details'
-                }
-            ]
-    })
-}}
     <h1>Point of Contact - Technical</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -60,7 +75,7 @@
         {{ onsInput({
         "id": "contact-email",
         "type": "email",
-        "value": "@ons.gov.uk",
+        "autocomplete": "email",
         "label": {
             "text": "Email address",
             "description": "This will be stored and used as a point of contact for the project."

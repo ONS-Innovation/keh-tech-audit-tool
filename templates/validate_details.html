@@ -276,6 +276,7 @@
                                         }
                                     ]
                                 },
+                                
                             ]
                         }
                     ]
@@ -362,6 +363,8 @@
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
+            var stageData = localStorage.getItem('data-stage');
+
             localStorage.setItem('validate', false);
 
             document.getElementById('error-panel').style.display = 'none';
@@ -461,6 +464,7 @@
                 "hosting": JSON.parse(hostingData),
                 "database": JSON.parse(databaseData),
             },
+            "stage": JSON.parse(stageData).stage
             }
 
             var technical_contact = `<ul><li>${finalData.user[0].roles.join(', ')}: ${finalData.user[0].email} (${finalData.user[0].grade})</li></ul>`;
@@ -473,12 +477,13 @@
 
             try {
                 var details = JSON.parse(projectData);
-                if (details["project_name"] === '' || details["project_short_name"] === '' || details["doc_link"] === '') {
+                var stage = JSON.parse(stageData);
+                if (details["project_name"] === '' || details["project_short_name"] === '' || details["doc_link"] === '' || stage["stage"] === '') {
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Project' section is incomplete</li></ul>";
                     document.getElementById('submit-button').style.display = 'none';
                 } else {
-                    project_details = `<ul><li>Name: ${details.project_name}</li><li>Short Name: ${details.project_short_name}</li><li>Documentation Link: ${details.doc_link}</li></ul>`;
+                    project_details = `<ul><li>Name: ${details.project_name}</li><li>Short Name: ${details.project_short_name}</li><li>Documentation Link: ${details.doc_link}</li><li>Stage: ${stage.stage}</li></ul>`;
                     document.getElementById('project_details').innerHTML = project_details; 
                 }             
             } catch (e) {

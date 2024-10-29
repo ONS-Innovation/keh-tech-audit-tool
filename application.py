@@ -323,7 +323,7 @@ def survey():
             "user": [u for u in user],
             "details": [{
                 "name": project["project_name"],
-                "short_name": project["project_long_name"],
+                "short_name": project["project_short_name"],
                 "documentation_link": [project["doc_link"]],
             }],
             "developed":[  

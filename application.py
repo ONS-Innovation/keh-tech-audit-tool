@@ -124,6 +124,13 @@ techNavItems = [
 @app.context_processor
 def inject_header():
     user_email = session.get('email', 'Not Logged In')
+
+    ## SESSION CHECK
+    user_auth = get_email()
+    if not user_auth:
+        flash("Please re-login to authenticate your account.")
+        return dict(items=items_none, currentPath=[], navItems=[])
+
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
     current_url = request.path
@@ -148,20 +155,15 @@ def home():
     code = request.args.get('code')
     if code:
         token_response = exchange_code_for_tokens(code)
+        print(token_response)
         if 'id_token' in token_response and 'refresh_token' in token_response:
             session['id_token'], session['refresh_token'] = token_response['id_token'], token_response['refresh_token']
             flash("You have successfully logged in with Cognito")
             return redirect(url_for("dashboard"))
         else:
-            print(token_response)
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
     
-    # try:
-    #     print(refresh_tokens())
-    # except Exception as error:
-    #     print(error)
-        
     return render_template("index.html", items=items_none)
 
 # from botocore.auth import SigV4Auth
@@ -235,7 +237,7 @@ def exchange_code_for_tokens(code):
     auth = (AWS_COGNITO_CLIENT_ID, AWS_COGNITO_CLIENT_SECRET)
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
-
+    print(response)
     if response.status_code != 200:
         if response.json().get('error') == 'invalid_grant':
             logger.error("Invalid authorization code")
@@ -244,17 +246,23 @@ def exchange_code_for_tokens(code):
         raise Exception(f"Error: {response.status_code}, {response.text}")
     else:
         if response.json()["id_token"]:
+            print(response)
             session["id_token"] = response.json()["id_token"]
         else:
             raise Exception("Failed to retrieve ID Token")
-        headers = {"Authorization": f"{session['id_token']}"}
-        user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
-        if user_request.status_code != 200:
-            return {"error": "Failed to retrieve user information"}
-        else:
-            session["email"] = user_request.json()["email"]
+        get_email()
 
     return response.json()
+
+
+def get_email():
+    headers = {"Authorization": f"{session['id_token']}"}
+    user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
+    if user_request.status_code != 200:
+        return False
+    else:
+        session["email"] = user_request.json()["email"]
+        return True
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():

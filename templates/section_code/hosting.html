@@ -147,7 +147,6 @@
 <script>
 loadHostingData();
 document.getElementById("error-panel").style.display = "none";
-redirectToPrevious();
 
 function storeHostingData() {
     var hostingType = document.querySelector('input[name="role"]:checked').value;
@@ -175,6 +174,8 @@ function loadHostingData() {
         console.log(data);
     }
 }
+
+
 </script>
 
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, session, flash, abort
+from flask import Flask, render_template, request, url_for, redirect, session, flash, abort, make_response
 from jinja2 import ChainableUndefined
 from botocore.exceptions import ClientError
 import requests
@@ -185,8 +185,10 @@ def dashboard():
 def view_project(project_name):
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects/{project_name}", headers=headers).json()
+    print(projects)
+    databases = ", ".join([database for database in projects["architecture"]["database"]["main"]])
     # """https://confluence.ons.gov.uk/display/KEH/API"""
-    return render_template("view_project.html", project=projects)
+    return render_template("view_project.html", project=projects, databases=databases)
 
 
 
@@ -254,7 +256,7 @@ def survey():
             "archived": False
             }
         print(data)
-        # projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
         # print(projects.json())
         return redirect(url_for("dashboard"))
 
@@ -275,6 +277,14 @@ def project():
 @app.route("/survey/developed", methods=['GET'])
 def developed():
     return render_template("/section_project/developed.html")
+
+"""
+@app.route("/set_cookie", methods=['GET'])
+def set_cookie():
+    resp = make_response("COOKIE SET")
+    resp.set_cookie("source_control_stage2", "stage2", httponly=False)
+    return redirect("/survey/source_control")
+"""
 
 @app.route("/survey/source_control", methods=['GET'])
 def source_control():

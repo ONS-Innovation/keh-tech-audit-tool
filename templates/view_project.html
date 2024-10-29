@@ -23,7 +23,13 @@
       }
     }
 %}
+
+{% set project_details = '<ul><li>Project Name: ' + project.details[0].name + '</li>' + '<li>Short Name: ' + project.details[0].short_name + '</li>' + '<li>Documentation Link: ' + project.details[0].documentation_link[0] + '</li>' %}
+{% set database_details = project.architecture.database.main %}
 {% block main %}
+
+{{ project.user[1] }}
+
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 
 {{
@@ -50,23 +56,30 @@
                         "groupTitle": "Summary",
                         "rows": [
                             {
-                                "id": "sales-dates-row",
-                                "rowTitle": "Person Details",
+                                "id": "technical_contact_row",
+                                "rowTitle": "Technical Contact",
                                 "rowItems": [
                                     {
                                         "id": "sales-dates",
                                         "valueList": [
                                             {
-                                                "text": project.user[0].email
+                                                "text": project.user[0].email + ' (' + project.user[0].grade + ')'
                                             }
                                         ],
-                                        "actions": [
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "sales-dates-row",
+                                "rowTitle": "Delivery Manager Contact",
+                                "rowItems": [
+                                    {
+                                        "id": "sales-dates",
+                                        "valueList": [
                                             {
-                                                "text": "Change",
-                                                "visuallyHiddenText": "Change answer",
-                                                "url": "#0"
-                                            }
-                                        ]
+                                                "text": project.user[1].email + ' (' + project.user[1].grade + ')'
+                                            },
+                                        ],
                                     }
                                 ]
                             },
@@ -78,37 +91,9 @@
                                         "id": "sales-value",
                                         "valueList": [
                                             {
-                                                "text": project.details[0].name
+                                                "text": project_details
                                             }
                                         ],
-                                        "actions": [
-                                            {
-                                                "text": "Change",
-                                                "visuallyHiddenText": "Change answer",
-                                                "url": "#0"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "rowTitle": "Short Name",
-                                "id": "sales-value-row",
-                                "rowItems": [
-                                    {
-                                        "id": "sales-value",
-                                        "valueList": [
-                                            {
-                                                "text": project.details[0].short_name
-                                            }
-                                        ],
-                                        "actions": [
-                                            {
-                                                "text": "Change",
-                                                "visuallyHiddenText": "Change answer",
-                                                "url": "#0"
-                                            }
-                                        ]
                                     }
                                 ]
                             },
@@ -123,40 +108,43 @@
                                                 "text": project.developed[0]
                                             },
                                             {
-                                                "text": project.developed[1]
+                                                "text": project.developed[1][0]
                                             }
                                         ],
-                                        "actions": [
-                                            {
-                                                "text": "Change",
-                                                "visuallyHiddenText": "Change answer",
-                                                "url": "#0"
-                                            }
-                                        ]
                                     }
                                 ]
                             },
                             {
                                 "id": "sales-reasons-row",
-                                "rowTitle": "Architecture Hosting",
+                                "rowTitle": "Source Control",
+                                "rowItems": [
+                                    {
+                                        "id": "temp",
+                                        "valueList": [
+                                            {
+                                                "text": project.source_control[0].type
+                                            },
+                                            {
+                                                "text": project.source_control[0].links[0].name | string + ': ' + project.source_control[0].links[0].url
+                                            }
+                                        ],
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "sales-reasons-row",
+                                "rowTitle": "Hosting",
                                 "rowItems": [
                                     {
                                         "id": "architecture-hosting",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.hosting.type
+                                                "text": project.architecture.hosting.type[0]
                                             },
                                             {
-                                                "text": project.architecture.hosting.detail
+                                                "text": project.architecture.hosting.details| join(', ')
                                             }
                                         ],
-                                        "actions": [
-                                            {
-                                                "text": "Change",
-                                                "visuallyHiddenText": "Change answer",
-                                                "url": "#0"
-                                            }
-                                        ]
                                     }
                                 ]
                             },
@@ -168,7 +156,7 @@
                                         "id": "database",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.database.main
+                                                "text": '<p>' + databases + '</p>'
                                             },
                                         ]
                                     }
@@ -182,7 +170,7 @@
                                         "id": "frameworks",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.frameworks.others
+                                                "text": project.architecture.frameworks.others | join(', ')
                                             }
                                         ]
                                     }
@@ -196,7 +184,7 @@
                                         "id": "languages",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.languages.others
+                                                "text": project.architecture.languages.others | join(', ')
                                             }
                                         ]
                                     }
@@ -210,7 +198,7 @@
                                         "id": "cicd",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.CICD.others
+                                                "text": project.architecture.CICD.others | join(', ')
                                             }
                                         ]
                                     }
@@ -224,7 +212,7 @@
                                         "id": "infrastructure",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.infrastructure.others
+                                                "text": project.architecture.infrastructure.main | join(', ')
                                             }
                                         ]
                                     }
@@ -237,3 +225,7 @@
         ]
     }) }}
 {% endblock %}
+
+<script>
+    document.getElementById("project_details").innerHTML = 'hi';
+</script>

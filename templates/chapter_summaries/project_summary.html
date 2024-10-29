@@ -110,6 +110,25 @@
                                         }
                                     ]
                                 },
+                                {
+                                    "rowTitle": "Stage",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='stage_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('stage')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
  
                             ]
                         }
@@ -122,6 +141,7 @@
         <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
         <input id="developed" type="hidden" name="developed">
+        <input id="stage" type="hidden" name="stage">
 
     {{
         onsButton({
@@ -160,6 +180,8 @@
             var projectData = localStorage.getItem('data');
             var managerData = localStorage.getItem('contact-manager-data');
             var developedData = localStorage.getItem('data-developed');
+            var stageData = localStorage.getItem('data-stage');
+
 
             localStorage.setItem('validate', false);
 
@@ -183,12 +205,13 @@
                 "user": JSON.parse(techContactData),
                 "details": JSON.parse(projectData),
                 "developed": JSON.parse(developedData),
+                "stage": JSON.parse(stageData).stage
             }
             console.log(finalData);
 
             var user_details = `<ul><li>Contact Email: ${finalData.user.contactEmail}</li><li>Role : ${finalData.user.role}</li></ul>`;
             var project_details = `<ul><li>Project Name: ${finalData.details.project_name}</li><li>Project Short Name: ${finalData.details.project_short_name}</li><li>Documentation Link: ${finalData.details.doc_link}</li></ul>`;
-
+            var stage_details = `${finalData.stage}`;
             if (finalData.developed.developed === "Outsourced") {
                 var company = finalData.developed.outsource_company;
             } else if (finalData.developed.developed === "Partnership") {
@@ -203,10 +226,13 @@
             document.getElementById('user_details').innerHTML = user_details;
             document.getElementById('project_details').innerHTML = project_details;
             document.getElementById('developed_details').innerHTML = developed_details;
+            document.getElementById('stage_details').innerHTML = stage_details;
 
             document.getElementById('user').value = JSON.stringify(finalData.user);
             document.getElementById('project').value = JSON.stringify(finalData.details);
             document.getElementById('developed').value = JSON.stringify(finalData.developed);
+            document.getElementById('stage').value = JSON.stringify(finalData.stage);
+
 
             console.log(JSON.stringify(finalData.user));
         }

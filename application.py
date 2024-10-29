@@ -350,6 +350,10 @@ def contact_tech():
 def contact_manager():
     return render_template("/section_project/contact_manager.html")
 
+@app.route("/survey/stage", methods=['GET'])
+def stage():
+    return render_template("/section_project/stage.html")
+
 @app.route("/survey/project", methods=['GET'])
 def project():
     return render_template("/section_project/project.html")

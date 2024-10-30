@@ -256,13 +256,18 @@ def exchange_code_for_tokens(code):
 
 
 def get_email():
-    headers = {"Authorization": f"{session['id_token']}"}
-    user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
-    if user_request.status_code != 200:
+    try:
+        headers = {"Authorization": f"{session['id_token']}"}
+        user_request = requests.get("https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/user", headers=headers)
+        if user_request.status_code != 200:
+            return False
+        else:
+            session["email"] = user_request.json()["email"]
+            return True
+    except Exception as error:
+        print(f"{error.__class__.__name__}: {error}")
         return False
-    else:
-        session["email"] = user_request.json()["email"]
-        return True
+
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():

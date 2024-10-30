@@ -175,23 +175,27 @@
             var databaseData = localStorage.getItem('database-data');
 
             document.getElementById('error-panel').style.display = 'none';
-
+            var hostingJSON = JSON.parse(hostingData);
             try {
+                if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud'){
+                    if (hostingJSON.others.length === 0){
+                        document.getElementById('error-panel').style.display = 'block';
+                        document.getElementById('submit-button').style.display = 'none';
+                    }
+                }
                 if (sourceControlData === null ||
                     JSON.parse(databaseData).length === 0 || 
-                    (JSON.parse(hostingData).others.length === 0 && !JSON.parse(hostingData).type)) {
-
+                    hostingJSON.type === null){
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';
 
                 }
             } catch (e) {
+            console.log(e)
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('submit-button').style.display = 'none';
             }
 
-            var hostingJSON = JSON.parse(hostingData);
-            console.log(sourceControlData);
             var sourceControlDataJSON = JSON.parse(sourceControlData);
             var sourceType = sourceControlDataJSON.source_control;
             var finalData = {
@@ -204,10 +208,20 @@
                     "database": JSON.parse(databaseData),
                 },
             }
-            console.log(finalData);
 
-            var source_control = `Type: ${sourceType}<br>Link:` + arrToLinkList(finalData.source_control[0].links);
-            var hosting_details = `Type: ${hostingJSON.type}<br>Services:` +arrToList(finalData.architecture.hosting.others);
+            var source_control_links_label = 'No links added to project.';
+            if (finalData.source_control[0].links && finalData.source_control[0].links.length > 0) {
+                source_control_links_label = finalData.source_control[0].links.length > 1 ? 'Links: ' : 'Link: ';
+            }
+            var source_control = `Type: ${sourceType}<br>${source_control_links_label}` + arrToLinkList(finalData.source_control[0].links);
+
+
+            var hosting_details = `Type: ${hostingJSON.type}`;
+            if (hostingJSON.others && hostingJSON.others.length > 0) {
+                hosting_details += `<br>Services:` + arrToList(hostingJSON.others);
+            }
+
+
             var database_details = arrToList(finalData.architecture.database.others) + arrToList(finalData.architecture.database.main);
 
             document.getElementById('source_control_details').innerHTML = source_control;

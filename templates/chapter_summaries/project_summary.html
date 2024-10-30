@@ -203,13 +203,13 @@
                             }
                             try {
                                 var projectDataJSON = JSON.parse(projectData);
-                                var project_details = `Project Name: <p>${
+                                var project_details = `<p>Project Name: ${
                                     projectDataJSON.project_name
                                 }</p>
-            Project Short Name: <p>${
+            <p>Project Short Name: ${
                                     projectDataJSON.project_short_name
                                 }</p>
-            Documentation Link: <p>${
+            <p>Documentation Link: ${
                                     projectDataJSON.doc_link
                                 }</p>`;
                                 document.getElementById('project_details').innerHTML = project_details;
@@ -229,13 +229,13 @@
                                 console.log(developedDataJSON)
                                 var developed_details = `${
                                     developedDataJSON.developed
-                                }. `;
+                                }`;
                                 if (developedDataJSON.developed === "Outsourced") {
-                                    developed_details += `By: ${
+                                    developed_details += ` with: ${
                                         developedDataJSON.outsource_company
                                     }`;
                                 } else if (developedDataJSON.developed === "Partnership") {
-                                    developed_details += `With: ${
+                                    developed_details += ` with: ${
                                         developedDataJSON.partnership_company
                                     }`;
                                 }

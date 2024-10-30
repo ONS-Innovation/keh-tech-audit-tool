@@ -553,15 +553,27 @@
 
             var hosting = '';
             try {
-                hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
-                if (!JSON.parse(hostingData).type || JSON.parse(hostingData).others === 0) {
+                if (!JSON.parse(hostingData).type) {
+                    if (JSON.parse(hostingData).type === "Cloud" || JSON.parse(hostingData).type === "Hybrid") {
+                        if (JSON.parse(hostingData).others.length === 0) {
+                            document.getElementById('error-panel').style.display = 'block';
+                            document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
+                            document.getElementById('submit-button').style.display = 'none';
+                        }
+                    }
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
                     document.getElementById('submit-button').style.display = 'none';
                 } else {
-                    hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
+                    console.log('TESTING 2');
+                    if (JSON.parse(hostingData).type === "On-premises") {
+                        hosting = JSON.parse(hostingData).type;
+                    } else {
+                        hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
+                    }
                 }
             } catch (e) {
+                console.log('TESTIING');
                 document.getElementById('error-panel').style.display = 'block';
                 document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
                 document.getElementById('submit-button').style.display = 'none';
@@ -658,7 +670,11 @@
                 console.log(e);
             }
 
-            var hosting_details = arrToList(hosting);
+            if (hosting === "On-premises") {
+                var hosting_details = "<ul><li>On-Premises</li></ul>";
+            } else {
+                var hosting_details = arrToList(hosting);
+            }
             var languages_details = arrToList(languages);
             var frameworks_details = arrToList(frameworks);
             var integrations_details = arrToList(integrations);

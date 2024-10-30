@@ -135,7 +135,12 @@ function storeHostingData() {
     if (hostingType === "Hybrid" || hostingType === "Cloud") {
         window.location.href = "/survey/hosting?stage=2";
     } else {
-        window.location.href = "{{ url_for('database') }}";
+        if (JSON.parse(localStorage.getItem("hosting_validate")) && JSON.parse(localStorage.getItem("hosting-data")).type === "On-premises") {
+            window.location.href = '/validate_details';
+        } else {
+            console.log(JSON.parse(localStorage.getItem("hosting-data")).type);
+            window.location.href = "{{ url_for('database') }}";
+        }
     }
 }
 
@@ -150,6 +155,7 @@ function loadHostingData() {
         console.log(data);
     }
 }
+
 
 
 </script>

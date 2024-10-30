@@ -308,8 +308,8 @@
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();
-        localStorage.removeItem("source_control_validate");
-        localStorage.removeItem("hosting_validate");
+        localStorage.setItem("source_control_validate", false);
+        localStorage.setItem("hosting_validate", false);
     </script>
 {% endblock %}
 {% block scripts %}

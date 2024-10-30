@@ -298,6 +298,8 @@
         <input id="frameworks" type="hidden" name="frameworks">
         <input id="integrations" type="hidden" name="integrations">
         <input id="infrastructure" type="hidden" name="infrastructure">
+        <input id="stage" type="hidden" name="stage">
+
     {{
         onsButton({
             "text": 'Save Project',
@@ -422,7 +424,7 @@
                     if (managerTechData) {
                         youData.push({
                             "email": managerTechData.contactEmail,
-                            "roles": ["Technical Contact"],
+                            "roles": ["Delivery Manager"],
                             "grade": managerTechData.role
                         });
                     }
@@ -467,10 +469,10 @@
             "stage": JSON.parse(stageData).stage
             }
 
-            var technical_contact = `<ul><li>${finalData.user[0].roles.join(', ')}: ${finalData.user[0].email} (${finalData.user[0].grade})</li></ul>`;
+            var technical_contact = `${finalData.user[0].email} (${finalData.user[0].grade})`;
             var delivery_manager = '';
             if (finalData.user.length > 1) {
-                delivery_manager = `<ul><li>${finalData.user[1].roles.join(', ')}: ${finalData.user[1].email} (${finalData.user[1].grade})</li></ul>`;
+                delivery_manager = `${finalData.user[1].email} (${finalData.user[1].grade})`;
             }
 
             var project_details = '';
@@ -705,6 +707,8 @@
             document.getElementById('frameworks').value = JSON.stringify(finalData.architecture.frameworks);
             document.getElementById('integrations').value = JSON.stringify(finalData.architecture.integrations);
             document.getElementById('infrastructure').value = JSON.stringify(finalData.architecture.infrastructure);
+            document.getElementById('stage').value = JSON.stringify(finalData.stage);
+
 
             console.log(JSON.stringify(finalData.user));
         }

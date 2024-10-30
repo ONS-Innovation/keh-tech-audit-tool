@@ -536,6 +536,7 @@
                     source_control = `<ul><li>${source_control.source_control}</li></ul>`;
                     source_control = finalSourceControl;
                     sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
+                    console.log("A",source_control);
                     source_control[0].links.forEach(link => {
                     sourceControlDetails += `<li>${link.description}: ${link.link}</li>`;
                 });

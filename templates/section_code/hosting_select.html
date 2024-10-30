@@ -146,7 +146,7 @@
 <script>
 loadData();
 document.getElementById("error-panel").style.display = "none";
-if (localStorage.getItem("hosting_validate")) {
+if (JSON.parse(localStorage.getItem("hosting_validate"))) {
             document.getElementById("save-values-button").href = '/validate_details';
         }
 </script>

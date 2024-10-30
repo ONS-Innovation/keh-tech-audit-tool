@@ -3,8 +3,7 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
-{%
-    set pageConfig = {
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
@@ -18,32 +17,23 @@
               "post": ", except where otherwise stated"
           }
       }
-    }
-%}
-
+    } %}
 {% block main %}
-
-{%
-    call onsPanel({
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
-    })
-%}
-{{
-    onsLabel({
-        "id": 'label',
-        "for": "some-input",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'error-label',
+        "for": "error-label",
         "text": 'Please fill in missing data'
-    })
-}}
-
-{% endcall %}
+    }) }}
+    {% endcall %}
     <h1 class="ons-u-mt-m">Technology Details Summary</h1>
-
-    {{
-        onsSummary({
+    {{ onsSummary({
             "variant": "hub",
             "classes": "ons-u-mt-m",
             "summaries": [
@@ -133,106 +123,122 @@
                     ]
                 }
             ]
-        })
-    }}
-
-        <input id="user" type="hidden" name="user">
+        }) }}
+    <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
-        <input id="developed" type="hidden" name="developed">
-
-    {{
-        onsButton({
+            <input id="developed" type="hidden" name="developed">
+                {{ onsButton({
             "text": 'Finish section',
             "id": "submit-button",
             "url": url_for('survey'),
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "iconType": "check",
             "iconPosition": "after"
-        })
-    }}
-    
-
-    <script>
-        function arrToList(arr) {
-            var final = ""
-            try{
-                for (let i = 0; i <= arr.length - 1; i++) {
-                    if (i === 0) {
-                        final += `<ul>`
+        }) }}
+                <script>
+                    function arrToList(arr) {
+                        var final = ""
+                        try {
+                            for (let i = 0; i <= arr.length - 1; i++) {
+                                if (i === 0) {
+                                    final += `<ul>`
+                                }
+                                final += `<li>${
+                                    arr[i]
+                                }</li>`;
+                                if (i === arr.length - 1) {
+                                    final += `</ul>`
+                                }
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        return final;
                     }
-                    final += `<li>${arr[i]}</li>`;
-                    if (i === arr.length - 1) {
-                        final += `</ul>`
+                    function load_data() {
+                        var errorPanel = document.getElementById('error-panel');
+                        var frameworksData = localStorage.getItem('frameworks-data');
+                        var infrastructureData = localStorage.getItem('infrastructure-data');
+                        var integrationsData = localStorage.getItem('integrations-data');
+                        var languagesData = localStorage.getItem('languages-data');
+                        var errorList = [];
+                        localStorage.setItem('validate', false);
+                        console.log(JSON.parse(languagesData)['others']);
+                        try {
+                            if (
+                                (JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0) ||
+                                JSON.parse(frameworksData)['others'].length === 0 ||
+                                JSON.parse(infrastructureData)['others'].length === 0 ||
+                                JSON.parse(integrationsData)['others'].length === 0
+                            ) {
+                                errorPanel.classList.remove('ons-u-hidden');
+                                document
+                                    .getElementById('submit-button')
+                                    .style
+                                    .display = 'none';
+                            }
+                        } catch (e) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document
+                                .getElementById('submit-button')
+                                .style
+                                .display = 'none';
+                        }
+                        var finalData = {
+                            "architecture": {
+                                "frameworks": JSON.parse(frameworksData),
+                                "infrastructure": JSON.parse(infrastructureData),
+                                "integrations": JSON.parse(integrationsData),
+                                "languages": JSON.parse(languagesData)
+                            }
+                        }
+                        try {
+                            var languagesDataJSON = JSON.parse(languagesData);
+                            var languages_details = "Primary: " + arrToList(languagesDataJSON.main);
+                            if (languagesDataJSON.others.length > 0) {
+                                languages_details += "<br>Other: " + arrToList(languagesDataJSON.others);
+                            }
+                            document.getElementById('languages_details').innerHTML = languages_details;
+                        } catch (e) {
+                            errorList.push('Languages data');
+                        }
+                        try {
+                            var frameworksDataJSON = JSON.parse(frameworksData);
+                            var frameworks_details = arrToList(frameworksDataJSON.others);
+                            document.getElementById('framework_details').innerHTML = frameworks_details;
+                        } catch (e) {
+                            errorList.push('Frameworks data');
+                        }
+                        try {
+                            var integrationsDataJSON = JSON.parse(integrationsData);
+                            var integrations_details = arrToList(integrationsDataJSON.others);
+                            document.getElementById('integration_details').innerHTML = integrations_details;
+                        } catch (e) {
+                            errorList.push('Integrations data');
+                        }
+                        try {
+                            var infrastructureDataJSON = JSON.parse(infrastructureData);
+                            console.log(infrastructureDataJSON);
+                            if (infrastructureDataJSON.others.length === 0) {
+                                errorList.push('Infrastructure data');
+                            }
+                            var infrastructure_details = arrToList(infrastructureDataJSON.others);
+                            document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
+                        } catch (e) {
+                            errorList.push('Infrastructure data');
+                        }
+                        if (errorList.length > 0) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                        }
                     }
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            return final;
-        }
-        function load_data() {
-            var frameworksData = localStorage.getItem('frameworks-data');
-            var infrastructureData = localStorage.getItem('infrastructure-data');
-            var integrationsData = localStorage.getItem('integrations-data');
-            var languagesData = localStorage.getItem('languages-data');
-
-            localStorage.setItem('validate', false);
-    
-            document.getElementById('error-panel').style.display = 'none';
-            console.log(JSON.parse(languagesData)['others']);
-            try {
-                if ((JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0 )||
-                    JSON.parse(frameworksData)['others'].length === 0 || 
-                    JSON.parse(infrastructureData)['others'].length === 0 ||
-                    JSON.parse(integrationsData)['others'].length === 0) {
-
-                    document.getElementById('error-panel').style.display = 'block';
-                    document.getElementById('submit-button').style.display = 'none';
-
-                }
-            } catch (e) {
-                document.getElementById('error-panel').style.display = 'block';
-                document.getElementById('submit-button').style.display = 'none';
-            }
-            
-
-            var finalData = {
-                "architecture": {
-                    "frameworks": JSON.parse(frameworksData),
-                    "infrastructure": JSON.parse(infrastructureData),
-                    "integrations": JSON.parse(integrationsData),
-                    "languages": JSON.parse(languagesData),
-                },
-            }
-            console.log(finalData);
-
-            var languages_details = "Primary: " + arrToList(finalData.architecture.languages.main);
-            if (finalData.architecture.languages.others.length > 0) {
-                languages_details += "<br>Other: " + arrToList(finalData.architecture.languages.others);
-            }
-            var frameworks_details = arrToList(finalData.architecture.frameworks.others);
-            var integrations_details = arrToList(finalData.architecture.integrations.others);
-            var infrastructure_details = arrToList(finalData.architecture.infrastructure.others);
-
-            document.getElementById('languages_details').innerHTML = languages_details;
-            document.getElementById('framework_details').innerHTML = frameworks_details;
-            document.getElementById('integration_details').innerHTML = integrations_details;
-            document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
-
-        }
-        load_data();
-</script>
-
-
-{% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
-            height: auto;
-          }
-        </style>
-
-      {% endblock %}
-    
+                    load_data();
+                </script>
+            {% endblock %}
+            {% block scripts %}
+                <style>
+                    body {
+                        height: auto;
+                    }
+                </style>
+            {% endblock %}

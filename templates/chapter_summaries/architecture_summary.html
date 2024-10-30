@@ -179,7 +179,7 @@
             try {
                 if (sourceControlData === null ||
                     JSON.parse(databaseData).length === 0 || 
-                    JSON.parse(hostingData).length === 0) {
+                    (JSON.parse(hostingData).others.length === 0 && !JSON.parse(hostingData).type)) {
 
                     document.getElementById('error-panel').style.display = 'block';
                     document.getElementById('submit-button').style.display = 'none';

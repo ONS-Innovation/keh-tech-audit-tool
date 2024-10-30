@@ -155,7 +155,7 @@
                 }
                 try {
                     if (!JSON.parse(projectData)["project_name"] 
-                        || !JSON.parse(projectData)["project_long_name"] 
+                        || !JSON.parse(projectData)["project_short_name"] 
                         || !JSON.parse(projectData)["project_description"] 
                         || !JSON.parse(projectData)["doc_link"]) {
                             submitBtn.href = '/survey/project';
@@ -308,6 +308,8 @@
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();
+        localStorage.removeItem("source_control_validate");
+        localStorage.removeItem("hosting_validate");
     </script>
 {% endblock %}
 {% block scripts %}

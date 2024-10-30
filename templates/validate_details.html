@@ -537,9 +537,10 @@
                     source_control = finalSourceControl;
                     sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
                     source_control[0].links.forEach(link => {
-                    sourceControlDetails += `<li>${link.description}: <a href="${link.url}">${link.url}</a></li>`;
+                    sourceControlDetails += `<li>${link.description}: ${link.link}</li>`;
                 });
                 sourceControlDetails += `</ul>`;
+                console.log(source_control[0].links);
                 }
             } catch (e) {
                 document.getElementById('error-panel').style.display = 'block';

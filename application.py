@@ -341,9 +341,34 @@ def survey():
                 },
             "archived": False
             }
+
+        data = {
+            "user": [u for u in user],
+                "details": [{
+                "name": project["project_name"],
+                "short_name": project["project_short_name"],
+                "documentation_link": [project["doc_link"]],
+                "project_description": project["project_description"],
+            }],
+            "developed":[  
+                developed["developed"],
+                [developed_company]
+            ],
+            "source_control": source_control,
+            "architecture": {
+                "hosting": hosting,
+                "database": database,
+                "languages": languages,
+                "frameworks": frameworks,
+                "CICD": integrations,
+                "infrastructure": infrastructure
+                },
+            "archived": False,
+            "stage": "development"
+            }
         print(data)
         projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
-        # print(projects.json())
+        print(projects.json())
         return redirect(url_for("dashboard"))
 
     return render_template("survey.html")

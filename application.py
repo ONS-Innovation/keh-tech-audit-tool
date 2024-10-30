@@ -49,7 +49,7 @@ REDIRECT_URI = "http://localhost:8000"
 items = [{"text": "", "iconType": "person" }, { "text": "Sign Out", "url": "/sign-out" }]
 items_none = []
 
-mainNavItems = [{"text": 'Dashboard', "url": '/dashboard'},{"text": 'Pre-Survey', "url": '/pre-survey'},{"text": 'Survey', "url": '/survey'}]
+mainNavItems = [{"text": 'Dashboard', "url": '/dashboard'},{"text": 'Pre-Survey', "url": '/pre-survey'},{"text": 'Survey', "url": '/survey'},{"text": 'Submit', "url": '/validate_details'}]
 
 projectNavItems = [
     {
@@ -322,6 +322,8 @@ def survey():
         frameworks = json.loads(request.form["frameworks"])
         integrations = json.loads(request.form["integrations"])
         infrastructure = json.loads(request.form["infrastructure"])
+        stage = json.loads(request.form["stage"])
+
 
         if developed["developed"] == "Outsourced":
             developed_company = developed["outsource_company"]
@@ -332,28 +334,28 @@ def survey():
         
 
         ## HOSTING NEEDS CHANGING IN FUTURE!
-        data = {
-            "user": [u for u in user],
-            "details": [{
-                "name": project["project_name"],
-                "short_name": project["project_short_name"],
-                "documentation_link": [project["doc_link"]],
-            }],
-            "developed":[  
-                developed["developed"],
-                [developed_company]
-            ],
-            "source_control": source_control,
-            "architecture": {
-                "hosting": hosting,
-                "database": database,
-                "languages": languages,
-                "frameworks": frameworks,
-                "CICD": integrations,
-                "infrastructure": infrastructure
-                },
-            "archived": False
-            }
+        # data = {
+        #     "user": [u for u in user],
+        #     "details": [{
+        #         "name": project["project_name"],
+        #         "short_name": project["project_short_name"],
+        #         "documentation_link": [project["doc_link"]],
+        #     }],
+        #     "developed":[  
+        #         developed["developed"],
+        #         [developed_company]
+        #     ],
+        #     "source_control": source_control,
+        #     "architecture": {
+        #         "hosting": hosting,
+        #         "database": database,
+        #         "languages": languages,
+        #         "frameworks": frameworks,
+        #         "CICD": integrations,
+        #         "infrastructure": infrastructure
+        #         },
+        #     "archived": False
+        #     }
 
         data = {
             "user": [u for u in user],
@@ -376,12 +378,11 @@ def survey():
                 "CICD": integrations,
                 "infrastructure": infrastructure
                 },
-            "archived": False,
-            "stage": "development"
+            "stage": stage
             }
         print(data)
-        projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
-        print(projects.json())
+        # projects = requests.post(f"https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev/api/projects", json=data, headers=headers)
+        # print(projects.json())
         return redirect(url_for("dashboard"))
 
     return render_template("survey.html")

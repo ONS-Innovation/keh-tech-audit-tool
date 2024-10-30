@@ -167,8 +167,9 @@
                             localStorage.setItem('validate', false);
                             var errorList = [];
                             try {
-                                if (techContactData === null || managerData === null || projectData === null || developedData === null) {
+                                if (managerData === null) {
                                     errorPanel.classList.remove('ons-u-hidden');
+                                    errorList.push('Delivery contact data');
                                     document
                                         .getElementById('submit-button')
                                         .style

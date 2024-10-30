@@ -24,7 +24,7 @@
     }
 %}
 
-{% set project_details = 'Project Name: ' + project.details[0].name + '<br>' + 'Short Name: ' + project.details[0].short_name + '<br>' + 'Documentation Link: ' + project.details[0].documentation_link[0] + '<br>' + 'Project Description: ' + project.details[0].project_description + '' %}
+{% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' %}
 {% block main %}
 
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
@@ -102,10 +102,7 @@
                                         "id": "developed",
                                         "valueList": [
                                             {
-                                                "text": project.developed[0]
-                                            },
-                                            {
-                                                "text": project.developed[1] | join(', ')
+                                                "text": project.developed[0] + ' ' + project.developed[1] | join(', ')
                                             }
                                         ],
                                     }
@@ -136,10 +133,7 @@
                                         "id": "architecture-hosting",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.hosting.type[0]
-                                            },
-                                            {
-                                                "text": project.architecture.hosting.details| join(', ')
+                                                "text": project.architecture.hosting.type[0] + '. ' + project.architecture.hosting.details | join(', ')
                                             }
                                         ],
                                     }

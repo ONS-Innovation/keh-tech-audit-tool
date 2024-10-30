@@ -3,8 +3,7 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
-{%
-    set pageConfig = {
+{% set pageConfig = {
         "header": {
             "title": "Create a project",
             "signoutButton": {
@@ -18,32 +17,23 @@
               "post": ", except where otherwise stated"
           }
       }
-    }
-%}
-
+    } %}
 {% block main %}
-
-{%
-    call onsPanel({
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
-    })
-%}
-{{
-    onsLabel({
-        "id": 'label',
-        "for": "some-input",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'error-label',
+        "for": "error-label",
         "text": 'Please fill in missing data'
-    })
-}}
-
-{% endcall %}
+    }) }}
+    {% endcall %}
     <h1 class="ons-u-mt-m">Code and Architecture Summary</h1>
-
-    {{
-        onsSummary({
+    {{ onsSummary({
             "variant": "hub",
             "classes": "ons-u-mt-m",
             "summaries": [
@@ -114,135 +104,141 @@
                     ]
                 }
             ]
-        })
-    }}
-
-        <input id="user" type="hidden" name="user">
+        }) }}
+    <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
-        <input id="developed" type="hidden" name="developed">
-
-    {{
-        onsButton({
+            <input id="developed" type="hidden" name="developed">
+                {{ onsButton({
             "text": 'Finish section',
             "id": "submit-button",
             "url": url_for('survey'),
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "iconType": "check",
             "iconPosition": "after"
-        })
-    }}
-    
-
-    <script>
-        function arrToList(arr) {
-            var final = ""
-            try{
-            for (let i = 0; i <= arr.length - 1; i++) {
-                if (i === 0) {
-                final += `<ul>`
-                }
-                final += `<li>${arr[i]}</li>`;
-                if (i === arr.length - 1) {
-                final += `</ul>`
-                }
-            }
-            } catch (e) {
-            console.log(e);
-            }
-            return final;
-        }
-
-        function arrToLinkList(arr) {
-            var final = ""
-            try {
-            for (let i = 0; i <= arr.length - 1; i++) {
-                if (i === 0) {
-                final += `<ul>`
-                }
-                final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
-                if (i === arr.length - 1) {
-                final += `</ul>`
-                }
-            }
-            } catch (e) {
-            console.log(e);
-            }
-            return final;
-        }
-        function load_data() {
-            var sourceControlData = localStorage.getItem('source_control-data');
-            var hostingData = localStorage.getItem('hosting-data');
-            var databaseData = localStorage.getItem('database-data');
-
-            document.getElementById('error-panel').style.display = 'none';
-            var hostingJSON = JSON.parse(hostingData);
-            try {
-                if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud'){
-                    if (hostingJSON.others.length === 0){
-                        document.getElementById('error-panel').style.display = 'block';
-                        document.getElementById('submit-button').style.display = 'none';
+        }) }}
+                <script>
+                    function arrToList(arr) {
+                        var final = ""
+                        try {
+                            for (let i = 0; i <= arr.length - 1; i++) {
+                                if (i === 0) {
+                                    final += `<ul>`
+                                }
+                                final += `<li>${
+                                    arr[i]
+                                }</li>`;
+                                if (i === arr.length - 1) {
+                                    final += `</ul>`
+                                }
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        return final;
                     }
-                }
-                if (sourceControlData === null ||
-                    JSON.parse(databaseData).length === 0 || 
-                    hostingJSON.type === null){
-                    document.getElementById('error-panel').style.display = 'block';
-                    document.getElementById('submit-button').style.display = 'none';
-
-                }
-            } catch (e) {
-            console.log(e)
-                document.getElementById('error-panel').style.display = 'block';
-                document.getElementById('submit-button').style.display = 'none';
-            }
-
-            var sourceControlDataJSON = JSON.parse(sourceControlData);
-            var sourceType = sourceControlDataJSON.source_control;
-            var finalData = {
-                "source_control": [{"type": sourceType, "links": sourceControlDataJSON.links}],
-                "architecture": {
-                    "hosting": {
-                        "main": [hostingJSON.type],
-                        "others": hostingJSON.others,
-                    },
-                    "database": JSON.parse(databaseData),
-                },
-            }
-
-            var source_control_links_label = 'No links added to project.';
-            if (finalData.source_control[0].links && finalData.source_control[0].links.length > 0) {
-                source_control_links_label = finalData.source_control[0].links.length > 1 ? 'Links: ' : 'Link: ';
-            }
-            var source_control = `Type: ${sourceType}<br>${source_control_links_label}` + arrToLinkList(finalData.source_control[0].links);
-
-
-            var hosting_details = `Type: ${hostingJSON.type}`;
-            if (hostingJSON.others && hostingJSON.others.length > 0) {
-                hosting_details += `<br>Services:` + arrToList(hostingJSON.others);
-            }
-
-
-            var database_details = arrToList(finalData.architecture.database.others) + arrToList(finalData.architecture.database.main);
-
-            document.getElementById('source_control_details').innerHTML = source_control;
-            document.getElementById('hosting_details').innerHTML = hosting_details;
-            document.getElementById('database_details').innerHTML = database_details;
-
-            console.log(JSON.stringify(finalData.user));
-        }
-        load_data();
-</script>
-
-
-{% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
-            height: auto;
-          }
-        </style>
-
-      {% endblock %}
-    
+                    function arrToLinkList(arr) {
+                        var final = ""
+                        try {
+                            for (let i = 0; i <= arr.length - 1; i++) {
+                                if (i === 0) {
+                                    final += `<ul>`
+                                }
+                                final += `<li>${
+                                    arr[i].description
+                                }: <br> <a href='${
+                                    arr[i].link
+                                }'>${
+                                    arr[i].link
+                                }</a></li>`;
+                                if (i === arr.length - 1) {
+                                    final += `</ul>`
+                                }
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        return final;
+                    }
+                    function load_data() {
+                        var errorPanel = document.getElementById('error-panel');
+                        console.log(errorPanel);
+                        var sourceControlData = localStorage.getItem('source_control-data');
+                        var hostingData = localStorage.getItem('hosting-data');
+                        var databaseData = localStorage.getItem('database-data');
+                        var hostingJSON = JSON.parse(hostingData);
+                        try {
+                            if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud') {
+                                if (hostingJSON.others.length === 0) {
+                                    errorPanel.classList.remove('ons-u-hidden');
+                                    document
+                                        .getElementById('submit-button')
+                                        .style
+                                        .display = 'none';
+                                }
+                            }
+                            if (sourceControlData === null || JSON.parse(databaseData).length === 0 || hostingJSON.type === null) {
+                                errorPanel.classList.remove('ons-u-hidden');
+                                document
+                                    .getElementById('submit-button')
+                                    .style
+                                    .display = 'none';
+                            }
+                        } catch (e) {
+                            console
+                                .log(e)
+                                errorPanel
+                                .classList
+                                .remove('ons-u-hidden');
+                            document
+                                .getElementById('submit-button')
+                                .style
+                                .display = 'none';
+                        }
+                        var errorList = []
+                        try {
+                            var sourceControlDataJSON = JSON.parse(sourceControlData);
+                            var sourceType = sourceControlDataJSON.source_control;
+                            var source_control_links_label = 'No links added to project.';
+                            if (sourceControlDataJSON.links && sourceControlDataJSON.links.length > 0) {
+                                source_control_links_label = sourceControlDataJSON.links.length > 1
+                                    ? 'Links: '
+                                    : 'Link: ';
+                            }
+                            var source_control = `Type: ${sourceType}<br>${source_control_links_label}` + arrToLinkList(sourceControlDataJSON.links);
+                            document.getElementById('source_control_details').innerHTML = source_control;
+                        } catch (e) {
+                            errorList.push('Source Control');
+                        }
+                        try {
+                            var databaseDataJSON = JSON.parse(databaseData);
+                            var database_details = arrToList(databaseDataJSON.others);
+                            document.getElementById('database_details').innerHTML = database_details;
+                        } catch (e) {
+                            errorList.push('Database');
+                        }
+                        try {
+                            var hosting_details = `Type: ${
+                                hostingJSON.type
+                            }`;
+                            if (hostingJSON.others && hostingJSON.others.length > 0) {
+                                hosting_details += `<br>Services:` + arrToList(hostingJSON.others);
+                            }
+                            document.getElementById('hosting_details').innerHTML = hosting_details;
+                        } catch (e) {
+                            errorList.push('Hosting');
+                        }
+                        if (errorList.length > 0) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                        }
+                    }
+                    load_data();
+                </script>
+            {% endblock %}
+            {% block scripts %}
+                <style>
+                    body {
+                        height: auto;
+                    }
+                </style>
+            {% endblock %}

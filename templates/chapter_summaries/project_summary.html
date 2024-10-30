@@ -184,17 +184,17 @@
                             try {
                                 var techContactDataJSON = JSON.parse(techContactData);
                                 var managerContactDataJSON = JSON.parse(managerData);
-                                var user_details = `Technical Contact: ${
+                                var user_details = `<p>Technical Contact: ${
                                     techContactDataJSON.contactEmail
                                 } (${
                                     techContactDataJSON.role
-                                })`;
+                                })</p>`;
                                 if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
-                                    user_details += `, Manager Contact: ${
+                                    user_details += `<p>Manager Contact: ${
                                         managerContactDataJSON.contactEmail
                                     } (${
                                         managerContactDataJSON.role
-                                    })`;
+                                    })</p>`;
                                 }
                                 document.getElementById('user_details').innerHTML = user_details;
                                 document.getElementById('user').value = JSON.stringify(techContactDataJSON);
@@ -211,6 +211,9 @@
                                 }</p>
             <p>Documentation Link: ${
                                     projectDataJSON.doc_link
+                                }</p>
+                                <p>Project Description: ${
+                                    projectDataJSON.project_description
                                 }</p>`;
                                 document.getElementById('project_details').innerHTML = project_details;
                                 document.getElementById('project').value = JSON.stringify(projectDataJSON);

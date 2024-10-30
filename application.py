@@ -57,7 +57,7 @@ projectNavItems = [
         "url": '/survey'
     },
     {
-        "text": 'Pre-Survey',
+        "text": 'Details',
         "url": '/pre-survey/project'
     },
     {
@@ -69,7 +69,7 @@ projectNavItems = [
         "url": '/survey/contact-manager'
     },
     {
-        "text": 'Details',
+        "text": 'Project',
         "url": '/survey/project'
     },
     {
@@ -91,7 +91,7 @@ codeNavItems = [{
     "url": '/survey'
     },
     {
-        "text": 'Pre-survey',
+        "text": 'Details',
         "url": '/pre-survey/architecture'
     },
     {
@@ -114,7 +114,7 @@ codeNavItems = [{
 
 techNavItems = [
     {"text": 'Survey', "url": '/survey'},
-    {"text": 'Pre-Survey', "url": '/pre-survey'},
+    {"text": 'Details', "url": '/pre-survey/technology'},
     {"text": 'Languages', "url": '/survey/languages'},
     {"text": 'Frameworks', "url": '/survey/frameworks'},
     {"text": 'Integrations', "url": '/survey/integrations'},

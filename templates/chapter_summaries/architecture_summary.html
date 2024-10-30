@@ -211,6 +211,9 @@
                         }
                         try {
                             var databaseDataJSON = JSON.parse(databaseData);
+                            if (databaseDataJSON.others.length === 0) {
+                                errorList.push('Database');
+                            }
                             var database_details = arrToList(databaseDataJSON.others);
                             document.getElementById('database_details').innerHTML = database_details;
                         } catch (e) {

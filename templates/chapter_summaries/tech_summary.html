@@ -198,12 +198,18 @@
                             if (languagesDataJSON.others.length > 0) {
                                 languages_details += "<br>Other: " + arrToList(languagesDataJSON.others);
                             }
+                            if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
+                                errorList.push('Languages data');
+                            }
                             document.getElementById('languages_details').innerHTML = languages_details;
                         } catch (e) {
                             errorList.push('Languages data');
                         }
                         try {
                             var frameworksDataJSON = JSON.parse(frameworksData);
+                            if (frameworksDataJSON.others.length === 0) {
+                                errorList.push('Frameworks data');
+                            }
                             var frameworks_details = arrToList(frameworksDataJSON.others);
                             document.getElementById('framework_details').innerHTML = frameworks_details;
                         } catch (e) {
@@ -211,6 +217,9 @@
                         }
                         try {
                             var integrationsDataJSON = JSON.parse(integrationsData);
+                            if (integrationsDataJSON.others.length === 0) {
+                                errorList.push('Integrations data');
+                            }
                             var integrations_details = arrToList(integrationsDataJSON.others);
                             document.getElementById('integration_details').innerHTML = integrations_details;
                         } catch (e) {
@@ -218,7 +227,6 @@
                         }
                         try {
                             var infrastructureDataJSON = JSON.parse(infrastructureData);
-                            console.log(infrastructureDataJSON);
                             if (infrastructureDataJSON.others.length === 0) {
                                 errorList.push('Infrastructure data');
                             }

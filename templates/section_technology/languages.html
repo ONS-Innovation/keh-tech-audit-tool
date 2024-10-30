@@ -30,6 +30,7 @@
         "title": 'Error',
         "variant": 'error',
         "type": "error",
+        "classes": "ons-u-hidden"
     }) %}
     {{ onsLabel({
         "id": 'label',
@@ -121,9 +122,6 @@
             <script>
                 loadData();
                 redirectToPrevious();
-                document
-                    .getElementById("error-panel")
-                    .style
-                    .display = "none";
+
             </script>
         {% endblock %}

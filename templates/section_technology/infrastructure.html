@@ -31,6 +31,8 @@
         "title": 'Error',
         "variant": 'error',
         "type": "error",
+        "classes": "ons-u-hidden"
+
     }) %}
     {{ onsLabel({
         "id": 'label',
@@ -136,9 +138,5 @@ If you are using multiple components across different platforms or providers, be
             <script>
                 loadData();
                 redirectToPrevious();
-                document
-                    .getElementById("error-panel")
-                    .style
-                    .display = "none";
             </script>
         {% endblock %}

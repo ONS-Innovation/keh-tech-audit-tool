@@ -36,6 +36,8 @@
         "title": 'Error',
         "variant": 'error',
         "type": "error",
+        "classes": "ons-u-hidden"
+
     })
 %}
 
@@ -233,7 +235,6 @@ if (localStorage.getItem("source_control_validate")) {
 }
 
 loadData();
-document.getElementById("error-panel").style.display = "none";
 redirectToPrevious();
 console.log(document.cookie);
 

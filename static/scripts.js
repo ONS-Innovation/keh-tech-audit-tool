@@ -90,7 +90,7 @@ function removeData(lang) {
 }
 
 function showError() {
-    document.getElementById('error-panel').style.display = 'block';
+    document.getElementById('error-panel').classList.remove('ons-u-hidden');
 }
 
 function addData(event) {
@@ -119,7 +119,8 @@ function addData(event) {
     renderData();
 
     document.getElementById(page + '-input').value = "";
-    document.getElementById("error-panel").style.display = "none";
+    document.getElementById('error-panel').classList.add('ons-u-hidden');
+
 }
 
 

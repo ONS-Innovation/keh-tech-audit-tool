@@ -147,9 +147,10 @@
 
 <script>
 loadData();
-if (localStorage.getItem("hosting_validate")) {
-            document.getElementById("save-values-button").href = '/validate_details';
-        }
+
+if (JSON.parse(localStorage.getItem("hosting_validate"))) {
+    document.getElementById("save-values-button").href = '/validate_details';
+}
 </script>
 
 

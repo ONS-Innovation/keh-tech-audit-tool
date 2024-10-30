@@ -229,7 +229,7 @@ document.getElementById('source_control_desc-input').onkeydown = function(event)
 
 <script>
 
-if (localStorage.getItem("source_control_validate")) {
+if (JSON.parse(localStorage.getItem("source_control_validate"))) {
     console.log("hi");
     document.getElementById("save-values-button").href = '/validate_details';
 }

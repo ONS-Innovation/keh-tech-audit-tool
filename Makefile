@@ -9,5 +9,8 @@ format-python:
 black:
 	poetry run black .
 
-format:
-	npx prettier --write .
+install: 
+	poetry install --only main --no-root
+
+install-dev: 
+	poetry install --no-root

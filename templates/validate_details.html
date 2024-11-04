@@ -310,27 +310,8 @@
     }}
     
 </form>
-
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <script>
-        function arrToList(arr) {
-            // Converts array to unordered html list
-            var final = ""
-            try{
-                for (let i = 0; i <= arr.length - 1; i++) {
-                
-                    if (i === 0) {
-                        final += `<ul>`
-                    }
-                    final += `<li>${arr[i]}</li>`;
-                    if (i === arr.length - 1) {
-                        final += `</ul>`
-                    }
-                }
-            } catch (e) {
-                
-            }
-            return final;
-        }
         function arrToLinkList(arr) {
             // Converts array of objects to unordered html list with hrefs
             var final = ""

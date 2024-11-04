@@ -28,3 +28,26 @@ function arrToList(arr) {
     }
     return final;
 }
+function arrToLinkList(arr) {
+    var final = ""
+    try {
+        for (let i = 0; i <= arr.length - 1; i++) {
+            if (i === 0) {
+                final += `<ul>`
+            }
+            final += `<li>${
+                arr[i].description
+            }: <br> <a href='${
+                arr[i].url
+            }'>${
+                arr[i].url
+            }</a></li>`;
+            if (i === arr.length - 1) {
+                final += `</ul>`
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    return final;
+}

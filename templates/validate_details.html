@@ -345,7 +345,7 @@
                     }
                 }
                 } catch (e) {
-                
+                    console.log(e);
             }
             return final;
         }
@@ -542,7 +542,7 @@
                     sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
                     
                     source_control[0].links.forEach(link => {
-                    sourceControlDetails += `<li>${link.description}: ${link.link}</li>`;
+                    sourceControlDetails += `<li>${link.description}: ${link.url}</li>`;
                 });
                 sourceControlDetails += `</ul>`;
                 

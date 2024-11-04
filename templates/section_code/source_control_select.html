@@ -138,10 +138,10 @@ function renderData() {
         newRow.classList.add('ons-table__row');
 
         newRow.innerHTML = `
-            <td class="ons-table__cell">${item.link}</td>
+            <td class="ons-table__cell">${item.url}</td>
             <td class="ons-table__cell">${item.description}</td>
             <td class="ons-table__cell">
-                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${item.link}")'>
+                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${item.url}")'>
                     <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>
                 </button>
             </td>
@@ -151,8 +151,8 @@ function renderData() {
     });
 }
 
-function removeData(link) {
-    langArr.links = langArr.links.filter(item => item.link !== link);
+function removeData(url) {
+    langArr.links = langArr.links.filter(item => item.url !== url);
     storeData();
     renderData();
 }
@@ -180,7 +180,7 @@ function addData(event) {
 
     try {
 
-        if (langArr.links.some(item => item.link.toLowerCase() === link_value.toLowerCase())) {
+        if (langArr.links.some(item => item.url.toLowerCase() === link_value.toLowerCase())) {
             showError();
             return;
         }
@@ -188,7 +188,7 @@ function addData(event) {
         console.log(e);
     }
 
-    langArr.links.push({ link: link_value, description: desc_value });
+    langArr.links.push({ url: link_value, description: desc_value });
     storeData();
     renderData();
 

@@ -284,9 +284,9 @@
             ]
         })
     }}
-    
+    <!--onsubmit="localStorage.clear()"-->
     <form action="{{ url_for('survey') }}"
-    method="POST" onsubmit="localStorage.clear()" >
+    method="POST"  >
         <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
         <input id="developed" type="hidden" name="developed">
@@ -313,6 +313,7 @@
 
     <script>
         function arrToList(arr) {
+            // Converts array to unordered html list
             var final = ""
             try{
                 for (let i = 0; i <= arr.length - 1; i++) {
@@ -331,24 +332,26 @@
             return final;
         }
         function arrToLinkList(arr) {
+            // Converts array of objects to unordered html list with hrefs
             var final = ""
             try {
-            for (let i = 0; i <= arr.length - 1; i++) {
-                if (i === 0) {
-                final += `<ul>`
+                for (let i = 0; i <= arr.length - 1; i++) {
+                    if (i === 0) {
+                    final += `<ul>`
+                    }
+                    final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
+                    if (i === arr.length - 1) {
+                    final += `</ul>`
+                    }
                 }
-                final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
-                if (i === arr.length - 1) {
-                final += `</ul>`
-                }
-            }
-            } catch (e) {
-            
+                } catch (e) {
+                
             }
             return final;
         }
 
         function displayError() {
+            // error message to be displayed when data is missing
             document.getElementById('error-panel').style.display = 'block';
             document.getElementById('submit-button').style.display = 'none';
         }
@@ -379,6 +382,7 @@
             var managerTechData = JSON.parse(contactManagerData);
             var techData = JSON.parse(contactTechData);
 
+            // try catch block for contact email and role (technical contact)
             try {
                 if (!JSON.parse(contactTechData)["contactEmail"] 
                     || !JSON.parse(contactTechData)["role"]) {
@@ -397,8 +401,7 @@
                             "roles": ["Technical Contact"],
                             "grade": techData.role
                         });
-            }
-
+                }
                 }
             } catch (e) {
                 displayError();
@@ -409,6 +412,8 @@
                             "grade": ""
                         });
             }
+
+            // try catch block for contact email and role (delivery manager)
 
             try {
                 if (!JSON.parse(contactManagerData)["contactEmail"] 
@@ -451,6 +456,7 @@
             }
             ];
 
+            // chuck all data into finalData object
             var finalData = {
             "user": (youData),
             "details": JSON.parse(projectData),
@@ -474,7 +480,7 @@
             }
 
             var project_details = '';
-
+            // try catch block for project details
             try {
                 var details = JSON.parse(projectData);
                 var stage = JSON.parse(stageData);
@@ -493,6 +499,7 @@
             }
 
             var developed = '';
+            // try catch block for developed details
             try {
                 developed = JSON.parse(developedData);
                 if (!developed["outsource_company"] && !developed["partnership_company"] && !developed["developed"]) {
@@ -522,6 +529,7 @@
             }
 
             var sourceControlDetails= '';
+            // try catch block for source control details
             try {
                 if (!JSON.parse(sourceControlData)["source_control"]) {
                     displayError();
@@ -547,6 +555,7 @@
             }
 
             var hosting = '';
+            // try catch block for hosting details
             try {
                 if (!JSON.parse(hostingData).type) {
                     if (JSON.parse(hostingData).type === "Cloud" || JSON.parse(hostingData).type === "Hybrid") {
@@ -558,7 +567,6 @@
                     displayError();
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
                 } else {
-                    
                     if (JSON.parse(hostingData).type === "On-premises") {
                         hosting = JSON.parse(hostingData).type;
                     } else {
@@ -566,12 +574,12 @@
                     }
                 }
             } catch (e) {
-                
                 displayError();
                 document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
             }
 
             var languages = '';
+            // try catch block for languages details
             try {
                 if (JSON.parse(languagesData).main.length === 0 && JSON.parse(languagesData).others.length === 0) {
                     displayError();
@@ -588,6 +596,7 @@
             }
 
             var frameworks = '';
+            // try catch block for frameworks details
             try {
                 if (JSON.parse(frameworksData).others.length === 0) {
                     displayError();
@@ -604,6 +613,7 @@
             }
 
             var integrations = '';
+            // try catch block for integrations details
             try {
                 if (JSON.parse(integrationsData).others.length === 0) {
                     displayError();
@@ -620,6 +630,7 @@
             }
 
             var infrastructure = '';
+            // try catch block for infrastructure details
             try {
                 if (JSON.parse(infrastructureData).others.length === 0) {
                     displayError();
@@ -635,6 +646,7 @@
             }
 
             var database_details = '';
+            // try catch block for database details
             try {
                 if (JSON.parse(databaseData).others.length === 0) {
                     displayError();
@@ -677,30 +689,57 @@
 
             // Fills in the data for summary section
             for (let i=0; i < summaryArray.length; i++) {
-                var key = Object.keys(summaryArray[i])[0];
-                console.log(key);
-                console.log(summaryArray[i][key]);
-                document.getElementById(key).innerHTML = summaryArray[i][key];
+                var key = Object.keys(summaryArray[i])[0]; // e.g "technical_contact"
+                document.getElementById(key).innerHTML = summaryArray[i][key]; // e.g getElementByID(technical_contact).innerHTML = technical_contact
 
             }
 
-
-            document.getElementById('user').value = JSON.stringify(finalData.user);
-            document.getElementById('project').value = JSON.stringify(finalData.details);
-            document.getElementById('developed').value = JSON.stringify(finalData.developed);
-            document.getElementById('source_control').value = JSON.stringify(finalData.source_control);
             var hostingData = {
                 "type": [finalData.architecture.hosting.type],
                 "details": finalData.architecture.hosting.others
             };
-            document.getElementById('hosting').value = JSON.stringify(hostingData);
-            document.getElementById('database').value = JSON.stringify(finalData.architecture.database);
-            document.getElementById('languages').value = JSON.stringify(finalData.architecture.languages);
-            document.getElementById('frameworks').value = JSON.stringify(finalData.architecture.frameworks);
-            document.getElementById('integrations').value = JSON.stringify(finalData.architecture.integrations);
-            document.getElementById('infrastructure').value = JSON.stringify(finalData.architecture.infrastructure);
-            document.getElementById('stage').value = JSON.stringify(finalData.stage);
 
+            var hiddenInputsArray = [
+                {
+                    "user": JSON.stringify(finalData.user)
+                },
+                {
+                    "project": JSON.stringify(finalData.details)
+                },
+                {
+                    "developed": JSON.stringify(finalData.developed)
+                },
+                {
+                    "source_control": JSON.stringify(finalData.source_control)
+                },
+                {
+                    "hosting": JSON.stringify(hostingData)
+                },
+                {
+                    "database": JSON.stringify(finalData.architecture.database)
+                },
+                {
+                    "languages": JSON.stringify(finalData.architecture.languages)
+                },
+                {
+                    "frameworks": JSON.stringify(finalData.architecture.frameworks)
+                },
+                {
+                    "integrations": JSON.stringify(finalData.architecture.integrations)
+                },
+                {
+                    "infrastructure": JSON.stringify(finalData.architecture.infrastructure)
+                },
+                {
+                    "stage": JSON.stringify(finalData.stage)
+                }
+            ];
+            
+            // Fill in hidden input fields to be sent in POST request
+            for (let i=0; i < hiddenInputsArray.length; i++) {
+                var key = Object.keys(hiddenInputsArray[i])[0]; // e.g "user"
+                document.getElementById(key).value = hiddenInputsArray[i][key]; // e.g getElementByID(user).value = JSON.stringify(finalData.user)
+            }
 
             console.log(JSON.stringify(finalData.user));
         }

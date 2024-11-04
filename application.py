@@ -262,6 +262,7 @@ def view_project(project_name):
         headers=headers,
     ).json()
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
+    print(projects)
     try:
         if projects["message"] and projects["message"] is None:
             flash("Project not found. Please try again.")

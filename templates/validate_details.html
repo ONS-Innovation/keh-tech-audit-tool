@@ -337,7 +337,7 @@
                 if (i === 0) {
                 final += `<ul>`
                 }
-                final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
+                final += `<li>${arr[i].description}: <br> <a href='${arr[i].url}'>${arr[i].url}</a></li>`;
                 if (i === arr.length - 1) {
                 final += `</ul>`
                 }
@@ -539,7 +539,7 @@
                     sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
                     console.log("A",source_control);
                     source_control[0].links.forEach(link => {
-                    sourceControlDetails += `<li>${link.description}: ${link.link}</li>`;
+                    sourceControlDetails += `<li>${link.description}: ${link.url}</li>`;
                 });
                 sourceControlDetails += `</ul>`;
                 console.log(source_control[0].links);

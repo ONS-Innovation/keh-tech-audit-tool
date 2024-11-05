@@ -105,11 +105,11 @@
                 }
             ]
         }) }}
-        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <input id="user" type="hidden" name="user">
         <input id="project" type="hidden" name="project">
             <input id="developed" type="hidden" name="developed">
-                {{ onsButton({
+        {{ onsButton({
             "text": 'Finish section',
             "id": "submit-button",
             "url": url_for('survey'),
@@ -125,6 +125,7 @@
                         var hostingData = localStorage.getItem('hosting-data');
                         var databaseData = localStorage.getItem('database-data');
                         var hostingJSON = JSON.parse(hostingData);
+
                         try {
                             if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud') {
                                 if (hostingJSON.others.length === 0) {
@@ -153,6 +154,7 @@
                                 .style
                                 .display = 'none';
                         }
+
                         var errorList = []
                         try {
                             var sourceControlDataJSON = JSON.parse(sourceControlData);
@@ -168,6 +170,7 @@
                         } catch (e) {
                             errorList.push('Source Control');
                         }
+
                         try {
                             var databaseDataJSON = JSON.parse(databaseData);
                             if (databaseDataJSON.others.length === 0) {
@@ -178,6 +181,7 @@
                         } catch (e) {
                             errorList.push('Database');
                         }
+
                         try {
                             var hosting_details = `Type: ${
                                 hostingJSON.type
@@ -189,6 +193,7 @@
                         } catch (e) {
                             errorList.push('Hosting');
                         }
+                        
                         if (errorList.length > 0) {
                             errorPanel.classList.remove('ons-u-hidden');
                             document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');

@@ -147,6 +147,7 @@
                         var errorList = [];
                         localStorage.setItem('validate', false);
                         console.log(JSON.parse(languagesData)['others']);
+
                         try {
                             if (
                                 (JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0) ||
@@ -167,6 +168,7 @@
                                 .style
                                 .display = 'none';
                         }
+
                         var finalData = {
                             "architecture": {
                                 "frameworks": JSON.parse(frameworksData),
@@ -175,6 +177,7 @@
                                 "languages": JSON.parse(languagesData)
                             }
                         }
+
                         try {
                             var languagesDataJSON = JSON.parse(languagesData);
                             var languages_details = "Primary: " + arrToList(languagesDataJSON.main);
@@ -188,6 +191,7 @@
                         } catch (e) {
                             errorList.push('Languages data');
                         }
+
                         try {
                             var frameworksDataJSON = JSON.parse(frameworksData);
                             if (frameworksDataJSON.others.length === 0) {
@@ -198,6 +202,7 @@
                         } catch (e) {
                             errorList.push('Frameworks data');
                         }
+
                         try {
                             var integrationsDataJSON = JSON.parse(integrationsData);
                             if (integrationsDataJSON.others.length === 0) {
@@ -208,6 +213,7 @@
                         } catch (e) {
                             errorList.push('Integrations data');
                         }
+                        
                         try {
                             var infrastructureDataJSON = JSON.parse(infrastructureData);
                             if (infrastructureDataJSON.others.length === 0) {
@@ -218,11 +224,13 @@
                         } catch (e) {
                             errorList.push('Infrastructure data');
                         }
+
                         if (errorList.length > 0) {
                             errorPanel.classList.remove('ons-u-hidden');
                             document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
                         }
                     }
+
                     load_data();
                 </script>
             {% endblock %}

@@ -122,13 +122,16 @@
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script>
             function storeData() {
+                // Store detauls about the delivery manager in local storage
                 var contactEmail = document.getElementById('contact-email').value;
                 var role = document.querySelector('input[name="role"]:checked').value;
                 var otherRole = document.getElementById('other-input').value;
                 if (role === 'other') {
                     role = otherRole;
                 }
+
                 let complete = false;
+
                 if (contactEmail && role) {
                     complete = true;
                 }
@@ -146,6 +149,7 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
+
                 var data = JSON.parse(localStorage.getItem('contact-manager-data'));
                 if (data) {
                     document.getElementById('contact-email').value = data.contactEmail;
@@ -157,6 +161,7 @@
                     }
                 }
             }
+
             redirectToPrevious();
             loadData();
         </script>

@@ -137,107 +137,113 @@
             "iconType": "check",
             "iconPosition": "after"
         }) }}
-                    <script>
-                        function load_data() {
-                            var errorPanel = document.getElementById('error-panel');
-                            var techContactData = localStorage.getItem('contact-tech-data');
-                            var projectData = localStorage.getItem('data');
-                            var managerData = localStorage.getItem('contact-manager-data');
-                            console.log(techContactData, managerData)
-                            var developedData = localStorage.getItem('data-developed');
-                            var stageData = localStorage.getItem('data-stage');
-                            localStorage.setItem('validate', false);
-                            var errorList = [];
-                            try {
-                                if (managerData === null) {
-                                    errorPanel.classList.remove('ons-u-hidden');
-                                    errorList.push('Delivery contact data');
-                                    document
-                                        .getElementById('submit-button')
-                                        .style
-                                        .display = 'none';
-                                }
-                            } catch (e) {
-                                errorPanel.classList.remove('ons-u-hidden');
-                                document
-                                    .getElementById('submit-button')
-                                    .style
-                                    .display = 'none';
-                            }
-                            try {
-                                var techContactDataJSON = JSON.parse(techContactData);
-                                var managerContactDataJSON = JSON.parse(managerData);
-                                var user_details = `<p>Technical Contact: ${
-                                    techContactDataJSON.contactEmail
-                                } (${
-                                    techContactDataJSON.role
-                                })</p>`;
-                                if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
-                                    user_details += `<p>Manager Contact: ${
-                                        managerContactDataJSON.contactEmail
-                                    } (${
-                                        managerContactDataJSON.role
-                                    })</p>`;
-                                }
-                                document.getElementById('user_details').innerHTML = user_details;
-                                document.getElementById('user').value = JSON.stringify(techContactDataJSON);
-                            } catch (e) {
-                                errorList.push('Contact data');
-                            }
-                            try {
-                                var projectDataJSON = JSON.parse(projectData);
-                                var project_details = `<p>Project Name: ${
-                                    projectDataJSON.project_name
-                                }</p>
-            <p>Project Short Name: ${
-                                    projectDataJSON.project_short_name
-                                }</p>
-            <p>Documentation Link: ${
-                                    projectDataJSON.doc_link
-                                }</p>
-                                <p>Project Description: ${
-                                    projectDataJSON.project_description
-                                }</p>`;
-                                document.getElementById('project_details').innerHTML = project_details;
-                                document.getElementById('project').value = JSON.stringify(projectDataJSON);
-                            } catch (e) {
-                                errorList.push('Project data');
-                            }
-                            try {
-                                let stageDetailsJSON = JSON.parse(stageData).stage;
-                                document.getElementById('stage_details').innerHTML = stageDetailsJSON;
-                                document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
-                            } catch (e) {
-                                errorList.push('Stage data');
-                            }
-                            try {
-                                var developedDataJSON = JSON.parse(developedData)
-                                console.log(developedDataJSON)
-                                var developed_details = `${
-                                    developedDataJSON.developed
-                                }`;
-                                if (developedDataJSON.developed === "Outsourced") {
-                                    developed_details += ` with: ${
-                                        developedDataJSON.outsource_company
-                                    }`;
-                                } else if (developedDataJSON.developed === "Partnership") {
-                                    developed_details += ` with: ${
-                                        developedDataJSON.partnership_company
-                                    }`;
-                                }
-                                document.getElementById('developed_details').innerHTML = developed_details;
-                                document.getElementById('developed').value = JSON.stringify(developedDataJSON.developed);
-                            } catch (e) {
-                                errorList.push('Developed data');
-                                console.log(e)
-                            }
-                            if (errorList.length > 0) {
-                                errorPanel.classList.remove('ons-u-hidden');
-                                document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
-                            }
+            <script>
+                function load_data() {
+                    var errorPanel = document.getElementById('error-panel');
+                    var techContactData = localStorage.getItem('contact-tech-data');
+                    var projectData = localStorage.getItem('data');
+                    var managerData = localStorage.getItem('contact-manager-data');
+                    console.log(techContactData, managerData)
+                    var developedData = localStorage.getItem('data-developed');
+                    var stageData = localStorage.getItem('data-stage');
+                    localStorage.setItem('validate', false);
+                    var errorList = [];
+                    
+                    try {
+                        if (managerData === null) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            errorList.push('Delivery contact data');
+                            document
+                                .getElementById('submit-button')
+                                .style
+                                .display = 'none';
                         }
-                        load_data();
-                    </script>
+                    } catch (e) {
+                        errorPanel.classList.remove('ons-u-hidden');
+                        document
+                            .getElementById('submit-button')
+                            .style
+                            .display = 'none';
+                    }
+
+                    try {
+                        var techContactDataJSON = JSON.parse(techContactData);
+                        var managerContactDataJSON = JSON.parse(managerData);
+                        var user_details = `<p>Technical Contact: ${
+                            techContactDataJSON.contactEmail
+                        } (${
+                            techContactDataJSON.role
+                        })</p>`;
+                        if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
+                            user_details += `<p>Manager Contact: ${
+                                managerContactDataJSON.contactEmail
+                            } (${
+                                managerContactDataJSON.role
+                            })</p>`;
+                        }
+                        document.getElementById('user_details').innerHTML = user_details;
+                        document.getElementById('user').value = JSON.stringify(techContactDataJSON);
+                    } catch (e) {
+                        errorList.push('Contact data');
+                    }
+
+                    try {
+                        var projectDataJSON = JSON.parse(projectData);
+                        var project_details = `<p>Project Name: ${
+                            projectDataJSON.project_name
+                        }</p>
+                            <p>Project Short Name: ${
+                            projectDataJSON.project_short_name
+                        }</p>
+                            <p>Documentation Link: ${
+                            projectDataJSON.doc_link
+                        }</p>
+                            <p>Project Description: ${
+                            projectDataJSON.project_description
+                        }</p>`;
+                        document.getElementById('project_details').innerHTML = project_details;
+                        document.getElementById('project').value = JSON.stringify(projectDataJSON);
+                    } catch (e) {
+                        errorList.push('Project data');
+                    }
+
+                    try {
+                        let stageDetailsJSON = JSON.parse(stageData).stage;
+                        document.getElementById('stage_details').innerHTML = stageDetailsJSON;
+                        document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
+                    } catch (e) {
+                        errorList.push('Stage data');
+                    }
+
+                    try {
+                        var developedDataJSON = JSON.parse(developedData)
+                        console.log(developedDataJSON)
+                        var developed_details = `${
+                            developedDataJSON.developed
+                        }`;
+                        if (developedDataJSON.developed === "Outsourced") {
+                            developed_details += ` with: ${
+                                developedDataJSON.outsource_company
+                            }`;
+                        } else if (developedDataJSON.developed === "Partnership") {
+                            developed_details += ` with: ${
+                                developedDataJSON.partnership_company
+                            }`;
+                        }
+                        document.getElementById('developed_details').innerHTML = developed_details;
+                        document.getElementById('developed').value = JSON.stringify(developedDataJSON.developed);
+                    } catch (e) {
+                        errorList.push('Developed data');
+                        console.log(e)
+                    }
+                    
+                    if (errorList.length > 0) {
+                        errorPanel.classList.remove('ons-u-hidden');
+                        document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                    }
+                }
+                load_data();
+            </script>
                 {% endblock %}
                 {% block scripts %}
                     <style>

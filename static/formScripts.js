@@ -1,4 +1,5 @@
 function redirectToPrevious(){
+    // Redirec to previous page
     console.log(document.referrer);
     var url = new URL(document.referrer).pathname;
     if (url === '/validate_details' 
@@ -10,6 +11,7 @@ function redirectToPrevious(){
 }
 
 function arrToList(arr) {
+    // Convert array to unordered html list
     var final = ""
     try {
         for (let i = 0; i <= arr.length - 1; i++) {
@@ -29,6 +31,7 @@ function arrToList(arr) {
     return final;
 }
 function arrToLinkList(arr) {
+    // Convert array of objects to unordered html list with hrefs
     var final = ""
     try {
         for (let i = 0; i <= arr.length - 1; i++) {

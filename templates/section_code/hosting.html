@@ -125,6 +125,7 @@ loadHostingData();
 document.getElementById("error-panel").style.display = "none";
 
 function storeHostingData() {
+    // Store hosting data in local storage
     var hostingType = document.querySelector('input[name="role"]:checked').value;
 
     var data = JSON.parse(localStorage.getItem('hosting-data')) || {};

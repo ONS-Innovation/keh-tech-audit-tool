@@ -252,6 +252,7 @@
             }
 
             function updateSectionStatus(sectionId, dataItems) {
+                // Update selection status to indicate how far complete a section is e.g Not started, Partially completed, Completed
                 var sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
                     var completedCount = dataItems.filter(item => {

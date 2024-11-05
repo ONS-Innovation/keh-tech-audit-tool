@@ -91,6 +91,7 @@
     }) }}
         <script>
             function storeData() {
+                // Store data about source control in local storage
                 var source_control = document.querySelector('input[name="role"]:checked').value;
                 var other_source_control = document.getElementById('other-input').value;
                 var complete = true;
@@ -109,6 +110,7 @@
                 };
                 localStorage.setItem('source_control-data', JSON.stringify(updatedData));
             }
+
             function loadData() {
                 var obj = {
                     "Github": "github",

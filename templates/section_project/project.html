@@ -77,13 +77,10 @@
                     "doc_link": doc_link,
                     "complete": complete
                 };
-                // && data['doc_link'] != '' && data['project_description'] != '' if required^ only project_name and short_name are
-                // required - although this then means that nothing is saved if its missing the name or short name if
-                // (data['project_name'] != '' && data['project_short_name'] != '' ) {}
-                localStorage.setItem('data', JSON.stringify(data));
+                localStorage.setItem('project-data', JSON.stringify(data));
             }
             function loadData() {
-                var data = JSON.parse(localStorage.getItem('data'));
+                var data = JSON.parse(localStorage.getItem('project-data'));
                 if (data) {
                     document.getElementById('project-name').value = data.project_name;
                     document.getElementById('project-short-name').value = data.project_short_name;

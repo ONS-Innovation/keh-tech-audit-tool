@@ -310,10 +310,11 @@
                                                             .display = 'none';
                                                     }
                                                     function load_data() { // Project Details
-                                                        var contactTechData = localStorage.getItem('contact-tech-data');
-                                                        var contactManagerData = localStorage.getItem('contact-manager-data');
-                                                        var projectData = localStorage.getItem('data');
-                                                        var developedData = localStorage.getItem('data-developed');
+                                                        var contactTechData = localStorage.getItem('contact_tech-data');
+                                                        var contactManagerData = localStorage.getItem('contact_manager-data');
+                                                        var projectData = localStorage.getItem('project-data');
+                                                        var developedData = localStorage.getItem('developed-data');
+                                                        var stageData = localStorage.getItem('stage-data');
                                                         // Architecture Details
                                                         var sourceControlData = localStorage.getItem('source_control-data');
                                                         var hostingData = localStorage.getItem('hosting-data');
@@ -323,7 +324,6 @@
                                                         var infrastructureData = localStorage.getItem('infrastructure-data');
                                                         var integrationsData = localStorage.getItem('integrations-data');
                                                         var languagesData = localStorage.getItem('languages-data');
-                                                        var stageData = localStorage.getItem('data-stage');
                                                         localStorage.setItem('validate', false);
                                                         document
                                                             .getElementById('error-panel')
@@ -716,8 +716,8 @@
                                                         }
                                                     }
                                                     load_data();
-                                                    localStorage.setItem("source_control_validate", true);
-                                                    localStorage.setItem("hosting_validate", true);
+                                                    localStorage.setItem("source_control-validate", true);
+                                                    localStorage.setItem("hosting-validate", true);
                                                 </script>
                                             {% endblock %}
                                             {% block scripts %}

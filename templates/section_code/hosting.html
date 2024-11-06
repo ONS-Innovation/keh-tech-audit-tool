@@ -29,8 +29,8 @@
         ]
     }) }}
         {{ onsLabel({
-        "id": 'contact-grade-label',
-        "for": "contact-grade",
+        "id": 'hosting-label',
+        "for": "hosting",
         "text": 'Where is the solution hosted?',
         "description": 'Select the type of hosting.'
     }) }}
@@ -91,7 +91,7 @@
                         window.location.href = "/survey/hosting?stage=2";
                     } else {
                         if (
-                            JSON.parse(localStorage.getItem("hosting_validate")) &&
+                            JSON.parse(localStorage.getItem("hosting-validate")) &&
                             JSON.parse(localStorage.getItem("hosting-data")).type === "On-premises"
                         ) {
                             window.location.href = '/validate_details';

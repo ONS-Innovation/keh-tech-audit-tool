@@ -1,6 +1,5 @@
 function redirectToPrevious(){
-    // Redirec to previous page
-    console.log(document.referrer);
+    // Redirect to previous page
     var url = new URL(document.referrer).pathname;
     if (url === '/validate_details' 
         || url === '/survey/project_summary' 

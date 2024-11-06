@@ -102,7 +102,7 @@
                 } else {
                     data.complete = false;
                 }
-                localStorage.setItem('data-developed', JSON.stringify(data));
+                localStorage.setItem('developed-data', JSON.stringify(data));
             }
             function loadData() {
                 var obj = {
@@ -110,7 +110,7 @@
                     "Partnership": "partnership",
                     "In House": "in-house"
                 }
-                var data = JSON.parse(localStorage.getItem('data-developed'));
+                var data = JSON.parse(localStorage.getItem('developed-data'));
                 if (data) {
                     var option = obj[data.developed]
                     if (data.developed === "Outsourced") {

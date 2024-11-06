@@ -71,10 +71,10 @@
                     "stage": stage,
                     "complete": complete
                 };
-                localStorage.setItem('data-stage', JSON.stringify(data));
+                localStorage.setItem('stage-data', JSON.stringify(data));
             }
             function loadData() {
-                var data = JSON.parse(localStorage.getItem('data-stage'));
+                var data = JSON.parse(localStorage.getItem('stage-data'));
                 if (data) {
                     document.getElementById(data.stage).checked = true;
                 }

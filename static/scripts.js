@@ -2,7 +2,6 @@ var langArr = { main: [], others: [] };
 
 var path = window.location.pathname;
 var page = path.split("/").pop();
-console.log(page);
 
 function storeData() {
     localStorage.setItem(page + '-data', JSON.stringify(langArr));
@@ -14,9 +13,6 @@ function loadData() {
     }
 
     langArr = JSON.parse(localStorage.getItem(page + '-data'));
-    console.log(langArr);
-    console.log(typeof langArr);
-
     renderData();
 }
 function renderData() {
@@ -94,7 +90,6 @@ function showError() {
 }
 
 function addData(event) {
-    console.log(page)
     var lang = document.getElementById(page + '-input').value;
     if (!lang) {
         showError();
@@ -104,6 +99,7 @@ function addData(event) {
     if (!langArr.main) {
         langArr.main = [];
     }
+
     if (!langArr.others) {
         langArr.others = [];
     }
@@ -112,7 +108,6 @@ function addData(event) {
         showError();
         return;
     }
-    console.log(lang);
 
     langArr.others.push(lang);
     storeData();
@@ -120,7 +115,6 @@ function addData(event) {
 
     document.getElementById(page + '-input').value = "";
     document.getElementById('error-panel').classList.add('ons-u-hidden');
-
 }
 
 

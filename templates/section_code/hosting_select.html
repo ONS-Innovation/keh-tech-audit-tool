@@ -101,7 +101,7 @@
             <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
             <script>
                 loadData();
-                if (JSON.parse(localStorage.getItem("hosting_validate"))) {
+                if (JSON.parse(localStorage.getItem("hosting-validate"))) {
                     document.getElementById("save-values-button").href = '/validate_details';
                 }
             </script>

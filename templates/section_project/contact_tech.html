@@ -117,7 +117,7 @@
                     "role": role,
                     "complete": complete
                 };
-                localStorage.setItem('contact-tech-data', JSON.stringify(data));
+                localStorage.setItem('contact_tech-data', JSON.stringify(data));
             }
             function loadData() {
                 var obj = {
@@ -125,7 +125,7 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
-                var data = JSON.parse(localStorage.getItem('contact-tech-data'));
+                var data = JSON.parse(localStorage.getItem('contact_tech-data'));
                 if (data) {
                     document.getElementById('contact-email').value = data.contactEmail;
                     try {

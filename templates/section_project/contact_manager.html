@@ -119,7 +119,7 @@
                     "role": role,
                     "complete": complete
                 };
-                localStorage.setItem('contact-manager-data', JSON.stringify(data));
+                localStorage.setItem('contact_manager-data', JSON.stringify(data));
             }
             function loadData() {
                 var obj = {
@@ -127,7 +127,7 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
-                var data = JSON.parse(localStorage.getItem('contact-manager-data'));
+                var data = JSON.parse(localStorage.getItem('contact_manager-data'));
                 if (data) {
                     document.getElementById('contact-email').value = data.contactEmail;
                     try {

@@ -91,11 +91,13 @@
             "url": url_for('validate_details')
         }) }}
     <script>
-        function load_data() { // Project Details
-            var contactTechData = localStorage.getItem('contact-tech-data');
-            var contactManagerData = localStorage.getItem('contact-manager-data');
-            var projectData = localStorage.getItem('data');
-            var developedData = localStorage.getItem('data-developed');
+        function load_data() {
+            // Project Details
+            var contactTechData = localStorage.getItem('contact_tech-data');
+            var contactManagerData = localStorage.getItem('contact_manager-data');
+            var projectData = localStorage.getItem('project-data');
+            var developedData = localStorage.getItem('developed-data');
+            var stageData = localStorage.getItem('stage-data');
             // Architecture Details
             var sourceControlData = localStorage.getItem('source_control-data');
             var hostingData = localStorage.getItem('hosting-data');
@@ -115,7 +117,7 @@
                 }
                 try {
                     if (!JSON.parse(contactTechData)["contactEmail"] || !JSON.parse(contactTechData)["role"]) {
-                        submitBtn.href = '/survey/contact-tech';
+                        submitBtn.href = '/survey/contact_tech';
                         document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
@@ -128,7 +130,7 @@
                 }
                 try {
                     if (!JSON.parse(contactManagerData)["contactEmail"] || !JSON.parse(contactManagerData)["role"]) {
-                        submitBtn.href = '/survey/contact-manager';
+                        submitBtn.href = '/survey/contact_manager';
                         document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
@@ -280,13 +282,13 @@
                 }
             }
             changeBtnURL();
-            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData]);
+            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
         }
         load_data();
-        localStorage.setItem("source_control_validate", false);
-        localStorage.setItem("hosting_validate", false);
+        localStorage.setItem("source_control-validate", false);
+        localStorage.setItem("hosting-validate", false);
     </script>
 {% endblock %}
 {% block scripts %}

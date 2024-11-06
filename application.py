@@ -86,8 +86,8 @@ mainNavItems = [
 projectNavItems = [
     {"text": "Survey", "url": "/survey"},
     {"text": "Details", "url": "/pre-survey/project"},
-    {"text": "Technical Contact", "url": "/survey/contact-tech"},
-    {"text": "Delivery Contact", "url": "/survey/contact-manager"},
+    {"text": "Technical Contact", "url": "/survey/contact_tech"},
+    {"text": "Delivery Contact", "url": "/survey/contact_manager"},
     {"text": "Project", "url": "/survey/project"},
     {"text": "Developed", "url": "/survey/developed"},
     {"text": "Stage", "url": "/survey/stage"},
@@ -369,12 +369,12 @@ def tech_pre_survey():
 # ------------------------
 
 
-@app.route("/survey/contact-tech", methods=["GET"])
+@app.route("/survey/contact_tech", methods=["GET"])
 def contact_tech():
     return render_template("/section_project/contact_tech.html")
 
 
-@app.route("/survey/contact-manager", methods=["GET"])
+@app.route("/survey/contact_manager", methods=["GET"])
 def contact_manager():
     return render_template("/section_project/contact_manager.html")
 

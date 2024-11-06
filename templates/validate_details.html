@@ -288,10 +288,11 @@
 
         function load_data() {
             // Project Details
-            var contactTechData = localStorage.getItem('contact-tech-data');
-            var contactManagerData = localStorage.getItem('contact-manager-data');
-            var projectData = localStorage.getItem('data');
-            var developedData = localStorage.getItem('data-developed');
+            var contactTechData = localStorage.getItem('contact_tech-data');
+            var contactManagerData = localStorage.getItem('contact_manager-data');
+            var projectData = localStorage.getItem('project-data');
+            var developedData = localStorage.getItem('developed-data');
+            var stageData = localStorage.getItem('stage-data');
 
             // Architecture Details 
             var sourceControlData = localStorage.getItem('source_control-data');
@@ -303,7 +304,6 @@
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
-            var stageData = localStorage.getItem('data-stage');
 
             localStorage.setItem('validate', false);
 
@@ -378,7 +378,6 @@
             }
 
             var sourceControlParsed = JSON.parse(sourceControlData);
-            console.log(sourceControlParsed.links)
             var finalSourceControl = [
             {
                 "type": sourceControlParsed.source_control,
@@ -583,7 +582,6 @@
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Databases' section is incomplete</li></ul>";
                     database_details = '';
                 } else {
-                    console.log(JSON.parse(databaseData).main);
                     database_details = arrToList(JSON.parse(databaseData).main.concat(JSON.parse(databaseData).others));
                 }
             } catch (e) {
@@ -671,12 +669,10 @@
                 var key = Object.keys(hiddenInputsArray[i])[0]; // e.g "user"
                 document.getElementById(key).value = hiddenInputsArray[i][key]; // e.g getElementByID(user).value = JSON.stringify(finalData.user)
             }
-
-            console.log(JSON.stringify(finalData.user));
         }
         load_data();
-        localStorage.setItem("source_control_validate", true);
-        localStorage.setItem("hosting_validate", true);
+        localStorage.setItem("source_control-validate", true);
+        localStorage.setItem("hosting-validate", true);
 </script>
 
 

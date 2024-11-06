@@ -312,24 +312,7 @@
 </form>
 <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <script>
-        function arrToLinkList(arr) {
-            // Converts array of objects to unordered html list with hrefs
-            var final = ""
-            try {
-                for (let i = 0; i <= arr.length - 1; i++) {
-                    if (i === 0) {
-                    final += `<ul>`
-                    }
-                    final += `<li>${arr[i].description}: <br> <a href='${arr[i].link}'>${arr[i].link}</a></li>`;
-                    if (i === arr.length - 1) {
-                    final += `</ul>`
-                    }
-                }
-                } catch (e) {
-                    console.log(e);
-            }
-            return final;
-        }
+     
 
         function displayError() {
             // error message to be displayed when data is missing

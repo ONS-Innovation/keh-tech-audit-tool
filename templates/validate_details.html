@@ -3,56 +3,26 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
 {% block main %}
-
-{%
-    call onsPanel({
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
-    })
-%}
-{{
-    onsLabel({
+    }) %}
+    {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Please fill in missing data'
-    })
-}}
-
-{% endcall %}
+    }) }}
+    {% endcall %}
     <h1 class="ons-u-mt-m">Check your answers</h1>
-    {{
-    onsLabel({
+    {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Please review the information you have entered before submitting the project.',
-    })
-}}
-
-    {{
-        onsSummary({
+    }) }}
+    {{ onsSummary({
             "variant": "hub",
             "classes": "ons-u-mt-m",
             "summaries": [
@@ -282,25 +252,21 @@
                     ]
                 }
             ]
-        })
-    }}
+        }) }}
     <!--onsubmit="localStorage.clear()"-->
-    <form action="{{ url_for('survey') }}"
-    method="POST"  onsubmit="localStorage.clear()">
+    <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
         <input id="user" type="hidden" name="user">
-        <input id="project" type="hidden" name="project">
-        <input id="developed" type="hidden" name="developed">
-        <input id="source_control" type="hidden" name="source_control">
-        <input id="hosting" type="hidden" name="hosting">
-        <input id="database" type="hidden" name="database">
-        <input id="languages" type="hidden" name="languages">
-        <input id="frameworks" type="hidden" name="frameworks">
-        <input id="integrations" type="hidden" name="integrations">
-        <input id="infrastructure" type="hidden" name="infrastructure">
-        <input id="stage" type="hidden" name="stage">
-
-    {{
-        onsButton({
+            <input id="project" type="hidden" name="project">
+                <input id="developed" type="hidden" name="developed">
+                    <input id="source_control" type="hidden" name="source_control">
+                        <input id="hosting" type="hidden" name="hosting">
+                            <input id="database" type="hidden" name="database">
+                                <input id="languages" type="hidden" name="languages">
+                                    <input id="frameworks" type="hidden" name="frameworks">
+                                        <input id="integrations" type="hidden" name="integrations">
+                                            <input id="infrastructure" type="hidden" name="infrastructure">
+                                                <input id="stage" type="hidden" name="stage">
+                                                    {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
             "classes": 'ons-u-mb-m ons-u-mt-l',

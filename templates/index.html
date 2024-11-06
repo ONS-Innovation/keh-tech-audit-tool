@@ -1,9 +1,5 @@
 {% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
-{% from "components/password/_macro.njk" import onsPassword %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/list/_macro.njk" import onsList %}
 {% block main %}
   {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -14,16 +10,6 @@
     </ul>
   {% endif %}
   {% endwith %}
-  {# {% from "components/hero/_macro.njk" import onsHero %}
-  {{ onsHero({
-        "title": 'Contribute to Internal Data Collection',
-        "text": 'Selected users can sign in to the tool using their Cognito credentials.',
-        "button":  {
-            "text": "Sign in with Cognito",
-            "url": "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/authorize?client_id=dm3289s0tqtsr5qn2qm5i9fql&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:8000"
-    },
-        "variants": ['dark']
-    }) }} #}
   <section id="section-content" class="ons-page__body">
     <h2>What is the Tech Radar Data Collection Tool?</h2>
     <p>

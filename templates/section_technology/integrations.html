@@ -1,61 +1,26 @@
 {% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/radios/_macro.njk" import onsRadios %}
-{% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-{% block main %}
-
-
-
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
-{%
-    call onsPanel({
+{% block main %}
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
         "classes": "ons-u-hidden"
-    })
-%}
-
-{{
-    onsLabel({
+    }) %}
+    {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Item already added.'
-    })
-}}
-{% endcall %}
-<br>
-
-<h1>Integrations</h1>
-
-{{
-    onsAccordion({
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Integrations</h1>
+        {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -63,10 +28,8 @@
                 "content": "<p>Please list the technologies and tools used for integrating and deploying your solution (e.g., GitHub Actions for linting, Concourse for build and deploy). If multiple tools are used at different stages, please include them all to give a complete overview of your build and deployment process.</p>"
             }
         ]
-    })
-}}
-
-{{ onsAutosuggest({
+    }) }}
+        {{ onsAutosuggest({
         "id": "integrations-input",
         "input": {
             "label": {
@@ -102,15 +65,9 @@
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-
-
-
-
-<br>
-{% from "components/table/_macro.njk" import onsTable %}
-
-{{
-    onsTable({
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
         "caption": "",
         "id": "table-list",
         "ths": [
@@ -126,31 +83,21 @@
                 "tds": []
             }
         ]
-    })
-}}
-<script src="{{ url_for('static', filename='scripts.js') }}"></script>
-
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-
-<form action="{{ url_for('survey') }}" method="GET">
-{{
-    onsButton({
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
         "url": url_for('infrastructure'),
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-
-<script>
-loadData();
-redirectToPrevious();
-</script>
-
-
-</form>
-{% endblock %}
+    }) }}
+                <script>
+                    loadData();
+                    redirectToPrevious();
+                </script>
+            </form>
+        {% endblock %}

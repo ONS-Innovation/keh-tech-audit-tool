@@ -1,26 +1,8 @@
 {% extends "layout/_template.njk" %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/list/_macro.njk" import onsList %}
-{% from "components/details/_macro.njk" import onsDetails %}
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        }
-    }
-%}
-
 {% block main %}
-
-
     <h1 class="ons-u-mt-m">Pre-survey</h1>
-
-
     <p>To complete this survey you will need to know details such as:</p>
     {{
         onsList({

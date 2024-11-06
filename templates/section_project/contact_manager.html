@@ -4,26 +4,8 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-
 {% from "components/label/_macro.njk" import onsLabel %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
 {% block main %}
-
     <h1>Point of Contact - Delivery Manager</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -121,17 +103,14 @@
     }) }}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script>
-            function storeData() {
-                // Store detauls about the delivery manager in local storage
+            function storeData() { // Store detauls about the delivery manager in local storage
                 var contactEmail = document.getElementById('contact-email').value;
                 var role = document.querySelector('input[name="role"]:checked').value;
                 var otherRole = document.getElementById('other-input').value;
                 if (role === 'other') {
                     role = otherRole;
                 }
-
                 let complete = false;
-
                 if (contactEmail && role) {
                     complete = true;
                 }
@@ -141,7 +120,6 @@
                     "complete": complete
                 };
                 localStorage.setItem('contact-manager-data', JSON.stringify(data));
-                console.log(localStorage.getItem('contact-manager-data'));
             }
             function loadData() {
                 var obj = {
@@ -149,7 +127,6 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
-
                 var data = JSON.parse(localStorage.getItem('contact-manager-data'));
                 if (data) {
                     document.getElementById('contact-email').value = data.contactEmail;
@@ -161,7 +138,6 @@
                     }
                 }
             }
-
             redirectToPrevious();
             loadData();
         </script>

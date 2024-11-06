@@ -1,22 +1,6 @@
 {% extends "layout/_template.njk" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
 {% macro checkBox() %}
     check
 {%- endmacro %}
@@ -107,27 +91,28 @@
             "url": url_for('validate_details')
         }) }}
     <script>
-        function load_data() {
-            // Project Details
+        function load_data() { // Project Details
             var contactTechData = localStorage.getItem('contact-tech-data');
             var contactManagerData = localStorage.getItem('contact-manager-data');
             var projectData = localStorage.getItem('data');
             var developedData = localStorage.getItem('data-developed');
-
-            // Architecture Details 
+            // Architecture Details
             var sourceControlData = localStorage.getItem('source_control-data');
             var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
-
             // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
-
             function changeBtnURL() {
                 var submitBtn = document.getElementById('submit-btn');
-                console.log(JSON.parse(contactTechData));
+                var submitBtnSpan = submitBtn.querySelector('span');
+                if (submitBtnSpan) {
+                    submitBtnSpan.style.display = 'flex';
+                    submitBtnSpan.querySelector('svg').style.marginTop = '2px';
+
+                }
                 try {
                     if (!JSON.parse(contactTechData)["contactEmail"] || !JSON.parse(contactTechData)["role"]) {
                         submitBtn.href = '/survey/contact-tech';
@@ -138,9 +123,9 @@
                     document.getElementById('submit-btn-text').innerHTML = 'Continue'
                     submitBtn.href = '/pre-survey/project';
                     console.log(e)
+
                     return;
                 }
-
                 try {
                     if (!JSON.parse(contactManagerData)["contactEmail"] || !JSON.parse(contactManagerData)["role"]) {
                         submitBtn.href = '/survey/contact-manager';
@@ -154,105 +139,97 @@
                     return;
                 }
                 try {
-                    if (!JSON.parse(projectData)["project_name"] 
-                        || !JSON.parse(projectData)["project_short_name"] 
-                        || !JSON.parse(projectData)["project_description"] 
-                        || !JSON.parse(projectData)["doc_link"]) {
-                            submitBtn.href = '/survey/project';
-                            console.log("hello");
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    if (
+                        !JSON.parse(projectData)["project_name"] ||
+                        !JSON.parse(projectData)["project_short_name"] ||
+                        !JSON.parse(projectData)["project_description"] ||
+                        !JSON.parse(projectData)["doc_link"]
+                    ) {
                         submitBtn.href = '/survey/project';
-                        console.log(e);
+                        console.log("hello");
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/survey/project';
+                    console.log(e);
+                    return;
+                }
                 try {
                     if (!JSON.parse(sourceControlData)["source_control"]) {
-                            submitBtn.href = '/survey/source_control';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
-                        submitBtn.href = '/pre-survey/architecture';
-                        console.log(e)
+                        submitBtn.href = '/survey/source_control';
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-                
-
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/pre-survey/architecture';
+                    console.log(e)
+                    return;
+                }
                 try {
                     if (!JSON.parse(databaseData)["others"].length === 0) {
-                            submitBtn.href = '/survey/database';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
                         submitBtn.href = '/survey/database';
-                        console.log(e);
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-                
-
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/survey/database';
+                    console.log(e);
+                    return;
+                }
                 try {
                     if (!JSON.parse(languagesData)["others"].length === 0) {
-                            submitBtn.href = '/survey/languages';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
-                        submitBtn.href = '/pre-survey/technology';
-                        console.log(e);
+                        submitBtn.href = '/survey/languages';
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-                
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/pre-survey/technology';
+                    console.log(e);
+                    return;
+                }
                 try {
                     if (!JSON.parse(frameworksData)["others"].length === 0) {
-                            submitBtn.href = '/survey/frameworks';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         submitBtn.href = '/survey/frameworks';
-                        console.log(e)
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-                
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                    submitBtn.href = '/survey/frameworks';
+                    console.log(e)
+                    return;
+                }
                 try {
                     if (!JSON.parse(integrationsData)["others"].length === 0) {
-                            submitBtn.href = '/survey/integrations';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue'
                         submitBtn.href = '/survey/integrations';
-                        console.log(e);
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
-                
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue'
+                    submitBtn.href = '/survey/integrations';
+                    console.log(e);
+                    return;
+                }
                 try {
                     if (!JSON.parse(infrastructureData)["others"].length === 0) {
-                            submitBtn.href = '/survey/infrastructure';
-                            document.getElementById('submit-btn-text').innerHTML = 'Continue';
-                            return;
-                        }
-                    } catch (e) {
-                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         submitBtn.href = '/survey/infrastructure';
-                        console.log(e);
+                        document.getElementById('submit-btn-text').innerHTML = 'Continue';
                         return;
                     }
+                } catch (e) {
+                    document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                    submitBtn.href = '/survey/infrastructure';
+                    console.log(e);
+                    return;
+                }
             }
-
-            function updateSectionStatus(sectionId, dataItems) {
-                // Update selection status to indicate how far complete a section is e.g Not started, Partially completed, Completed
+            function updateSectionStatus(sectionId, dataItems) { // Update selection status to indicate how far complete a section is e.g Not started, Partially completed, Completed
                 var sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
                     var completedCount = dataItems.filter(item => {
@@ -261,23 +238,19 @@
                             if (Array.isArray(parsedItem)) {
                                 return parsedItem.length > 0;
                             } else if (typeof parsedItem === 'object') {
-                            console.log(item, parsedItem.complete);
                                 if (parsedItem.complete === true) {
                                     return true;
                                 } else if (parsedItem.main || parsedItem.others) {
-                                    return (parsedItem.main && parsedItem.main.length > 0) || (parsedItem.others && parsedItem.others.length > 0);
+                                    return(parsedItem.main && parsedItem.main.length > 0) || (parsedItem.others && parsedItem.others.length > 0);
                                 }
                             }
                         }
                         return false;
                     }).length;
                     var totalCount = dataItems.length;
-                    console.log(sectionId, completedCount, totalCount);
-
                     var sectionIdWithDash = sectionId.replace(/_/g, '-');
                     var sectionElementWithDash = document.getElementById(sectionIdWithDash);
                     var actionSpan = sectionElementWithDash.querySelectorAll('dd span')[1];
-
                     if (completedCount === 0) {
                         sectionElement.innerHTML = 'Not Started';
                         if (actionSpan) {
@@ -296,9 +269,9 @@
                         var span = sectionElementWithDash.querySelector('dt span');
                         if (span) {
                             span.innerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
-                                ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
-                                'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
-                                '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>';
+                                    ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
+                                    'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
+                                    '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>';
                         }
                     }
                 }

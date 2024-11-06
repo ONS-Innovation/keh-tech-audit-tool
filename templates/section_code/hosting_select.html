@@ -1,60 +1,27 @@
 {% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/radios/_macro.njk" import onsRadios %}
-{% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
-
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
-{% block main %}
-
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
-{%
-    call onsPanel({
+{% block main %}
+    {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
         "classes": "ons-u-hidden"
 
-    })
-%}
-
-{{
-    onsLabel({
+    }) %}
+    {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Item already added.'
-    })
-}}
-{% endcall %}
-<br>
-
-<h1>Hosting</h1>
-
-{{
-    onsAccordion({
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Hosting</h1>
+        {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -62,10 +29,8 @@
                 "content": "<p>Please specify how your solution is hosted by entering one or more cloud service providers (e.g., AWS, Azure, Google Cloud). If your project utilises multiple cloud platforms (e.g Azure for integrating authentication and GCP for application) you can add more than one service provider. </p>"
             }
         ]
-    })
-}}
-
-{{ onsAutosuggest({
+    }) }}
+        {{ onsAutosuggest({
         "id": "hosting-input",
         "input": {
             "label": {
@@ -101,7 +66,6 @@
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-
         <br>
             {% from "components/table/_macro.njk" import onsTable %}
             {{ onsTable({
@@ -121,13 +85,9 @@
             }
         ]
     }) }}
-<script src="{{ url_for('static', filename='scripts.js') }}">
-</script>
-
-
-<form action="{{ url_for('survey') }}" method="GET"> 
-{{
-    onsButton({
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
         "iconType": "arrow-next",
@@ -136,24 +96,13 @@
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-</form>
-
-<script src="{{ url_for('static', filename='formScripts.js') }}">
-</script>
-
-
-<script>
-loadData();
-
-if (JSON.parse(localStorage.getItem("hosting_validate"))) {
-    document.getElementById("save-values-button").href = '/validate_details';
-}
-</script>
-
-
-
-
-{% endblock %}
+    }) }}
+            </form>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                loadData();
+                if (JSON.parse(localStorage.getItem("hosting_validate"))) {
+                    document.getElementById("save-values-button").href = '/validate_details';
+                }
+            </script>
+        {% endblock %}

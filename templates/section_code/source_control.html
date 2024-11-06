@@ -1,29 +1,10 @@
 {% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-
 {% from "components/label/_macro.njk" import onsLabel %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
 {% block main %}
-
     <h1>Source Control</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -90,8 +71,7 @@
         }
     }) }}
         <script>
-            function storeData() {
-                // Store data about source control in local storage
+            function storeData() { // Store data about source control in local storage
                 var source_control = document.querySelector('input[name="role"]:checked').value;
                 var other_source_control = document.getElementById('other-input').value;
                 var complete = true;
@@ -110,7 +90,6 @@
                 };
                 localStorage.setItem('source_control-data', JSON.stringify(updatedData));
             }
-
             function loadData() {
                 var obj = {
                     "Github": "github",
@@ -124,13 +103,12 @@
                         var option = obj[data.source_control];
                     }
                     document.getElementById(option).checked = true;
-                    console.log(option);
                     if (data.source_control) {
                         document.getElementById('other-input').value = data.source_control;
                     }
                 }
             }
-    loadData();
+            loadData();
         </script>
     </form>
 {% endblock %}

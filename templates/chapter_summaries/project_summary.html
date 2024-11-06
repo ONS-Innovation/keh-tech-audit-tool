@@ -3,21 +3,6 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -143,7 +128,6 @@
                     var techContactData = localStorage.getItem('contact-tech-data');
                     var projectData = localStorage.getItem('data');
                     var managerData = localStorage.getItem('contact-manager-data');
-                    console.log(techContactData, managerData)
                     var developedData = localStorage.getItem('data-developed');
                     var stageData = localStorage.getItem('data-stage');
                     localStorage.setItem('validate', false);
@@ -217,7 +201,6 @@
 
                     try {
                         var developedDataJSON = JSON.parse(developedData)
-                        console.log(developedDataJSON)
                         var developed_details = `${
                             developedDataJSON.developed
                         }`;

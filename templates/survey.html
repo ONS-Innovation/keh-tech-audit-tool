@@ -240,7 +240,10 @@
                             } else if (typeof parsedItem === 'object') {
                                 if (parsedItem.complete === true) {
                                     return true;
-                                } else if (parsedItem.main || parsedItem.others) {
+                                } else if (parsedItem.type === 'On-premises') {
+                                    return true;
+                                }
+                                else if (parsedItem.main || parsedItem.others) {
                                     return(parsedItem.main && parsedItem.main.length > 0) || (parsedItem.others && parsedItem.others.length > 0);
                                 }
                             }

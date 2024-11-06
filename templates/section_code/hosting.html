@@ -84,12 +84,21 @@
                 function storeHostingData() { // Store hosting data in local storage
                     var hostingType = document.querySelector('input[name="role"]:checked').value;
                     var data = JSON.parse(localStorage.getItem('hosting-data')) || {};
+
                     data.type = hostingType;
+
+                    if (data.type === "On-premises") {
+                        data.others = [];
+                    }
+
                     localStorage.setItem('hosting-data', JSON.stringify(data));
+
                     console.log(localStorage.getItem('hosting-data'));
+
                     if (hostingType === "Hybrid" || hostingType === "Cloud") {
                         window.location.href = "/survey/hosting?stage=2";
                     } else {
+                        
                         if (
                             JSON.parse(localStorage.getItem("hosting_validate")) &&
                             JSON.parse(localStorage.getItem("hosting-data")).type === "On-premises"

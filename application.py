@@ -16,6 +16,56 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from flask import render_template_string
+
+
+# Quick work around to edit the _template.njk file to include the pageConfig variable.
+def edit_template():
+    template_path = os.path.join(app.root_path, "templates", "layout", "_template.njk")
+    new_content = """
+    {% set pageConfig = {
+    "wide": true,
+    "header": {
+    "variants": "internal",
+    "title": "Tech Radar Data Collection",
+    "serviceLinks": {
+    "itemsList": items
+    },
+    "navigation": {
+    "id": 'main-nav',
+    "ariaLabel": 'Main menu',
+    "currentPath": currentPath,
+    "currentPageTitle": 'Design system',
+    "itemsList": navItems,
+    "toggleNavigationButton": {
+    "text": 'Menu',
+    "ariaLabel": 'Toggle menu'
+    }
+    },
+    },
+    "footer": {
+    "OGLLink": {
+    "pre": "All content is available under the",
+    "link": "Open Government Licence v3.0",
+    "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "post": ", except where otherwise stated"
+    }
+    }
+    } %}
+    """
+    
+    with open(template_path, "r") as file:
+        content = file.readlines()
+    
+    if any("{% set pageConfig" in line for line in content):
+        return "Template already contains pageConfig"
+    
+    content.insert(6, new_content)
+    
+    with open(template_path, "w") as file:
+        file.writelines(content)
+    
+    return "Template updated successfully"
 
 # Basic logging information
 logging.basicConfig(level=logging.DEBUG)
@@ -34,6 +84,10 @@ app = Flask(__name__)
 app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
+
+# Quick workaround.
+edit_template()
+
 
 
 # GET client keys from S3 bucket using boto3

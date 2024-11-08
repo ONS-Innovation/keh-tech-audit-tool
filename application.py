@@ -16,6 +16,7 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from http import HTTPStatus
 from enum import Enum
 
 # Basic logging information
@@ -60,6 +61,32 @@ def read_auto_complete_data():
         else:
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
+
+# GET secrets from AWS Secrets Manager using boto3
+def get_secret():
+
+    secret_name = "tech-audit-tool-api/secrets"
+    region_name = "eu-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
 
 
 # SET client keys from S3 bucket using boto3
@@ -154,6 +181,7 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
+    print(code)
     if code:
         token_response = exchange_code_for_tokens(code)
         if "id_token" in token_response and "refresh_token" in token_response:
@@ -214,7 +242,7 @@ def exchange_code_for_tokens(code):
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
     response_json = response.json()
-    if response.status_code != HTTPStatus.ok:
+    if response.status_code != HTTPStatus.OK:
         if response_json.get("error") == "invalid_grant":
             logger.error("Invalid authorization code")
             return {"error": "Invalid authorization code"}
@@ -299,6 +327,7 @@ def survey():
     # ONLY GET AND POST ARE ALLOWED HENCE NO NEED FOR SECOND IF STATEMENT
     # IF METHOD IS 'GET' THEN THE SURVEY IS RENDERED
     if request.method == "GET":
+        print(get_secret())
         return render_template("survey.html")
     # IF METHOD IS 'NOT GET' THEN THE POST PROCESS BEGINS
     headers = {

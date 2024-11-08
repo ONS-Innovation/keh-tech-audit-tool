@@ -181,7 +181,6 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
-    print(code)
     if code:
         token_response = exchange_code_for_tokens(code)
         if "id_token" in token_response and "refresh_token" in token_response:
@@ -199,7 +198,8 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    return render_template("index.html", items=items_none)
+    CLIENT_ID = json.loads(get_secret())["COGNITO_CLIENT_ID"]
+    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
 
 
 # Basic sign out
@@ -327,7 +327,6 @@ def survey():
     # ONLY GET AND POST ARE ALLOWED HENCE NO NEED FOR SECOND IF STATEMENT
     # IF METHOD IS 'GET' THEN THE SURVEY IS RENDERED
     if request.method == "GET":
-        print(get_secret())
         return render_template("survey.html")
     # IF METHOD IS 'NOT GET' THEN THE POST PROCESS BEGINS
     headers = {

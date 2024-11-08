@@ -1,4 +1,4 @@
-# TECH AUDIT TOOL - UI
+# KEH TECH AUDIT TOOL - UI
 ## About
 
 ### Introduction
@@ -30,12 +30,17 @@ To run, please import these credentials into the app:
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
 export AWS_DEFAULT_REGION=eu-west-2
-export AWS_SECRET_NAME=github-tooling-suite/onsdigital
 ```
 
 ### Running the Application
 
-Use the make command in the root directory of the project to run the app:
+Use the make command in the root directory of the project to load the design system:
+
+```bash
+make load-design
+```
+
+Then you can start the application by running:
 
 ```bash
 make run-ui
@@ -57,3 +62,5 @@ Use the make command in the root directory of the project to run the app:
 ```bash
 make format-python
 ```
+
+This will run `isort`, `black` and `flake8`. Flake8 will ignore `E501 line too long`.

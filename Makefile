@@ -9,7 +9,7 @@ run-ui:
 format-python:
 	poetry run isort .
 	poetry run black .
-	poetry run flake8 .
+	poetry run flake8 --ignore=E501 .
 
 black:
 	poetry run black .

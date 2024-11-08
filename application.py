@@ -16,56 +16,6 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
-from flask import render_template_string
-
-
-# Quick work around to edit the _template.njk file to include the pageConfig variable.
-def edit_template():
-    template_path = os.path.join(app.root_path, "templates", "layout", "_template.njk")
-    new_content = """
-    {% set pageConfig = {
-    "wide": true,
-    "header": {
-    "variants": "internal",
-    "title": "Tech Radar Data Collection",
-    "serviceLinks": {
-    "itemsList": items
-    },
-    "navigation": {
-    "id": 'main-nav',
-    "ariaLabel": 'Main menu',
-    "currentPath": currentPath,
-    "currentPageTitle": 'Design system',
-    "itemsList": navItems,
-    "toggleNavigationButton": {
-    "text": 'Menu',
-    "ariaLabel": 'Toggle menu'
-    }
-    },
-    },
-    "footer": {
-    "OGLLink": {
-    "pre": "All content is available under the",
-    "link": "Open Government Licence v3.0",
-    "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-    "post": ", except where otherwise stated"
-    }
-    }
-    } %}
-    """
-    
-    with open(template_path, "r") as file:
-        content = file.readlines()
-    
-    if any("{% set pageConfig" in line for line in content):
-        return "Template already contains pageConfig"
-    
-    content.insert(6, new_content)
-    
-    with open(template_path, "w") as file:
-        file.writelines(content)
-    
-    return "Template updated successfully"
 
 # Basic logging information
 logging.basicConfig(level=logging.DEBUG)
@@ -86,8 +36,7 @@ app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
 # Quick workaround.
-edit_template()
-
+# edit_template()
 
 
 # GET client keys from S3 bucket using boto3
@@ -125,11 +74,13 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
 # This is the redirect uri set in the Cognito app settings.
 REDIRECT_URI = "http://localhost:8000"
 
-# For the _template.njk to load info into the header of the page. Automatically loads the user's email into the header.
+# For the _template.njk to load info into the header of the page.
+# Automatically loads the user's email into the header.
 items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
-# For the _template.njk to load info into the header of the page. Automatically loads the navigation depending on what page the user is on.
+# For the _template.njk to load info into the header of the page.
+# Automatically loads the navigation depending on what page the user is on.
 mainNavItems = [
     {"text": "Dashboard", "url": "/dashboard"},
     {"text": "Pre-Survey", "url": "/pre-survey"},
@@ -180,7 +131,8 @@ def inject_header():
     # Reaching this point means the user is logged in. This should not error.
     user_email = session.get("email", "No email found")
 
-    # Injecting the user's email into the header and sorting navigation based on the current page.
+    # Injecting the user's email into the header and sorting navigation
+    # based on the current page.
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
     current_url = request.path
@@ -202,7 +154,8 @@ def inject_header():
 
 @app.route("/", methods=["GET"])
 def home():
-    # This is the login page. If there is URL/code=<code> then it will attempt exchange the code for tokens (ID and refresh).
+    # This is the login page. If there is URL/code=<code> then it will
+    # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
     if code:
         token_response = exchange_code_for_tokens(code)
@@ -232,12 +185,14 @@ def sign_out():
     return redirect(url_for("home"))
 
 
-# Make a GET request to '/autocomplete/<search>.json' and returned with a JSON list of whatever you searched for.
+# Make a GET request to '/autocomplete/<search>.json' and returned with
+# a JSON list of whatever you searched for.
 @app.route("/autocomplete/<search>.json", methods=["GET"])
 def autocomplete(search):
     array_data = read_auto_complete_data()
     if search in array_data:
-        # Formats the data into a list of dictionaries with the key 'en' and the value of the search result. This is the format needed for ONS autosuggest.
+        # Formats the data into a list of dictionaries with the key 'en' and
+        # the value of the search result. This is the format needed for ONS autosuggest.
         result = [{"en": language.capitalize()} for language in array_data[search]]
         return json.dumps(result)
     else:
@@ -247,7 +202,7 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     token_url = (
-        f"https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",

@@ -1,4 +1,4 @@
-{% extends "layout/_template.njk" %}
+{% extends 'core.html'%}
 {% from "components/button/_macro.njk" import onsButton %}
 {% block main %}
   {% with messages = get_flashed_messages() %}

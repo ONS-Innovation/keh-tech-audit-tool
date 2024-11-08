@@ -19,7 +19,7 @@ RUN pip install awscli
 # Copy the source code into the container.
 
 # Expose the port that the application listens on.
-EXPOSE 8000
+EXPOSE 8080
 
 # Run the application.
-CMD poetry run flask --app application run --debug -p 8000
+CMD poetry run flask --app application run --host=0.0.0.0 --debug -p 8080

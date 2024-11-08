@@ -2,6 +2,6 @@
 */*/__pycache__
 */*/*/__pycache__
 *.pyc
-env
+*.env
 templates/components
 node_modules

@@ -16,6 +16,9 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Basic logging information
 logging.basicConfig(level=logging.DEBUG)

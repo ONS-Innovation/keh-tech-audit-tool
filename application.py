@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # SETTING OF API URL: Change if moving to production
-API_URL = "https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev"
+API_URL = os.getenv("API_URL")
 
 # AWS S3 bucket settings
 bucket_name = "keh-tech-audit-tool"
@@ -32,13 +32,9 @@ s3 = boto3.client("s3", region_name=region_name)
 
 # Standard flask initialisation
 app = Flask(__name__)
-app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
+app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
-
-# Quick workaround.
-# edit_template()
-
 
 # GET client keys from S3 bucket using boto3
 def read_client_keys():
@@ -73,7 +69,7 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
-REDIRECT_URI = "http://localhost:8000"
+REDIRECT_URI = os.getenv("REDIRECT_URI")
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
@@ -202,13 +198,14 @@ def autocomplete(search):
 
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
+    # This is the endpoint for the AWS Cognito user pool. It will not change.
     token_url = (
         "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",
         "code": f"{code}",
-        "redirect_uri": f"{REDIRECT_URI}",
+        "redirect_uri": REDIRECT_URI,
     }
 
     # For apps with secrets, secret has to be included in auth headers.
@@ -217,7 +214,7 @@ def exchange_code_for_tokens(code):
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
     response_json = response.json()
-    if response.status_code != 200:
+    if response.status_code != HTTPStatus.ok:
         if response_json.get("error") == "invalid_grant":
             logger.error("Invalid authorization code")
             return {"error": "Invalid authorization code"}
@@ -235,7 +232,7 @@ def get_email():
             f"{API_URL}/api/user",
             headers=headers,
         )
-        if user_request.status_code != 200:
+        if user_request.status_code != HTTPStatus.OK:
             return False
         else:
             session["email"] = user_request.json()["email"]
@@ -279,6 +276,23 @@ def view_project(project_name):
     except Exception:
         return render_template("view_project.html", project=projects)
 
+# Improved readibility of the form data
+def map_form_data(form):
+    keys = [
+        "user",
+        "project",
+        "developed",
+        "source_control",
+        "hosting",
+        "database",
+        "languages",
+        "frameworks",
+        "integrations",
+        "infrastructure",
+        "stage",
+    ]
+    return {key: json.loads(form[key]) for key in keys}
+
 
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
@@ -292,45 +306,36 @@ def survey():
         "content-type": "application/json",
     }
 
-    user = json.loads(request.form["user"])
-    project = json.loads(request.form["project"])
-    developed = json.loads(request.form["developed"])
-    source_control = json.loads(request.form["source_control"])
-    hosting = json.loads(request.form["hosting"])
-    database = json.loads(request.form["database"])
-    languages = json.loads(request.form["languages"])
-    frameworks = json.loads(request.form["frameworks"])
-    integrations = json.loads(request.form["integrations"])
-    infrastructure = json.loads(request.form["infrastructure"])
-    stage = json.loads(request.form["stage"])
+    # Improved readibility of the form data
+    form_data = map_form_data(request.form)
 
     developed_company = ""
-    if developed["developed"] == "Outsourced":
-        developed_company = developed["outsource_company"]
-    elif developed["developed"] == "Partnership":
-        developed_company = developed["partnership_company"]
+    if form_data["developed"]["developed"] == "Outsourced":
+        developed_company = form_data["developed"]["outsource_company"]
+    elif form_data["developed"]["developed"] == "Partnership":
+        developed_company = form_data["developed"]["partnership_company"]
 
     data = {
-        "user": [u for u in user],
+        "user": [u for u in form_data["user"]],
         "details": [
             {
-                "name": project["project_name"],
-                "short_name": project["project_short_name"],
-                "documentation_link": [project["doc_link"]],
-                "project_description": project["project_description"],
+                "name": form_data["project"]["project_name"],
+                "short_name": form_data["project"]["project_short_name"],
+                "documentation_link": [form_data["project"]["doc_link"]],
+                "project_description": form_data["project"]["project_description"],
             }
         ],
-        "developed": [developed["developed"], [developed_company]],
-        "source_control": source_control,
+        "developed": [form_data["developed"]["developed"], [developed_company]],
+        "source_control": form_data["source_control"],
         "architecture": {
-            "hosting": hosting,
-            "database": database,
-            "languages": languages,
-            "frameworks": frameworks,
-            "CICD": integrations,
-            "infrastructure": infrastructure,
+            "hosting": form_data["hosting"],
+            "database": form_data["database"],
+            "languages": form_data["languages"],
+            "frameworks": form_data["frameworks"],
+            "CICD": form_data["integrations"],
+            "infrastructure": form_data["infrastructure"],
         },
-        "stage": stage,
+        "stage": form_data["stage"],
     }
     try:
         projects = requests.post(

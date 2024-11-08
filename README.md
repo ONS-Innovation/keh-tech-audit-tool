@@ -32,6 +32,20 @@ export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
 export AWS_DEFAULT_REGION=eu-west-2
 ```
 
+Also, import this information to use the app:
+
+```bash
+export API_URL="https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev"
+export APP_SECRET_KEY=<KEY_FOR_FLASK_APP>
+export REDIRECT_URI="http://localhost:8000"
+```
+
+The API_URL is set to the production URL to get the latest, working version of the API.
+
+The APP_SECRET_KEY can be anything for development purposes.
+
+The REDIRECT_URI must be set to localhost:8000 in development purposes as that is set in AWS Cognito. When pushed to production, this must change to the production URI of the UI app.
+
 ### Running the Application
 
 Use the make command in the root directory of the project to load the design system:

@@ -1,12 +1,13 @@
 var langArr = { main: [], others: [] };
-
 var path = window.location.pathname;
 var page = path.split("/").pop();
 
+// Stores the data for that page in local storage.
 function storeData() {
     localStorage.setItem(page + '-data', JSON.stringify(langArr));
 }
 
+// Loads the data for that page from local storage.
 function loadData() {
     if (localStorage.getItem(page + '-data') === null) {
         localStorage.setItem(page + '-data', JSON.stringify(langArr));
@@ -15,6 +16,9 @@ function loadData() {
     langArr = JSON.parse(localStorage.getItem(page + '-data'));
     renderData();
 }
+
+// Renders data from the local storage into the table. This is used when we add multiple entries.
+// For example, when we use Autosuggest on /database we can add multiple lines of data to the table.
 function renderData() {
     var tableBody = document.querySelector('#table-list tbody');
     tableBody.innerHTML = '';
@@ -62,6 +66,7 @@ function renderData() {
     });
 }
 
+// Used for the languages page to change the type of the language from main to other and vice versa.
 function changeListItemType(lang, type) {
     if (type === 'main') {
         langArr.main = langArr.main.filter(item => item !== lang);
@@ -76,8 +81,7 @@ function changeListItemType(lang, type) {
     renderData();
 }
 
-
-
+// Removes the data from the local storage and re-renders the table.
 function removeData(lang) {
     langArr.main = langArr.main.filter(item => item !== lang);
     langArr.others = langArr.others.filter(item => item !== lang);
@@ -85,10 +89,12 @@ function removeData(lang) {
     renderData();
 }
 
+// Shows the error panel when the user tries to add a language that already exists.
 function showError() {
     document.getElementById('error-panel').classList.remove('ons-u-hidden');
 }
 
+// Adds the data from the autosuggest to local storage and re-renders the table.
 function addData(event) {
     var lang = document.getElementById(page + '-input').value;
     if (!lang) {
@@ -117,8 +123,7 @@ function addData(event) {
     document.getElementById('error-panel').classList.add('ons-u-hidden');
 }
 
-
-
+// When the user is entering in the Autosuggest, if they press enter then it will add the data.
 document.getElementById(page + '-input').onkeydown = function(event) {
     if (event.key === 'Enter') {
         addData(event);

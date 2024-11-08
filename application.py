@@ -16,6 +16,7 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from enum import Enum
 
 # Basic logging information
 logging.basicConfig(level=logging.DEBUG)
@@ -271,7 +272,6 @@ def view_project(project_name):
         headers=headers,
     ).json()
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
-    print(projects)
     try:
         if projects["message"] and projects["message"] is None:
             flash("Project not found. Please try again.")
@@ -332,7 +332,6 @@ def survey():
         },
         "stage": stage,
     }
-    print(data)
     try:
         projects = requests.post(
             f"{API_URL}/api/projects",
@@ -341,9 +340,9 @@ def survey():
         )
     except Exception:
         try:
-            print(f"Request was not blocked but returned: {projects.json()}")
+            logger.error(f"Request was not blocked but returned: {projects.json()}")
         except Exception as second_error:
-            print(f"{second_error.__class__.__name__}: {second_error}")
+            logger.error(f"{second_error.__class__.__name__}: {second_error}")
 
     return redirect(url_for("dashboard"))
 
@@ -408,10 +407,14 @@ def developed():
 # ------------------------
 
 
+class Stage(Enum):
+    INITIAL = "1"
+    SELECT = "2"
+
 @app.route("/survey/source_control", methods=["GET"])
 def source_control():
     stage = request.args.get("stage")
-    if stage == "2":
+    if stage == Stage.SELECT.value:
         return render_template("/section_code/source_control_select.html")
     return render_template("/section_code/source_control.html")
 
@@ -419,7 +422,7 @@ def source_control():
 @app.route("/survey/hosting", methods=["GET"])
 def hosting():
     stage = request.args.get("stage")
-    if stage == "2":
+    if stage == Stage.SELECT.value:
         return render_template("/section_code/hosting_select.html")
     return render_template("/section_code/hosting.html")
 

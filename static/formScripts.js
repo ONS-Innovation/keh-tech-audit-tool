@@ -1,5 +1,5 @@
+// Redirect to previous page
 function redirectToPrevious(){
-    // Redirect to previous page
     var url = new URL(document.referrer).pathname;
     if (url === '/validate_details' 
         || url === '/survey/project_summary' 
@@ -9,8 +9,8 @@ function redirectToPrevious(){
     }
 }
 
+// Convert array to unordered html list
 function arrToList(arr) {
-    // Convert array to unordered html list
     var final = ""
     try {
         for (let i = 0; i <= arr.length - 1; i++) {
@@ -29,8 +29,9 @@ function arrToList(arr) {
     }
     return final;
 }
+
+// Convert array of objects to unordered html list with hrefs
 function arrToLinkList(arr) {
-    // Convert array of objects to unordered html list with hrefs
     var final = ""
     try {
         for (let i = 0; i <= arr.length - 1; i++) {

@@ -6,3 +6,4 @@ env
 templates/components
 templates/layout/_dsTemplate.njk
 node_modules
+.DS_Store

@@ -107,7 +107,12 @@ function updateSectionStatus(sectionId, dataItems) { // Update selection status 
     }
 }
 
+function changeBtnText() {
+    document.getElementById('submit-btn-text').innerHTML = 'Continue';
+}
+
 function changeBtnURL(contactTechData, contactManagerData, projectData, sourceControlData, databaseData, languagesData, frameworksData, integrationsData, infrastructureData) {
+    // Dynamically change url of submit button based on the completion status of each section
     var submitBtn = document.getElementById('submit-btn');
         var submitBtnSpan = submitBtn.querySelector('span');
         if (submitBtnSpan) {
@@ -118,7 +123,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(contactTechData)["contactEmail"] || !JSON.parse(contactTechData)["role"]) {
                 submitBtn.href = '/survey/contact_tech';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -131,7 +136,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(contactManagerData)["contactEmail"] || !JSON.parse(contactManagerData)["role"]) {
                 submitBtn.href = '/survey/contact_manager';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -149,7 +154,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
             ) {
                 submitBtn.href = '/survey/project';
                 console.log("hello");
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -161,7 +166,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(sourceControlData)["source_control"]) {
                 submitBtn.href = '/survey/source_control';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -173,7 +178,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(databaseData)["others"].length === 0) {
                 submitBtn.href = '/survey/database';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -185,7 +190,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(languagesData)["others"].length === 0) {
                 submitBtn.href = '/survey/languages';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -197,11 +202,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(frameworksData)["others"].length === 0) {
                 submitBtn.href = '/survey/frameworks';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+            changeBtnText()
             submitBtn.href = '/survey/frameworks';
             console.log(e)
             return;
@@ -209,7 +214,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(integrationsData)["others"].length === 0) {
                 submitBtn.href = '/survey/integrations';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
@@ -221,11 +226,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         try {
             if (!JSON.parse(infrastructureData)["others"].length === 0) {
                 submitBtn.href = '/survey/infrastructure';
-                document.getElementById('submit-btn-text').innerHTML = 'Continue';
+                changeBtnText()
                 return;
             }
         } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue';
+            changeBtnText()
             submitBtn.href = '/survey/infrastructure';
             console.log(e);
             return;

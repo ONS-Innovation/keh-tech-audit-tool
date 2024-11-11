@@ -278,413 +278,279 @@
 </form>
 <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <script>
-     
-
-        function displayError() {
-            // error message to be displayed when data is missing
-            document.getElementById('error-panel').style.display = 'block';
+        function displayError(message) {
+            const errorPanel = document.getElementById('error-panel');
+            // Show the error panel
+            errorPanel.style.display = 'block';
+            
+            // Find or create the error message container
+            let errorContainer = errorPanel.querySelector('.error-messages');
+            if (!errorContainer) {
+                errorContainer = document.createElement('div');
+                errorContainer.className = 'error-messages';
+                // Add after the label but before any existing content
+                const label = errorPanel.querySelector('label');
+                if (label) {
+                    label.insertAdjacentElement('afterend', errorContainer);
+                } else {
+                    errorPanel.appendChild(errorContainer);
+                }
+            }
+            
+            // Add the new error message
+            errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
             document.getElementById('submit-button').style.display = 'none';
         }
 
-        function load_data() {
-            // Project Details
-            var contactTechData = localStorage.getItem('contact_tech-data');
-            var contactManagerData = localStorage.getItem('contact_manager-data');
-            var projectData = localStorage.getItem('project-data');
-            var developedData = localStorage.getItem('developed-data');
-            var stageData = localStorage.getItem('stage-data');
-
-            // Architecture Details 
-            var sourceControlData = localStorage.getItem('source_control-data');
-            var hostingData = localStorage.getItem('hosting-data');
-            var databaseData = localStorage.getItem('database-data');
-
-            // Technology Details
-            var frameworksData = localStorage.getItem('frameworks-data');
-            var infrastructureData = localStorage.getItem('infrastructure-data');
-            var integrationsData = localStorage.getItem('integrations-data');
-            var languagesData = localStorage.getItem('languages-data');
-
-            localStorage.setItem('validate', false);
-
-            document.getElementById('error-panel').style.display = 'none';
-            var youData = [];
-            var managerTechData = JSON.parse(contactManagerData);
-            var techData = JSON.parse(contactTechData);
-
-            // try catch block for contact email and role (technical contact)
-            try {
-                if (!JSON.parse(contactTechData)["contactEmail"] 
-                    || !JSON.parse(contactTechData)["role"]) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Technical Contact' section is incomplete</li></ul>";
-                    document.getElementById('submit-button').style.display = 'none';
-                    youData.push({
-                            "email": "",
-                            "roles": [""],
-                            "grade": ""
-                        });
-                } else {
-                    if (contactTechData) {
-                        youData.push({
-                            "email": techData.contactEmail,
-                            "roles": ["Technical Contact"],
-                            "grade": techData.role
-                        });
-                }
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Technical Contact' section is incomplete</li></ul>";
-                youData.push({
-                            "email": "",
-                            "roles": [""],
-                            "grade": ""
-                        });
+        function clearErrors() {
+            const errorPanel = document.getElementById('error-panel');
+            // Hide the panel
+            errorPanel.style.display = 'none';
+            // Clear only the error messages, not the header or label
+            const errorContainer = errorPanel.querySelector('.error-messages');
+            if (errorContainer) {
+                errorContainer.innerHTML = '';
             }
+            document.getElementById('submit-button').style.display = 'block';
+        }
 
-            // try catch block for contact email and role (delivery manager)
-
+        function validateData(data, sectionName, requiredFields = []) {
             try {
-                if (!JSON.parse(contactManagerData)["contactEmail"] 
-                    || !JSON.parse(contactManagerData)["role"]) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Delivery Manager' section is incomplete</li></ul>";
-                    youData.push({
-                            "email": "",
-                            "roles": [""],
-                            "grade": ""
-                        });
-                } else {
-                    if (managerTechData) {
-                        youData.push({
-                            "email": managerTechData.contactEmail,
-                            "roles": ["Delivery Manager"],
-                            "grade": managerTechData.role
-                        });
+                const parsedData = JSON.parse(data);
+                
+                // Check if any required fields are missing or empty strings
+                for (const field of requiredFields) {
+                    if (!parsedData[field] || parsedData[field] === "") {
+                        throw new Error(`Missing required field: ${field}`);
                     }
                 }
-            } catch (e) {
-                
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Delivery Manager' section is incomplete</li></ul>";
-                if (managerTechData) {
-                        youData.push({
-                            "email": "",
-                            "roles": [""],
-                            "grade": ""
-                        });
-                    }
-            }
 
-            var sourceControlParsed = JSON.parse(sourceControlData);
-            var finalSourceControl = [
-            {
-                "type": sourceControlParsed.source_control,
-                "links": sourceControlParsed.links
-            }
-            ];
-
-            // chuck all data into finalData object
-            var finalData = {
-            "user": (youData),
-            "details": JSON.parse(projectData),
-            "developed": JSON.parse(developedData),
-            "source_control": finalSourceControl,
-            "architecture": {
-                "frameworks": JSON.parse(frameworksData),
-                "infrastructure": JSON.parse(infrastructureData),
-                "integrations": JSON.parse(integrationsData),
-                "languages": JSON.parse(languagesData),
-                "hosting": JSON.parse(hostingData),
-                "database": JSON.parse(databaseData),
-            },
-            "stage": JSON.parse(stageData).stage
-            }
-
-            var technical_contact = `${finalData.user[0].email} (${finalData.user[0].grade})`;
-            var delivery_manager = '';
-            if (finalData.user.length > 1) {
-                delivery_manager = `${finalData.user[1].email} (${finalData.user[1].grade})`;
-            }
-
-            var project_details = '';
-            // try catch block for project details
-            try {
-                var details = JSON.parse(projectData);
-                var stage = JSON.parse(stageData);
-                if (details["project_name"] === '' || details["project_short_name"] === '' || details["doc_link"] === '' || stage["stage"] === '') {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Project' section is incomplete</li></ul>";
-                } else {
-                    project_details = `<ul><li>Name: ${details.project_name}</li><li>Short Name: ${details.project_short_name}</li><li>Documentation Link: ${details.doc_link}</li><li>Stage: ${stage.stage}</li></ul>`;
-                    document.getElementById('project_details').innerHTML = project_details; 
-                }             
-            } catch (e) {
-                displayError();
-                document.getElementById('project_details').innerHTML = project_details;
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Project' section is incomplete</li></ul>";
-                
-            }
-
-            var developed = '';
-            // try catch block for developed details
-            try {
-                developed = JSON.parse(developedData);
-                if (!developed["outsource_company"] && !developed["partnership_company"] && !developed["developed"]) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Developed' section is incomplete</li></ul>";
-                    var developed_details = '';
-                    var company = '';
-
-                } else {
-                    if (developed.developed === "Outsourced") {
-                        var company = developed.outsource_company;
-                    } else if (developed.developed === "Partnership") {
-                        var company = developed.partnership_company;
-                    } else {
-                        var company = "N/A";
-                    }
-                    var developed_details = `<ul><li>Developed By: ${developed["developed"]}</li><li>Partnership/Outsource Company: ${company}</li></ul>`;
-
-                }
-            } catch (e) {
-                
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Developed' section is incomplete</li></ul>";
-                var developed_details = '';
-                var company = '';
-                
-            }
-
-            var sourceControlDetails= '';
-            // try catch block for source control details
-            try {
-                if (!JSON.parse(sourceControlData)["source_control"]) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Source Control' section is incomplete</li></ul>";
-                    sourceControlDetails = '';
-                } else {
-                    var source_control = JSON.parse(sourceControlData);
-                    source_control = `<ul><li>${source_control.source_control}</li></ul>`;
-                    source_control = finalSourceControl;
-                    sourceControlDetails = `<ul><li>Type: ${source_control[0].type}</li>`;
+                // Special validation for arrays-based data
+                if (sectionName === 'Frameworks' || sectionName === 'Languages' || 
+                    sectionName === 'CI/CD' || sectionName === 'Infrastructure' || 
+                    sectionName === 'Databases') {
                     
-                    source_control[0].links.forEach(link => {
-                    sourceControlDetails += `<li>${link.description}: ${link.url}</li>`;
-                });
-                sourceControlDetails += `</ul>`;
-                
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Source Control' section is incomplete</li></ul>";
-                sourceControlDetails = '';
-                
-            }
-
-            var hosting = '';
-            // try catch block for hosting details
-            try {
-                if (!JSON.parse(hostingData).type) {
-                    if (JSON.parse(hostingData).type === "Cloud" || JSON.parse(hostingData).type === "Hybrid") {
-                        if (JSON.parse(hostingData).others.length === 0) {
-                            displayError();
-                            document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
-                        }
-                    }
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
-                } else {
-                    if (JSON.parse(hostingData).type === "On-premises") {
-                        hosting = JSON.parse(hostingData).type;
-                    } else {
-                        hosting = JSON.parse(hostingData).main.concat(JSON.parse(hostingData).others);
+                    // Check main array - ensure no empty strings
+                    const validMain = parsedData.main?.filter(item => item && item !== "");
+                    // Check others array - ensure no empty strings
+                    const validOthers = parsedData.others?.filter(item => item && item !== "");
+                    
+                    if ((!validMain || validMain.length === 0) && 
+                        (!validOthers || validOthers.length === 0)) {
+                        throw new Error(`No items selected in ${sectionName}`);
                     }
                 }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Hosting' section is incomplete</li></ul>";
-            }
-
-            var languages = '';
-            // try catch block for languages details
-            try {
-                if (JSON.parse(languagesData).main.length === 0 && JSON.parse(languagesData).others.length === 0) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Languages' section is incomplete</li></ul>";
-                    langauges = '';
-                } else {
-                    languages = JSON.parse(languagesData).main.concat(JSON.parse(languagesData).others)
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Languages' section is incomplete</li></ul>";
-                languages = '';
                 
-            }
-
-            var frameworks = '';
-            // try catch block for frameworks details
-            try {
-                if (JSON.parse(frameworksData).others.length === 0) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Frameworks' section is incomplete</li></ul>";
-                    frameworks = '';
-                } else {
-                    frameworks = JSON.parse(frameworksData).main.concat(JSON.parse(frameworksData).others);
-                }
+                return parsedData;
             } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Frameworks' section is incomplete</li></ul>";
-                frameworks = '';
-                
-            }
-
-            var integrations = '';
-            // try catch block for integrations details
-            try {
-                if (JSON.parse(integrationsData).others.length === 0) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'CI/CD' section is incomplete</li></ul>";
-                    integrations = '';
-                } else {
-                    integrations = JSON.parse(integrationsData).main.concat(JSON.parse(integrationsData).others);
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'CI/CD' section is incomplete</li></ul>";
-                integrations = '';
-                
-            }
-
-            var infrastructure = '';
-            // try catch block for infrastructure details
-            try {
-                if (JSON.parse(infrastructureData).others.length === 0) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Infrastructure' section is incomplete</li></ul>";
-                    infrastructure = '';
-                } else {
-                    infrastructure = JSON.parse(infrastructureData).main.concat(JSON.parse(infrastructureData).others);
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Infrastructure' section is incomplete</li></ul>";
-                infrastructure = '';
-            }
-
-            var database_details = '';
-            // try catch block for database details
-            try {
-                if (JSON.parse(databaseData).others.length === 0) {
-                    displayError();
-                    document.getElementById('error-panel').innerHTML += "<ul><li>'Databases' section is incomplete</li></ul>";
-                    database_details = '';
-                } else {
-                    database_details = arrToList(JSON.parse(databaseData).main.concat(JSON.parse(databaseData).others));
-                }
-            } catch (e) {
-                displayError();
-                document.getElementById('error-panel').innerHTML += "<ul><li>'Databases' section is incomplete</li></ul>";
-                database_details = '';
-                
-            }
-
-            if (hosting === "On-premises") {
-                var hosting_details = "<ul><li>On-Premises</li></ul>";
-            } else {
-                var hosting_details = arrToList(hosting);
-            }
-            var languages_details = arrToList(languages);
-            var frameworks_details = arrToList(frameworks);
-            var integrations_details = arrToList(integrations);
-            var infrastructure_details = arrToList(infrastructure);
-
-            var summaryArray = [
-                {"technical_contact": technical_contact},
-                {"delivery_manager": delivery_manager},
-                {"project_details": project_details},
-                {"developed_details": developed_details},
-                {"source_control_details": sourceControlDetails},
-                {"hosting_details": hosting_details},
-                {"database_details": database_details},
-                {"languages_details": languages_details},
-                {"framework_details": frameworks_details},
-                {"integration_details": integrations_details},
-                {"infrastructure_details": infrastructure_details}
-            ];
-
-            // Fills in the data for summary section
-            for (let i=0; i < summaryArray.length; i++) {
-                var key = Object.keys(summaryArray[i])[0]; // e.g "technical_contact"
-                document.getElementById(key).innerHTML = summaryArray[i][key]; // e.g getElementByID(technical_contact).innerHTML = technical_contact
-
-            }
-
-            var hostingData = {
-                "type": [finalData.architecture.hosting.type],
-                "details": finalData.architecture.hosting.others
-            };
-
-            // Values to be stored in the hidden input fields
-            var hiddenInputsArray = [
-                {
-                    "user": JSON.stringify(finalData.user)
-                },
-                {
-                    "project": JSON.stringify(finalData.details)
-                },
-                {
-                    "developed": JSON.stringify(finalData.developed)
-                },
-                {
-                    "source_control": JSON.stringify(finalData.source_control)
-                },
-                {
-                    "hosting": JSON.stringify(hostingData)
-                },
-                {
-                    "database": JSON.stringify(finalData.architecture.database)
-                },
-                {
-                    "languages": JSON.stringify(finalData.architecture.languages)
-                },
-                {
-                    "frameworks": JSON.stringify(finalData.architecture.frameworks)
-                },
-                {
-                    "integrations": JSON.stringify(finalData.architecture.integrations)
-                },
-                {
-                    "infrastructure": JSON.stringify(finalData.architecture.infrastructure)
-                },
-                {
-                    "stage": JSON.stringify(finalData.stage)
-                }
-            ];
-            
-            // Fill in hidden input fields to be sent in POST request
-            for (let i=0; i < hiddenInputsArray.length; i++) {
-                var key = Object.keys(hiddenInputsArray[i])[0]; // e.g "user"
-                document.getElementById(key).value = hiddenInputsArray[i][key]; // e.g getElementByID(user).value = JSON.stringify(finalData.user)
+                displayError(`'${sectionName}' section is incomplete`);
+                return null;
             }
         }
+
+        function arrToList(arr) {
+            if (!arr || arr.length === 0) return '';
+            return `<ul>${arr.map(item => `<li>${item}</li>`).join('')}</ul>`;
+        }
+
+        function processSourceControl(sourceControlData) {
+            const parsed = validateData(sourceControlData, 'Source Control', ['source_control']);
+            if (!parsed) return '';
+
+            const finalSourceControl = [{
+                type: parsed.source_control,
+                links: parsed.links || []
+            }];
+
+            let details = `<ul><li>Type: ${finalSourceControl[0].type}</li>`;
+            if (finalSourceControl[0].links) {
+                finalSourceControl[0].links.forEach(link => {
+                    details += `<li>${link.description}: ${link.url}</li>`;
+                });
+            }
+            details += '</ul>';
+            
+            return details;
+        }
+
+        function processHosting(hostingData) {
+            const parsed = validateData(hostingData, 'Hosting', ['type']);
+            if (!parsed) return '';
+
+            if (parsed.type === "On-premises") {
+                return "<ul><li>On-Premises</li></ul>";
+            }
+
+            if ((parsed.type === "Cloud" || parsed.type === "Hybrid") && (!parsed.others || parsed.others.length === 0)) {
+                displayError("'Hosting' section is incomplete");
+                return '';
+            }
+
+            return arrToList(parsed.main ? parsed.main.concat(parsed.others) : parsed.others);
+        }
+
+        function processContacts(techData, managerData) {
+            const youData = [];
+            
+            // Process Technical Contact
+            const techContact = validateData(techData, 'Technical Contact', ['contactEmail', 'role']);
+            if (techContact) {
+                youData.push({
+                    email: techContact.contactEmail,
+                    roles: ["Technical Contact"],
+                    grade: techContact.role
+                });
+            } else {
+                youData.push({ email: "", roles: [""], grade: "" });
+            }
+
+            // Process Delivery Manager
+            const managerContact = validateData(managerData, 'Delivery Manager', ['contactEmail', 'role']);
+            if (managerContact) {
+                youData.push({
+                    email: managerContact.contactEmail,
+                    roles: ["Delivery Manager"],
+                    grade: managerContact.role
+                });
+            } else {
+                youData.push({ email: "", roles: [""], grade: "" });
+            }
+
+            return youData;
+        }
+
+        function load_data() {
+            // Reset error panel at the start
+            clearErrors();
+
+            // Load all data from localStorage
+            const storedData = {
+                contactTech: localStorage.getItem('contact_tech-data'),
+                contactManager: localStorage.getItem('contact_manager-data'),
+                project: localStorage.getItem('project-data'),
+                developed: localStorage.getItem('developed-data'),
+                stage: localStorage.getItem('stage-data'),
+                sourceControl: localStorage.getItem('source_control-data'),
+                hosting: localStorage.getItem('hosting-data'),
+                database: localStorage.getItem('database-data'),
+                frameworks: localStorage.getItem('frameworks-data'),
+                infrastructure: localStorage.getItem('infrastructure-data'),
+                integrations: localStorage.getItem('integrations-data'),
+                languages: localStorage.getItem('languages-data')
+            };
+
+            // Process contacts
+            const youData = processContacts(storedData.contactTech, storedData.contactManager);
+
+            // Process all other sections
+            const processedData = {
+                sourceControl: processSourceControl(storedData.sourceControl),
+                hosting: processHosting(storedData.hosting),
+                database: validateData(storedData.database, 'Databases'),
+                languages: validateData(storedData.languages, 'Languages'),
+                frameworks: validateData(storedData.frameworks, 'Frameworks'),
+                integrations: validateData(storedData.integrations, 'CI/CD'),
+                infrastructure: validateData(storedData.infrastructure, 'Infrastructure'),
+                project: validateData(storedData.project, 'Project', ['project_name', 'project_short_name', 'doc_link']),
+                stage: validateData(storedData.stage, 'Stage', ['stage']),
+                developed: validateData(storedData.developed, 'Developed', ['developed'])
+            };
+
+            // Additional validation for hosting
+            if (processedData.hosting) {
+                if ((processedData.hosting.type === "Cloud" || processedData.hosting.type === "Hybrid") 
+                    && (!processedData.hosting.others || processedData.hosting.others.length === 0)) {
+                    displayError("'Hosting' section is incomplete");
+                }
+            }
+
+            // Build the final data object
+            const finalData = {
+                user: youData,
+                details: processedData.project,
+                developed: processedData.developed,
+                source_control: [{
+                    type: JSON.parse(storedData.sourceControl)?.source_control || '',
+                    links: JSON.parse(storedData.sourceControl)?.links || []
+                }],
+                architecture: {
+                    frameworks: processedData.frameworks || { main: [], others: [] },
+                    infrastructure: processedData.infrastructure || { main: [], others: [] },
+                    integrations: processedData.integrations || { main: [], others: [] },
+                    languages: processedData.languages || { main: [], others: [] },
+                    hosting: JSON.parse(storedData.hosting) || { type: '', others: [] },
+                    database: processedData.database || { main: [], others: [] }
+                },
+                stage: processedData.stage?.stage || ''
+            };
+
+            // Update the summary display
+            updateSummaryDisplay(finalData);
+            
+            // Update hidden form fields
+            updateHiddenFields(finalData);
+        }
+
+        function updateSummaryDisplay(finalData) {
+            const summaryData = {
+                technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
+                delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
+                project_details: finalData.details ? `<ul>
+                    <li>Name: ${finalData.details.project_name}</li>
+                    <li>Short Name: ${finalData.details.project_short_name}</li>
+                    <li>Documentation Link: ${finalData.details.doc_link}</li>
+                    <li>Stage: ${finalData.stage}</li>
+                </ul>` : '',
+                developed_details: finalData.developed ? `<ul>
+                    <li>Developed By: ${finalData.developed.developed}</li>
+                    <li>Partnership/Outsource Company: ${finalData.developed.partnership_company || finalData.developed.outsource_company || 'N/A'}</li>
+                </ul>` : '',
+                source_control_details: processSourceControl(localStorage.getItem('source_control-data')),
+                hosting_details: processHosting(localStorage.getItem('hosting-data')),
+                database_details: arrToList(finalData.architecture.database?.main?.concat(finalData.architecture.database?.others) || []),
+                languages_details: arrToList(finalData.architecture.languages?.main?.concat(finalData.architecture.languages?.others) || []),
+                framework_details: arrToList(finalData.architecture.frameworks?.main?.concat(finalData.architecture.frameworks?.others) || []),
+                integration_details: arrToList(finalData.architecture.integrations?.main?.concat(finalData.architecture.integrations?.others) || []),
+                infrastructure_details: arrToList(finalData.architecture.infrastructure?.main?.concat(finalData.architecture.infrastructure?.others) || [])
+            };
+
+            // Update all summary elements
+            Object.entries(summaryData).forEach(([key, value]) => {
+                const element = document.getElementById(key);
+                if (element) element.innerHTML = value;
+            });
+        }
+
+        function updateHiddenFields(finalData) {
+            const hiddenFields = {
+                user: finalData.user,
+                project: finalData.details,
+                developed: finalData.developed,
+                source_control: finalData.source_control,
+                hosting: {
+                    type: [finalData.architecture.hosting.type],
+                    details: finalData.architecture.hosting.others
+                },
+                database: finalData.architecture.database,
+                languages: finalData.architecture.languages,
+                frameworks: finalData.architecture.frameworks,
+                integrations: finalData.architecture.integrations,
+                infrastructure: finalData.architecture.infrastructure,
+                stage: finalData.stage
+            };
+
+            // Update all hidden input fields
+            Object.entries(hiddenFields).forEach(([key, value]) => {
+                const element = document.getElementById(key);
+                if (element) element.value = JSON.stringify(value);
+            });
+        }
+
+        // Initialize the page
         load_data();
         localStorage.setItem("source_control-validate", true);
         localStorage.setItem("hosting-validate", true);
-</script>
+    </script>
 
 
 {% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
-            height: auto;
-          }
-        </style>
-
-      {% endblock %}
-    

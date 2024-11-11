@@ -20,8 +20,8 @@ from http import HTTPStatus
 from enum import Enum
 
 # Basic logging information
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.DEBUG)
+# logger = logging.getLogger(__name__)
 
 # SETTING OF API URL: Change if moving to production
 API_URL = os.getenv("API_URL")
@@ -298,7 +298,7 @@ def view_project(project_name):
     ).json()
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
     try:
-        if projects["message"] and projects["message"] is None:
+        if projects["message"] is None:
             flash("Project not found. Please try again.")
             return redirect(url_for("dashboard"))
     except Exception:

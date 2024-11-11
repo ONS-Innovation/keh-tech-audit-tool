@@ -108,6 +108,7 @@ function updateSectionStatus(sectionId, dataItems) { // Update selection status 
 }
 
 function changeBtnText() {
+    // Chnage text of submit button to 'Continue' if the section is not completed
     document.getElementById('submit-btn-text').innerHTML = 'Continue';
 }
 

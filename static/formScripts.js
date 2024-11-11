@@ -112,6 +112,10 @@ function changeBtnText() {
     document.getElementById('submit-btn-text').innerHTML = 'Continue';
 }
 
+function displayIncomplete(section) {
+    return `<ul><li>'${section}' section is incomplete</li></ul>`
+}
+
 function changeBtnURL(contactTechData, contactManagerData, projectData, sourceControlData, databaseData, languagesData, frameworksData, integrationsData, infrastructureData) {
     // Dynamically change url of submit button based on the completion status of each section
     var submitBtn = document.getElementById('submit-btn');

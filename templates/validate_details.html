@@ -376,38 +376,7 @@
                         });
                     }
             }
-
-            var sourceControlParsed = JSON.parse(sourceControlData);
-            var finalSourceControl = [
-            {
-                "type": sourceControlParsed.source_control,
-                "links": sourceControlParsed.links
-            }
-            ];
-
-            // chuck all data into finalData object
-            var finalData = {
-            "user": (youData),
-            "details": JSON.parse(projectData),
-            "developed": JSON.parse(developedData),
-            "source_control": finalSourceControl,
-            "architecture": {
-                "frameworks": JSON.parse(frameworksData),
-                "infrastructure": JSON.parse(infrastructureData),
-                "integrations": JSON.parse(integrationsData),
-                "languages": JSON.parse(languagesData),
-                "hosting": JSON.parse(hostingData),
-                "database": JSON.parse(databaseData),
-            },
-            "stage": JSON.parse(stageData).stage
-            }
-
-            var technical_contact = `${finalData.user[0].email} (${finalData.user[0].grade})`;
-            var delivery_manager = '';
-            if (finalData.user.length > 1) {
-                delivery_manager = `${finalData.user[1].email} (${finalData.user[1].grade})`;
-            }
-
+            console.log(youData);
             var project_details = '';
             // try catch block for project details
             try {
@@ -465,6 +434,14 @@
                     document.getElementById('error-panel').innerHTML += "<ul><li>'Source Control' section is incomplete</li></ul>";
                     sourceControlDetails = '';
                 } else {
+                    var sourceControlParsed = JSON.parse(sourceControlData);
+
+                var finalSourceControl = [
+                    {
+                        "type": sourceControlParsed.source_control,
+                        "links": sourceControlParsed.links
+                    }
+                    ];
                     var source_control = JSON.parse(sourceControlData);
                     source_control = `<ul><li>${source_control.source_control}</li></ul>`;
                     source_control = finalSourceControl;
@@ -601,6 +578,30 @@
             var integrations_details = arrToList(integrations);
             var infrastructure_details = arrToList(infrastructure);
 
+            // chuck all data into finalData object
+            var finalData = {
+            "user": (youData),
+            "details": JSON.parse(projectData),
+            "developed": JSON.parse(developedData),
+            "source_control": finalSourceControl,
+            "architecture": {
+                "frameworks": JSON.parse(frameworksData),
+                "infrastructure": JSON.parse(infrastructureData),
+                "integrations": JSON.parse(integrationsData),
+                "languages": JSON.parse(languagesData),
+                "hosting": JSON.parse(hostingData),
+                "database": JSON.parse(databaseData),
+            },
+            "stage": JSON.parse(stageData).stage
+            }
+
+            var technical_contact = `${finalData.user[0].email} (${finalData.user[0].grade})`;
+            var delivery_manager = '';
+            if (finalData.user.length > 1) {
+                delivery_manager = `${finalData.user[1].email} (${finalData.user[1].grade})`;
+            }
+
+
             var summaryArray = [
                 {"technical_contact": technical_contact},
                 {"delivery_manager": delivery_manager},
@@ -621,6 +622,8 @@
                 document.getElementById(key).innerHTML = summaryArray[i][key]; // e.g getElementByID(technical_contact).innerHTML = technical_contact
 
             }
+
+
 
             var hostingData = {
                 "type": [finalData.architecture.hosting.type],

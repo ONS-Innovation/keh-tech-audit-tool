@@ -41,6 +41,13 @@ Use the make command in the root directory of the project to run the app:
 make run-ui
 ```
 
+### Setting up with Docker
+To set up with docker, in the root directory of the project create a `.env` file and copy in your AWS credentials:
+
+```
+
+```
+
 Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
 
 

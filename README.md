@@ -45,7 +45,9 @@ make run-ui
 To set up with docker, in the root directory of the project create a `.env` file and copy in your AWS credentials:
 
 ```
-
+AWS_ACCESS_KEY_ID = <AWS_ACCESS_KEY_ID>
+AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+AWS_
 ```
 
 Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.

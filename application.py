@@ -18,10 +18,11 @@ from flask import (
 from jinja2 import ChainableUndefined
 from http import HTTPStatus
 from enum import Enum
+import logging
 
 # Basic logging information
 # logging.basicConfig(level=logging.DEBUG)
-# logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # SETTING OF API URL: Change if moving to production
 API_URL = os.getenv("API_URL")

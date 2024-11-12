@@ -1,37 +1,12 @@
-{% extends "layout/_template.njk" %}
+{% extends "core.html" %}
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/textarea/_macro.njk" import onsTextarea %}
-
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
 {% block main %}
-
-<h1>Project Details</h1>
-
-{{
-    onsAccordion({
+    <h1>Project Details</h1>
+    {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -39,42 +14,28 @@
                 "content": "Enter details about the project such as: <ul><li>Project Name</li> <li>Shortened Project Name</li> <li>Documentation link for the project</li></ul>"
             }
         ]
-    })
-}}
-
-<form action="{{ url_for('survey') }}" method="GET">
-
-{{
-    onsInput({
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsInput({
         "id": "project-name",
         "label": {
             "text": "What is the name of the project?"
         },
         
-    })
-}}
-
-{{
-    onsInput({
+    }) }}
+        {{ onsInput({
         "id": "project-short-name",
         "label": {
             "text": "What is the short name of the project?"
         }
-    })
-}}
-
-{{
-    onsInput({
+    }) }}
+        {{ onsInput({
         "id": "documentation-link",
         "label": {
             "text": "Is there a link to the documentation for this project?"
         }
-    })
-}}
-
-
-{{
-    onsTextarea({
+    }) }}
+        {{ onsTextarea({
         "id": "project-description",
         "name": "feedback-limited",
         "width": "30",
@@ -87,70 +48,48 @@
             "charCountSingular": "You have {x} character remaining",
             "charCountPlural": "You have {x} characters remaining"
         }
-    })
-}}
-
-
-{%
-    call onsQuestion({
+    }) }}
+        {% call onsQuestion({
         "classes": "ons-u-mt-no",
         "legendIsQuestionTitle": true
-    })
-%}
-{% endcall %}
-
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-
-{{
-    onsButton({
+    }) %}
+        {% endcall %}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        {{ onsButton({
         "id": "save-values-button",
         "text": "Save and continue",
         "url": url_for('developed'),
         "attributes": {
             "onclick": "storeData();"
         }
-    })
-}}
-
-<script>
-    function storeData() {
-        // Store Details about project in local storage
-        var project_name = document.getElementById('project-name').value;
-        var project_short_name = document.getElementById('project-short-name').value;
-        var project_description = document.getElementById('project-description').value;
-        var doc_link = document.getElementById('documentation-link').value;
-        var complete = (project_name !== '' && project_short_name !== '');
-        var data = {
-            "project_name": project_name,
-            "project_short_name": project_short_name,
-            "project_description": project_description,
-            "doc_link": doc_link,
-            "complete": complete
-        };
-
-        // && data['doc_link'] != '' && data['project_description'] != ''
-        // if required^
-
-        // only project_name and short_name are required - although this then means that nothing is saved if its missing the name or short name
-        // if (data['project_name'] != '' && data['project_short_name'] != '' ) {}
-
-        localStorage.setItem('data', JSON.stringify(data));
-    }
-
-    function loadData() {
-        var data = JSON.parse(localStorage.getItem('data'));
-        if (data) {
-            document.getElementById('project-name').value = data.project_name;
-            document.getElementById('project-short-name').value = data.project_short_name;
-            document.getElementById('documentation-link').value = data.doc_link;
-            document.getElementById('project-description').value = data.project_description;
-        }
-    }
-    redirectToPrevious();
-    loadData();
-</script>
-
-
-</form>
-
+    }) }}
+        <script>
+            function storeData() { // Store Details about project in local storage
+                var project_name = document.getElementById('project-name').value;
+                var project_short_name = document.getElementById('project-short-name').value;
+                var project_description = document.getElementById('project-description').value;
+                var doc_link = document.getElementById('documentation-link').value;
+                var complete = (project_name !== '' && project_short_name !== '');
+                var data = {
+                    "project_name": project_name,
+                    "project_short_name": project_short_name,
+                    "project_description": project_description,
+                    "doc_link": doc_link,
+                    "complete": complete
+                };
+                localStorage.setItem('project-data', JSON.stringify(data));
+            }
+            function loadData() {
+                var data = JSON.parse(localStorage.getItem('project-data'));
+                if (data) {
+                    document.getElementById('project-name').value = data.project_name;
+                    document.getElementById('project-short-name').value = data.project_short_name;
+                    document.getElementById('documentation-link').value = data.doc_link;
+                    document.getElementById('project-description').value = data.project_description;
+                }
+            }
+            redirectToPrevious();
+            loadData();
+        </script>
+    </form>
 {% endblock %}

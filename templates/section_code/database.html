@@ -1,37 +1,10 @@
-{% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
+{% extends "core.html" %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/radios/_macro.njk" import onsRadios %}
-{% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-
-{% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
 {% block main %}
-
-<h1>Databases</h1>
-{{ onsAccordion({
+    <h1>Databases</h1>
+    {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
@@ -40,7 +13,7 @@
             }
         ]
     }) }}
-        {{ onsAutosuggest({
+    {{ onsAutosuggest({
         "id": "database-input",
         "input": {
             "label": {
@@ -76,9 +49,9 @@
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-        <br>
-            {% from "components/table/_macro.njk" import onsTable %}
-            {{ onsTable({
+    <br>
+        {% from "components/table/_macro.njk" import onsTable %}
+        {{ onsTable({
         "caption": "",
         "id": "table-list",
         "ths": [
@@ -95,10 +68,10 @@
             }
         ]
     }) }}
-            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-            <form action="{{ url_for('survey') }}" method="GET">
-                {{ onsButton({
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <form action="{{ url_for('survey') }}" method="GET">
+            {{ onsButton({
         "id": "save-values-button",
         "url": url_for('architecture_summary'),
         "text": "Save and continue",
@@ -108,13 +81,13 @@
             "onclick": "storeData();"
         }
     }) }}
-            </form>
-            <script>
-                loadData();
-                redirectToPrevious();
-                document
-                    .getElementById("error-panel")
-                    .style
-                    .display = "none";
-            </script>
-        {% endblock %}
+        </form>
+        <script>
+            loadData();
+            redirectToPrevious();
+            document
+                .getElementById("error-panel")
+                .style
+                .display = "none";
+        </script>
+    {% endblock %}

@@ -1,36 +1,9 @@
-{% extends "layout/_template.njk" %}
-{% from "components/input/_macro.njk" import onsInput %}
-{% from "components/password/_macro.njk" import onsPassword %}
-{% from "components/button/_macro.njk" import onsButton %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/list/_macro.njk" import onsList %}{% from "components/summary/_macro.njk" import onsSummary %}
-
-{%
-    set pageConfig = {
-        "header": {
-            "title": project.details[0].name,
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    }
-%}
-
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' %}
 {% block main %}
-
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-
-{{
-    onsBreadcrumbs({
+    {{ onsBreadcrumbs({
         "ariaLabel": 'Breadcrumbs',
         "itemsList": [
                 {
@@ -38,11 +11,8 @@
                     "text": 'Back'
                 }
             ]
-    })
-}}
-
-{% set langs = [] %}
-
+    }) }}
+    {% set langs = [] %}
     {{ onsSummary({
         "summaries": [
             {
@@ -175,7 +145,7 @@
                                         "id": "languages",
                                         "valueList": [
                                             {
-                                                "text": project.architecture.languages.others | join(', ')
+                                                "text": project.architecture.languages.main | join(', ') + project.architecture.languages.others | join(', ')
                                             }
                                         ]
                                     }
@@ -216,7 +186,6 @@
         ]
     }) }}
 {% endblock %}
-
 <script>
     document.getElementById("project_details").innerHTML = 'hi';
 </script>

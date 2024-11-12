@@ -1,20 +1,6 @@
-{% extends "layout/_template.njk" %}
+{% extends "core.html" %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/list/_macro.njk" import onsList %}
-{% from "components/details/_macro.njk" import onsDetails %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{%
-    set pageConfig = {
-        "header": {
-            "title": "Architecture Details",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            }
-        }
-    }
-%}
-
 {% block main %}
 
 
@@ -47,15 +33,4 @@
         })
     }}
 {% endblock %}
-
-      {% block scripts %}
-
-        <style>
-          body {
-            height: auto;
-          }
-        </style>
-
-        <script src="{{ site.baseUrl }}js/main.js?t={{ cacheTime }}"></script>
-      {% endblock %}
     

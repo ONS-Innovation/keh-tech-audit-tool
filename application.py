@@ -18,26 +18,18 @@ from flask import (
 from jinja2 import ChainableUndefined
 from dotenv import load_dotenv
 
+from enum import Enum
+from http import HTTPStatus
+
 load_dotenv()
-
 # Basic logging information
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-# SETTING OF API URL: Change if moving to production
-API_URL = "https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev"
 
 # AWS S3 bucket settings
 bucket_name = "keh-tech-audit-tool"
-region_name = os.getenv("AWS_DEFAULT_REGION")
+region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
-
-# Standard flask initialisation
-app = Flask(__name__)
-app.secret_key = "lsdbfnhjldfbvjlhdsblhjsd"
-app.jinja_env.undefined = ChainableUndefined
-app.jinja_env.add_extension("jinja2.ext.do")
-
 
 # GET client keys from S3 bucket using boto3
 def read_client_keys():
@@ -64,6 +56,66 @@ def read_auto_complete_data():
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
+# GET secrets from AWS Secrets Manager using boto3
+def get_secret():
+
+    secret_name = "tech-audit-tool-api/secrets"
+    region_name = "eu-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
+
+def get_ui_secret():
+
+    secret_name = "tech-audit-tool-ui/secrets"
+    region_name = "eu-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
+
+# SETTING OF API URL: Change if moving to production
+API_URL = json.loads(get_ui_secret())['API_URL']
+
+# Standard flask initialisation
+app = Flask(__name__)
+app.secret_key = json.loads(get_ui_secret())['APP_SECRET_KEY']
+app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
+
 
 # SET client keys from S3 bucket using boto3
 cognito_settings = read_client_keys()
@@ -72,13 +124,15 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
-REDIRECT_URI = "http://localhost:8000"
+REDIRECT_URI = json.loads(get_ui_secret())['REDIRECT_URI']
 
-# For the _template.njk to load info into the header of the page. Automatically loads the user's email into the header.
+# For the _template.njk to load info into the header of the page.
+# Automatically loads the user's email into the header.
 items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
-# For the _template.njk to load info into the header of the page. Automatically loads the navigation depending on what page the user is on.
+# For the _template.njk to load info into the header of the page.
+# Automatically loads the navigation depending on what page the user is on.
 mainNavItems = [
     {"text": "Dashboard", "url": "/dashboard"},
     {"text": "Pre-Survey", "url": "/pre-survey"},
@@ -89,8 +143,8 @@ mainNavItems = [
 projectNavItems = [
     {"text": "Survey", "url": "/survey"},
     {"text": "Details", "url": "/pre-survey/project"},
-    {"text": "Technical Contact", "url": "/survey/contact-tech"},
-    {"text": "Delivery Contact", "url": "/survey/contact-manager"},
+    {"text": "Technical Contact", "url": "/survey/contact_tech"},
+    {"text": "Delivery Contact", "url": "/survey/contact_manager"},
     {"text": "Project", "url": "/survey/project"},
     {"text": "Developed", "url": "/survey/developed"},
     {"text": "Stage", "url": "/survey/stage"},
@@ -129,7 +183,8 @@ def inject_header():
     # Reaching this point means the user is logged in. This should not error.
     user_email = session.get("email", "No email found")
 
-    # Injecting the user's email into the header and sorting navigation based on the current page.
+    # Injecting the user's email into the header and sorting navigation
+    # based on the current page.
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
     current_url = request.path
@@ -151,7 +206,8 @@ def inject_header():
 
 @app.route("/", methods=["GET"])
 def home():
-    # This is the login page. If there is URL/code=<code> then it will attempt exchange the code for tokens (ID and refresh).
+    # This is the login page. If there is URL/code=<code> then it will
+    # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
     if code:
         token_response = exchange_code_for_tokens(code)
@@ -170,7 +226,8 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    return render_template("index.html", items=items_none)
+    CLIENT_ID = json.loads(get_secret())["COGNITO_CLIENT_ID"]
+    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
 
 
 # Basic sign out
@@ -181,12 +238,14 @@ def sign_out():
     return redirect(url_for("home"))
 
 
-# Make a GET request to '/autocomplete/<search>.json' and returned with a JSON list of whatever you searched for.
+# Make a GET request to '/autocomplete/<search>.json' and returned with
+# a JSON list of whatever you searched for.
 @app.route("/autocomplete/<search>.json", methods=["GET"])
 def autocomplete(search):
     array_data = read_auto_complete_data()
     if search in array_data:
-        # Formats the data into a list of dictionaries with the key 'en' and the value of the search result. This is the format needed for ONS autosuggest.
+        # Formats the data into a list of dictionaries with the key 'en' and
+        # the value of the search result. This is the format needed for ONS autosuggest.
         result = [{"en": language.capitalize()} for language in array_data[search]]
         return json.dumps(result)
     else:
@@ -195,13 +254,14 @@ def autocomplete(search):
 
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
+    # This is the endpoint for the AWS Cognito user pool. It will not change.
     token_url = (
-        f"https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",
         "code": f"{code}",
-        "redirect_uri": f"{REDIRECT_URI}",
+        "redirect_uri": REDIRECT_URI,
     }
 
     # For apps with secrets, secret has to be included in auth headers.
@@ -210,7 +270,7 @@ def exchange_code_for_tokens(code):
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
     response_json = response.json()
-    if response.status_code != 200:
+    if response.status_code != HTTPStatus.OK:
         if response_json.get("error") == "invalid_grant":
             logger.error("Invalid authorization code")
             return {"error": "Invalid authorization code"}
@@ -228,7 +288,7 @@ def get_email():
             f"{API_URL}/api/user",
             headers=headers,
         )
-        if user_request.status_code != 200:
+        if user_request.status_code != HTTPStatus.OK:
             return False
         else:
             session["email"] = user_request.json()["email"]
@@ -265,13 +325,29 @@ def view_project(project_name):
         headers=headers,
     ).json()
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
-    print(projects)
     try:
-        if projects["message"] and projects["message"] is None:
+        if projects["message"] is None:
             flash("Project not found. Please try again.")
             return redirect(url_for("dashboard"))
     except Exception:
         return render_template("view_project.html", project=projects)
+
+# Improved readibility of the form data
+def map_form_data(form):
+    keys = [
+        "user",
+        "project",
+        "developed",
+        "source_control",
+        "hosting",
+        "database",
+        "languages",
+        "frameworks",
+        "integrations",
+        "infrastructure",
+        "stage",
+    ]
+    return {key: json.loads(form[key]) for key in keys}
 
 
 @app.route("/survey", methods=["GET", "POST"])
@@ -286,47 +362,37 @@ def survey():
         "content-type": "application/json",
     }
 
-    user = json.loads(request.form["user"])
-    project = json.loads(request.form["project"])
-    developed = json.loads(request.form["developed"])
-    source_control = json.loads(request.form["source_control"])
-    hosting = json.loads(request.form["hosting"])
-    database = json.loads(request.form["database"])
-    languages = json.loads(request.form["languages"])
-    frameworks = json.loads(request.form["frameworks"])
-    integrations = json.loads(request.form["integrations"])
-    infrastructure = json.loads(request.form["infrastructure"])
-    stage = json.loads(request.form["stage"])
+    # Improved readibility of the form data
+    form_data = map_form_data(request.form)
 
     developed_company = ""
-    if developed["developed"] == "Outsourced":
-        developed_company = developed["outsource_company"]
-    elif developed["developed"] == "Partnership":
-        developed_company = developed["partnership_company"]
+    if form_data["developed"]["developed"] == "Outsourced":
+        developed_company = form_data["developed"]["outsource_company"]
+    elif form_data["developed"]["developed"] == "Partnership":
+        developed_company = form_data["developed"]["partnership_company"]
 
     data = {
-        "user": [u for u in user],
+        "user": [u for u in form_data["user"]],
         "details": [
             {
-                "name": project["project_name"],
-                "short_name": project["project_short_name"],
-                "documentation_link": [project["doc_link"]],
-                "project_description": project["project_description"],
+                "name": form_data["project"]["project_name"],
+                "short_name": form_data["project"]["project_short_name"],
+                "documentation_link": [form_data["project"]["doc_link"]],
+                "project_description": form_data["project"]["project_description"],
             }
         ],
-        "developed": [developed["developed"], [developed_company]],
-        "source_control": source_control,
+        "developed": [form_data["developed"]["developed"], [developed_company]],
+        "source_control": form_data["source_control"],
         "architecture": {
-            "hosting": hosting,
-            "database": database,
-            "languages": languages,
-            "frameworks": frameworks,
-            "CICD": integrations,
-            "infrastructure": infrastructure,
+            "hosting": form_data["hosting"],
+            "database": form_data["database"],
+            "languages": form_data["languages"],
+            "frameworks": form_data["frameworks"],
+            "CICD": form_data["integrations"],
+            "infrastructure": form_data["infrastructure"],
         },
-        "stage": stage,
+        "stage": form_data["stage"],
     }
-    print(data)
     try:
         projects = requests.post(
             f"{API_URL}/api/projects",
@@ -335,9 +401,9 @@ def survey():
         )
     except Exception:
         try:
-            print(f"Request was not blocked but returned: {projects.json()}")
+            logger.error(f"Request was not blocked but returned: {projects.json()}")
         except Exception as second_error:
-            print(f"{second_error.__class__.__name__}: {second_error}")
+            logger.error(f"{second_error.__class__.__name__}: {second_error}")
 
     return redirect(url_for("dashboard"))
 
@@ -372,12 +438,12 @@ def tech_pre_survey():
 # ------------------------
 
 
-@app.route("/survey/contact-tech", methods=["GET"])
+@app.route("/survey/contact_tech", methods=["GET"])
 def contact_tech():
     return render_template("/section_project/contact_tech.html")
 
 
-@app.route("/survey/contact-manager", methods=["GET"])
+@app.route("/survey/contact_manager", methods=["GET"])
 def contact_manager():
     return render_template("/section_project/contact_manager.html")
 
@@ -402,10 +468,14 @@ def developed():
 # ------------------------
 
 
+class Stage(Enum):
+    INITIAL = "1"
+    SELECT = "2"
+
 @app.route("/survey/source_control", methods=["GET"])
 def source_control():
     stage = request.args.get("stage")
-    if stage == "2":
+    if stage == Stage.SELECT.value:
         return render_template("/section_code/source_control_select.html")
     return render_template("/section_code/source_control.html")
 
@@ -413,7 +483,7 @@ def source_control():
 @app.route("/survey/hosting", methods=["GET"])
 def hosting():
     stage = request.args.get("stage")
-    if stage == "2":
+    if stage == Stage.SELECT.value:
         return render_template("/section_code/hosting_select.html")
     return render_template("/section_code/hosting.html")
 

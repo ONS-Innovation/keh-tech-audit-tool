@@ -1,23 +1,8 @@
-{% extends "layout/_template.njk" %}
+{% extends "core.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out"
-            }
-        },
-              "footer": {
-          "OGLLink": {
-              "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "post": ", except where otherwise stated"
-          }
-      }
-    } %}
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -120,7 +105,6 @@
                 <script>
                     function load_data() {
                         var errorPanel = document.getElementById('error-panel');
-                        console.log(errorPanel);
                         var sourceControlData = localStorage.getItem('source_control-data');
                         var hostingData = localStorage.getItem('hosting-data');
                         var databaseData = localStorage.getItem('database-data');

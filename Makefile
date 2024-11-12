@@ -1,3 +1,8 @@
+DESIGN_SYSTEM_VERSION=`cat .design-system-version`
+
+load-design:
+	./scripts/load_release.sh onsdigital/design-system $(DESIGN_SYSTEM_VERSION)
+
 run-ui:
 	poetry run flask --app application run --debug -p 8000
 

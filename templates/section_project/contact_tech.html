@@ -1,60 +1,11 @@
-{% extends "layout/_template.njk" %}
+{% extends "core.html" %}
 {% from "components/input/_macro.njk" import onsInput %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
-{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
 {% from "components/label/_macro.njk" import onsLabel %}
-{% from "components/section-navigation/_macro.njk" import onsSectionNavigation %}
-{% set pageConfig = {
-        "header": {
-            "title": "Create a project",
-            "signoutButton": {
-                "text": "Save and sign out",
-                "url": "/sign-out"
-            },
-            "navigation": {
-                "id": 'main-nav',
-                "ariaLabel": 'Main menu',
-                "currentPath": [ '#design-system', '#patterns', '#access-codes' ],
-                "currentPageTitle": 'Design system',
-                "itemsList": [
-                    {
-                        "text": 'Service standard',
-                        "url": '#0'
-                    },
-                    {
-                        "text": 'Design system',
-                        "url": '#design-system'
-                    },
-                    {
-                        "text": 'Accessibility',
-                        "url": '#0'
-                    },
-                    {
-                        "text": 'Brand guidelines',
-                        "url": '#0'
-                    },
-                    {
-                        "text": 'Content style guide',
-                        "url": '#0'
-                    }
-                ],
-                "toggleNavigationButton": {
-                    "text": 'Menu',
-                    "ariaLabel": 'Toggle menu' 
-                }
-            },
-              "footer": {
-            "OGLLink": {
-                "pre": "All content is available under the", "link": "Open Government Licence v3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "post": ", except where otherwise stated"
-            } }}
-    } %}
 {% block main %}
-
     <h1>Point of Contact - Technical</h1>
     {{ onsAccordion({
         "id": "accordion-example",
@@ -150,18 +101,14 @@
     }) }}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script>
-            function storeData() {
-                // Store details about the technical contact in local storage
+            function storeData() { // Store details about the technical contact in local storage
                 var contactEmail = document.getElementById('contact-email').value;
                 var role = document.querySelector('input[name="role"]:checked').value;
                 var otherRole = document.getElementById('other-input').value;
-
                 if (role === 'other') {
                     role = otherRole;
                 }
-
                 let complete = false;
-                
                 if (contactEmail && role) {
                     complete = true;
                 }
@@ -170,8 +117,7 @@
                     "role": role,
                     "complete": complete
                 };
-                localStorage.setItem('contact-tech-data', JSON.stringify(data));
-                console.log(localStorage.getItem('contact-tech-data'));
+                localStorage.setItem('contact_tech-data', JSON.stringify(data));
             }
             function loadData() {
                 var obj = {
@@ -179,9 +125,7 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
-
-                var data = JSON.parse(localStorage.getItem('contact-tech-data'));
-
+                var data = JSON.parse(localStorage.getItem('contact_tech-data'));
                 if (data) {
                     document.getElementById('contact-email').value = data.contactEmail;
                     try {
@@ -190,7 +134,6 @@
                         document.getElementById("other").checked = true;
                         document.getElementById('other-input').value = data.role;
                     }
-                    console.log(data)
                 }
             }
             redirectToPrevious();

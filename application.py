@@ -20,8 +20,8 @@ from http import HTTPStatus
 from enum import Enum
 
 # Basic logging information
-# logging.basicConfig(level=logging.DEBUG)
-# logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # SETTING OF API URL: Change if moving to production
 API_URL = os.getenv("API_URL")
@@ -37,19 +37,6 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
-# GET client keys from S3 bucket using boto3
-def read_client_keys():
-    try:
-        response = s3.get_object(Bucket=bucket_name, Key="client_keys.json")
-        client_keys = json.loads(response["Body"].read().decode("utf-8"))
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            client_keys = {}
-        else:
-            abort(500, description=f"Error reading client keys: {e}")
-    return client_keys
-
-
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
@@ -63,7 +50,7 @@ def read_auto_complete_data():
     return array_data
 
 # GET secrets from AWS Secrets Manager using boto3
-def get_secret():
+def get_secrets():
 
     secret_name = "tech-audit-tool-api/secrets"
     region_name = "eu-west-2"
@@ -90,9 +77,9 @@ def get_secret():
 
 
 # SET client keys from S3 bucket using boto3
-cognito_settings = read_client_keys()
-AWS_COGNITO_CLIENT_ID = cognito_settings["AWS_COGNITO_CLIENT_ID"]
-AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
+cognito_settings = json.loads(get_secrets())
+AWS_COGNITO_CLIENT_ID = cognito_settings["COGNITO_CLIENT_ID"]
+AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
@@ -198,8 +185,7 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    CLIENT_ID = json.loads(get_secret())["COGNITO_CLIENT_ID"]
-    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
+    return render_template("index.html", items=items_none, CLIENT_ID=AWS_COGNITO_CLIENT_ID)
 
 
 # Basic sign out

@@ -29,16 +29,9 @@ To run, please import these credentials into the app:
 ```bash
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-export AWS_DEFAULT_REGION=eu-west-2
 ```
 
-Also, import this information to use the app:
-
-```bash
-export API_URL="https://dutwj6q915.execute-api.eu-west-2.amazonaws.com/dev"
-export APP_SECRET_KEY=<KEY_FOR_FLASK_APP>
-export REDIRECT_URI="http://localhost:8000"
-```
+API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets  Manager, there is no need to export them.
 
 The API_URL is set to the production URL to get the latest, working version of the API.
 
@@ -61,13 +54,30 @@ make run-ui
 ```
 
 ### Setting up with Docker
-To set up with docker, in the root directory of the project create a `.env` file and copy in your AWS credentials:
 
+To build the image:
+```bash
+docker build -t tech-audit-tool .
 ```
-AWS_ACCESS_KEY_ID = <AWS_ACCESS_KEY_ID>
-AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
-AWS_
+
+To run an instance of the image as a container:
+```bash
+docker run -e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID tech-audit-tool -p 127.0.0.1:8000:8000
 ```
+
+Alternatively, you may use docker-compose to build:
+
+```bash
+docker-compose up --build
+```
+
+To run:
+
+```bash
+docker-compose up
+```
+
+On AWS, these environment variables will be set in the task definition on ECS.
 
 Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
 

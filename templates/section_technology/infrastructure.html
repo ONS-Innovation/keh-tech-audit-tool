@@ -1,0 +1,122 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% from "components/panel/_macro.njk" import onsPanel %}
+    {% from "components/list/_macro.njk" import onsList %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Infrastructure</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list the infrastructure components used in your project. Thinking about the services used in the following areas may help:
+
+Networking (e.g., AWS Virtual Private Cloud, Subnets, VPNs)
+
+Security (e.g., Web Application Firewall, Security Groups, IAM Roles)
+
+Logging & Monitoring (e.g., CloudWatch, Prometheus, Grafana)
+
+File Storage (e.g., S3 Buckets, GCP Buckets, Azure Blob Storage)
+
+Authentication (e.g., AWS Cognito, OAuth, Active Directory)
+
+Application Hosting (e.g., NGINX HTTP Server, EC2 Instances, GCP App Engine)
+
+If you are using multiple components across different platforms or providers, be sure to include them all for a comprehensive view of your architecture.</p>"
+            }
+        ]
+    }) }}
+        {{ onsAutosuggest({
+        "id": "infrastructure-input",
+        "input": {
+            "label": {
+                "text": "What infrastructure is used in the project?",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "infrastructures-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter infrastructure",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": true,
+                "text": 'Search',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "infrastructure-suggestions",
+        "autosuggestData": "/autocomplete/infrastructure.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
+        
+
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Infrastructure"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+                            "id": "save-values-button",
+                            "url": url_for('tech_summary'),
+                            "text": "Save and continue",
+                            "iconType": "arrow-next",
+                            "iconPosition": "after",
+                            "attributes": {
+                                "onclick": "storeData();"
+                            }
+                        }) }}
+            </form>
+            <script>
+                loadData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

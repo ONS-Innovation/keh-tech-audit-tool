@@ -1,0 +1,36 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% block main %}
+
+
+    <h1 class="ons-u-mt-m">Architecture Details</h1>
+
+
+    <p>To complete this survey you will need to know details such as:</p>
+    {{
+        onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'Source Control of choice'
+                },
+                {
+                    "text": 'Which platform your project is hosted on'
+                },
+                {
+                    "text": 'What databases have been used'
+                },
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('source_control')
+        })
+    }}
+{% endblock %}
+    

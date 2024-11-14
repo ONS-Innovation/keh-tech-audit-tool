@@ -1,0 +1,86 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    <h1>Project Stage</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter details about whether the project was developed in-house, outsourced or in partnership with another company.</p>"
+            }
+        ]
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsLabel({
+    "id": 'developed-label',
+    "for": "developed",
+    "text": 'What stage is the project at?',
+    "description": 'Select the option that best describes the stage of the project.'
+}) }}
+        {% call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    }) %}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "stage",
+            "radios": [
+                {
+                    "id": "Development",
+                    "label": {
+                        "text": "Development"
+                    },
+                    "value": "Development"
+                },
+                {
+                    "id": "Active Support",
+                    "label": {
+                        "text": "Active Support"
+                    },
+                    "value": "Active Support",
+                },
+                {
+                    "id": "Unsupported",
+                    "label": {
+                        "text": "Unsupported"
+                    },
+                    "value": "Unsupported",
+                }
+            ]
+        }) }}
+        {% endcall %}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        {{ onsButton({
+        "id": "save-values-button",
+        "url": url_for('project_summary'),
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        <script>
+            function storeData() {
+                var stage = document.querySelector('input[name="stage"]:checked').value;
+                var complete = true;
+                var data = {
+                    "stage": stage,
+                    "complete": complete
+                };
+                localStorage.setItem('stage-data', JSON.stringify(data));
+            }
+            function loadData() {
+                var data = JSON.parse(localStorage.getItem('stage-data'));
+                if (data) {
+                    document.getElementById(data.stage).checked = true;
+                }
+            }
+            redirectToPrevious();
+            loadData();
+        </script>
+    </form>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% block main %}
+    <h1 class="ons-u-mt-m">Pre-survey</h1>
+    <p>To complete this survey you will need to know details such as:</p>
+    {{
+        onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'Your email and role'
+                },
+                {
+                    "text": 'Project name and documentation URL'
+                },
+                {
+                    "text": 'Where the software was developed'
+                },
+                {
+                    "text": 'Source control of choice'
+                },
+                {
+                    "text": 'Which hosting platforms have been used'
+                },
+                {
+                    "text": 'What databases have been used'
+                },
+                {
+                    "text": 'What languages have been used'
+                },
+                {
+                    "text": 'What CI/CD tools have been used'
+                },
+                {
+                    "text": 'What infrastructure the project uses'
+                }
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('survey')
+        })
+    }}
+{% endblock %}

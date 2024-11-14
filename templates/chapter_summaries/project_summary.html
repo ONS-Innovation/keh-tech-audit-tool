@@ -1,0 +1,237 @@
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'error-label',
+        "for": "error-label",
+        "text": 'Please fill in missing data'
+    }) }}
+    {% endcall %}
+    <h1 class="ons-u-mt-m">Project Details Summary</h1>
+    {{ onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Contact",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='user_details'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('contact_tech'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('project')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Developed",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='developed_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('developed')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Stage",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='stage_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('stage')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+ 
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+            <input id="developed" type="hidden" name="developed">
+                <input id="stage" type="hidden" name="stage">
+                    {{ onsButton({
+            "text": 'Finish section',
+            "id": "submit-button",
+            "url": url_for('survey'),
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "check",
+            "iconPosition": "after"
+        }) }}
+            <script>
+                function load_data() {
+                    var errorPanel = document.getElementById('error-panel');
+                    var techContactData = localStorage.getItem('contact_tech-data');
+                    var managerData = localStorage.getItem('contact_manager-data');
+                    var projectData = localStorage.getItem('project-data');
+                    var developedData = localStorage.getItem('developed-data');
+                    var stageData = localStorage.getItem('stage-data');
+                    localStorage.setItem('validate', false);
+                    var errorList = [];
+                    
+                    try {
+                        if (managerData === null) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            errorList.push('Delivery contact data');
+                            document
+                                .getElementById('submit-button')
+                                .style
+                                .display = 'none';
+                        }
+                    } catch (e) {
+                        errorPanel.classList.remove('ons-u-hidden');
+                        document
+                            .getElementById('submit-button')
+                            .style
+                            .display = 'none';
+                    }
+
+                    try {
+                        var techContactDataJSON = JSON.parse(techContactData);
+                        var managerContactDataJSON = JSON.parse(managerData);
+                        var user_details = `<p>Technical Contact: ${
+                            techContactDataJSON.contactEmail
+                        } (${
+                            techContactDataJSON.role
+                        })</p>`;
+                        if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
+                            user_details += `<p>Manager Contact: ${
+                                managerContactDataJSON.contactEmail
+                            } (${
+                                managerContactDataJSON.role
+                            })</p>`;
+                        }
+                        document.getElementById('user_details').innerHTML = user_details;
+                        document.getElementById('user').value = JSON.stringify(techContactDataJSON);
+                    } catch (e) {
+                        errorList.push('Contact data');
+                    }
+
+                    try {
+                        var projectDataJSON = JSON.parse(projectData);
+                        var project_details = `<p>Project Name: ${
+                            projectDataJSON.project_name
+                        }</p>
+                            <p>Project Short Name: ${
+                            projectDataJSON.project_short_name
+                        }</p>
+                            <p>Documentation Link: ${
+                            projectDataJSON.doc_link
+                        }</p>
+                            <p>Project Description: ${
+                            projectDataJSON.project_description
+                        }</p>`;
+                        document.getElementById('project_details').innerHTML = project_details;
+                        document.getElementById('project').value = JSON.stringify(projectDataJSON);
+                    } catch (e) {
+                        errorList.push('Project data');
+                    }
+
+                    try {
+                        let stageDetailsJSON = JSON.parse(stageData).stage;
+                        document.getElementById('stage_details').innerHTML = stageDetailsJSON;
+                        document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
+                    } catch (e) {
+                        errorList.push('Stage data');
+                    }
+
+                    try {
+                        var developedDataJSON = JSON.parse(developedData)
+                        var developed_details = `${
+                            developedDataJSON.developed
+                        }`;
+                        if (developedDataJSON.developed === "Outsourced") {
+                            developed_details += ` with: ${
+                                developedDataJSON.outsource_company
+                            }`;
+                        } else if (developedDataJSON.developed === "Partnership") {
+                            developed_details += ` with: ${
+                                developedDataJSON.partnership_company
+                            }`;
+                        }
+                        document.getElementById('developed_details').innerHTML = developed_details;
+                        document.getElementById('developed').value = JSON.stringify(developedDataJSON.developed);
+                    } catch (e) {
+                        errorList.push('Developed data');
+                        console.log(e)
+                    }
+                    
+                    if (errorList.length > 0) {
+                        errorPanel.classList.remove('ons-u-hidden');
+                        document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                    }
+                }
+                load_data();
+            </script>
+                {% endblock %}
+                {% block scripts %}
+                    <style>
+                        body {
+                            height: auto;
+                        }
+                    </style>
+                {% endblock %}

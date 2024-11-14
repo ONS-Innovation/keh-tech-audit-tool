@@ -1,0 +1,128 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    <h1>Developed</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter details about whether the project was developed in-house, outsourced or in partnership with another company.</p>"
+            }
+        ]
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsLabel({
+    "id": 'developed-label',
+    "for": "developed",
+    "text": 'Where was this Software Developed?',
+    "description": 'Select the option that best describes how the project was developed.'
+}) }}
+        {% call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    }) %}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "developed",
+            "radios": [
+                {
+                    "id": "in-house",
+                    "label": {
+                        "text": "In House"
+                    },
+                    "value": "In House"
+                },
+                {
+                    "id": "outsourced",
+                    "label": {
+                        "text": "Outsourced"
+                    },
+                    "value": "outsourced",
+                    "value": "Outsourced",
+                    "other": {
+                        "id": "other-input-1",
+                        "name": "other",
+                        "label": {
+                            "text": "Outsource Company"
+                        }
+                    }
+                },
+                {
+                    "id": "partnership",
+                    "label": {
+                        "text": "Partnership"
+                    },
+                    "value": "Partnership",
+                    "other": {
+                        "id": "other-input-2",
+                        "name": "other",
+                        "label": {
+                            "text": "Partnership Company"
+                        }
+                    }
+                }
+            ]
+        }) }}
+        {% endcall %}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        {{ onsButton({
+        "id": "save-values-button",
+        "url": url_for('stage'),
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        <script>
+            function storeData() { // Store data about where the software was developed in local storage
+                var developed = document.querySelector('input[name="developed"]:checked').value;
+                var outsource_company = document.getElementById('other-input-1').value;
+                var partnership_company = document.getElementById('other-input-2').value;
+                var complete = true;
+                var data = {
+                    "outsource_company": outsource_company,
+                    "partnership_company": partnership_company,
+                    "developed": developed,
+                    "complete": complete
+                };
+                if (developed === "In House") {
+                    data.partnership_company = null;
+                    data.outsource_company = null;
+                } else if (developed === "Outsourced") {
+                    data.partnership_company = null;
+                    data.outsource_company = document.getElementById('other-input-1').value;
+                } else if (developed === "Partnership") {
+                    data.outsource_company = null;
+                    data.partnership_company = document.getElementById('other-input-2').value;
+                } else {
+                    data.complete = false;
+                }
+                localStorage.setItem('developed-data', JSON.stringify(data));
+            }
+            function loadData() {
+                var obj = {
+                    "Outsourced": "outsourced",
+                    "Partnership": "partnership",
+                    "In House": "in-house"
+                }
+                var data = JSON.parse(localStorage.getItem('developed-data'));
+                if (data) {
+                    var option = obj[data.developed]
+                    if (data.developed === "Outsourced") {
+                        document.getElementById('other-input-1').value = data.outsource_company;
+                    } else if (data.developed === "Partnership") {
+                        document.getElementById('other-input-2').value = data.partnership_company;
+                    }
+                    document.getElementById(option).checked = true;
+                }
+            }
+            redirectToPrevious();
+            loadData();
+        </script>
+    </form>
+{% endblock %}

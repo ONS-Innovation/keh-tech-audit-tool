@@ -1,0 +1,226 @@
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'error-label',
+        "for": "error-label",
+        "text": 'Please fill in missing data'
+    }) }}
+    {% endcall %}
+    <h1 class="ons-u-mt-m">Technology Details Summary</h1>
+    {{ onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Languages",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='languages_details'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('languages'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Frameworks",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='framework_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('frameworks')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "CI/CD",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='integration_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('integrations')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Infrastructure",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='infrastructure_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('infrastructure')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+ 
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+            <input id="developed" type="hidden" name="developed">
+                {{ onsButton({
+            "text": 'Finish section',
+            "id": "submit-button",
+            "url": url_for('survey'),
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "check",
+            "iconPosition": "after"
+        }) }}
+                <script>
+
+                    function load_data() {
+                        var errorPanel = document.getElementById('error-panel');
+                        var frameworksData = localStorage.getItem('frameworks-data');
+                        var infrastructureData = localStorage.getItem('infrastructure-data');
+                        var integrationsData = localStorage.getItem('integrations-data');
+                        var languagesData = localStorage.getItem('languages-data');
+                        var errorList = [];
+                        localStorage.setItem('validate', false);
+                        try {
+                            if (
+                                (JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0) ||
+                                JSON.parse(frameworksData)['others'].length === 0 ||
+                                JSON.parse(infrastructureData)['others'].length === 0 ||
+                                JSON.parse(integrationsData)['others'].length === 0
+                            ) {
+                                errorPanel.classList.remove('ons-u-hidden');
+                                document
+                                    .getElementById('submit-button')
+                                    .style
+                                    .display = 'none';
+                            }
+                        } catch (e) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document
+                                .getElementById('submit-button')
+                                .style
+                                .display = 'none';
+                        }
+
+                        var finalData = {
+                            "architecture": {
+                                "frameworks": JSON.parse(frameworksData),
+                                "infrastructure": JSON.parse(infrastructureData),
+                                "integrations": JSON.parse(integrationsData),
+                                "languages": JSON.parse(languagesData)
+                            }
+                        }
+
+                        try {
+                            var languagesDataJSON = JSON.parse(languagesData);
+                            var languages_details = "Primary: " + arrToList(languagesDataJSON.main);
+                            if (languagesDataJSON.others.length > 0) {
+                                languages_details += "<br>Other: " + arrToList(languagesDataJSON.others);
+                            }
+                            if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
+                                errorList.push('Languages data');
+                            }
+                            document.getElementById('languages_details').innerHTML = languages_details;
+                        } catch (e) {
+                            errorList.push('Languages data');
+                        }
+
+                        try {
+                            var frameworksDataJSON = JSON.parse(frameworksData);
+                            if (frameworksDataJSON.others.length === 0) {
+                                errorList.push('Frameworks data');
+                            }
+                            var frameworks_details = arrToList(frameworksDataJSON.others);
+                            document.getElementById('framework_details').innerHTML = frameworks_details;
+                        } catch (e) {
+                            errorList.push('Frameworks data');
+                        }
+
+                        try {
+                            var integrationsDataJSON = JSON.parse(integrationsData);
+                            if (integrationsDataJSON.others.length === 0) {
+                                errorList.push('Integrations data');
+                            }
+                            var integrations_details = arrToList(integrationsDataJSON.others);
+                            document.getElementById('integration_details').innerHTML = integrations_details;
+                        } catch (e) {
+                            errorList.push('Integrations data');
+                        }
+                        
+                        try {
+                            var infrastructureDataJSON = JSON.parse(infrastructureData);
+                            if (infrastructureDataJSON.others.length === 0) {
+                                errorList.push('Infrastructure data');
+                            }
+                            var infrastructure_details = arrToList(infrastructureDataJSON.others);
+                            document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
+                        } catch (e) {
+                            errorList.push('Infrastructure data');
+                        }
+
+                        if (errorList.length > 0) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                        }
+                    }
+
+                    load_data();
+                </script>
+            {% endblock %}
+            {% block scripts %}
+                <style>
+                    body {
+                        height: auto;
+                    }
+                </style>
+            {% endblock %}

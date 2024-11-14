@@ -1,0 +1,28 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% block main %}
+
+
+    <h1 class="ons-u-mt-m">Project Details</h1>
+    <p>To complete this survey you will need to know details such as:</p>
+    {{ onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'The main points of contact'
+                },
+                {
+                    "text": 'Project name, short name and documentation links'
+                },
+                {
+                    "text": 'Where the software was developed'
+                },
+            ]
+        }) }}
+    {{ onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('contact_tech')
+        }) }}
+{% endblock %}

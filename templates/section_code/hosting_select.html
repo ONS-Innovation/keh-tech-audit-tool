@@ -1,0 +1,108 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Hosting</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please specify how your solution is hosted by entering one or more cloud service providers (e.g., AWS, Azure, Google Cloud). If your project utilises multiple cloud platforms (e.g Azure for integrating authentication and GCP for application) you can add more than one service provider. </p>"
+            }
+        ]
+    }) }}
+        {{ onsAutosuggest({
+        "id": "hosting-input",
+        "input": {
+            "label": {
+                "text": "Which cloud service provider(s) host the solution?",
+                "description": "Enter your own answer or select from suggestions.",
+            },
+            "autocomplete": "on",
+            "id": "hosting-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter hosting",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "hosting-suggestions",
+        "autosuggestData": "/autocomplete/hosting.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
+
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Hosting"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "iconType": "arrow-next",
+        "iconPosition": "after",
+        "url": url_for('database'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+            </form>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                loadData();
+                if (JSON.parse(localStorage.getItem("hosting-validate"))) {
+                    document.getElementById("save-values-button").href = '/validate_details';
+                }
+            </script>
+        {% endblock %}

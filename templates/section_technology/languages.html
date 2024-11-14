@@ -1,0 +1,106 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Languages</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list all the programming languages associated with your project. You can also indicate if a language is a primary driver of significant functionality or responsible for implementing the majority of the solution. For example, if your website is built with Flask, you might list Python as the primary language and JavaScript as a supporting language for front-end features.</p>"
+            }
+        ]
+    }) }}
+        {{ onsAutosuggest({
+        "id": "languages-input",
+        "input": {
+            "label": {
+                "text": "What languages are used in the project?",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "languages-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter languages",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "lanuages-suggestions",
+        "autosuggestData": "/autocomplete/languages.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
+
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Language"
+            },
+            {
+                "value": "Is this a primary language?"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": url_for('frameworks'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+            </form>
+            <script>
+                loadData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

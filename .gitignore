@@ -4,5 +4,7 @@
 *.pyc
 env
 templates/components
-templates/layout
+templates/layout/_dsTemplate.njk
 node_modules
+.DS_Store
+.env

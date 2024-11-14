@@ -1,0 +1,79 @@
+{% extends "core.html" %}
+{% from "components/table/_macro.njk" import onsTable %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/tabs/_macro.njk" import onsTabs %}
+{% block main %}
+  {% macro header(text) %}
+    <h2>{{ text }}</h2>
+  {%- endmacro %}
+  {% macro desc(text) %}
+    <p>{{ text }}</p>
+  {%- endmacro %}
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+  {% set createTab = {
+      "id": "add-project",
+      "text": "Add Project",
+      "url": url_for("pre_survey")
+    
+  } %}
+  {% set methodsTable = {
+    "id": "ready-table",
+    "variants": ["responsive"],
+    "tableClasses": "ons-u-mt-m",
+    "ths": [
+      {
+        "value": "Your Projects",
+
+      }
+
+    ]
+  } %}
+  {% set methodsTableRows = [] %}
+  {% for project in projects %}
+    {% do methodsTableRows.append({
+      "tds": [
+        {
+            "value":'<a href="' + url_for("view_project", project_name=project.details[0].name) + '">' + project.details[0].name + '</a>'
+        },
+      ]
+    }) %}
+  {% endfor %}
+  {% set searchBar = {
+        "id": "search-bar",
+        "label": {
+            "text": "Search for a project"
+        }
+    } %}
+  {% set title = "<h2>Add Project</h2>" %}
+  {% do methodsTable.update({"trs": methodsTableRows}) %}
+  {{ onsTabs({
+        "title": 'Contents',
+        "titleClasses": 'ons-u-fs-m',
+        "tabs": [
+                    {
+                "id": "my-projects",
+                "title": 'View your Projects',
+                "showTitle": true,
+                "content": onsInput(searchBar) + onsTable(methodsTable)
+
+            },
+            {
+                "id": "add-projects",
+                "title": 'Create a Project',
+                "showTitle": true,
+                "content": header("Create a project") + desc('Record new data for an exisiting project.') + onsButton(createTab)
+
+            },
+          ]
+
+    }) }}
+{% endblock %}

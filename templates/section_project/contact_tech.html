@@ -1,0 +1,143 @@
+{% extends "core.html" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    <h1>Point of Contact - Technical</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<div>Enter the information for the technical contact. This is the person who can be contacted in regards to discussing the project.</div><br>"
+            }
+        ]
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsLabel({
+        "id": 'contact-email-label',
+        "for": "contact-email",
+        "text": 'Technical Contact',
+        "description": 'Enter the information of the technical contact for this project.'
+    }) }}
+        {{ onsInput({
+        "id": "contact-email",
+        "type": "email",
+        "autocomplete": "email",
+        "label": {
+            "text": "Email address",
+            "description": "This will be stored and used as a point of contact for the project."
+        }
+    }) }}
+        {% call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    }) %}
+        {{ onsLabel({
+        "id": 'contact-grade-label',
+        "for": "contact-grade",
+        "text": 'Technical Contact Grade',
+        "description": 'Select the grade of the technical contact.'
+    }) }}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "role",
+            "radios": [
+                {
+                    "id": "Grade 6",
+                    "label": {
+                        "text": "Grade 6"
+                    },
+                    "value": "Grade 6"
+                },
+                                {
+                    "id": "Grade 7",
+                    "label": {
+                        "text": "Grade 7"
+                    },
+                    "value": "Grade 7"
+                },
+                {
+                    "id": "SEO",
+                    "label": {
+                        "text": "SEO"
+                    },
+                    "value": "SEO"
+                },
+                {
+                    "id": "HEO",
+                    "label": {
+                        "text": "HEO"
+                    },
+                    "value": "HEO"
+                },
+                {
+                    "id": "other",
+                    "label": {
+                        "text": "Other"
+                    },
+                    "value": "other",
+                    "other": {
+                        "id": "other-input",
+                        "name": "other",
+                        "label": {
+                            "text": "Enter your role"
+                        }
+                    }
+                }
+            ]
+        }) }}
+        {% endcall %}
+        {{ onsButton({
+        "id": 'save-values-button',
+        "text": "Save and continue",
+        "url": url_for('contact_manager'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <script>
+            function storeData() { // Store details about the technical contact in local storage
+                var contactEmail = document.getElementById('contact-email').value;
+                var role = document.querySelector('input[name="role"]:checked').value;
+                var otherRole = document.getElementById('other-input').value;
+                if (role === 'other') {
+                    role = otherRole;
+                }
+                let complete = false;
+                if (contactEmail && role) {
+                    complete = true;
+                }
+                var data = {
+                    "contactEmail": contactEmail,
+                    "role": role,
+                    "complete": complete
+                };
+                localStorage.setItem('contact_tech-data', JSON.stringify(data));
+            }
+            function loadData() {
+                var obj = {
+                    "Tech Lead": "tech-lead",
+                    "SEO": "seo",
+                    "HEO": "heo"
+                }
+                var data = JSON.parse(localStorage.getItem('contact_tech-data'));
+                if (data) {
+                    document.getElementById('contact-email').value = data.contactEmail;
+                    try {
+                        document.getElementById(data.role).checked = true;
+                    } catch {
+                        document.getElementById("other").checked = true;
+                        document.getElementById('other-input').value = data.role;
+                    }
+                }
+            }
+            redirectToPrevious();
+            loadData();
+        </script>
+    </form>
+</form>{% endblock %}

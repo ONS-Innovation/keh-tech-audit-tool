@@ -1,0 +1,103 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Integrations</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list the technologies and tools used for integrating and deploying your solution (e.g., GitHub Actions for linting, Concourse for build and deploy). If multiple tools are used at different stages, please include them all to give a complete overview of your build and deployment process.</p>"
+            }
+        ]
+    }) }}
+        {{ onsAutosuggest({
+        "id": "integrations-input",
+        "input": {
+            "label": {
+                "text": "What CI/CD tools are used in the project?",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "integrations-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter integrations",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "integrations-suggestions",
+        "autosuggestData": "/autocomplete/cicd.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
+
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Integration"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": url_for('infrastructure'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+                <script>
+                    loadData();
+                    redirectToPrevious();
+                </script>
+            </form>
+        {% endblock %}

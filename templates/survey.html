@@ -1,0 +1,128 @@
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% macro checkBox() %}
+    check
+{%- endmacro %}
+{% block main %}
+    <h1 class="ons-u-mt-m">Choose a section to complete</h1>
+    {{ onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Project Details",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='user_details'></div>"
+                                                }
+                                            ],
+                                          "id": "user-details",
+
+                                            "iconType": "chevron",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('project_pre_survey'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Code and Architecture",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_details'></div>"
+                                            }
+                                        ],
+                                        "id": "project-details",
+                                            "iconType": "chevron", 
+                                            "actions": [
+                                                {   
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('architecture_pre_survey')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Technology Details",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='developed_details'></div>"
+                                            }
+                                        ],
+                                        "id": "developed-details",
+                                            "iconType": "chevron",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('tech_pre_survey')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }) }}
+    {{ onsButton({
+            "id": "submit-btn",
+            "text": '<div id="submit-btn-text">Continue to Submission</div>',
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "url": url_for('validate_details')
+        }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <script>
+        function load_data() {
+            // Project Details
+            var contactTechData = localStorage.getItem('contact_tech-data');
+            var contactManagerData = localStorage.getItem('contact_manager-data');
+            var projectData = localStorage.getItem('project-data');
+            var developedData = localStorage.getItem('developed-data');
+            var stageData = localStorage.getItem('stage-data');
+            // Architecture Details
+            var sourceControlData = localStorage.getItem('source_control-data');
+            var hostingData = localStorage.getItem('hosting-data');
+            var databaseData = localStorage.getItem('database-data');
+            // Technology Details
+            var frameworksData = localStorage.getItem('frameworks-data');
+            var infrastructureData = localStorage.getItem('infrastructure-data');
+            var integrationsData = localStorage.getItem('integrations-data');
+            var languagesData = localStorage.getItem('languages-data');
+            
+            changeBtnURL(contactTechData, contactManagerData, projectData, sourceControlData, databaseData, languagesData, frameworksData, integrationsData, infrastructureData);
+            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
+            updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
+            updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+        }
+        load_data();
+        localStorage.setItem("source_control-validate", false);
+        localStorage.setItem("hosting-validate", false);
+    </script>
+{% endblock %}
+{% block scripts %}
+    <style>
+        body {
+            height: auto;
+        }
+    </style>
+{% endblock %}

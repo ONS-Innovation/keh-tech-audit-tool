@@ -1,0 +1,556 @@
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Please fill in missing data'
+    }) }}
+    {% endcall %}
+    <h1 class="ons-u-mt-m">Check your answers</h1>
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Please review the information you have entered before submitting the project.',
+    }) }}
+    {{ onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Technical Contact",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='technical_contact'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('contact_tech'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Delivery Manager Contact",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='delivery_manager'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('contact_manager'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('project')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Developed",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='developed_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('developed')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Source Control",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='source_control_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Continue with John Smith's section",
+                                                    "url": url_for('source_control')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Hosting",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='hosting_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('hosting')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Database",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='database_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Mary Susannah Smith's section",
+                                                    "url": url_for('database')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Languages",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='languages_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('languages')                                              }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Frameworks",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='framework_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('frameworks')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "CI/CD",
+                                    "rowItems": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='integration_details'></div>"
+                                            }
+                                        ],
+                              
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('integrations')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Infrastructure",
+                                    "rowItems": [
+                                        {   
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='infrastructure_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('infrastructure')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }) }}
+    <!--onsubmit="localStorage.clear()"-->
+    <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
+        <input id="user" type="hidden" name="user">
+            <input id="project" type="hidden" name="project">
+                <input id="developed" type="hidden" name="developed">
+                    <input id="source_control" type="hidden" name="source_control">
+                        <input id="hosting" type="hidden" name="hosting">
+                            <input id="database" type="hidden" name="database">
+                                <input id="languages" type="hidden" name="languages">
+                                    <input id="frameworks" type="hidden" name="frameworks">
+                                        <input id="integrations" type="hidden" name="integrations">
+                                            <input id="infrastructure" type="hidden" name="infrastructure">
+                                                <input id="stage" type="hidden" name="stage">
+                                                    {{ onsButton({
+            "text": 'Save Project',
+            "id": "submit-button",
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "check",
+            "iconPosition": "after",
+        })
+    }}
+    
+</form>
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <script>
+        function displayError(message) {
+            const errorPanel = document.getElementById('error-panel');
+            // Show the error panel
+            errorPanel.style.display = 'block';
+            
+            // Find or create the error message container
+            let errorContainer = errorPanel.querySelector('.error-messages');
+            if (!errorContainer) {
+                errorContainer = document.createElement('div');
+                errorContainer.className = 'error-messages';
+                // Add after the label but before any existing content
+                const label = errorPanel.querySelector('label');
+                if (label) {
+                    label.insertAdjacentElement('afterend', errorContainer);
+                } else {
+                    errorPanel.appendChild(errorContainer);
+                }
+            }
+            
+            // Add the new error message
+            errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
+            document.getElementById('submit-button').style.display = 'none';
+        }
+
+        function clearErrors() {
+            const errorPanel = document.getElementById('error-panel');
+            // Hide the panel
+            errorPanel.style.display = 'none';
+            // Clear only the error messages, not the header or label
+            const errorContainer = errorPanel.querySelector('.error-messages');
+            if (errorContainer) {
+                errorContainer.innerHTML = '';
+            }
+            document.getElementById('submit-button').style.display = 'block';
+        }
+
+        function validateData(data, sectionName, requiredFields = []) {
+            try {
+                const parsedData = JSON.parse(data);
+                
+                // Check if any required fields are missing or empty strings
+                for (const field of requiredFields) {
+                    if (!parsedData[field] || parsedData[field] === "") {
+                        throw new Error(`Missing required field: ${field}`);
+                    }
+                }
+
+                // Special validation for arrays-based data
+                if (sectionName === 'Frameworks' || sectionName === 'Languages' || 
+                    sectionName === 'CI/CD' || sectionName === 'Infrastructure' || 
+                    sectionName === 'Databases') {
+                    
+                    // Check main array - ensure no empty strings
+                    const validMain = parsedData.main?.filter(item => item && item !== "");
+                    // Check others array - ensure no empty strings
+                    const validOthers = parsedData.others?.filter(item => item && item !== "");
+                    
+                    if ((!validMain || validMain.length === 0) && 
+                        (!validOthers || validOthers.length === 0)) {
+                        throw new Error(`No items selected in ${sectionName}`);
+                    }
+                }
+                
+                return parsedData;
+            } catch (e) {
+                displayError(`'${sectionName}' section is incomplete`);
+                return null;
+            }
+        }
+
+        function arrToList(arr) {
+            if (!arr || arr.length === 0) return '';
+            return `<ul>${arr.map(item => `<li>${item}</li>`).join('')}</ul>`;
+        }
+
+        function processSourceControl(sourceControlData) {
+            const parsed = validateData(sourceControlData, 'Source Control', ['source_control']);
+            if (!parsed) return '';
+
+            const finalSourceControl = [{
+                type: parsed.source_control,
+                links: parsed.links || []
+            }];
+
+            let details = `<ul><li>Type: ${finalSourceControl[0].type}</li>`;
+            if (finalSourceControl[0].links) {
+                finalSourceControl[0].links.forEach(link => {
+                    details += `<li>${link.description}: ${link.url}</li>`;
+                });
+            }
+            details += '</ul>';
+            
+            return details;
+        }
+
+        function processHosting(hostingData) {
+            const parsed = validateData(hostingData, 'Hosting', ['type']);
+            if (!parsed) return '';
+
+            if (parsed.type === "On-premises") {
+                return "<ul><li>On-Premises</li></ul>";
+            }
+
+            if ((parsed.type === "Cloud" || parsed.type === "Hybrid") && (!parsed.others || parsed.others.length === 0)) {
+                displayError("'Hosting' section is incomplete");
+                return '';
+            }
+
+            return arrToList(parsed.main ? parsed.main.concat(parsed.others) : parsed.others);
+        }
+
+        function processContacts(techData, managerData) {
+            const youData = [];
+            
+            // Process Technical Contact
+            const techContact = validateData(techData, 'Technical Contact', ['contactEmail', 'role']);
+            if (techContact) {
+                youData.push({
+                    email: techContact.contactEmail,
+                    roles: ["Technical Contact"],
+                    grade: techContact.role
+                });
+            } else {
+                youData.push({ email: "", roles: [""], grade: "" });
+            }
+
+            // Process Delivery Manager
+            const managerContact = validateData(managerData, 'Delivery Manager', ['contactEmail', 'role']);
+            if (managerContact) {
+                youData.push({
+                    email: managerContact.contactEmail,
+                    roles: ["Delivery Manager"],
+                    grade: managerContact.role
+                });
+            } else {
+                youData.push({ email: "", roles: [""], grade: "" });
+            }
+
+            return youData;
+        }
+
+        function load_data() {
+            // Reset error panel at the start
+            clearErrors();
+
+            // Load all data from localStorage
+            const storedData = {
+                contactTech: localStorage.getItem('contact_tech-data'),
+                contactManager: localStorage.getItem('contact_manager-data'),
+                project: localStorage.getItem('project-data'),
+                developed: localStorage.getItem('developed-data'),
+                stage: localStorage.getItem('stage-data'),
+                sourceControl: localStorage.getItem('source_control-data'),
+                hosting: localStorage.getItem('hosting-data'),
+                database: localStorage.getItem('database-data'),
+                frameworks: localStorage.getItem('frameworks-data'),
+                infrastructure: localStorage.getItem('infrastructure-data'),
+                integrations: localStorage.getItem('integrations-data'),
+                languages: localStorage.getItem('languages-data')
+            };
+
+            // Process contacts
+            const youData = processContacts(storedData.contactTech, storedData.contactManager);
+
+            // Process all other sections
+            const processedData = {
+                sourceControl: processSourceControl(storedData.sourceControl),
+                hosting: processHosting(storedData.hosting),
+                database: validateData(storedData.database, 'Databases'),
+                languages: validateData(storedData.languages, 'Languages'),
+                frameworks: validateData(storedData.frameworks, 'Frameworks'),
+                integrations: validateData(storedData.integrations, 'CI/CD'),
+                infrastructure: validateData(storedData.infrastructure, 'Infrastructure'),
+                project: validateData(storedData.project, 'Project', ['project_name', 'project_short_name', 'doc_link']),
+                stage: validateData(storedData.stage, 'Stage', ['stage']),
+                developed: validateData(storedData.developed, 'Developed', ['developed'])
+            };
+
+            // Additional validation for hosting
+            if (processedData.hosting) {
+                if ((processedData.hosting.type === "Cloud" || processedData.hosting.type === "Hybrid") 
+                    && (!processedData.hosting.others || processedData.hosting.others.length === 0)) {
+                    displayError("'Hosting' section is incomplete");
+                }
+            }
+
+            // Build the final data object
+            const finalData = {
+                user: youData,
+                details: processedData.project,
+                developed: processedData.developed,
+                source_control: [{
+                    type: JSON.parse(storedData.sourceControl)?.source_control || '',
+                    links: JSON.parse(storedData.sourceControl)?.links || []
+                }],
+                architecture: {
+                    frameworks: processedData.frameworks || { main: [], others: [] },
+                    infrastructure: processedData.infrastructure || { main: [], others: [] },
+                    integrations: processedData.integrations || { main: [], others: [] },
+                    languages: processedData.languages || { main: [], others: [] },
+                    hosting: JSON.parse(storedData.hosting) || { type: '', others: [] },
+                    database: processedData.database || { main: [], others: [] }
+                },
+                stage: processedData.stage?.stage || ''
+            };
+
+            // Update the summary display
+            updateSummaryDisplay(finalData);
+            
+            // Update hidden form fields
+            updateHiddenFields(finalData);
+        }
+
+        function updateSummaryDisplay(finalData) {
+            const summaryData = {
+                technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
+                delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
+                project_details: finalData.details ? `<ul>
+                    <li>Name: ${finalData.details.project_name}</li>
+                    <li>Short Name: ${finalData.details.project_short_name}</li>
+                    <li>Documentation Link: ${finalData.details.doc_link}</li>
+                    <li>Stage: ${finalData.stage}</li>
+                </ul>` : '',
+                developed_details: finalData.developed ? `<ul>
+                    <li>Developed By: ${finalData.developed.developed}</li>
+                    <li>Partnership/Outsource Company: ${finalData.developed.partnership_company || finalData.developed.outsource_company || 'N/A'}</li>
+                </ul>` : '',
+                source_control_details: processSourceControl(localStorage.getItem('source_control-data')),
+                hosting_details: processHosting(localStorage.getItem('hosting-data')),
+                database_details: arrToList(finalData.architecture.database?.main?.concat(finalData.architecture.database?.others) || []),
+                languages_details: arrToList(finalData.architecture.languages?.main?.concat(finalData.architecture.languages?.others) || []),
+                framework_details: arrToList(finalData.architecture.frameworks?.main?.concat(finalData.architecture.frameworks?.others) || []),
+                integration_details: arrToList(finalData.architecture.integrations?.main?.concat(finalData.architecture.integrations?.others) || []),
+                infrastructure_details: arrToList(finalData.architecture.infrastructure?.main?.concat(finalData.architecture.infrastructure?.others) || [])
+            };
+
+            // Update all summary elements
+            Object.entries(summaryData).forEach(([key, value]) => {
+                const element = document.getElementById(key);
+                if (element) element.innerHTML = value;
+            });
+        }
+
+        function updateHiddenFields(finalData) {
+            const hiddenFields = {
+                user: finalData.user,
+                project: finalData.details,
+                developed: finalData.developed,
+                source_control: finalData.source_control,
+                hosting: {
+                    type: [finalData.architecture.hosting.type],
+                    details: finalData.architecture.hosting.others
+                },
+                database: finalData.architecture.database,
+                languages: finalData.architecture.languages,
+                frameworks: finalData.architecture.frameworks,
+                integrations: finalData.architecture.integrations,
+                infrastructure: finalData.architecture.infrastructure,
+                stage: finalData.stage
+            };
+
+            // Update all hidden input fields
+            Object.entries(hiddenFields).forEach(([key, value]) => {
+                const element = document.getElementById(key);
+                if (element) element.value = JSON.stringify(value);
+            });
+        }
+
+        // Initialize the page
+        load_data();
+        localStorage.setItem("source_control-validate", true);
+        localStorage.setItem("hosting-validate", true);
+    </script>
+
+
+{% endblock %}

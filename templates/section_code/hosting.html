@@ -1,0 +1,123 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Hosting</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please specify how your solution is hosted: on-premises (e.g as VMs on servers owned buy ONS), in the cloud, or hybrid. If your solution is hosted in the cloud or as a hybrid setup, you will be prompted to enter the cloud service providers used (e.g., AWS, Azure, Google Cloud). </p>"
+            }
+        ]
+    }) }}
+        {{ onsLabel({
+        "id": 'hosting-label',
+        "for": "hosting",
+        "text": 'Where is the solution hosted?',
+        "description": 'Select the type of hosting.'
+    }) }}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "role",
+            "radios": [
+                {
+                    "id": "On-premises",
+                    "label": {
+                        "text": "On-premises"
+                    },
+                    "value": "On-premises"
+                },
+                                {
+                    "id": "Cloud",
+                    "label": {
+                        "text": "Cloud"
+                    },
+                    "value": "Cloud"
+                },
+                {
+                    "id": "Hybrid",
+                    "label": {
+                        "text": "Hybrid"
+                    },
+                    "value": "Hybrid"
+                }
+                
+            ]
+        }) }}
+        <br>
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": "#",
+        "attributes": {
+            "onclick": "storeHostingData();"
+        }
+    }) }}
+            </form>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                loadHostingData();
+                document
+                    .getElementById("error-panel")
+                    .style
+                    .display = "none";
+                function storeHostingData() { // Store hosting data in local storage
+                    var hostingType = document.querySelector('input[name="role"]:checked').value;
+                    var data = JSON.parse(localStorage.getItem('hosting-data')) || {};
+
+                    data.type = hostingType;
+
+                    if (data.type === "On-premises") {
+                        data.others = [];
+                    }
+
+                    localStorage.setItem('hosting-data', JSON.stringify(data));
+
+                    console.log(localStorage.getItem('hosting-data'));
+
+                    if (hostingType === "Hybrid" || hostingType === "Cloud") {
+                        window.location.href = "/survey/hosting?stage=2";
+                    } else {
+                        
+                        if (
+                            JSON.parse(localStorage.getItem("hosting-validate")) &&
+                            JSON.parse(localStorage.getItem("hosting-data")).type === "On-premises"
+                        ) {
+                            window.location.href = '/validate_details';
+                        } else {
+                            window.location.href = "{{ url_for('database') }}";
+                        }
+                    }
+                }
+                function loadHostingData() {
+                    var data = JSON.parse(localStorage.getItem('hosting-data'));
+                    if (data) {
+                        try {
+                            document.getElementById(data.type).checked = true;
+                        } catch {
+                            console.error("Error loading hosting data");
+                        }
+                    }
+                }
+            </script>
+        {% endblock %}

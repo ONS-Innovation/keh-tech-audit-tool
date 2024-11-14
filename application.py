@@ -243,7 +243,7 @@ def get_email():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
         user_request = requests.get(
-            f"{API_URL}/api/user",
+            f"{API_URL}/api/v1/user",
             headers=headers,
         )
         if user_request.status_code != HTTPStatus.OK:
@@ -260,7 +260,7 @@ def get_email():
 def dashboard():
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get(
-        f"{API_URL}/api/projects",
+        f"{API_URL}/api/v1/projects",
         headers=headers,
     ).json()
     try:
@@ -279,7 +279,7 @@ def dashboard():
 def view_project(project_name):
     headers = {"Authorization": f"{session['id_token']}"}
     projects = requests.get(
-        f"{API_URL}/api/projects/{project_name}",
+        f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     ).json()
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
@@ -353,7 +353,7 @@ def survey():
     }
     try:
         projects = requests.post(
-            f"{API_URL}/api/projects",
+            f"{API_URL}/api/v1/projects",
             json=data,
             headers=headers,
         )

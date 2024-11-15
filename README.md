@@ -57,12 +57,12 @@ make run-ui
 
 To build the image:
 ```bash
-docker build -t tech-audit-tool .
+make docker-build
 ```
 
 To run an instance of the image as a container:
 ```bash
-docker run -e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID tech-audit-tool -p 127.0.0.1:8000:8000
+make docker-run
 ```
 
 Alternatively, you may use docker-compose to build:

@@ -10,6 +10,8 @@ node_modules
 .env
 
 # .tfstate files
+# Exclude tfstate.backup file as it contains sensitive data loaded in from
+# the .tfvars file.
 *.tfstate
 *.tfstate.*
 

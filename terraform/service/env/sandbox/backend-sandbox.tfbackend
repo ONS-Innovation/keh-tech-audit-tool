@@ -1,0 +1,6 @@
+# For sandbox environment
+# terraform init -backend-config="env/sandbox/backend-sandbox.tfbackend"
+bucket         = "sdp-sandbox-tf-state"
+key            = "sdp-sandbox-ecs-tech-audit-tool/terraform.tfstate"
+region         = "eu-west-2"
+dynamodb_table = "terraform-state-lock"

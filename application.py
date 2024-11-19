@@ -320,10 +320,24 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     headers = {"Authorization": f"{session['id_token']}"}
-    projects = requests.get(
-        f"{API_URL}/api/v1/projects/{project_name}",
+
+    project_list = requests.get(
+        f"{API_URL}/api/v1/projects",
         headers=headers,
     ).json()
+
+    project_list = [project["details"][0]["name"] for project in project_list]
+    if project_name in project_list:
+        projects = requests.get(
+            f"{API_URL}/api/v1/projects/{project_name}",
+            headers=headers,
+        ).json()
+        return render_template("view_project.html", project=projects)
+    else:
+        flash("Project not found. Please try again.")
+        return redirect(url_for("dashboard"))
+
+
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
     try:
         if projects["message"] is None:

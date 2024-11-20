@@ -154,15 +154,15 @@
                         var techContactDataJSON = JSON.parse(techContactData);
                         var managerContactDataJSON = JSON.parse(managerData);
                         var user_details = `<p>Technical Contact: ${
-                            techContactDataJSON.contactEmail
+                            escapeHTML(techContactDataJSON.contactEmail)
                         } (${
-                            techContactDataJSON.role
+                            escapeHTML(techContactDataJSON.role)
                         })</p>`;
                         if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
                             user_details += `<p>Manager Contact: ${
-                                managerContactDataJSON.contactEmail
+                                escapeHTML(managerContactDataJSON.contactEmail)
                             } (${
-                                managerContactDataJSON.role
+                                escapeHTML(managerContactDataJSON.role)
                             })</p>`;
                         }
                         document.getElementById('user_details').innerHTML = user_details;
@@ -177,13 +177,13 @@
                             projectDataJSON.project_name
                         }</p>
                             <p>Project Short Name: ${
-                            projectDataJSON.project_short_name
+                            escapeHTML(projectDataJSON.project_short_name)
                         }</p>
                             <p>Documentation Link: ${
-                            projectDataJSON.doc_link
+                            escapeHTML(projectDataJSON.doc_link)
                         }</p>
                             <p>Project Description: ${
-                            projectDataJSON.project_description
+                            escapeHTML(projectDataJSON.project_description)
                         }</p>`;
                         document.getElementById('project_details').innerHTML = project_details;
                         document.getElementById('project').value = JSON.stringify(projectDataJSON);
@@ -202,15 +202,15 @@
                     try {
                         var developedDataJSON = JSON.parse(developedData)
                         var developed_details = `${
-                            developedDataJSON.developed
+                            escapeHTML(developedDataJSON.developed)
                         }`;
                         if (developedDataJSON.developed === "Outsourced") {
                             developed_details += ` with: ${
-                                developedDataJSON.outsource_company
+                                escapeHTML(developedDataJSON.outsource_company)
                             }`;
                         } else if (developedDataJSON.developed === "Partnership") {
                             developed_details += ` with: ${
-                                developedDataJSON.partnership_company
+                                escapeHTML(developedDataJSON.partnership_company)
                             }`;
                         }
                         document.getElementById('developed_details').innerHTML = developed_details;

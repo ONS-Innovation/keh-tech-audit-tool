@@ -317,24 +317,35 @@ def dashboard():
         return redirect(url_for("home"))
 
 
+
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
+    # Sanitize project name to prevent path traversal and injection attacks
+    if not project_name or not re.match(r'^[a-zA-Z0-9_-]+$', project_name):
+        flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
+        return redirect(url_for("dashboard"))
+    
+    if len(project_name) > 128:
+        flash("Project name is too long. Please try again.")
+        return redirect(url_for("dashboard"))
+
     headers = {"Authorization": f"{session['id_token']}"}
-
-    project_list = requests.get(
-        f"{API_URL}/api/v1/projects",
-        headers=headers,
-    ).json()
-
-    project_list = [project["details"][0]["name"] for project in project_list]
-    if project_name in project_list:
+    try:
         projects = requests.get(
             f"{API_URL}/api/v1/projects/{project_name}",
             headers=headers,
         ).json()
+        
+        # Check if project not found
+        if projects.get("message") is None:
+            flash("Project not found. Please try again.")
+            return redirect(url_for("dashboard"))
+            
         return render_template("view_project.html", project=projects)
-    else:
-        flash("Project not found. Please try again.")
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching project: {str(e)}")
+        flash("Error retrieving project. Please try again.")
         return redirect(url_for("dashboard"))
 
 

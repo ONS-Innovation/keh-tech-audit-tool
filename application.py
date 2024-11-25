@@ -33,15 +33,28 @@ s3 = boto3.client("s3", region_name=region_name)
 
 # GET client keys from S3 bucket using boto3
 def read_client_keys():
+    secret_name = "sdp-dev-tech-audit-tool-api-cognito-secrets"
+    region_name = "eu-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
     try:
-        response = s3.get_object(Bucket=bucket_name, Key="client_keys.json")
-        client_keys = json.loads(response["Body"].read().decode("utf-8"))
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
     except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            client_keys = {}
-        else:
-            abort(500, description=f"Error reading client keys: {e}")
-    return client_keys
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
 
 
 # GET auto complete data from S3 bucket using boto3
@@ -108,7 +121,9 @@ def get_ui_secret():
     return secret
 
 # SETTING OF API URL: Change if moving to production
-API_URL = json.loads(get_ui_secret())['API_URL']
+UI_secret = json.loads(get_ui_secret())
+API_URL = UI_secret['API_URL']
+REDIRECT_URI = UI_secret['REDIRECT_URI']
 
 # Standard flask initialisation
 app = Flask(__name__)
@@ -118,13 +133,12 @@ app.jinja_env.add_extension("jinja2.ext.do")
 
 
 # SET client keys from S3 bucket using boto3
-cognito_settings = read_client_keys()
-AWS_COGNITO_CLIENT_ID = cognito_settings["AWS_COGNITO_CLIENT_ID"]
-AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
+cognito_settings = json.loads(read_client_keys())
+AWS_COGNITO_CLIENT_ID = cognito_settings["COGNITO_CLIENT_ID"]
+AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
-REDIRECT_URI = json.loads(get_ui_secret())['REDIRECT_URI']
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
@@ -226,7 +240,7 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    CLIENT_ID = json.loads(get_secret())["COGNITO_CLIENT_ID"]
+    CLIENT_ID = AWS_COGNITO_CLIENT_ID
     return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
 
 
@@ -256,7 +270,7 @@ def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
     token_url = (
-        "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        "https://tech-audit-tool-api-sdp-dev.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",
@@ -269,6 +283,7 @@ def exchange_code_for_tokens(code):
     auth = (AWS_COGNITO_CLIENT_ID, AWS_COGNITO_CLIENT_SECRET)
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
+    print(response.json())
     response_json = response.json()
     if response.status_code != HTTPStatus.OK:
         if response_json.get("error") == "invalid_grant":

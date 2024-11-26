@@ -339,7 +339,6 @@ def view_project(project_name):
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     ).json()
-    # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
     try:
         if projects["message"] is None:
             flash("Project not found. Please try again.")
@@ -403,7 +402,7 @@ def survey():
             "database": form_data["database"],
             "languages": form_data["languages"],
             "frameworks": form_data["frameworks"],
-            "CICD": form_data["integrations"],
+            "cicd": form_data["integrations"],
             "infrastructure": form_data["infrastructure"],
         },
         "stage": form_data["stage"],

@@ -27,7 +27,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # AWS S3 bucket settings
-bucket_name = "keh-tech-audit-tool"
+bucket_name = "sdp-dev-tech-audit-tool-api-tool"
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
@@ -241,7 +241,7 @@ def home():
             return redirect(url_for("home"))
 
     CLIENT_ID = AWS_COGNITO_CLIENT_ID
-    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
+    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID, REDIRECT_URI=REDIRECT_URI)
 
 
 # Basic sign out

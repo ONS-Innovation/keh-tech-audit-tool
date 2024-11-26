@@ -29,6 +29,8 @@ To run, please import these credentials into the app:
 ```bash
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
+export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
+export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 ```
 
 API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets  Manager, there is no need to export them.

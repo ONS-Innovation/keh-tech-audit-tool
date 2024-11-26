@@ -27,13 +27,13 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # AWS S3 bucket settings
-bucket_name = "sdp-dev-tech-audit-tool-api"
+api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
 # GET client keys from S3 bucket using boto3
 def read_client_keys():
-    secret_name = "sdp-dev-tech-audit-tool-api/secrets"
+    api_secret_name = os.getenv("API_SECRET_NAME")
     region_name = "eu-west-2"
 
     # Create a Secrets Manager client
@@ -45,7 +45,7 @@ def read_client_keys():
 
     try:
         get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
+            SecretId=api_secret_name
         )
     except ClientError as e:
         # For a list of exceptions thrown, see

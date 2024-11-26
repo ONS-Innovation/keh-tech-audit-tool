@@ -27,13 +27,13 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # AWS S3 bucket settings
-bucket_name = "sdp-dev-tech-audit-tool-api-tool"
+bucket_name = "sdp-dev-tech-audit-tool-api"
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
 # GET client keys from S3 bucket using boto3
 def read_client_keys():
-    secret_name = "sdp-dev-tech-audit-tool-api-cognito-secrets"
+    secret_name = "sdp-dev-tech-audit-tool-api/secrets"
     region_name = "eu-west-2"
 
     # Create a Secrets Manager client
@@ -283,7 +283,6 @@ def exchange_code_for_tokens(code):
     auth = (AWS_COGNITO_CLIENT_ID, AWS_COGNITO_CLIENT_SECRET)
 
     response = requests.post(token_url, data=payload, headers=headers, auth=auth)
-    print(response.json())
     response_json = response.json()
     if response.status_code != HTTPStatus.OK:
         if response_json.get("error") == "invalid_grant":

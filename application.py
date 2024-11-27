@@ -26,6 +26,12 @@ load_dotenv()
 # logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# SETTING OF API URL: Change if moving to production
+API_URL = os.getenv("API_URL")
+
 # AWS S3 bucket settings
 bucket_name = "keh-tech-audit-tool"
 region_name = 'eu-west-2'
@@ -44,6 +50,12 @@ def read_client_keys():
     return client_keys
 
 
+# Standard flask initialisation
+app = Flask(__name__)
+app.secret_key = os.getenv("APP_SECRET_KEY")
+app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
+
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
@@ -57,7 +69,7 @@ def read_auto_complete_data():
     return array_data
 
 # GET secrets from AWS Secrets Manager using boto3
-def get_secret():
+def get_secrets():
 
     secret_name = "tech-audit-tool-api/secrets"
     region_name = "eu-west-2"
@@ -118,9 +130,9 @@ app.jinja_env.add_extension("jinja2.ext.do")
 
 
 # SET client keys from S3 bucket using boto3
-cognito_settings = read_client_keys()
-AWS_COGNITO_CLIENT_ID = cognito_settings["AWS_COGNITO_CLIENT_ID"]
-AWS_COGNITO_CLIENT_SECRET = cognito_settings["AWS_COGNITO_CLIENT_SECRET"]
+cognito_settings = json.loads(get_secrets())
+AWS_COGNITO_CLIENT_ID = cognito_settings["COGNITO_CLIENT_ID"]
+AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
@@ -226,8 +238,7 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    CLIENT_ID = json.loads(get_secret())["COGNITO_CLIENT_ID"]
-    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID)
+    return render_template("index.html", items=items_none, CLIENT_ID=AWS_COGNITO_CLIENT_ID)
 
 
 # Basic sign out
@@ -330,6 +341,7 @@ def view_project(project_name):
         return redirect(url_for("dashboard"))
 
     headers = {"Authorization": f"{session['id_token']}"}
+
     try:
         projects = requests.get(
             f"{API_URL}/api/v1/projects/{project_name}",
@@ -347,7 +359,6 @@ def view_project(project_name):
         logger.error(f"Error fetching project: {str(e)}")
         flash("Error retrieving project. Please try again.")
         return redirect(url_for("dashboard"))
-
 
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
     try:

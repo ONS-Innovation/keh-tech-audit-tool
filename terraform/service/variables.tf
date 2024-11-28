@@ -47,7 +47,6 @@ variable "container_ver" {
   description = "Container tag"
   type        = string
   default     = "v.0.0.1"
-
 }
 
 variable "container_port" {

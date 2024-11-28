@@ -16,7 +16,6 @@ RUN pip install poetry==1.8.3
 COPY .  /app
 
 RUN poetry install
-
 # Expose the port that the application listens on.
 EXPOSE 8000
 

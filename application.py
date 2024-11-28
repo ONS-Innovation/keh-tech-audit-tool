@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 import boto3
 import requests
@@ -31,6 +32,14 @@ api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# Standard flask initialisation
+app = Flask(__name__)
+app.secret_key = os.getenv("APP_SECRET_KEY")
+app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
@@ -54,7 +63,7 @@ def get_secret(env):
         service_name='secretsmanager',
         region_name=region_name
     )
-
+    
     try:
         secret_value_response = client.get_secret_value(
             SecretId=secret_name
@@ -280,13 +289,25 @@ def dashboard():
         return redirect(url_for("home"))
 
 
+
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
+    # Sanitize project name to prevent path traversal and injection attacks
+    if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
+        flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
+        return redirect(url_for("dashboard"))
+    
+    if len(project_name) > 128:
+        flash("Project name is too long. Please try again.")
+        return redirect(url_for("dashboard"))
+
     headers = {"Authorization": f"{session['id_token']}"}
+    
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     ).json()
+    
     try:
         if projects["message"] is None:
             flash("Project not found. Please try again.")
@@ -511,4 +532,4 @@ def validate_details():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

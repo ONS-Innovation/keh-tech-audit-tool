@@ -15,6 +15,10 @@ node_modules
 *.tfstate
 *.tfstate.*
 
+.terraform/
+!env/*/sandbox.tfvars
+.terraform.lock.hcl
+
 # Crash log files
 crash.log
 crash.*.log
@@ -42,7 +46,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-.terraform
 
 # Ignore the terraform/service prority calc
 terraform/service/highest_priority.txt

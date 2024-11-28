@@ -59,6 +59,32 @@ Then you can start the application by running:
 make run-ui
 ```
 
+### Setting up with Docker
+
+To build the image:
+```bash
+make docker-build
+```
+
+To run an instance of the image as a container:
+```bash
+make docker-run
+```
+
+Alternatively, you may use docker-compose to build:
+
+```bash
+docker-compose up --build
+```
+
+To run:
+
+```bash
+docker-compose up
+```
+
+On AWS, these environment variables will be set in the task definition on ECS.
+
 Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
 
 ### Setting up with Docker

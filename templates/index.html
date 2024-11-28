@@ -23,7 +23,7 @@
     </p>
     {{ onsButton({
             "text": "Sign in with Cognito",
-            "url": "https://tech-audit-tool-api-sdp-dev.auth.eu-west-2.amazoncognito.com/login?client_id=" + CLIENT_ID + "&response_type=code&scope=email+openid&redirect_uri=" + REDIRECT_URI
+            "url": "https://tech-audit-tool-api-sdp-" + AWS_ENV + ".auth.eu-west-2.amazoncognito.com/login?client_id=" + CLIENT_ID + "&response_type=code&scope=email+openid&redirect_uri=" + REDIRECT_URI
     }) }}
   </section>
 {% endblock %}

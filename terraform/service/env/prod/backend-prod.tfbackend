@@ -1,0 +1,6 @@
+# For prod environment
+# terraform init -backend-config="env/prod/backend-prod.tfbackend"
+bucket         = "sdp-prod-tf-state"
+key            = "sdp-prod-ecs-tech-audit-tool/terraform.tfstate"
+region         = "eu-west-2"
+dynamodb_table = "terraform-state-lock"

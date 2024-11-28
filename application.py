@@ -31,36 +31,10 @@ api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
-# GET client keys from S3 bucket using boto3
-def read_client_keys():
-    api_secret_name = os.getenv("API_SECRET_NAME")
-    region_name = "eu-west-2"
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=api_secret_name
-        )
-    except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise e
-
-    secret = get_secret_value_response['SecretString']
-
-    return secret
-
-
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
-        response = s3.get_object(Bucket=bucket_name, Key="array_data.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
         array_data = json.loads(response["Body"].read().decode("utf-8"))
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
@@ -70,9 +44,8 @@ def read_auto_complete_data():
     return array_data
 
 # GET secrets from AWS Secrets Manager using boto3
-def get_secret():
-
-    secret_name = "tech-audit-tool-api/secrets"
+def get_secret(env):
+    secret_name = os.getenv(env)
     region_name = "eu-west-2"
 
     # Create a Secrets Manager client
@@ -83,7 +56,7 @@ def get_secret():
     )
 
     try:
-        get_secret_value_response = client.get_secret_value(
+        secret_value_response = client.get_secret_value(
             SecretId=secret_name
         )
     except ClientError as e:
@@ -91,54 +64,27 @@ def get_secret():
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
-    secret = get_secret_value_response['SecretString']
-
-    return secret
-
-def get_ui_secret():
-
-    secret_name = "tech-audit-tool-ui/secrets"
-    region_name = "eu-west-2"
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
-    except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise e
-
-    secret = get_secret_value_response['SecretString']
+    secret = secret_value_response.get('SecretString')
 
     return secret
 
 # SETTING OF API URL: Change if moving to production
-UI_secret = json.loads(get_ui_secret())
+UI_secret = json.loads(get_secret("UI_SECRET_NAME"))
 API_URL = UI_secret['API_URL']
-REDIRECT_URI = UI_secret['REDIRECT_URI']
+# REDIRECT_URI = UI_secret['REDIRECT_URI']
+REDIRECT_URI = "http://localhost:8000"
 
 # Standard flask initialisation
 app = Flask(__name__)
-app.secret_key = json.loads(get_ui_secret())['APP_SECRET_KEY']
+app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))['APP_SECRET_KEY']
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
 
 # SET client keys from S3 bucket using boto3
-cognito_settings = json.loads(read_client_keys())
+cognito_settings = json.loads(get_secret("API_SECRET_NAME"))
 AWS_COGNITO_CLIENT_ID = cognito_settings["COGNITO_CLIENT_ID"]
 AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
-
-# IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
-# This is the redirect uri set in the Cognito app settings.
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
@@ -223,6 +169,8 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
+    AWS_ENV = os.getenv("AWS_ENVIRONMENT")
+
     if code:
         token_response = exchange_code_for_tokens(code)
         if "id_token" in token_response and "refresh_token" in token_response:
@@ -241,7 +189,7 @@ def home():
             return redirect(url_for("home"))
 
     CLIENT_ID = AWS_COGNITO_CLIENT_ID
-    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID, REDIRECT_URI=REDIRECT_URI)
+    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID, REDIRECT_URI=REDIRECT_URI, AWS_ENV=AWS_ENV)
 
 
 # Basic sign out
@@ -269,8 +217,9 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
+    AWS_ENV = os.getenv("AWS_ENVIRONMENT")
     token_url = (
-        "https://tech-audit-tool-api-sdp-dev.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        f"https://tech-audit-tool-api-sdp-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",

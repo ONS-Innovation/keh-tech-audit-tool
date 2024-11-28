@@ -31,6 +31,8 @@ export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
 export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
+export UI_SECRET_NAME=tech-audit-tool-ui/secrets
+export AWS_ENVIRONMENT=<sandbox/dev/prod>
 ```
 
 API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets  Manager, there is no need to export them.
@@ -40,6 +42,8 @@ The API_URL is set to the production URL to get the latest, working version of t
 The APP_SECRET_KEY can be anything for development purposes.
 
 The REDIRECT_URI must be set to localhost:8000 in development purposes as that is set in AWS Cognito. When pushed to production, this must change to the production URI of the UI app.
+
+On AWS, these environment variables will be set in the task definition on ECS.
 
 ### Running the Application
 
@@ -54,6 +58,8 @@ Then you can start the application by running:
 ```bash
 make run-ui
 ```
+
+Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
 
 ### Setting up with Docker
 
@@ -78,10 +84,6 @@ To run:
 ```bash
 docker-compose up
 ```
-
-On AWS, these environment variables will be set in the task definition on ECS.
-
-Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
 
 
 ## Deployment to AWS
@@ -154,7 +156,7 @@ There are associated README files in each of the Terraform modules in this repos
 Depending upon which environment you are deploying to you will want to run your terraform by pointing at an appropriate environment tfvars file.  
 
 Example service tfvars file:
-[service/env/sandbox/example_tfvars.txt](https://github.com/ONS-Innovation/keh-tech-audit-tool/terraform/service/env/sandbox/example_tfvars.txt)
+[service/env/sandbox/example_tfvars.txt](./terraform/service/env/sandbox/example_tfvars.txt)
 
 ### Updating the running service using Terraform
 

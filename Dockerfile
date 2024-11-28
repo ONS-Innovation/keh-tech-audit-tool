@@ -11,12 +11,11 @@ FROM python:3.11-slim-bullseye
 WORKDIR /app
 
 RUN pip install poetry==1.8.3
+
+# Copy the source code into the container.
 COPY .  /app
 
 RUN poetry install
-RUN pip install awscli
-
-# Copy the source code into the container.
 
 # Expose the port that the application listens on.
 EXPOSE 8000

@@ -50,12 +50,20 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.domain
         },
         {
-          name  = "GITHUB_ORG"
-          value = var.github_org
+          name = "UI_SECRET_NAME"
+          value = var.ui_secret_name
         },
         {
-          name = "AWS_SECRET_NAME"
-          value = var.aws_secret_name
+          name = "API_SECRET_NAME"
+          value = var.api_secret_name
+        },
+        {
+          name = "API_BUCKET_NAME"
+          value = var.api_bucket_name
+        },
+        {
+          name = "AWS_ENVIRONMENT"
+          value = var.aws_environment
         }
       ],
       logConfiguration = {

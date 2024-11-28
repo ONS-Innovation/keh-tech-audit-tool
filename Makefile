@@ -24,4 +24,6 @@ docker-build:
 	docker build -t tech-audit-tool .
 
 docker-run:
-	docker run -p 127.0.0.1:8000:8000 -e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID tech-audit-tool
+	docker run -p 127.0.0.1:8000:8000 -e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID \
+	 -e API_BUCKET_NAME -e API_SECRET_NAME \
+	  -e UI_SECRET_NAME -e AWS_ENVIRONMENT tech-audit-tool

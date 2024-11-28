@@ -33,15 +33,16 @@ export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
 export AWS_ENVIRONMENT=<sandbox/dev/prod>
+export LOCALHOST=<true/false>
 ```
 
 API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets  Manager, there is no need to export them.
 
 The API_URL is set to the production URL to get the latest, working version of the API.
 
-The APP_SECRET_KEY can be anything for development purposes.
+The REDIRECT_URI changes dynamically based on what is set by the LOCALHOST environment variable. When running locally, set `LOCALHOST=TRUE`. When running in production, LOCALHOST will be set to FALSE, and will instead retrieve the REDIRECT_URI from AWS Secrets Manager.
 
-The REDIRECT_URI must be set to localhost:8000 in development purposes as that is set in AWS Cognito. When pushed to production, this must change to the production URI of the UI app.
+The AWS_ENVIRONMENT environment variable states which AWS environment tech-audit-tool is running on. This is important as the Cognito token URLs will change depending on the environment. You can choose between `sandbox`, `dev` and `prod`
 
 On AWS, these environment variables will be set in the task definition on ECS.
 
@@ -86,31 +87,6 @@ docker-compose up
 On AWS, these environment variables will be set in the task definition on ECS.
 
 Once running, the app will appear on [http://localhost:8000](http://localhost:8000). Do not change the port or authentication with Cognito will not work.
-
-### Setting up with Docker
-
-To build the image:
-```bash
-make docker-build
-```
-
-To run an instance of the image as a container:
-```bash
-make docker-run
-```
-
-Alternatively, you may use docker-compose to build:
-
-```bash
-docker-compose up --build
-```
-
-To run:
-
-```bash
-docker-compose up
-```
-
 
 ## Deployment to AWS
 

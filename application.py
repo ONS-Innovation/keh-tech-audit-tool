@@ -79,9 +79,12 @@ def get_secret(env):
 
 # SETTING OF API URL: Change if moving to production
 UI_secret = json.loads(get_secret("UI_SECRET_NAME"))
+if os.getenv("LOCALHOST").lower() == "true":
+    REDIRECT_URI = "http://localhost:8000" # USE DURING DEVELOPMENT§
+else:
+    REDIRECT_URI = UI_secret['REDIRECT_URI'] # USE DURING PRODUCTION
 API_URL = UI_secret['API_URL']
-# REDIRECT_URI = UI_secret['REDIRECT_URI']
-REDIRECT_URI = "http://localhost:8000"
+# REDIRECT_URI = "http://localhost:8000" # USE DURING DEVELOPMENT
 
 # Standard flask initialisation
 app = Flask(__name__)

@@ -133,6 +133,12 @@ variable "force_deployment" {
   default     = "false"
 }
 
+variable "localhost" {
+  description = "Localhost"
+  type        = string
+  default     = "false"
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"

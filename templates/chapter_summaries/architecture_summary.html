@@ -149,7 +149,7 @@
                                     ? 'Links: '
                                     : 'Link: ';
                             }
-                            var source_control = `Type: ${sourceType}<br>${source_control_links_label}` + arrToLinkList(sourceControlDataJSON.links);
+                            var source_control = `Type: ${escapeHTML(sourceType)}<br>${escapeHTML(source_control_links_label)}` + arrToLinkList(escapeHTML(sourceControlDataJSON.links));
                             document.getElementById('source_control_details').innerHTML = source_control;
                         } catch (e) {
                             errorList.push('Source Control');
@@ -160,7 +160,7 @@
                             if (databaseDataJSON.others.length === 0) {
                                 errorList.push('Database');
                             }
-                            var database_details = arrToList(databaseDataJSON.others);
+                            var database_details = arrToList(escapeHTML(databaseDataJSON.others));
                             document.getElementById('database_details').innerHTML = database_details;
                         } catch (e) {
                             errorList.push('Database');
@@ -168,10 +168,10 @@
 
                         try {
                             var hosting_details = `Type: ${
-                                hostingJSON.type
+                                escapeHTML(hostingJSON.type)
                             }`;
                             if (hostingJSON.others && hostingJSON.others.length > 0) {
-                                hosting_details += `<br>Services:` + arrToList(hostingJSON.others);
+                                hosting_details += `<br>Services:` + arrToList(escapeHTML(hostingJSON.others));
                             }
                             document.getElementById('hosting_details').innerHTML = hosting_details;
                         } catch (e) {

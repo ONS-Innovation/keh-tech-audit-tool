@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 import boto3
 import requests
@@ -16,10 +17,16 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
-from http import HTTPStatus
-from enum import Enum
+from dotenv import load_dotenv
 
+from enum import Enum
+from http import HTTPStatus
+
+load_dotenv()
 # Basic logging information
+# logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -28,8 +35,21 @@ API_URL = os.getenv("API_URL")
 
 # AWS S3 bucket settings
 bucket_name = "keh-tech-audit-tool"
-region_name = os.getenv("AWS_DEFAULT_REGION")
+region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
+
+# GET client keys from S3 bucket using boto3
+def read_client_keys():
+    try:
+        response = s3.get_object(Bucket=bucket_name, Key="client_keys.json")
+        client_keys = json.loads(response["Body"].read().decode("utf-8"))
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            client_keys = {}
+        else:
+            abort(500, description=f"Error reading client keys: {e}")
+    return client_keys
+
 
 # Standard flask initialisation
 app = Flask(__name__)
@@ -75,6 +95,40 @@ def get_secrets():
 
     return secret
 
+def get_ui_secret():
+
+    secret_name = "tech-audit-tool-ui/secrets"
+    region_name = "eu-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
+
+# SETTING OF API URL: Change if moving to production
+API_URL = json.loads(get_ui_secret())['API_URL']
+
+# Standard flask initialisation
+app = Flask(__name__)
+app.secret_key = json.loads(get_ui_secret())['APP_SECRET_KEY']
+app.jinja_env.undefined = ChainableUndefined
+app.jinja_env.add_extension("jinja2.ext.do")
+
 
 # SET client keys from S3 bucket using boto3
 cognito_settings = json.loads(get_secrets())
@@ -83,7 +137,7 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
 # This is the redirect uri set in the Cognito app settings.
-REDIRECT_URI = os.getenv("REDIRECT_URI")
+REDIRECT_URI = json.loads(get_ui_secret())['REDIRECT_URI']
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
@@ -275,13 +329,38 @@ def dashboard():
         return redirect(url_for("home"))
 
 
+
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
+    # Sanitize project name to prevent path traversal and injection attacks
+    if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
+        flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
+        return redirect(url_for("dashboard"))
+    
+    if len(project_name) > 128:
+        flash("Project name is too long. Please try again.")
+        return redirect(url_for("dashboard"))
+
     headers = {"Authorization": f"{session['id_token']}"}
-    projects = requests.get(
-        f"{API_URL}/api/v1/projects/{project_name}",
-        headers=headers,
-    ).json()
+
+    try:
+        projects = requests.get(
+            f"{API_URL}/api/v1/projects/{project_name}",
+            headers=headers,
+        ).json()
+        
+        # Check if project not found
+        if projects.get("message") is None:
+            flash("Project not found. Please try again.")
+            return redirect(url_for("dashboard"))
+            
+        return render_template("view_project.html", project=projects)
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching project: {str(e)}")
+        flash("Error retrieving project. Please try again.")
+        return redirect(url_for("dashboard"))
+
     # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
     try:
         if projects["message"] is None:
@@ -507,4 +586,4 @@ def validate_details():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

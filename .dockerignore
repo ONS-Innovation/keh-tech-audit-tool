@@ -9,7 +9,6 @@
 **/.venv
 **/.classpath
 **/.dockerignore
-**/.env
 **/.git
 **/.gitignore
 **/.project
@@ -17,6 +16,7 @@
 **/.toolstarget
 **/.vs
 **/.vscode
+.env
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm

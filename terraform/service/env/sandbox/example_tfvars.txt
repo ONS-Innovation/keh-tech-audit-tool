@@ -1,0 +1,11 @@
+# Do NOT commit the real tfvars file to Github
+aws_account_id        = "99999999999"
+aws_access_key_id     = "AWSACCCESSKEYID"
+aws_secret_access_key = "AWSSECRETASSOCIATEDWITHACCESSKEY"
+aws_secret_name       = "sdp/pem"
+domain                = "sdp-sandbox"
+container_image       = "sdp-repo-archive"
+container_ver         = "v0.0.3"
+force_deployment      = "true"
+github_org            = "ONS-Innovation"
+github_app_client_id  = "123456789"

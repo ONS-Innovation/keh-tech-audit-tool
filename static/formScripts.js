@@ -241,3 +241,18 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
             return;
         }
     }
+
+function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, function(match) {
+            const escapeMap = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            };
+            return escapeMap[match];
+        });
+    }
+    
+

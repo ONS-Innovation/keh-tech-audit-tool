@@ -3,7 +3,7 @@
 
 ### Introduction
 
-This application is to demonstrate a proof of concept of how a survey for collecting project data from tech leads or delivery managers would work.
+The Tech Audit Tool is a tool used to survey out what tools, languages and frameworks are being used by various projects within DST.
 
 This data aims to be used in the Tech Radar to help ONS understand more about the technology used within the organisation.
 

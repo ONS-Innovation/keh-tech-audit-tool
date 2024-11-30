@@ -31,10 +31,10 @@ variable "api_bucket_name" {
   default="sdp-dev-tech-audit-tool-api"
 }
 
-variable "aws_environment" {
+variable "aws_account_name" {
   description = "AWS Environment e.g sandbox, dev, prod"
   type        = string
-  default     = "dev"
+  default     = "sdp-dev"
 }
 
 variable "container_image" {
@@ -46,7 +46,7 @@ variable "container_image" {
 variable "container_ver" {
   description = "Container tag"
   type        = string
-  default     = "v.0.0.1"
+  default     = "v0.0.1"
 }
 
 variable "container_port" {

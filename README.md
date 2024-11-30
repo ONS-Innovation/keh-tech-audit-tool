@@ -1,4 +1,4 @@
-# KEH TECH AUDIT TOOL - UI
+# TECH AUDIT TOOL - UI
 ## About
 
 ### Introduction
@@ -32,11 +32,11 @@ export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
 export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
-export AWS_ENVIRONMENT=<sandbox/dev/prod>
+export AWS_ACCOUNT_NAME=<sdp-sandbox/sdp-dev/sdp-prod>
 export LOCALHOST=<true/false>
 ```
 
-API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets  Manager, there is no need to export them.
+API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets Manager, there is no need to export them.
 
 The API_URL is set to the production URL to get the latest, working version of the API.
 
@@ -146,7 +146,6 @@ To store the state and implement a state locking mechanism for the service resou
 AWS Secret Manager must be set up with a secret:
 
 - tech-audit-tool-ui/secrets
-  - A plaintext secret, containing the contents of the .pem file created when a Github App was installed.
 
 #### Running the Terraform
 

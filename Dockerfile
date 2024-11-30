@@ -20,4 +20,4 @@ RUN poetry install
 EXPOSE 8000
 
 # Run the application.
-CMD poetry run flask --app application run --host=0.0.0.0 --debug -p 8000
+CMD poetry run flask --app application run --host=0.0.0.0 -p 8000

@@ -78,13 +78,13 @@ def get_secret(env):
     return secret
 
 # SETTING OF API URL: Change if moving to production
-UI_secret = json.loads(get_secret("UI_SECRET_NAME"))
+ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
 if os.getenv("LOCALHOST").lower() == "true":
-    REDIRECT_URI = "http://localhost:8000" # USE DURING DEVELOPMENT§
+    REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
 else:
-    REDIRECT_URI = UI_secret['REDIRECT_URI'] # USE DURING PRODUCTION
-API_URL = UI_secret['API_URL']
-# REDIRECT_URI = "http://localhost:8000" # USE DURING DEVELOPMENT
+    REDIRECT_URI = ui_secret['REDIRECT_URI'] # USED DURING PRODUCTION
+
+API_URL = ui_secret['API_URL']
 
 # Standard flask initialisation
 app = Flask(__name__)
@@ -181,7 +181,7 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
-    AWS_ENV = os.getenv("AWS_ENVIRONMENT")
+    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
 
     if code:
         token_response = exchange_code_for_tokens(code)
@@ -229,9 +229,9 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
-    AWS_ENV = os.getenv("AWS_ENVIRONMENT")
+    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
     token_url = (
-        f"https://tech-audit-tool-api-sdp-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",

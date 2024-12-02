@@ -62,10 +62,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.api_bucket_name
         },
         {
-          name = "AWS_ENVIRONMENT"
-          value = var.aws_account_name
-        },
-        {
           name = "LOCALHOST"
           value = var.localhost
         }

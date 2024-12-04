@@ -154,15 +154,15 @@
                         var techContactDataJSON = JSON.parse(techContactData);
                         var managerContactDataJSON = JSON.parse(managerData);
                         var user_details = `<p>Technical Contact: ${
-                            escapeHTML(techContactDataJSON.contactEmail)
+                            escapeHtml(techContactDataJSON.contactEmail)
                         } (${
-                            escapeHTML(techContactDataJSON.role)
+                            escapeHtml(techContactDataJSON.role)
                         })</p>`;
                         if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
                             user_details += `<p>Manager Contact: ${
-                                escapeHTML(managerContactDataJSON.contactEmail)
+                                escapeHtml(managerContactDataJSON.contactEmail)
                             } (${
-                                escapeHTML(managerContactDataJSON.role)
+                                escapeHtml(managerContactDataJSON.role)
                             })</p>`;
                         }
                         document.getElementById('user_details').innerHTML = user_details;
@@ -177,13 +177,13 @@
                             projectDataJSON.project_name
                         }</p>
                             <p>Project Short Name: ${
-                            escapeHTML(projectDataJSON.project_short_name)
+                            escapeHtml(projectDataJSON.project_short_name)
                         }</p>
                             <p>Documentation Link: ${
-                            escapeHTML(projectDataJSON.doc_link)
+                            escapeHtml(projectDataJSON.doc_link)
                         }</p>
                             <p>Project Description: ${
-                            escapeHTML(projectDataJSON.project_description)
+                            escapeHtml(projectDataJSON.project_description)
                         }</p>`;
                         document.getElementById('project_details').innerHTML = project_details;
                         document.getElementById('project').value = JSON.stringify(projectDataJSON);
@@ -202,15 +202,15 @@
                     try {
                         var developedDataJSON = JSON.parse(developedData)
                         var developed_details = `${
-                            escapeHTML(developedDataJSON.developed)
+                            escapeHtml(developedDataJSON.developed)
                         }`;
                         if (developedDataJSON.developed === "Outsourced") {
                             developed_details += ` with: ${
-                                escapeHTML(developedDataJSON.outsource_company)
+                                escapeHtml(developedDataJSON.outsource_company)
                             }`;
                         } else if (developedDataJSON.developed === "Partnership") {
                             developed_details += ` with: ${
-                                escapeHTML(developedDataJSON.partnership_company)
+                                escapeHtml(developedDataJSON.partnership_company)
                             }`;
                         }
                         document.getElementById('developed_details').innerHTML = developed_details;

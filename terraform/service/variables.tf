@@ -13,11 +13,29 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-  variable "aws_secret_name" {
-    description = "The path to the AWS Secret Manager resource which contains the secrets"
+variable "ui_secret_name" {
+    description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
     type        = string
     default="tech-audit-tool/secrets"
-  }
+}
+
+variable "api_secret_name" {
+  description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
+  type        = string
+  default="sdp-tech-audit-tool-api/secrets"
+}
+
+variable "api_bucket_name" {
+  description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
+  type        = string
+  default="sdp-dev-tech-audit-tool-api"
+}
+
+variable "aws_account_name" {
+  description = "AWS Environment e.g sandbox, dev, prod"
+  type        = string
+  default     = "sdp-dev"
+}
 
 variable "container_image" {
   description = "Container image"
@@ -28,8 +46,7 @@ variable "container_image" {
 variable "container_ver" {
   description = "Container tag"
   type        = string
-  default     = "latest"
-
+  default     = "v0.0.1"
 }
 
 variable "container_port" {
@@ -92,12 +109,6 @@ variable "log_retention_days" {
   default     = 90
 }
 
-variable "github_org" {
-  description = "Github Organisation"
-  type        = string
-  default     = "ONS-Innovation"
-}
-
 variable "project_tag" {
   description = "Project"
   type        = string
@@ -118,6 +129,12 @@ variable "business_owner_tag" {
 
 variable "force_deployment" {
   description = "Force new task definition deployment"
+  type        = string
+  default     = "false"
+}
+
+variable "localhost" {
+  description = "Localhost"
   type        = string
   default     = "false"
 }

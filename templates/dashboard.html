@@ -47,12 +47,6 @@
       ]
     }) %}
   {% endfor %}
-  {% set searchBar = {
-        "id": "search-bar",
-        "label": {
-            "text": "Search for a project"
-        }
-    } %}
   {% set title = "<h2>Add Project</h2>" %}
   {% do methodsTable.update({"trs": methodsTableRows}) %}
   {{ onsTabs({
@@ -63,7 +57,7 @@
                 "id": "my-projects",
                 "title": 'View your Projects',
                 "showTitle": true,
-                "content": onsInput(searchBar) + onsTable(methodsTable)
+                "content": onsTable(methodsTable)
 
             },
             {

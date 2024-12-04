@@ -27,40 +27,23 @@ load_dotenv()
 # logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
-# SETTING OF API URL: Change if moving to production
-API_URL = os.getenv("API_URL")
-
 # AWS S3 bucket settings
-bucket_name = "keh-tech-audit-tool"
+api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
-# GET client keys from S3 bucket using boto3
-def read_client_keys():
-    try:
-        response = s3.get_object(Bucket=bucket_name, Key="client_keys.json")
-        client_keys = json.loads(response["Body"].read().decode("utf-8"))
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            client_keys = {}
-        else:
-            abort(500, description=f"Error reading client keys: {e}")
-    return client_keys
-
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Standard flask initialisation
 app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
-
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
-        response = s3.get_object(Bucket=bucket_name, Key="array_data.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
         array_data = json.loads(response["Body"].read().decode("utf-8"))
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
@@ -70,9 +53,8 @@ def read_auto_complete_data():
     return array_data
 
 # GET secrets from AWS Secrets Manager using boto3
-def get_secrets():
-
-    secret_name = "tech-audit-tool-api/secrets"
+def get_secret(env):
+    secret_name = os.getenv(env)
     region_name = "eu-west-2"
 
     # Create a Secrets Manager client
@@ -81,9 +63,9 @@ def get_secrets():
         service_name='secretsmanager',
         region_name=region_name
     )
-
+    
     try:
-        get_secret_value_response = client.get_secret_value(
+        secret_value_response = client.get_secret_value(
             SecretId=secret_name
         )
     except ClientError as e:
@@ -91,53 +73,30 @@ def get_secrets():
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
-    secret = get_secret_value_response['SecretString']
-
-    return secret
-
-def get_ui_secret():
-
-    secret_name = "tech-audit-tool-ui/secrets"
-    region_name = "eu-west-2"
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
-    except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise e
-
-    secret = get_secret_value_response['SecretString']
+    secret = secret_value_response.get('SecretString')
 
     return secret
 
 # SETTING OF API URL: Change if moving to production
-API_URL = json.loads(get_ui_secret())['API_URL']
+ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
+if os.getenv("LOCALHOST").lower() == "true":
+    REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
+else:
+    REDIRECT_URI = ui_secret['REDIRECT_URI'] # USED DURING PRODUCTION
+
+API_URL = ui_secret['API_URL']
 
 # Standard flask initialisation
 app = Flask(__name__)
-app.secret_key = json.loads(get_ui_secret())['APP_SECRET_KEY']
+app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))['APP_SECRET_KEY']
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
 
 # SET client keys from S3 bucket using boto3
-cognito_settings = json.loads(get_secrets())
+cognito_settings = json.loads(get_secret("API_SECRET_NAME"))
 AWS_COGNITO_CLIENT_ID = cognito_settings["COGNITO_CLIENT_ID"]
 AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
-
-# IMPORTANT: CHANGE WHEN MOVING TO PRODUCTION
-# This is the redirect uri set in the Cognito app settings.
-REDIRECT_URI = json.loads(get_ui_secret())['REDIRECT_URI']
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
@@ -222,6 +181,8 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
+    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
+
     if code:
         token_response = exchange_code_for_tokens(code)
         if "id_token" in token_response and "refresh_token" in token_response:
@@ -239,7 +200,8 @@ def home():
             flash("Failed to retrieve ID Token")
             return redirect(url_for("home"))
 
-    return render_template("index.html", items=items_none, CLIENT_ID=AWS_COGNITO_CLIENT_ID)
+    CLIENT_ID = AWS_COGNITO_CLIENT_ID
+    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID, REDIRECT_URI=REDIRECT_URI, AWS_ENV=AWS_ENV)
 
 
 # Basic sign out
@@ -267,8 +229,9 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
+    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
     token_url = (
-        "https://keh-tech-audit-tool.auth.eu-west-2.amazoncognito.com/oauth2/token"
+        f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
     )
     payload = {
         "grant_type": "authorization_code",
@@ -342,26 +305,12 @@ def view_project(project_name):
         return redirect(url_for("dashboard"))
 
     headers = {"Authorization": f"{session['id_token']}"}
-
-    try:
-        projects = requests.get(
-            f"{API_URL}/api/v1/projects/{project_name}",
-            headers=headers,
-        ).json()
-        
-        # Check if project not found
-        if projects.get("message") is None:
-            flash("Project not found. Please try again.")
-            return redirect(url_for("dashboard"))
-            
-        return render_template("view_project.html", project=projects)
-        
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching project: {str(e)}")
-        flash("Error retrieving project. Please try again.")
-        return redirect(url_for("dashboard"))
-
-    # projects either returnes {'description': 'Project not found', 'message': None} or a project in dict form.
+    
+    projects = requests.get(
+        f"{API_URL}/api/v1/projects/{project_name}",
+        headers=headers,
+    ).json()
+    
     try:
         if projects["message"] is None:
             flash("Project not found. Please try again.")
@@ -425,7 +374,7 @@ def survey():
             "database": form_data["database"],
             "languages": form_data["languages"],
             "frameworks": form_data["frameworks"],
-            "CICD": form_data["integrations"],
+            "cicd": form_data["integrations"],
             "infrastructure": form_data["infrastructure"],
         },
         "stage": form_data["stage"],

@@ -33,7 +33,6 @@ class TestProjectCreation(unittest.TestCase):
 
     def test_project_details(self):
         driver = self.driver
-
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
         print(link.text)
         link.click()
@@ -53,7 +52,6 @@ class TestProjectCreation(unittest.TestCase):
             other_input = driver.find_element(By.ID, "other-input")
             other_input.click()
             other_input.send_keys("Example Role")
-        
         
         click_link(driver, "Save and continue")
        
@@ -86,20 +84,17 @@ class TestProjectCreation(unittest.TestCase):
 
         click_link(driver, "Save and continue")
 
-        choice = click_radio(driver, ["outsourced", "partnership"])
+        choice = click_radio(driver, ["in-house", "outsourced", "partnership"])
 
         if choice == "partnership":
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             company_name = driver.find_element(By.ID, "other-input-2")
             company_name.click()
-            company_name.clear()
             company_name.send_keys("Example Company")
         elif choice == "outsourced":
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             company_name = driver.find_element(By.ID, "other-input-1")
             company_name.click()
-            company_name.clear()
             company_name.send_keys("Example Company")
+
         click_link(driver, "Save and continue")
 
         click_radio(driver, ["Development", "Active Support", "Unsupported"])
@@ -107,6 +102,65 @@ class TestProjectCreation(unittest.TestCase):
         click_link(driver, "Save and continue")
 
         click_link(driver, "Finish section")
+
+        driver.implicitly_wait(10)
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
+
+        link.click()
+
+        driver.implicitly_wait(10)
+
+        click_link(driver, "Continue")
+
+        choice = click_radio(driver, ["github", "gitlab", "other"])
+
+        if choice == "other":
+            source_control = driver.find_element(By.ID, "other-input")
+            source_control.click()
+            source_control.send_keys("Bitbucket")
+        
+        click_link(driver, "Save and continue")
+
+        source_control_link = driver.find_element(By.ID, "source_control_link-input")
+        source_control_link.click()
+        source_control_link.send_keys("https://example.com")
+
+        source_control_description = driver.find_element(By.ID, "source_control_desc-input")
+        source_control_description.click()
+        source_control_description.send_keys("Test Description")
+
+        # add_btn = driver.find_elements(By.CLASS_NAME, "ons-btn")[0]
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        click_link(driver, "Save and continue")
+
+        click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
+
+        click_link(driver, "Save and continue")
+
+        hosting_provider = driver.find_element(By.ID, "hosting-input")
+        hosting_provider.click()
+        hosting_provider.send_keys("Example Hosting Provider")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        click_link(driver, "Save and continue")
+
+        database = driver.find_element(By.ID, "database-input")
+        database.click()
+        database.send_keys("Example Hosting Provider")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        click_link(driver, "Save and continue")
+
+        click_link(driver, "Finish section")
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
 
         time.sleep(2)
     

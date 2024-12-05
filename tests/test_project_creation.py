@@ -146,6 +146,9 @@ class TestProjectCreation(unittest.TestCase):
 
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
+        driver.implicitly_wait(10)
+
+        time.sleep(2)
 
         click_link(driver, "Save and continue")
 
@@ -155,6 +158,7 @@ class TestProjectCreation(unittest.TestCase):
 
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
+        driver.implicitly_wait(10)
 
         click_link(driver, "Save and continue")
 
@@ -162,7 +166,83 @@ class TestProjectCreation(unittest.TestCase):
 
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
 
+        link.click()
+
+        click_link(driver, "Continue")
+
+        language = driver.find_element(By.ID, "languages-input")
+
+        language.click()
+
+        language.send_keys("Python")
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        driver.implicitly_wait(10)
+
+        main_language = driver.find_element(By.XPATH, '//input[@value="main"]')
+        main_language.click()
+
+        language = driver.find_element(By.ID, "languages-input")
+
+        language.click()
+
+        language.send_keys("JavaScript")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
         time.sleep(2)
+
+        click_link(driver, "Save and continue")
+        
+        framework = driver.find_element(By.ID, "frameworks-input")
+
+        framework.click()
+
+        framework.send_keys("Django")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        time.sleep(2)
+
+        click_link(driver, "Save and continue")
+
+        integrations = driver.find_element(By.ID, "integrations-input")
+        
+        integrations.click()
+
+        integrations.send_keys("Github Actions")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        time.sleep(2)
+
+        click_link(driver, "Save and continue")
+
+        infrastructure = driver.find_element(By.ID, "infrastructure-input")
+        
+        infrastructure.click()
+
+        infrastructure.send_keys("AWS")
+
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        add_btn.click()
+
+        time.sleep(2)
+
+        click_link(driver, "Save and continue")
+
+        time.sleep(2)
+
+        click_link(driver, "Finish section")
+
+        time.sleep(2)
+
+        
+
     
     def tearDown(self):
         self.driver.close()

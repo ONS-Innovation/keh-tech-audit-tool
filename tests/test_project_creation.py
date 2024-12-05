@@ -86,19 +86,20 @@ class TestProjectCreation(unittest.TestCase):
 
         click_link(driver, "Save and continue")
 
-        click_radio(driver, ["in-house", "outsourced", "partnership"])
+        choice = click_radio(driver, ["outsourced", "partnership"])
 
         if choice == "partnership":
-            company_name = driver.find_element(By.ID, "other-input-1")
-            company_name.click()
-            company_name.clear()
-            company_name.send_keys("Example Company")
-        elif choice == "outsourced":
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             company_name = driver.find_element(By.ID, "other-input-2")
             company_name.click()
             company_name.clear()
             company_name.send_keys("Example Company")
-        
+        elif choice == "outsourced":
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            company_name = driver.find_element(By.ID, "other-input-1")
+            company_name.click()
+            company_name.clear()
+            company_name.send_keys("Example Company")
         click_link(driver, "Save and continue")
 
         click_radio(driver, ["Development", "Active Support", "Unsupported"])

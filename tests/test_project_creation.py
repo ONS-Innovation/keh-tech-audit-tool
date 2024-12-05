@@ -91,10 +91,12 @@ class TestProjectCreation(unittest.TestCase):
         if choice == "partnership":
             company_name = driver.find_element(By.ID, "other-input-1")
             company_name.click()
+            company_name.clear()
             company_name.send_keys("Example Company")
         elif choice == "outsourced":
             company_name = driver.find_element(By.ID, "other-input-2")
             company_name.click()
+            company_name.clear()
             company_name.send_keys("Example Company")
         
         click_link(driver, "Save and continue")

@@ -14,12 +14,31 @@ class TestProjectCreation(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         id_token = os.getenv("id_token")
-        self.driver.get("http://localhost:8000/survey")
-        self.driver.add_cookie({"name": "session", "value": id_token})
+        self.driver.get("http://localhost:8000")
+        self.email = os.getenv("TEST_EMAIL")
+        self.password = os.getenv("TEST_PASSWORD")
+        # self.driver.add_cookie({"name": "session", "value": id_token})
         self.driver.refresh()
 
     def test_project_details(self):
         driver = self.driver
+
+        click_link(driver, "Sign in with Cognito")
+
+        wait = WebDriverWait(self.driver, 3)
+
+        form = wait.until(
+            EC.visibility_of_element_located((By.XPATH, "//div[contains(@class,'visible-md')]//form[@name='cognitoSignInForm']"))
+        )
+        email = form.find_element(By.NAME, "username")
+        password = form.find_element(By.NAME, "password")
+        email.send_keys(self.email)
+        password.send_keys(self.password)
+        button = form.find_element(By.NAME, "signInSubmitButton")
+        button.click()
+        time.sleep(3)
+
+        driver.get("http://localhost:8000/survey")
 
         complete_contact_details(driver)
 

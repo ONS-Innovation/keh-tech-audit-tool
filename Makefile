@@ -9,6 +9,9 @@ run-ui:
 run-ui-debug:
 	poetry run flask --app application run --debug -p 8000
 
+test-project-creation:
+	poetry run python tests/test_project_creation.py
+
 format-python:
 	poetry run isort .
 	poetry run black .

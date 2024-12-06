@@ -9,6 +9,65 @@ import os
 import random
 import time
 
+class TestProjectCreation(unittest.TestCase):
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        id_token = os.getenv("id_token")
+        self.driver.get("http://localhost:8000/survey")
+        self.driver.add_cookie({"name": "session", "value": id_token})
+        self.driver.refresh()
+
+    def test_project_details(self):
+        driver = self.driver
+
+        complete_contact_details(driver)
+
+        complete_project_details(driver)
+
+        complete_tools_details(driver)
+
+        driver.implicitly_wait(10)
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
+
+        link.click()
+
+        driver.implicitly_wait(10)
+
+        click_link(driver, "Continue")
+
+        complete_source_control(driver)
+
+        complete_hosting(driver)
+
+        complete_database(driver)
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
+
+        link.click()
+
+        click_link(driver, "Continue")
+
+        complete_languages(driver)
+        
+        complete_frameworks(driver)
+
+        complete_integrations(driver)
+
+        complete_infrastructure(driver)
+
+        click_link(driver, "Continue to Submission")
+
+        button = driver.find_element(By.ID, 'submit-button')
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        button.click()
+        time.sleep(10)
+
+    
+    def tearDown(self):
+        self.driver.close()
+
 def click_link(driver, link_text):
     link = driver.find_element(By.LINK_TEXT, link_text)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -208,65 +267,6 @@ def complete_infrastructure(driver):
 
 
         click_link(driver, "Finish section")
-
-class TestProjectCreation(unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        id_token = os.getenv("id_token")
-        self.driver.get("http://localhost:8000/survey")
-        self.driver.add_cookie({"name": "session", "value": id_token})
-        self.driver.refresh()
-
-    def test_project_details(self):
-        driver = self.driver
-
-        complete_contact_details(driver)
-
-        complete_project_details(driver)
-
-        complete_tools_details(driver)
-
-        driver.implicitly_wait(10)
-
-        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
-
-        link.click()
-
-        driver.implicitly_wait(10)
-
-        click_link(driver, "Continue")
-
-        complete_source_control(driver)
-
-        complete_hosting(driver)
-
-        complete_database(driver)
-
-        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
-
-        link.click()
-
-        click_link(driver, "Continue")
-
-        complete_languages(driver)
-        
-        complete_frameworks(driver)
-
-        complete_integrations(driver)
-
-        complete_infrastructure(driver)
-
-        click_link(driver, "Continue to Submission")
-
-        button = driver.find_element(By.ID, 'submit-button')
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        button.click()
-        time.sleep(10)
-
-    
-    def tearDown(self):
-        self.driver.close()
 
 
 if __name__ == "__main__":

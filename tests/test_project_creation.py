@@ -21,18 +21,7 @@ def click_radio(driver, options):
     radio.click()
     return choice
 
-class TestProjectCreation(unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        id_token = os.getenv("id_token")
-        self.driver.get("http://localhost:8000/survey")
-        self.driver.add_cookie({"name": "session", "value": id_token})
-        self.driver.refresh()
-    
-
-    def test_project_details(self):
-        driver = self.driver
+def complete_contact_details(driver):
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
         print(link.text)
         link.click()
@@ -67,7 +56,8 @@ class TestProjectCreation(unittest.TestCase):
             other_input.send_keys("Example Role")
         
         click_link(driver, "Save and continue")
-        
+    
+def complete_project_details(driver):
         project_name = driver.find_element(By.ID, "project-name")
         project_short_name = driver.find_element(By.ID, "project-short-name")
         documentation_link = driver.find_element(By.ID, "documentation-link")
@@ -81,9 +71,9 @@ class TestProjectCreation(unittest.TestCase):
         documentation_link.send_keys("https://example.com")
         project_description.click()
         project_description.send_keys("test description")
-
         click_link(driver, "Save and continue")
 
+def complete_tools_details(driver):
         choice = click_radio(driver, ["in-house", "outsourced", "partnership"])
 
         if choice == "partnership":
@@ -103,16 +93,7 @@ class TestProjectCreation(unittest.TestCase):
 
         click_link(driver, "Finish section")
 
-        driver.implicitly_wait(10)
-
-        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
-
-        link.click()
-
-        driver.implicitly_wait(10)
-
-        click_link(driver, "Continue")
-
+def complete_source_control(driver):
         choice = click_radio(driver, ["github", "gitlab", "other"])
 
         if choice == "other":
@@ -125,7 +106,7 @@ class TestProjectCreation(unittest.TestCase):
         source_control_link = driver.find_element(By.ID, "source_control_link-input")
         source_control_link.click()
         source_control_link.send_keys("https://example.com")
-
+        
         source_control_description = driver.find_element(By.ID, "source_control_desc-input")
         source_control_description.click()
         source_control_description.send_keys("Test Description")
@@ -133,14 +114,14 @@ class TestProjectCreation(unittest.TestCase):
         # add_btn = driver.find_elements(By.CLASS_NAME, "ons-btn")[0]
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
-
         click_link(driver, "Save and continue")
 
+def complete_hosting(driver):
         click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
-
         click_link(driver, "Save and continue")
 
         hosting_provider = driver.find_element(By.ID, "hosting-input")
+        driver.implicitly_wait(10)
         hosting_provider.click()
         hosting_provider.send_keys("Example Hosting Provider")
 
@@ -148,13 +129,12 @@ class TestProjectCreation(unittest.TestCase):
         add_btn.click()
         driver.implicitly_wait(10)
 
-        time.sleep(2)
-
         click_link(driver, "Save and continue")
 
+def complete_database(driver):
         database = driver.find_element(By.ID, "database-input")
         database.click()
-        database.send_keys("Example Hosting Provider")
+        database.send_keys("Example Database Provider")
 
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
@@ -163,13 +143,8 @@ class TestProjectCreation(unittest.TestCase):
         click_link(driver, "Save and continue")
 
         click_link(driver, "Finish section")
-
-        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
-
-        link.click()
-
-        click_link(driver, "Continue")
-
+    
+def complete_languages(driver):
         language = driver.find_element(By.ID, "languages-input")
 
         language.click()
@@ -192,10 +167,9 @@ class TestProjectCreation(unittest.TestCase):
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
 
-        time.sleep(2)
-
         click_link(driver, "Save and continue")
-        
+
+def complete_frameworks(driver):
         framework = driver.find_element(By.ID, "frameworks-input")
 
         framework.click()
@@ -205,10 +179,9 @@ class TestProjectCreation(unittest.TestCase):
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
 
-        time.sleep(2)
-
         click_link(driver, "Save and continue")
-
+    
+def complete_integrations(driver):
         integrations = driver.find_element(By.ID, "integrations-input")
         
         integrations.click()
@@ -218,10 +191,9 @@ class TestProjectCreation(unittest.TestCase):
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
 
-        time.sleep(2)
-
         click_link(driver, "Save and continue")
 
+def complete_infrastructure(driver):
         infrastructure = driver.find_element(By.ID, "infrastructure-input")
         
         infrastructure.click()
@@ -231,17 +203,66 @@ class TestProjectCreation(unittest.TestCase):
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
 
-        time.sleep(2)
 
         click_link(driver, "Save and continue")
 
-        time.sleep(2)
 
         click_link(driver, "Finish section")
 
-        time.sleep(2)
+class TestProjectCreation(unittest.TestCase):
 
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        id_token = os.getenv("id_token")
+        self.driver.get("http://localhost:8000/survey")
+        self.driver.add_cookie({"name": "session", "value": id_token})
+        self.driver.refresh()
+
+    def test_project_details(self):
+        driver = self.driver
+
+        complete_contact_details(driver)
+
+        complete_project_details(driver)
+
+        complete_tools_details(driver)
+
+        driver.implicitly_wait(10)
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
+
+        link.click()
+
+        driver.implicitly_wait(10)
+
+        click_link(driver, "Continue")
+
+        complete_source_control(driver)
+
+        complete_hosting(driver)
+
+        complete_database(driver)
+
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
+
+        link.click()
+
+        click_link(driver, "Continue")
+
+        complete_languages(driver)
         
+        complete_frameworks(driver)
+
+        complete_integrations(driver)
+
+        complete_infrastructure(driver)
+
+        click_link(driver, "Continue to Submission")
+
+        button = driver.find_element(By.ID, 'submit-button')
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        button.click()
+        time.sleep(10)
 
     
     def tearDown(self):

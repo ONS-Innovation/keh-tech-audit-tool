@@ -34,3 +34,6 @@ docker-run:
 	 -e API_BUCKET_NAME -e API_SECRET_NAME \
 	  -e UI_SECRET_NAME -e AWS_ACCOUNT_NAME \
 	  -e LOCALHOST tech-audit-tool
+
+test:
+	cd tests && poetry run python3 test_login.py

@@ -19,6 +19,8 @@ python-dotenv = "^1.0.1"
 flake8 = "^7.0.0"
 black = "^24.4.2"
 isort = "^5.13.2"
+selenium = "^4.25.0"
+
 
 [build-system]
 requires = ["poetry-core"]

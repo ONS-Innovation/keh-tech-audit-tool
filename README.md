@@ -254,6 +254,8 @@ export TEST_PASSWORD=<password>
 
 ## Running tests
 ### Project Creation Tests
+The following test will automatically go through the steps required for creating a project.
+This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
 ```bash
 make test-project-creation
 ```
@@ -261,7 +263,7 @@ make test-project-creation
 ### Login test
 ```bash
 cd tests
-poetry run python3 test_login.py
+poetry run python3 tests/test_login.py
 ```
 
 If login is successful, cookies will be saved to the `cookies` directory. When running the tests again, the cookies will be used to log in automatically. If the session is expired, a user can login again and the cookies will be updated.

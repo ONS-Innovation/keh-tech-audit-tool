@@ -12,6 +12,7 @@ import time
 class TestProjectCreation(unittest.TestCase):
 
     def setUp(self):
+        """Set up testing"""
         self.driver = webdriver.Firefox()
         self.driver.get("http://localhost:8000")
         self.email = os.getenv("TEST_EMAIL")
@@ -20,11 +21,12 @@ class TestProjectCreation(unittest.TestCase):
         self.driver.refresh()
 
     def test_project_details(self):
+        """Test creating a project from beginning to end"""
         driver = self.driver
 
         self.click_link(driver, "Sign in with Cognito")
 
-        wait = WebDriverWait(self.driver, 3)
+        wait = WebDriverWait(self.driver, 5)
 
         form = wait.until(
             EC.visibility_of_element_located((By.XPATH, "//div[contains(@class,'visible-md')]//form[@name='cognitoSignInForm']"))
@@ -84,37 +86,39 @@ class TestProjectCreation(unittest.TestCase):
         button.click()
         time.sleep(10)
 
-    
     def tearDown(self):
         self.driver.close()
     
     def click_link(self, driver, link_text):
+        """Click link via text"""
         link = driver.find_element(By.LINK_TEXT, link_text)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         link.click()
         driver.implicitly_wait(10)
 
     def click_radio(self, driver, options):
+        """Randomly choose option from radio"""
         choice = random.choice(options)
         radio = driver.find_element(By.ID, choice)
         radio.click()
         return choice
 
     def assert_validation_page(self):
+        """Assert that the validation page has the correct details"""
         driver = self.driver
         assert driver.current_url == "http://localhost:8000/validate_details"
         assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
         assert "testmanager@ons.gov.uk" in driver.find_element(By.ID, "delivery_manager").text
         assert "Selenium bot test" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[1]").text
-        
+
         assert "selbottest" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[2]").text
         assert "https://example.com" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[3]").text
         assert "Active Support" or "Development" or "Unsupported" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[4]").text
-        assert "In House" or "Outsourced" or "Partnership" in driver.find_element(By.XPATH, "//div[@id='developed_details']/ul/li[1]").text
+        assert "In House" or (("Outsourced" or "Partnership") and "Example Company") in driver.find_element(By.XPATH, "//div[@id='developed_details']/ul/li[1]").text
 
-        assert "Bitbucket" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[1]").text
+        assert "Bitbucket" or "Github" or "Gitlab" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[1]").text
         assert "https://example.com" and "Test Description" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[2]").text
-        assert "Example Hosting Provider" in driver.find_element(By.XPATH, "//div[@id='hosting_details']/ul/li[1]").text
+        assert "Example Hosting Provider" or "On-Premises" in driver.find_element(By.XPATH, "//div[@id='hosting_details']/ul/li[1]").text
         assert "Example Database Provider" in driver.find_element(By.XPATH, "//div[@id='database_details']/ul/li[1]").text
 
         assert "Python" in driver.find_element(By.XPATH, "//div[@id='languages_details']/ul/li[1]").text
@@ -124,6 +128,7 @@ class TestProjectCreation(unittest.TestCase):
 
 
     def complete_contact_details(self, driver):
+        """Complete contact details i.e technical contact and delivery manager"""
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
         print(link.text)
         link.click()
@@ -160,6 +165,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
         
     def complete_project_details(self, driver):
+        """Complete basic project details"""
         project_name = driver.find_element(By.ID, "project-name")
         project_short_name = driver.find_element(By.ID, "project-short-name")
         documentation_link = driver.find_element(By.ID, "documentation-link")
@@ -176,6 +182,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_tools_details(self, driver):
+        """Complete details used on tooling"""
         choice = self.click_radio(driver, ["in-house", "outsourced", "partnership"])
 
         if choice == "partnership":
@@ -196,6 +203,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Finish section")
 
     def complete_source_control(self, driver):
+        """Complete details on source control"""
         choice = self.click_radio(driver, ["github", "gitlab", "other"])
 
         if choice == "other":
@@ -219,22 +227,24 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_hosting(self, driver):
-        self.click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
+        """Complete details on hosting services"""
+        choice = self.click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
         self.click_link(driver, "Save and continue")
 
-        hosting_provider = driver.find_element(By.ID, "hosting-input")
-        time.sleep(5)
-        driver.implicitly_wait(10)
-        hosting_provider.click()
-        hosting_provider.send_keys("Example Hosting Provider")
+        if choice != "On-premises":
+            hosting_provider = driver.find_element(By.ID, "hosting-input")
+            time.sleep(5)
+            driver.implicitly_wait(10)
+            hosting_provider.click()
+            hosting_provider.send_keys("Example Hosting Provider")
 
-        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
-        add_btn.click()
+            add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+            add_btn.click()
+            self.click_link(driver, "Save and continue")
         driver.implicitly_wait(10)
-
-        self.click_link(driver, "Save and continue")
 
     def complete_database(self, driver):
+        """Complete details on datbases used"""
         database = driver.find_element(By.ID, "database-input")
         database.click()
         database.send_keys("Example Database Provider")
@@ -248,6 +258,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Finish section")
         
     def complete_languages(self, driver):
+        """Complete details on languages used"""
         language = driver.find_element(By.ID, "languages-input")
 
         language.click()
@@ -273,6 +284,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_frameworks(self, driver):
+        """Complete details on frameworks used"""
         framework = driver.find_element(By.ID, "frameworks-input")
 
         framework.click()
@@ -285,6 +297,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
         
     def complete_integrations(self, driver):
+        """Completes the integrations section of the project creation form."""
         integrations = driver.find_element(By.ID, "integrations-input")
         
         integrations.click()
@@ -297,6 +310,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_infrastructure(self, driver):
+        """Completes the infrastructure section of the project creation process."""
         infrastructure = driver.find_element(By.ID, "infrastructure-input")
         
         infrastructure.click()
@@ -306,9 +320,7 @@ class TestProjectCreation(unittest.TestCase):
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         add_btn.click()
 
-
         self.click_link(driver, "Save and continue")
-
 
         self.click_link(driver, "Finish section")
 

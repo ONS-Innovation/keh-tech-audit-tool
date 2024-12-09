@@ -77,6 +77,8 @@ class TestProjectCreation(unittest.TestCase):
 
         self.click_link(driver, "Continue to Submission")
 
+        self.assert_validation_page()
+
         button = driver.find_element(By.ID, 'submit-button')
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         button.click()
@@ -97,6 +99,29 @@ class TestProjectCreation(unittest.TestCase):
         radio = driver.find_element(By.ID, choice)
         radio.click()
         return choice
+
+    def assert_validation_page(self):
+        driver = self.driver
+        assert driver.current_url == "http://localhost:8000/validate_details"
+        assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
+        assert "testmanager@ons.gov.uk" in driver.find_element(By.ID, "delivery_manager").text
+        assert "Selenium bot test" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[1]").text
+        
+        assert "selbottest" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[2]").text
+        assert "https://example.com" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[3]").text
+        assert "Active Support" or "Development" or "Unsupported" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[4]").text
+        assert "In House" or "Outsourced" or "Partnership" in driver.find_element(By.XPATH, "//div[@id='developed_details']/ul/li[1]").text
+
+        assert "Bitbucket" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[1]").text
+        assert "https://example.com" and "Test Description" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[2]").text
+        assert "Example Hosting Provider" in driver.find_element(By.XPATH, "//div[@id='hosting_details']/ul/li[1]").text
+        assert "Example Database Provider" in driver.find_element(By.XPATH, "//div[@id='database_details']/ul/li[1]").text
+
+        assert "Python" in driver.find_element(By.XPATH, "//div[@id='languages_details']/ul/li[1]").text
+        assert "Django" in driver.find_element(By.XPATH, "//div[@id='framework_details']/ul/li[1]").text
+        assert "Github Actions" in driver.find_element(By.XPATH, "//div[@id='integration_details']/ul/li[1]").text
+        assert "AWS" in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']/ul/li[1]").text
+
 
     def complete_contact_details(self, driver):
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
@@ -147,7 +172,7 @@ class TestProjectCreation(unittest.TestCase):
         documentation_link.click()
         documentation_link.send_keys("https://example.com")
         project_description.click()
-        project_description.send_keys("test description")
+        project_description.send_keys("https://example.com")
         self.click_link(driver, "Save and continue")
 
     def complete_tools_details(self, driver):
@@ -198,6 +223,7 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
         hosting_provider = driver.find_element(By.ID, "hosting-input")
+        time.sleep(5)
         driver.implicitly_wait(10)
         hosting_provider.click()
         hosting_provider.send_keys("Example Hosting Provider")

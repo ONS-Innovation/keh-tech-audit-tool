@@ -232,12 +232,12 @@ class TestProjectCreation(unittest.TestCase):
 
         if choice != "On-premises":
             hosting_provider = driver.find_element(By.ID, "hosting-input")
-            time.sleep(5)
             driver.implicitly_wait(10)
             self.wait.until(EC.element_to_be_clickable(hosting_provider)).click()
             hosting_provider.send_keys("Example Hosting Provider")
 
             add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+            self.wait.until(EC.element_to_be_clickable(add_btn)).click()
             self.click_link(driver, "Save and continue")
         driver.implicitly_wait(10)
 

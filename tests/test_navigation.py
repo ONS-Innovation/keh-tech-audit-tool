@@ -12,9 +12,9 @@ class TestNavigation(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
-        id_token = os.getenv("id_token")
-        self.driver.get("http://localhost:8000/dashboard")
-        self.driver.add_cookie({"name": "session", "value": id_token})
+        self.driver.get("http://localhost:8000")
+        self.email = os.getenv("TEST_EMAIL")
+        self.password = os.getenv("TEST_PASSWORD")
         self.driver.refresh()
     
     def test_dashboard(self):

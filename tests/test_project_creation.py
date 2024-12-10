@@ -127,7 +127,11 @@ class TestProjectCreation(unittest.TestCase):
 
 
     def complete_contact_details(self, driver):
-        """Complete contact details i.e technical contact and delivery manager"""
+        """Complete contact details i.e technical contact and delivery manager
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
         print(link.text)
         self.wait.until(EC.element_to_be_clickable(link)).click()
@@ -164,7 +168,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
         
     def complete_project_details(self, driver):
-        """Complete basic project details"""
+        """Complete basic project details
+
+        Args:
+            driver (webdriver.Firefox: The driver that interacts with the browser
+        """
         project_name = driver.find_element(By.ID, "project-name")
         project_short_name = driver.find_element(By.ID, "project-short-name")
         documentation_link = driver.find_element(By.ID, "documentation-link")
@@ -181,7 +189,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_tools_details(self, driver):
-        """Complete details used on tooling"""
+        """Complete details used on tooling
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         choice = self.click_radio(driver, ["in-house", "outsourced", "partnership"])
 
         if choice == "partnership":
@@ -202,7 +214,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Finish section")
 
     def complete_source_control(self, driver):
-        """Complete details on source control"""
+        """Complete details on source control
+
+        Args:
+            driver (webdriver.Firefox): Complete details on source control
+        """
         choice = self.click_radio(driver, ["github", "gitlab", "other"])
 
         if choice == "other":
@@ -226,7 +242,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_hosting(self, driver):
-        """Complete details on hosting services"""
+        """Complete details on hosting services
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         choice = self.click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
         self.click_link(driver, "Save and continue")
 
@@ -242,7 +262,11 @@ class TestProjectCreation(unittest.TestCase):
         driver.implicitly_wait(10)
 
     def complete_database(self, driver):
-        """Complete details on datbases used"""
+        """Complete details on datbases used
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         database = driver.find_element(By.ID, "database-input")
         self.wait.until(EC.element_to_be_clickable(database)).click()
         database.send_keys("Example Database Provider")
@@ -256,7 +280,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Finish section")
         
     def complete_languages(self, driver):
-        """Complete details on languages used"""
+        """Complete details on languages used
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         language = driver.find_element(By.ID, "languages-input")
 
         self.wait.until(EC.element_to_be_clickable(language)).click()
@@ -278,7 +306,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_frameworks(self, driver):
-        """Complete details on frameworks used"""
+        """Complete details on frameworks used
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         framework = driver.find_element(By.ID, "frameworks-input")
 
         self.wait.until(EC.element_to_be_clickable(framework)).click()
@@ -289,7 +321,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
         
     def complete_integrations(self, driver):
-        """Completes the integrations section of the project creation form."""
+        """Completes the integrations section of the project creation form.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         integrations = driver.find_element(By.ID, "integrations-input")
         
         self.wait.until(EC.element_to_be_clickable(integrations)).click()
@@ -300,7 +336,11 @@ class TestProjectCreation(unittest.TestCase):
         self.click_link(driver, "Save and continue")
 
     def complete_infrastructure(self, driver):
-        """Completes the infrastructure section of the project creation process."""
+        """Completes the infrastructure section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
         infrastructure = driver.find_element(By.ID, "infrastructure-input")
         
         self.wait.until(EC.element_to_be_clickable(infrastructure)).click()

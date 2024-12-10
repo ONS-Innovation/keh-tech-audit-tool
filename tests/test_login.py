@@ -13,22 +13,26 @@ import pathlib
 
 class TestNavigation(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        """Set up testing"""
+        self.driver = webdriver.Firefox()
         self.driver.maximize_window()
         self.email = os.getenv("TEST_EMAIL")
         self.password = os.getenv("TEST_PASSWORD")
         self.cookie_file = "cookies.pkl"
         
     def tearDown(self):
+        """End all testing processes"""
         self.driver.quit()
         
     def save_cookies(self):
+        """Saves session cookies to a file post-login from Cognito"""
         # Create cookies directory if it doesn't exist
         pathlib.Path("cookies").mkdir(exist_ok=True)
         with open(f"cookies/{self.cookie_file}", "wb") as f:
             pickle.dump(self.driver.get_cookies(), f)
             
     def load_cookies(self):
+        """Load cookies into session if they exist"""
         try:
             with open(f"cookies/{self.cookie_file}", "rb") as f:
                 cookies = pickle.load(f)
@@ -39,12 +43,14 @@ class TestNavigation(unittest.TestCase):
             return False
             
     def is_login_successful(self):
+        """Returns True if the user is successfully logged in"""
         self.driver.get("http://localhost:8000/dashboard")
         time.sleep(1)
         
         return "/dashboard" in self.driver.current_url
         
     def test_login_flow(self):
+        """Test general login flow starting from the index page"""
         self.driver.get("http://localhost:8000")
         
         if self.load_cookies():

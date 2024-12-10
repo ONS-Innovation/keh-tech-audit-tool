@@ -245,14 +245,14 @@ make format-python
 This will run `isort`, `black` and `flake8`. Flake8 will ignore `E501 line too long`.
 
 ## Testing
-### Setting up test environment variables
-
+### Setting Up Test Environment Variables
+The following environment variables are used for signing into the Tech Audit Tool through Cognito:
 ```bash
-export TEST_EMAIL=<email>
-export TEST_PASSWORD=<password>
+export TEST_EMAIL=<EMAIL> e.g test@ons.gov.uk
+export TEST_PASSWORD=<PASSWORD> e.g testpassword123
 ```
 
-## Running tests
+## Running Tests
 ### Project Creation Tests
 The following test will automatically go through the steps required for creating a project.
 This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
@@ -260,9 +260,8 @@ This is useful if you wish to quickly populate the fields after a change has bee
 make test-project-creation
 ```
 
-### Login test
+### Login Test
 ```bash
-cd tests
 poetry run python3 tests/test_login.py
 ```
 

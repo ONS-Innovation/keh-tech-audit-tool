@@ -11,6 +11,7 @@ import time
 class TestNavigation(unittest.TestCase):
 
     def setUp(self):
+        """Set up testing"""
         self.driver = webdriver.Firefox()
         self.driver.get("http://localhost:8000")
         self.email = os.getenv("TEST_EMAIL")
@@ -18,12 +19,14 @@ class TestNavigation(unittest.TestCase):
         self.driver.refresh()
     
     def test_dashboard(self):
+        """Test if dashboard contents are correct"""
         driver = self.driver
         assert driver.title == "Tech Radar Data Collection"
 
         time.sleep(1)
     
     def test_project_nav(self):
+        """Test if project navigation is correct"""
         driver = self.driver
         driver.find_element(By.ID, "tab_add-projects").click()
         assert driver.current_url == "http://localhost:8000/dashboard#add-projects"

@@ -9,8 +9,14 @@ run-ui:
 run-ui-debug:
 	poetry run flask --app application run --debug -p 8000
 
-test-project-creation:
+test-creation:
 	poetry run python tests/test_project_creation.py
+
+test-login:
+	poetry run python tests/test_login.py
+
+test-navigation:
+	poetry run python tests/test_navigation.py
 
 format-python:
 	poetry run isort .
@@ -36,4 +42,6 @@ docker-run:
 	  -e LOCALHOST tech-audit-tool
 
 test:
-	cd tests && poetry run python3 test_login.py
+	make test-login
+	make test-navigation
+	make test-creation

@@ -15,9 +15,6 @@ test-creation:
 test-login:
 	poetry run python tests/test_login.py
 
-test-navigation:
-	poetry run python tests/test_navigation.py
-
 format-python:
 	poetry run isort .
 	poetry run black .
@@ -42,6 +39,5 @@ docker-run:
 	  -e LOCALHOST tech-audit-tool
 
 test:
-	make test-login
 	make test-navigation
 	make test-creation

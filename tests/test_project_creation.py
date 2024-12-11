@@ -17,7 +17,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
     def setUp(self):
         """Set up testing"""
-        self.driver = webdriver.Firefox()
+        if os.getenv("CLIENT").lower() == "chrome":
+            self.driver = webdriver.Chrome()
+        else:
+            self.driver = webdriver.Firefox()
         self.driver.get("http://localhost:8000")
         self.email = os.getenv("TEST_EMAIL")
         self.password = os.getenv("TEST_PASSWORD")

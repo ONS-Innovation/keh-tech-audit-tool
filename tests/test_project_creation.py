@@ -21,8 +21,33 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait = WebDriverWait(self.driver, 5)
         self.driver.refresh()
 
+        self.project_name = self.generate_words(3)
+        self.project_short_name = self.generate_words(1, "").lower()
+        self.project_desc = self.generate_words(5)
+        self.documentation_link = f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+        self.source_control_link = f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+        self.source_control_description = self.generate_words(5)
+        self.hosting_provider = self.generate_words(1, "")
+        self.database_provider = self.generate_words(1, "")
+        self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
+        self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
+        self.integration = random.choice(["Github Actions", "Jenkins", "Travis CI", "Circle CI"])
+        self.infrastructure = random.choice(["AWS", "Azure", "Google Cloud"])
+    
+    def generate_words(self, num_words, delimiter=" "):
+        """Generates a string of random words
+
+        Args:
+            num_words (int): Number of words to be generated
+            delimiter (str, optional): Defines how to seprate words. Defaults to " ".
+
+        Returns:
+            str: Final string of words
+        """
+        return delimiter.join(list(map(str.title, [requests.get("https://random-word-api.herokuapp.com/word").json()[0] for word in range(num_words)])))
+
     def test_project_details(self):
-        """Test creating a project from beginning to end"""
+        """Test creating a project from start to finish"""
         driver = self.driver
 
         self.login(driver)
@@ -85,22 +110,22 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert driver.current_url == "http://localhost:8000/validate_details"
         assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
         assert "testmanager@ons.gov.uk" in driver.find_element(By.ID, "delivery_manager").text
-        assert "Selenium bot test" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[1]").text
+        assert self.project_name in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[1]").text
 
-        assert "selbottest" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[2]").text
-        assert "https://example.com" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[3]").text
+        assert self.project_short_name in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[2]").text
+        assert self.documentation_link in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[3]").text
         assert "Active Support" or "Development" or "Unsupported" in driver.find_element(By.XPATH, "//div[@id='project_details']/ul/li[4]").text
         assert "In House" or (("Outsourced" or "Partnership") and "Example Company") in driver.find_element(By.XPATH, "//div[@id='developed_details']/ul/li[1]").text
 
         assert "Bitbucket" or "Github" or "Gitlab" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[1]").text
-        assert "https://example.com" and "Test Description" in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[2]").text
-        assert "Example Hosting Provider" or "On-Premises" in driver.find_element(By.XPATH, "//div[@id='hosting_details']/ul/li[1]").text
-        assert "Example Database Provider" in driver.find_element(By.XPATH, "//div[@id='database_details']/ul/li[1]").text
+        assert self.source_control_link and self.source_control_description in driver.find_element(By.XPATH, "//div[@id='source_control_details']/ul/li[2]").text
+        assert self.hosting_provider or "On-Premises" in driver.find_element(By.XPATH, "//div[@id='hosting_details']/ul/li[1]").text
+        assert self.database_provider in driver.find_element(By.XPATH, "//div[@id='database_details']/ul/li[1]").text
 
-        assert "Python" in driver.find_element(By.XPATH, "//div[@id='languages_details']/ul/li[1]").text
-        assert "Django" in driver.find_element(By.XPATH, "//div[@id='framework_details']/ul/li[1]").text
-        assert "Github Actions" in driver.find_element(By.XPATH, "//div[@id='integration_details']/ul/li[1]").text
-        assert "AWS" in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']/ul/li[1]").text
+        assert self.language in driver.find_element(By.XPATH, "//div[@id='languages_details']/ul/li[1]").text
+        assert self.framework in driver.find_element(By.XPATH, "//div[@id='framework_details']/ul/li[1]").text
+        assert self.integration in driver.find_element(By.XPATH, "//div[@id='integration_details']/ul/li[1]").text
+        assert self.infrastructure in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']/ul/li[1]").text
 
 
     def complete_contact_details(self, driver):
@@ -167,13 +192,17 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         project_description = driver.find_element(By.ID, "project-description")
 
         self.wait.until(EC.element_to_be_clickable(project_name)).click()
-        project_name.send_keys("Selenium bot test")
+        project_name.send_keys(self.project_name)
+
         self.wait.until(EC.element_to_be_clickable(project_short_name)).click()
-        project_short_name.send_keys("selbottest")
+        project_short_name.send_keys(self.project_short_name)
+
         self.wait.until(EC.element_to_be_clickable(documentation_link)).click()
-        documentation_link.send_keys("https://example.com")
+        documentation_link.send_keys(self.documentation_link)
+
         self.wait.until(EC.element_to_be_clickable(project_description)).click()
-        project_description.send_keys("https://example.com")
+        project_description.send_keys(self.project_desc)
+
         self.click_link(driver, "Save and continue")
 
     def complete_tools_details(self, driver):
@@ -222,12 +251,12 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
         source_control_link = driver.find_element(By.ID, "source_control_link-input")
         self.wait.until(EC.element_to_be_clickable(source_control_link)).click()
-        source_control_link.send_keys("https://example.com")
+        source_control_link.send_keys(self.source_control_link)
         
         driver.implicitly_wait(10)
         source_control_description = driver.find_element(By.ID, "source_control_desc-input")
         self.wait.until(EC.element_to_be_clickable(source_control_description)).click()
-        source_control_description.send_keys("Test Description")
+        source_control_description.send_keys(self.source_control_description)
 
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
@@ -247,7 +276,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             driver.implicitly_wait(10)
             hosting_provider = driver.find_element(By.ID, "hosting-input")
             self.wait.until(EC.element_to_be_clickable(hosting_provider)).click()
-            hosting_provider.send_keys("Example Hosting Provider")
+            hosting_provider.send_keys(self.hosting_provider)
 
             driver.implicitly_wait(10)
             add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
@@ -264,7 +293,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
         database = driver.find_element(By.ID, "database-input")
         self.wait.until(EC.element_to_be_clickable(database)).click()
-        database.send_keys("Example Database Provider")
+        database.send_keys(self.database_provider)
 
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
@@ -286,7 +315,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         self.wait.until(EC.element_to_be_clickable(language)).click()
 
-        language.send_keys("Python")
+        language.send_keys(self.language)
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
@@ -315,7 +344,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         framework = driver.find_element(By.ID, "frameworks-input")
 
         self.wait.until(EC.element_to_be_clickable(framework)).click()
-        framework.send_keys("Django")
+        framework.send_keys(self.framework)
 
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
@@ -332,7 +361,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         integrations = driver.find_element(By.ID, "integrations-input")
         
         self.wait.until(EC.element_to_be_clickable(integrations)).click()
-        integrations.send_keys("Github Actions")
+        integrations.send_keys(self.integration)
 
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
@@ -349,7 +378,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         infrastructure = driver.find_element(By.ID, "infrastructure-input")
         
         self.wait.until(EC.element_to_be_clickable(infrastructure)).click()
-        infrastructure.send_keys("AWS")
+        infrastructure.send_keys(self.infrastructure)
 
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')

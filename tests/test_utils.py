@@ -6,6 +6,7 @@ import random
 class TestUtil:
     def click_link(self, driver, link_text):
         """Click link via text"""
+        driver.implicitly_wait(10)
         link = driver.find_element(By.LINK_TEXT, link_text)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         self.wait.until(EC.element_to_be_clickable(link)).click()
@@ -14,6 +15,7 @@ class TestUtil:
     def click_radio(self, driver, options):
         """Randomly choose option from radio"""
         choice = random.choice(options)
+        driver.implicitly_wait(10)
         radio = driver.find_element(By.ID, choice)
         self.wait.until(EC.element_to_be_clickable(radio)).click()
         return choice

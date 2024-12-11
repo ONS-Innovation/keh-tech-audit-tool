@@ -250,7 +250,7 @@ The following environment variables are used for signing into the Tech Audit Too
 ```bash
 export TEST_EMAIL=<EMAIL> e.g test@ons.gov.uk
 export TEST_PASSWORD=<PASSWORD> e.g testpassword123
-export client=<CLIENT NAME> e.g Chrome, defaults to Firefox
+export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
 ```
 
 ## Running Tests

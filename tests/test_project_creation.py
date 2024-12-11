@@ -9,6 +9,9 @@ import requests
 import os
 import random
 import time
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class TestProjectCreation(unittest.TestCase, TestUtil):
 
@@ -134,6 +137,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_contact_details...")
         driver.implicitly_wait(10)
         link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[0]
 
@@ -179,6 +183,8 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox: The driver that interacts with the browser
         """
+        logging.info("Testing complete_project_details...")
+
         driver.implicitly_wait(10)
         project_name = driver.find_element(By.ID, "project-name")
 
@@ -211,6 +217,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_tools_details...")
         choice = self.click_radio(driver, ["in-house", "outsourced", "partnership"])
 
         if choice == "partnership":
@@ -238,6 +245,8 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): Complete details on source control
         """
+        logging.info("Testing complete_source_control...")
+
         choice = self.click_radio(driver, ["github", "gitlab", "other"])
 
         if choice == "other":
@@ -269,6 +278,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_hosting...")
         choice = self.click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
         self.click_link(driver, "Save and continue")
 
@@ -290,6 +300,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_database...")
         driver.implicitly_wait(10)
         database = driver.find_element(By.ID, "database-input")
         self.wait.until(EC.element_to_be_clickable(database)).click()
@@ -310,6 +321,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_languages...")
         driver.implicitly_wait(10)
         language = driver.find_element(By.ID, "languages-input")
 
@@ -340,6 +352,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_frameworks...")
         driver.implicitly_wait(10)
         framework = driver.find_element(By.ID, "frameworks-input")
 
@@ -357,6 +370,8 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_integrations...")
+    
         driver.implicitly_wait(10)
         integrations = driver.find_element(By.ID, "integrations-input")
         
@@ -374,6 +389,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
+        logging.info("Testing complete_infrastructure...")
         driver.implicitly_wait(10)
         infrastructure = driver.find_element(By.ID, "infrastructure-input")
         

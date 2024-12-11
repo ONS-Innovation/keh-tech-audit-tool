@@ -142,6 +142,12 @@ techNavItems = [
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
 
+def get_id_token():
+    try:
+        headers = {"Authorization": f"{session['id_token']}"}
+    except KeyError:
+        return redirect(url_for("home"))
+    return headers
 
 @app.context_processor
 def inject_header():
@@ -275,10 +281,7 @@ def get_email():
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
-    try:
-        headers = {"Authorization": f"{session['id_token']}"}
-    except KeyError:
-        return redirect(url_for("home"))
+    headers = get_id_token()
     projects = requests.get(
         f"{API_URL}/api/v1/projects",
         headers=headers,
@@ -307,10 +310,7 @@ def view_project(project_name):
         flash("Project name is too long. Please try again.")
         return redirect(url_for("dashboard"))
 
-    try:
-        headers = {"Authorization": f"{session['id_token']}"}
-    except KeyError:
-        return redirect(url_for("home"))
+    headers = get_id_token()
     
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",

@@ -261,7 +261,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
-        driver.implicity_wait(10)
+        driver.implicitly_wait(10)
         database = driver.find_element(By.ID, "database-input")
         self.wait.until(EC.element_to_be_clickable(database)).click()
         database.send_keys("Example Database Provider")
@@ -328,13 +328,13 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
-        driver.implicity_wait(10)
+        driver.implicitly_wait(10)
         integrations = driver.find_element(By.ID, "integrations-input")
         
         self.wait.until(EC.element_to_be_clickable(integrations)).click()
         integrations.send_keys("Github Actions")
 
-        driver.implicity_wait(10)
+        driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")

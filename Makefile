@@ -12,8 +12,8 @@ run-ui-debug:
 test-creation:
 	poetry run python tests/test_project_creation.py
 
-test-login:
-	poetry run python tests/test_login.py
+test-navigation:
+	poetry run python tests/test_navigation.py
 
 format-python:
 	poetry run isort .

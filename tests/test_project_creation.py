@@ -105,6 +105,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         button = driver.find_element(By.ID, 'submit-button')
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         self.wait.until(EC.element_to_be_clickable(button)).click()
+        
+        assert driver.current_url == "http://localhost:8000/dashboard"
+        assert self.project_name in driver.find_element(By.ID, "my-projects").text
+        
         time.sleep(10)
 
     def tearDown(self):

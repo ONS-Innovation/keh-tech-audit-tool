@@ -32,7 +32,7 @@ api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 # Standard flask initialisation

@@ -32,7 +32,7 @@ api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = 'eu-west-2'
 s3 = boto3.client("s3", region_name=region_name)
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 # Standard flask initialisation
@@ -142,6 +142,12 @@ techNavItems = [
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
 
+def get_id_token():
+    try:
+        headers = {"Authorization": f"{session['id_token']}"}
+    except KeyError:
+        return redirect(url_for("home"))
+    return headers
 
 @app.context_processor
 def inject_header():
@@ -275,7 +281,7 @@ def get_email():
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
-    headers = {"Authorization": f"{session['id_token']}"}
+    headers = get_id_token()
     projects = requests.get(
         f"{API_URL}/api/v1/projects",
         headers=headers,
@@ -304,7 +310,7 @@ def view_project(project_name):
         flash("Project name is too long. Please try again.")
         return redirect(url_for("dashboard"))
 
-    headers = {"Authorization": f"{session['id_token']}"}
+    headers = get_id_token()
     
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
@@ -343,10 +349,13 @@ def survey():
     if request.method == "GET":
         return render_template("survey.html")
     # IF METHOD IS 'NOT GET' THEN THE POST PROCESS BEGINS
-    headers = {
-        "Authorization": f"{session['id_token']}",
-        "content-type": "application/json",
-    }
+    try:
+        headers = {
+            "Authorization": f"{session['id_token']}",
+            "content-type": "application/json",
+        }
+    except KeyError:
+        return redirect(url_for("home"))
 
     # Improved readibility of the form data
     form_data = map_form_data(request.form)

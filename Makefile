@@ -9,6 +9,12 @@ run-ui:
 run-ui-debug:
 	poetry run flask --app application run --debug -p 8000
 
+test-creation:
+	poetry run python tests/test_project_creation.py
+
+test-navigation:
+	poetry run python tests/test_navigation.py
+
 format-python:
 	poetry run isort .
 	poetry run black .
@@ -31,3 +37,7 @@ docker-run:
 	 -e API_BUCKET_NAME -e API_SECRET_NAME \
 	  -e UI_SECRET_NAME -e AWS_ACCOUNT_NAME \
 	  -e LOCALHOST tech-audit-tool
+
+test:
+	make test-navigation
+	make test-creation

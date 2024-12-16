@@ -1,13 +1,15 @@
-# TECH AUDIT TOOL - UI
+# Tech Audit Tool
+
 ## About
 
-### Introduction
+Introduction
 
 The Tech Audit Tool is a tool used to survey out what tools, languages and frameworks are being used by various projects within DST.
 
 This data aims to be used in the Tech Radar to help ONS understand more about the technology used within the organisation.
 
 An API runs in AWS, so there is no need to run the API locally when testing the UI.
+Authentication
 
 ### Authentication
 
@@ -20,13 +22,13 @@ The session token has a life of 1 day, for development purposes.
 
 Install necessary dependencies using the make command:
 
-```bash
+```
 make install
 ```
 
 To run, please import these credentials into the app:
 
-```bash
+```
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
 export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
@@ -50,37 +52,37 @@ On AWS, these environment variables will be set in the task definition on ECS.
 
 Use the make command in the root directory of the project to load the design system:
 
-```bash
+```
 make load-design
 ```
 
 Then you can start the application by running:
 
-```bash
+```
 make run-ui
 ```
 
 ### Setting up with Docker
 
 To build the image:
-```bash
+```
 make docker-build
 ```
 
 To run an instance of the image as a container:
-```bash
+```
 make docker-run
 ```
 
 Alternatively, you may use docker-compose to build:
 
-```bash
+```
 docker-compose up --build
 ```
 
 To run:
 
-```bash
+```
 docker-compose up
 ```
 
@@ -166,7 +168,7 @@ If the application has been modified then the following can be performed to upda
 - Build a new version of the container image and upload to ECR as per the instructions earlier in this guide.
 - Change directory to the **service terraform**
 
-  ```bash
+  ```
   cd terraform/service
   ```
 
@@ -176,7 +178,7 @@ If the application has been modified then the following can be performed to upda
 
 - Initialise terraform for the appropriate environment config file _backend-dev.tfbackend_ or _backend-prod.tfbackend_ run:
 
-  ```bash
+  ```
   terraform init -backend-config=env/dev/backend-dev.tfbackend -reconfigure
   ```
 
@@ -185,14 +187,14 @@ If the application has been modified then the following can be performed to upda
   **_Please Note:_** This step requires an **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** to be loaded into the environment if not already in place.
   This can be done using:
 
-  ```bash
+  ```
   export AWS_ACCESS_KEY_ID="<aws_access_key_id>"
   export AWS_SECRET_ACCESS_KEY="<aws_secret_access_key>"
   ```
 
 - Refresh the local state to ensure it is in sync with the backend
 
-  ```bash
+  ```
   terraform refresh -var-file=env/dev/dev.tfvars
   ```
 
@@ -200,7 +202,7 @@ If the application has been modified then the following can be performed to upda
 
   E.g. for the dev environment run
 
-  ```bash
+  ```
   terraform plan -var-file=env/dev/dev.tfvars
   ```
 
@@ -208,7 +210,7 @@ If the application has been modified then the following can be performed to upda
 
   E.g. for the dev environment run
 
-  ```bash
+  ```
   terraform apply -var-file=env/dev/dev.tfvars
   ```
 
@@ -218,7 +220,7 @@ If the application has been modified then the following can be performed to upda
 
 Delete the service resources by running the following ensuring your reference the correct environment files for the backend-config and var files:
 
-  ```bash
+  ```
   cd terraform/service
 
   terraform init -backend-config=env/dev/backend-dev.tfbackend -reconfigure
@@ -232,13 +234,13 @@ Delete the service resources by running the following ensuring your reference th
 
 Install necessary dev dependencies using the make command:
 
-```bash
+```
 make install-dev
 ```
 
 Use the make command in the root directory of the project to run the app:
 
-```bash
+```
 make format-python
 ```
 
@@ -247,7 +249,7 @@ This will run `isort`, `black` and `flake8`. Flake8 will ignore `E501 line too l
 ## Testing
 ### Setting Up Test Environment Variables
 The following environment variables are used for signing into the Tech Audit Tool through Cognito:
-```bash
+```
 export TEST_EMAIL=<EMAIL> e.g test@ons.gov.uk
 export TEST_PASSWORD=<PASSWORD> e.g testpassword123
 export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
@@ -257,13 +259,63 @@ export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
 ### Project Creation Tests
 The following test will automatically go through the steps required for creating a project.
 This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
-```bash
+```
 make test-project-creation
 ```
+## Project layout
 
-### Login Test
-```bash
-poetry run python3 tests/test_login.py
-```
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+    application.py # The backend that serves the Tech Audit Tool UI
+    tests/
+        test_navigation.py # Test Basic Navigation of the Tech Audit Tool
+        test_project_creation.py # Test Project Creation within Tech Audit Tool
+        test_utils.py # Various Testing Utilities to be used when writing tests
+    templates/
+        chapter_summaries/
+        pre_survey/ # HTML files that show the user what information is needed before filling in a form
+            pre-survey-architecture.html
+            pre-survey-project.html
+            pre-survey.html
+        section_code/ # HTML templates for source control, databases and hosting
+            database.html
+            hosting.html
+            source_control_select.html
+            source_control.html
+        section_project/ # HTML templates for basic project details
+            contact_manager.html
+            developed.html
+            project.html
+            stage.html
+        section_technology/
+            frameworks.html # Allows user to add frameworks
+            infrastructure.html # Allows user to add infrastructure
+            integrations.html # Allows user to add integrations
+            languages.html # Allows user to add languages
+        core.html # Contains navbar that is inherited by all other templates
+        index.html # Homepage that contains sign-in button to Cognito
+        survey.html # Shows overall progress on the forms
+        validate_details.html # Validation page for the fields input
+        view_project.html # Displays project details
+    terraform/
+        service/
+            env/
+                dev/
+                   dev.tfvars # AWS Credentials go in here
+                   backend-dev.tfbackend # AWS Environment Setup
+                sandbox/
+                    backend-sandbox.tfbackend
+                prod/
+                    backend-prod.tfbackend
+            alb.tf # Terraform Setup for Application Load Balancer
+            data.tf # Configured tfbackend
+            dns.tf # Terraform for DNS (Route53)
+            main.tf # Main Terraform for AWS ECS setup
+            outputs.tf
+            providers.tf
+            security.tf # Terraform for security groups
+            variables.tf # Terraform for various variables needed for deployment
 
-If login is successful, cookies will be saved to the `cookies` directory. When running the tests again, the cookies will be used to log in automatically. If the session is expired, a user can login again and the cookies will be updated.
+
+

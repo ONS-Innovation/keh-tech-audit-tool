@@ -10,12 +10,19 @@ FROM python:3.11-slim-bullseye
 
 WORKDIR /app
 
+# Create a non-root user and group
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
 RUN pip install poetry==1.8.3
 
 # Copy the source code into the container.
 COPY .  /app
 
 RUN poetry install
+
+# Change ownership of the application files to the non-root user
+RUN chown -R appuser:appuser /app
+
 # Expose the port that the application listens on.
 EXPOSE 8000
 

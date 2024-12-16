@@ -108,6 +108,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         
         assert driver.current_url == "http://localhost:8000/dashboard"
         assert self.project_name in driver.find_element(By.ID, "my-projects").text
+        self.assert_project_details()
         
         time.sleep(10)
 
@@ -136,7 +137,25 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert self.framework in driver.find_element(By.XPATH, "//div[@id='framework_details']/ul/li[1]").text
         assert self.integration in driver.find_element(By.XPATH, "//div[@id='integration_details']/ul/li[1]").text
         assert self.infrastructure in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']/ul/li[1]").text
+    
+    def assert_project_details(self):
+        driver = self.driver
+        self.click_link(driver, self.project_name)
 
+        assert "test@ons.gov.uk" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[0].text
+        assert "testmanager@ons.gov.uk" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[1].text
+        assert self.project_name and self.project_short_name and self.project_desc and self.documentation_link in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[2].text
+        assert "In House" or "Outsourced" or "Partnership" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[3].text
+        
+        assert "Github" or "Gitlab" or "Bitbucket" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[4].text
+        assert self.source_control_link and self.source_control_description in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[5].text
+        assert self.hosting_provider or "On-Premises"in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[6].text
+        assert self.database_provider in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[7].text
+        assert self.framework in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[8].text
+        
+        assert self.language in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
+        assert self.integration in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
+        assert self.infrastructure in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
 
     def complete_contact_details(self, driver):
         """Complete contact details i.e technical contact and delivery manager

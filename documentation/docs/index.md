@@ -1,4 +1,4 @@
-# Tech Audit Toool
+# Tech Audit Tool
 
 ## About
 

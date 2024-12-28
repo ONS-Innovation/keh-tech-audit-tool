@@ -1,0 +1,114 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/radios/_macro.njk" import onsRadios %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    <h1>Incident Management</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please specify what incident management system your project uses</p>"
+            }
+        ]
+    }) }}
+    <form action="{{ url_for('survey') }}" method="GET">
+        {% call onsQuestion({
+        "classes": "ons-u-mt-no",
+        "legendIsQuestionTitle": true
+    }) %}
+        {{ onsLabel({
+        "id": 'label',
+        "for": "label",
+        "text": 'What incident management system was used for this project?',
+
+    }) }}
+        {{ onsRadios({
+            "dontWrap": true,
+            "name": "role",
+            "radios": [
+                {
+                    "id": "servicenow",
+                    "label": {
+                        "text": "ServiceNow"
+                    },
+                    "value": "ServiceNow"
+                },
+                {
+                    "id": "jira",
+                    "label": {
+                        "text": "Jira"
+                    },
+                    "value": "Jira"
+                },
+                {
+                    "id": "other",
+                    "label": {
+                        "text": "Other"
+                    },
+                    "value": "other",
+                    "other": {
+                        "id": "other-input",
+                        "name": "other",
+                        "label": {
+                            "text": "Enter incident management system"
+                        }
+                    }
+                }
+            ]
+        }) }}
+        {% endcall %}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "url": "/survey",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        <script>
+            function storeData() { // Store data about incident management system in local storage
+                var incident_management = document.querySelector('input[name="role"]:checked').value;
+                var other_incident_management = document.getElementById('other-input').value;
+                var complete = true;
+                var newData = {
+                    "incident_management": incident_management,
+                    "complete": complete
+                };
+                if (incident_management === 'other') {
+                    newData.incident_management = other_incident_management;
+                }
+                var existingData = JSON.parse(localStorage.getItem('incident_management-data')) || {};
+                // Merge new data with existing data
+                var updatedData = {
+                    ... existingData,
+                    ... newData
+                };
+                localStorage.setItem('incident_management-data', JSON.stringify(updatedData));
+            }
+            function loadData() {
+                var obj = {
+                    "Jira": "jira",
+                    "ServiceNow": "servicenow"
+                }
+                var data = JSON.parse(localStorage.getItem('incident_management-data'));
+                if (data) {
+                    if (data.incident_management != "Jira" && data.incident_management != "ServiceNow") {
+                        var option = "other";
+                    } else {
+                        var option = obj[data.incident_management];
+                    }
+                    document.getElementById(option).checked = true;
+                    if (data.incident_management) {
+                        document.getElementById('other-input').value = data.incident_management;
+                    }
+                }
+            }
+            loadData();
+        </script>
+    </form>
+{% endblock %}

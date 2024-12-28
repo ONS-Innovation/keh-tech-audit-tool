@@ -1,0 +1,93 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% block main %}
+    <h1>Diagramming Tools</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please specify what diagramming tools were used for this project</p>"
+            }
+        ]
+    }) }}
+    {{ onsAutosuggest({
+        "id": "diagrams-input",
+        "input": {
+            "label": {
+                "text": "What diagramming tools were used to develop this project?",
+                "description": "Enter your own answer or select from suggestions",
+            },
+            "autocomplete": "on",
+            "id": "diagrams-input",
+            "class": "item-inputs",
+            "attributes": {
+                "onsubmit": "Enter diagramming tools",
+            },
+            "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+        },
+        "instructions": "Use up and down keys to navigate suggestions once you\'ve typed more than two characters. Use the enter key to select a suggestion. Touch device users, explore by touch or with swipe gestures.",
+        "ariaYouHaveSelected": "You have selected",
+        "ariaMinChars": "Enter 3 or more characters for suggestions.",
+        "ariaOneResult": "There is one suggestion available.",
+        "ariaNResults": "There are {n} suggestions available.",
+        "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
+        "moreResults": "Continue entering to improve suggestions",
+        "resultsTitle": "Suggestions",
+        "resultsTitleId": "lanuages-suggestions",
+        "autosuggestData": "/autocomplete/diagrams.json",
+        "noResults": "No suggestions found. You can enter your own answer",
+        "typeMore": "Continue entering to get suggestions",
+
+    }) }}
+    <br>
+        {% from "components/table/_macro.njk" import onsTable %}
+        {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Diagramming Tools"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <form action="{{ url_for('survey') }}" method="GET">
+            {{ onsButton({
+        "id": "save-values-button",
+        "url": url_for('project_tracking'),
+        "text": "Save and continue",
+        "iconType": "arrow-next",
+        "iconPosition": "after",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+        </form>
+        <script>
+            loadData();
+            redirectToPrevious();
+            document
+                .getElementById("error-panel")
+                .style
+                .display = "none";
+        </script>
+    {% endblock %}

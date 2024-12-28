@@ -428,6 +428,11 @@ def tech_pre_survey():
     return render_template("/pre_survey/pre-survey-tech.html")
 
 
+@app.route("/pre-survey/supporting_tools", methods=["GET"])
+def supporting_tools_pre_survey():
+    return render_template("/pre_survey/pre-survey-supporting-tools.html")
+
+
 # ------------------------
 # PROJECT SECTION RENDERING
 # ------------------------
@@ -512,6 +517,41 @@ def integrations():
 def infrastructure():
     return render_template("/section_technology/infrastructure.html")
 
+# ------------------------
+# SUPPORTING TOOLS SECTION RENDERING
+# ------------------------
+
+@app.route("/survey/code_editors", methods=["GET"])
+def code_editors():
+    return render_template("/section_supporting_tools/code_editors.html")
+
+@app.route("/survey/user_interface", methods=["GET"])
+def user_interface():
+    return render_template("/section_supporting_tools/user_interface.html")
+
+@app.route("/survey/diagrams", methods=["GET"])
+def diagramming_tools():
+    return render_template("/section_supporting_tools/diagrams.html")
+
+@app.route("/survey/project_tracking", methods=["GET"])
+def project_tracking():
+    return render_template("/section_supporting_tools/project_tracking.html")
+
+@app.route("/survey/documentation", methods=["GET"])
+def documentation():
+    return render_template("/section_supporting_tools/documentation.html")
+
+@app.route("/survey/communication", methods=["GET"])
+def communication():
+    return render_template("/section_supporting_tools/communication.html")
+
+@app.route("/survey/collaboration", methods=["GET"])
+def collaboration():
+    return render_template("/section_supporting_tools/collaboration.html")
+
+@app.route("/survey/incident_management", methods=["GET"])
+def incident_management():
+    return render_template("/section_supporting_tools/incident_management.html")
 
 # ------------------------
 # SUMMARY SECTION RENDERING

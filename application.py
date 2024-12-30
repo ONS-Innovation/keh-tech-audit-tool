@@ -572,6 +572,10 @@ def architecture_summary():
 def tech_summary():
     return render_template("chapter_summaries/tech_summary.html")
 
+@app.route("/survey/supporting_tools_summary")
+def supporting_tools_summary():
+    return render_template("chapter_summaries/supporting_tools_summary.html")
+
 
 # ------------------------
 # SUBMIT PROJECT PAGE RENDERING

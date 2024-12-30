@@ -4,7 +4,8 @@ function redirectToPrevious(){
     if (url === '/validate_details' 
         || url === '/survey/project_summary' 
         || url === '/survey/tech_summary' 
-        || url === '/survey/architecture_summary') {
+        || url === '/survey/architecture_summary'
+        || url === '/survey/supporting_tools_summary') {
         document.getElementById('save-values-button').href = new URL(document.referrer);
     }
 }

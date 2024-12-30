@@ -246,6 +246,26 @@
                                         }
                                     ]
                                 },
+                                {
+                                    "rowTitle": "Code Editors",
+                                    "rowItems": [
+                                        {   
+                                        "valueList": [
+                                            {
+                                                "text": "<div id='code_editors'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Start Billy Smith's section",
+                                                    "url": url_for('code_editors')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                
                                 
                             ]
                         }
@@ -328,7 +348,10 @@
                 // Special validation for arrays-based data
                 if (sectionName === 'Frameworks' || sectionName === 'Languages' || 
                     sectionName === 'CI/CD' || sectionName === 'Infrastructure' || 
-                    sectionName === 'Databases') {
+                    sectionName === 'Databases' || sectionName === 'Code Editors' || 
+                    sectionName === 'User Interface' || sectionName === 'Diagrams' || 
+                    sectionName === 'Project Tracking' || sectionName === 'Documentation' || 
+                    sectionName === 'Communication' || sectionName === 'Collaboration') {
                     
                     // Check main array - ensure no empty strings
                     const validMain = parsedData.main?.filter(item => item && item !== "");

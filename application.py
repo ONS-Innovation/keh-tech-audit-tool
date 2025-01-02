@@ -81,10 +81,10 @@ def get_secret(env):
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
 if os.getenv("LOCALHOST").lower() == "true":
     REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
+    API_URL = "http://localhost:5000"
 else:
     REDIRECT_URI = ui_secret['REDIRECT_URI'] # USED DURING PRODUCTION
-
-API_URL = ui_secret['API_URL']
+    API_URL = ui_secret['API_URL']
 
 # Standard flask initialisation
 app = Flask(__name__)
@@ -338,6 +338,14 @@ def map_form_data(form):
         "integrations",
         "infrastructure",
         "stage",
+        "code_editors",
+        "user_interface",
+        "diagrams",
+        "project_tracking",
+        "documentation",
+        "communication",
+        "collaboration",
+        "incident_management",
     ]
     return {key: json.loads(form[key]) for key in keys}
 
@@ -387,6 +395,16 @@ def survey():
             "infrastructure": form_data["infrastructure"],
         },
         "stage": form_data["stage"],
+        "supporting_tools": {
+            "code_editors": form_data["code_editors"],
+            "user_interface": form_data["user_interface"],
+            "diagrams": form_data["diagrams"],
+            "project_tracking": form_data["project_tracking"],
+            "documentation": form_data["documentation"],
+            "communication": form_data["communication"],
+            "collaboration": form_data["collaboration"],
+            "incident_management": form_data["incident_management"],
+        },
     }
     try:
         projects = requests.post(

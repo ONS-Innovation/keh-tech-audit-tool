@@ -96,6 +96,22 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         self.complete_infrastructure(driver)
 
+        self.complete_code_editors(driver)
+
+        self.complete_user_interface(driver)
+
+        self.complete_diagrams(driver)
+
+        self.project_tracking(driver)
+
+        self.complete_documentation(driver)
+
+        self.complete_communication(driver)
+
+        self.complete_collaboration(driver)
+
+        self.complete_incident_management(driver)
+
         self.click_link(driver, "Continue to Submission")
 
         self.assert_validation_page()
@@ -137,6 +153,17 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert self.framework in driver.find_element(By.XPATH, "//div[@id='framework_details']/ul/li[1]").text
         assert self.integration in driver.find_element(By.XPATH, "//div[@id='integration_details']/ul/li[1]").text
         assert self.infrastructure in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']/ul/li[1]").text
+
+        assert "VSCode" in driver.find_element(By.XPATH, "//div[@id='code_editor_details']/ul/li[1]").text
+        assert "Figma" in driver.find_element(By.XPATH, "//div[@id='user_interface_details']/ul/li[1]").text
+        assert "Draw.io" in driver.find_element(By.XPATH, "//div[@id='diagram_details']/ul/li[1]").text
+        assert len(driver.find_element(By.XPATH, "//div[@id='project_tracking_details']").text) > 0
+        assert "Confluence" in driver.find_element(By.XPATH, "//div[@id='documentation_details']/ul/li[1]").text
+        assert "Slack" in driver.find_element(By.XPATH, "//div[@id='communication_details']/ul/li[1]").text
+        assert "Github" in driver.find_element(By.XPATH, "//div[@id='collaboration_details']/ul/li[1]").text
+        assert len(driver.find_element(By.XPATH, "//div[@id='incident_management_details']").text) > 0
+
+
     
     def assert_project_details(self):
         driver = self.driver
@@ -156,6 +183,16 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert self.language in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
         assert self.integration in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
         assert self.infrastructure in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
+
+        assert "VSCode" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
+        assert "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
+        assert "Draw.io" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
+        assert len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text) > 0
+        assert "Confluence" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
+        assert "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
+        assert "Github" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+        assert len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text) > 0
+
 
     def complete_contact_details(self, driver):
         """Complete contact details i.e technical contact and delivery manager
@@ -428,6 +465,152 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.click_link(driver, "Save and continue")
 
         self.click_link(driver, "Finish section")
+    
+    def complete_code_editors(self, driver):
+        """Completes the code editors section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_code_editors...")
+        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[3]
+        self.wait.until(EC.element_to_be_clickable(link)).click()
+        self.click_link(driver, "Continue")
+        
+        driver.implicitly_wait(10)
+        code_editors = driver.find_element(By.ID, "code_editors-input")
+        
+        self.wait.until(EC.element_to_be_clickable(code_editors)).click()
+        code_editors.send_keys("VSCode")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def complete_user_interface(self, driver):
+        """Completes the user interface section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_user_interface...")
+        driver.implicitly_wait(10)
+        user_interface = driver.find_element(By.ID, "user_interface-input")
+        
+        self.wait.until(EC.element_to_be_clickable(user_interface)).click()
+        user_interface.send_keys("Figma")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def complete_diagrams(self, driver):
+        """Completes the diagrams section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_diagrams...")
+        driver.implicitly_wait(10)
+        diagrams = driver.find_element(By.ID, "diagrams-input")
+        
+        self.wait.until(EC.element_to_be_clickable(diagrams)).click()
+        diagrams.send_keys("Draw.io")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def project_tracking(self, driver):
+        """Completes the project tracking section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing project_tracking...")
+        driver.implicitly_wait(10)
+        choice = self.click_radio(driver, ["jira", "trello", "other"])
+        if choice == "other":
+            driver.implicitly_wait(10)
+            other_input = driver.find_element(By.ID, "other-input")
+            self.wait.until(EC.element_to_be_clickable(other_input)).click()
+            other_input.send_keys("Asana")
+        self.click_link(driver, "Save and continue")
+    
+    def complete_documentation(self, driver):
+        """Completes the documentation section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_documentation...")
+        driver.implicitly_wait(10)
+        documentation = driver.find_element(By.ID, "documentation-input")
+        
+        self.wait.until(EC.element_to_be_clickable(documentation)).click()
+        documentation.send_keys("Confluence")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def complete_communication(self, driver):
+        """Completes the communication section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_communication...")
+        driver.implicitly_wait(10)
+        communication = driver.find_element(By.ID, "communication-input")
+        
+        self.wait.until(EC.element_to_be_clickable(communication)).click()
+        communication.send_keys("Slack")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def complete_collaboration(self, driver):
+        """Completes the collaboration section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_collaboration...")
+        driver.implicitly_wait(10)
+        collaboration = driver.find_element(By.ID, "collaboration-input")
+        
+        self.wait.until(EC.element_to_be_clickable(collaboration)).click()
+        collaboration.send_keys("Github")
+
+        driver.implicitly_wait(10)
+        add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        self.click_link(driver, "Save and continue")
+    
+    def complete_incident_management(self, driver):
+        """Completes the incident management section of the project creation process.
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_incident_management...")
+        driver.implicitly_wait(10)
+        choice = self.click_radio(driver, ["servicenow", "jira", "other"])
+        if choice == 'other':
+            driver.implicitly_wait(10)
+            other_input = driver.find_element(By.ID, "other-input")
+            self.wait.until(EC.element_to_be_clickable(other_input)).click()
+            other_input.send_keys("Zendesk")
+        self.click_link(driver, "Save and continue")
+        self.click_link(driver, "Finish section")
+
 
 
 if __name__ == "__main__":

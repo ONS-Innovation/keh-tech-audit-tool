@@ -142,6 +142,20 @@ techNavItems = [
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
 
+supportingNavItems = [
+    {"text": "Survey", "url": "/survey"},
+    {"text": "Details", "url": "/pre-survey/supporting_tools"},
+    {"text": "Code Editors", "url": "/survey/code_editors"},
+    {"text": "User Interface", "url": "/survey/user_interface"},
+    {"text": "Diagrams", "url": "/survey/diagrams"},
+    {"text": "Project Tracking", "url": "/survey/project_tracking"},
+    {"text": "Documentation", "url": "/survey/documentation"},
+    {"text": "Communication", "url": "/survey/communication"},
+    {"text": "Collaboration", "url": "/survey/collaboration"},
+    {"text": "Incident Management", "url": "/survey/incident_management"},
+    {"text": "Summary", "url": "/survey/supporting_tools_summary"},
+]
+
 def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
@@ -176,6 +190,8 @@ def inject_header():
         navItems = codeNavItems
     elif current_url in [item["url"] for item in techNavItems]:
         navItems = techNavItems
+    elif current_url in [item["url"] for item in supportingNavItems]:
+        navItems = supportingNavItems
     else:
         navItems = []
 

@@ -117,7 +117,12 @@ function displayIncomplete(section) {
     return `<ul><li>'${section}' section is incomplete</li></ul>`
 }
 
-function changeBtnURL(contactTechData, contactManagerData, projectData, sourceControlData, databaseData, languagesData, frameworksData, integrationsData, infrastructureData) {
+function changeBtnURL(contactTechData, contactManagerData, projectData, 
+    sourceControlData, databaseData, languagesData, 
+    frameworksData, integrationsData, infrastructureData, 
+    codeEditorsData, uiToolsData, diagramToolsData, 
+    projectTrackingData, documentationData, communicationData, 
+    collaborationData, incidentManagementData) {
     // Dynamically change url of submit button based on the completion status of each section
     var submitBtn = document.getElementById('submit-btn');
         var submitBtnSpan = submitBtn.querySelector('span');
@@ -238,6 +243,102 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, sourceCo
         } catch (e) {
             changeBtnText()
             submitBtn.href = '/survey/infrastructure';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(codeEditorsData)["others"].length === 0) {
+                submitBtn.href = '/survey/code_editors';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            document.getElementById('submit-btn-text').innerHTML = 'Continue'
+            submitBtn.href = '/survey/code_editors';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(projectTrackingData).length === 0) {
+                submitBtn.href = '/survey/project_tracking';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            changeBtnText()
+            submitBtn.href = '/survey/project_tracking';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(uiToolsData)["others"].length === 0) {
+                submitBtn.href = '/survey/user_interface';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            changeBtnText()
+            submitBtn.href = '/survey/user_interface';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(diagramToolsData)["others"].length === 0) {
+                submitBtn.href = '/survey/diagrams';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            document.getElementById('submit-btn-text').innerHTML = 'Continue'
+            submitBtn.href = '/survey/diagrams';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(documentationData)["others"].length === 0) {
+                submitBtn.href = '/survey/documentation';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            changeBtnText()
+            submitBtn.href = '/survey/documentation';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(communicationData)["others"].length === 0) {
+                submitBtn.href = '/survey/communication';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            document.getElementById('submit-btn-text').innerHTML = 'Continue'
+            submitBtn.href = '/survey/communication';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(collaborationData)["others"].length === 0) {
+                submitBtn.href = '/survey/collaboration';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            changeBtnText()
+            submitBtn.href = '/survey/collaboration';
+            console.log(e);
+            return;
+        }
+        try {
+            if (JSON.parse(incidentManagementData).length === 0) {
+                submitBtn.href = '/survey/incident_management';
+                changeBtnText()
+                return;
+            }
+        } catch (e) {
+            document.getElementById('submit-btn-text').innerHTML = 'Continue'
+            submitBtn.href = '/survey/incident_management';
             console.log(e);
             return;
         }

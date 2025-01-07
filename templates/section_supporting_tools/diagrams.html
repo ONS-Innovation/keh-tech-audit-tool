@@ -3,13 +3,13 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
 {% block main %}
-    <h1>Diagramming Tools</h1>
+    <h1>Diagram Tools</h1>
     {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Please specify what diagramming tools were used for this project</p>"
+                "content": "<p>Please specify what Diagram tools were used for this project</p>"
             }
         ]
     }) }}
@@ -17,7 +17,7 @@
         "id": "diagrams-input",
         "input": {
             "label": {
-                "text": "What diagramming tools were used to develop this project?",
+                "text": "What diagram tools were used to develop this project?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",

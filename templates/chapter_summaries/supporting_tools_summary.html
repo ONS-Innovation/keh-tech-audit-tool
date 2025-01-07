@@ -242,7 +242,7 @@
                         try {
                             var projectTrackingJSON = JSON.parse(projectTrackingData);
                             var projectTrackingDetails = projectTrackingJSON.project_tracking;
-                            document.getElementById('project_tracking_details').innerHTML = projectTrackingDetails;
+                            document.getElementById('project_tracking_details').innerHTML = '<ul>' + '<li>' + projectTrackingDetails + '</li>'  + '</ul>';
                         } catch (e) {
                             errorList.push('Project Tracking');
                         }
@@ -271,7 +271,7 @@
                         try {
                             var incidentManagementJSON = JSON.parse(incidentManagementData);
                             var incidentManagementDetails = incidentManagementJSON.incident_management;
-                            document.getElementById('incident_management_details').innerHTML = incidentManagementDetails;
+                            document.getElementById('incident_management_details').innerHTML = '<ul>' + '<li>' + incidentManagementDetails + '</li>'  + '</ul>';
                         } catch (e) {
                             errorList.push('Incident Management');
                         }

@@ -273,5 +273,3 @@ make test-creation
 ```bash
 make test-navigation
 ```
-
-If login is successful, cookies will be saved to the `cookies` directory. When running the tests again, the cookies will be used to log in automatically. If the session is expired, a user can login again and the cookies will be updated.

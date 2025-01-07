@@ -79,7 +79,7 @@ def get_secret(env):
 
 # SETTING OF API URL: Change if moving to production
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
-if os.getenv("LOCALHOST").lower() == "true":
+if os.getenv("LOCALHOST", "false").lower() == "true":
     REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
     API_URL = "http://localhost:5000"
 else:

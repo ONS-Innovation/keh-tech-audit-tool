@@ -79,12 +79,12 @@ def get_secret(env):
 
 # SETTING OF API URL: Change if moving to production
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
-if os.getenv("LOCALHOST").lower() == "true":
+if os.getenv("LOCALHOST", "false").lower() == "true":
     REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
+    API_URL = "http://localhost:5000"
 else:
     REDIRECT_URI = ui_secret['REDIRECT_URI'] # USED DURING PRODUCTION
-
-API_URL = ui_secret['API_URL']
+    API_URL = ui_secret['API_URL']
 
 # Standard flask initialisation
 app = Flask(__name__)
@@ -142,6 +142,20 @@ techNavItems = [
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
 
+supportingNavItems = [
+    {"text": "Survey", "url": "/survey"},
+    {"text": "Details", "url": "/pre-survey/supporting_tools"},
+    {"text": "Code Editors", "url": "/survey/code_editors"},
+    {"text": "User Interface", "url": "/survey/user_interface"},
+    {"text": "Diagrams", "url": "/survey/diagrams"},
+    {"text": "Project Tracking", "url": "/survey/project_tracking"},
+    {"text": "Documentation", "url": "/survey/documentation"},
+    {"text": "Communication", "url": "/survey/communication"},
+    {"text": "Collaboration", "url": "/survey/collaboration"},
+    {"text": "Incident Management", "url": "/survey/incident_management"},
+    {"text": "Summary", "url": "/survey/supporting_tools_summary"},
+]
+
 def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
@@ -176,6 +190,8 @@ def inject_header():
         navItems = codeNavItems
     elif current_url in [item["url"] for item in techNavItems]:
         navItems = techNavItems
+    elif current_url in [item["url"] for item in supportingNavItems]:
+        navItems = supportingNavItems
     else:
         navItems = []
 
@@ -338,6 +354,14 @@ def map_form_data(form):
         "integrations",
         "infrastructure",
         "stage",
+        "code_editors",
+        "user_interface",
+        "diagrams",
+        "project_tracking",
+        "documentation",
+        "communication",
+        "collaboration",
+        "incident_management",
     ]
     return {key: json.loads(form[key]) for key in keys}
 
@@ -387,6 +411,16 @@ def survey():
             "infrastructure": form_data["infrastructure"],
         },
         "stage": form_data["stage"],
+        "supporting_tools": {
+            "code_editors": form_data["code_editors"],
+            "user_interface": form_data["user_interface"],
+            "diagrams": form_data["diagrams"],
+            "project_tracking": form_data["project_tracking"],
+            "documentation": form_data["documentation"],
+            "communication": form_data["communication"],
+            "collaboration": form_data["collaboration"],
+            "incident_management": form_data["incident_management"],
+        },
     }
     try:
         projects = requests.post(
@@ -426,6 +460,11 @@ def architecture_pre_survey():
 @app.route("/pre-survey/technology", methods=["GET"])
 def tech_pre_survey():
     return render_template("/pre_survey/pre-survey-tech.html")
+
+
+@app.route("/pre-survey/supporting_tools", methods=["GET"])
+def supporting_tools_pre_survey():
+    return render_template("/pre_survey/pre-survey-supporting-tools.html")
 
 
 # ------------------------
@@ -512,6 +551,41 @@ def integrations():
 def infrastructure():
     return render_template("/section_technology/infrastructure.html")
 
+# ------------------------
+# SUPPORTING TOOLS SECTION RENDERING
+# ------------------------
+
+@app.route("/survey/code_editors", methods=["GET"])
+def code_editors():
+    return render_template("/section_supporting_tools/code_editors.html")
+
+@app.route("/survey/user_interface", methods=["GET"])
+def user_interface():
+    return render_template("/section_supporting_tools/user_interface.html")
+
+@app.route("/survey/diagrams", methods=["GET"])
+def diagramming_tools():
+    return render_template("/section_supporting_tools/diagrams.html")
+
+@app.route("/survey/project_tracking", methods=["GET"])
+def project_tracking():
+    return render_template("/section_supporting_tools/project_tracking.html")
+
+@app.route("/survey/documentation", methods=["GET"])
+def documentation():
+    return render_template("/section_supporting_tools/documentation.html")
+
+@app.route("/survey/communication", methods=["GET"])
+def communication():
+    return render_template("/section_supporting_tools/communication.html")
+
+@app.route("/survey/collaboration", methods=["GET"])
+def collaboration():
+    return render_template("/section_supporting_tools/collaboration.html")
+
+@app.route("/survey/incident_management", methods=["GET"])
+def incident_management():
+    return render_template("/section_supporting_tools/incident_management.html")
 
 # ------------------------
 # SUMMARY SECTION RENDERING
@@ -531,6 +605,10 @@ def architecture_summary():
 @app.route("/survey/tech_summary")
 def tech_summary():
     return render_template("chapter_summaries/tech_summary.html")
+
+@app.route("/survey/supporting_tools_summary")
+def supporting_tools_summary():
+    return render_template("chapter_summaries/supporting_tools_summary.html")
 
 
 # ------------------------

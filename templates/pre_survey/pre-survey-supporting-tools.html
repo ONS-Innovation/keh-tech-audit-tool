@@ -1,0 +1,50 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/list/_macro.njk" import onsList %}
+{% block main %}
+
+
+    <h1 class="ons-u-mt-m">Supporting Tools Details</h1>
+
+
+    <p>To complete this survey you will need to know details such as:</p>
+    {{
+        onsList({
+            "classes": 'ons-u-mb-m',
+            "itemsList": [
+                {
+                    "text": 'Code editors used'
+                },
+                {
+                    "text": 'UI Design tools used'
+                },
+                {
+                    "text": 'Diagramming tools used'
+                },
+                {
+                    "text": 'Project Tracking tools used'
+                },
+                {
+                    "text": 'Documentation software used'
+                },
+                {
+                    "text": 'Communication tools used'
+                },
+                {
+                    "text": 'Collaboration tools tools used'
+                },
+                {
+                    "text": 'Incident management tools used'
+                },
+            ]
+        })
+    }}
+
+    {{
+        onsButton({
+            "text": 'Continue',
+            "classes": 'ons-u-mt-xl',
+            "url": url_for('code_editors'),
+        })
+    }}
+{% endblock %}

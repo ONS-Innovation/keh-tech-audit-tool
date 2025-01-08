@@ -78,6 +78,27 @@
                                         }
                                     ]
                                 },
+                                {
+                                    "rowTitle": "Supporting Tools",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='supporting_tools'></div>"
+                                            }
+                                        ],
+                                        "id": "supporting-tools",
+                                            "iconType": "chevron",
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('supporting_tools_pre_survey')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
                             ]
                         }
                     ]
@@ -108,11 +129,26 @@
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
+            // Supporting Tools Details
+            var codeEditorsData = localStorage.getItem('code_editors-data');
+            var uiDesignData = localStorage.getItem('user_interface-data');
+            var diagramsData = localStorage.getItem('diagrams-data');
+            var projectTrackingData = localStorage.getItem('project_tracking-data');
+            var documentationData = localStorage.getItem('documentation-data');
+            var communicationData = localStorage.getItem('communication-data');
+            var collaborationData = localStorage.getItem('collaboration-data');
+            var incidentManagementData = localStorage.getItem('incident_management-data');
             
-            changeBtnURL(contactTechData, contactManagerData, projectData, sourceControlData, databaseData, languagesData, frameworksData, integrationsData, infrastructureData);
+            changeBtnURL(contactTechData, contactManagerData, projectData, 
+            sourceControlData, databaseData, languagesData, 
+            frameworksData, integrationsData, infrastructureData, 
+            codeEditorsData, uiDesignData, diagramsData, 
+            projectTrackingData, documentationData, communicationData, 
+            collaborationData, incidentManagementData);
             updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
         }
         load_data();
         localStorage.setItem("source_control-validate", false);

@@ -2,46 +2,29 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
 {% block main %}
-    {% call onsPanel({
-        "id": "error-panel",
-        "title": 'Error',
-        "variant": 'error',
-        "type": "error",
-        "classes": "ons-u-hidden"
-
-    }) %}
-    {{ onsLabel({
-        "id": 'label',
-        "for": "some-input",
-        "text": 'Item already added.'
-    }) }}
-    {% endcall %}
-    <br>
-        <h1>Frameworks</h1>
-        {{ onsAccordion({
+    <h1>Code Editors</h1>
+    {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Enter details about the project's frameworks such as Flask, React etc.</p>"
+                "content": "<p>Please specify what code editors were used for this project</p>"
             }
         ]
     }) }}
-        {{ onsAutosuggest({
-        "id": "frameworks-input",
+    {{ onsAutosuggest({
+        "id": "code_editors-input",
         "input": {
             "label": {
-                "text": "What frameworks are used in the project?",
+                "text": "What code editors were used to develop this project?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "frameworks-input",
+            "id": "code_editors-input",
             "class": "item-inputs",
             "attributes": {
-                "onsubmit": "Enter frameworks",
+                "onsubmit": "Enter code editors",
             },
             "searchButton": {
                 "visuallyHideButtonText": false,
@@ -60,20 +43,20 @@
         "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
         "moreResults": "Continue entering to improve suggestions",
         "resultsTitle": "Suggestions",
-        "resultsTitleId": "frameworks-suggestions",
-        "autosuggestData": "/autocomplete/frameworks.json",
+        "resultsTitleId": "lanuages-suggestions",
+        "autosuggestData": "/autocomplete/code_editors.json",
         "noResults": "No suggestions found. You can enter your own answer",
         "typeMore": "Continue entering to get suggestions",
 
     }) }}
-        <br>
-            {% from "components/table/_macro.njk" import onsTable %}
-            {{ onsTable({
+    <br>
+        {% from "components/table/_macro.njk" import onsTable %}
+        {{ onsTable({
         "caption": "",
         "id": "table-list",
         "ths": [
             {
-                "value": "Framework"
+                "value": "Code Editors"
             },
             {
                 "value": ""
@@ -81,24 +64,30 @@
         ],
         "trs": [
             {
-                "tds": [ ]
+                "tds": []
             }
         ]
     }) }}
-            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-            <form action="{{ url_for('survey') }}" method="GET">
-                {{ onsButton({
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <form action="{{ url_for('survey') }}" method="GET">
+            {{ onsButton({
         "id": "save-values-button",
+        "url": url_for('user_interface'),
         "text": "Save and continue",
-        "url": url_for('integrations'),
+        "iconType": "arrow-next",
+        "iconPosition": "after",
         "attributes": {
             "onclick": "storeData();"
         }
     }) }}
-                <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-                <script>
-                    loadData();
-                    redirectToPrevious();
-                </script>
-            </form>
-        {% endblock %}
+        </form>
+        <script>
+            loadData();
+            redirectToPrevious();
+            document
+                .getElementById("error-panel")
+                .style
+                .display = "none";
+        </script>
+    {% endblock %}

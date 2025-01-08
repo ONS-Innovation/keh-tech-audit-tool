@@ -246,6 +246,161 @@
                                         }
                                     ]
                                 },
+
+                                {
+                                    "rowTitle": "Code Editors",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='code_editor_details'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('code_editors'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    "rowTitle": "User Interface",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='user_interface_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('user_interface')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Diagrams",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='diagram_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('diagramming_tools')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project Tracking",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_tracking_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('project_tracking')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Documentation",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='documentation_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('documentation')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Communication",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='communication_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('communication')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Collaboration",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='collaboration_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('collaboration')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Incident Management",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='incident_management_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('incident_management')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                
                                 
                             ]
                         }
@@ -266,6 +421,14 @@
                                         <input id="integrations" type="hidden" name="integrations">
                                             <input id="infrastructure" type="hidden" name="infrastructure">
                                                 <input id="stage" type="hidden" name="stage">
+                                                    <input id="code_editors" type="hidden" name="code_editors">
+                                                        <input id="user_interface" type="hidden" name="user_interface">
+                                                            <input id="diagrams" type="hidden" name="diagrams">
+                                                                <input id="project_tracking" type="hidden" name="project_tracking">
+                                                                    <input id="documentation" type="hidden" name="documentation">
+                                                                        <input id="communication" type="hidden" name="communication">
+                                                                            <input id="collaboration" type="hidden" name="collaboration">
+                                                                                <input id="incident_management" type="hidden" name="incident_management">
                                                     {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
@@ -328,7 +491,9 @@
                 // Special validation for arrays-based data
                 if (sectionName === 'Frameworks' || sectionName === 'Languages' || 
                     sectionName === 'CI/CD' || sectionName === 'Infrastructure' || 
-                    sectionName === 'Databases') {
+                    sectionName === 'Databases' || sectionName === 'Code Editors' || 
+                    sectionName === 'User Interface' || sectionName === 'Diagrams' || sectionName === 'Documentation' || 
+                    sectionName === 'Communication' || sectionName === 'Collaboration') {
                     
                     // Check main array - ensure no empty strings
                     const validMain = parsedData.main?.filter(item => item && item !== "");
@@ -389,6 +554,22 @@
             return arrToList(parsed.main ? parsed.main.concat(parsed.others) : parsed.others);
         }
 
+        function processProjectTracking(projectTrackingData) {
+            const parsed = validateData(projectTrackingData, 'Project Tracking', ['project_tracking']);
+            console.log(parsed);
+            if (!parsed) return '';
+            console.log('hi');
+
+            return parsed;
+        }
+
+        function processIncidentManagement(incidentManagementData) {
+            const parsed = validateData(incidentManagementData, 'Incident Management', ['incident_management']);
+            if (!parsed) return '';
+
+            return parsed;
+        }
+
         function processContacts(techData, managerData) {
             const youData = [];
             
@@ -436,12 +617,21 @@
                 frameworks: localStorage.getItem('frameworks-data'),
                 infrastructure: localStorage.getItem('infrastructure-data'),
                 integrations: localStorage.getItem('integrations-data'),
-                languages: localStorage.getItem('languages-data')
+                languages: localStorage.getItem('languages-data'),
+                codeEditors: localStorage.getItem('code_editors-data'),
+                userInterface: localStorage.getItem('user_interface-data'),
+                diagrams: localStorage.getItem('diagrams-data'),
+                projectTracking: localStorage.getItem('project_tracking-data'),
+                documentation: localStorage.getItem('documentation-data'),
+                communication: localStorage.getItem('communication-data'),
+                collaboration: localStorage.getItem('collaboration-data'),
+                incidentManagement: localStorage.getItem('incident_management-data')
             };
+
+            console.log(storedData.projectTracking);
 
             // Process contacts
             const youData = processContacts(storedData.contactTech, storedData.contactManager);
-
             // Process all other sections
             const processedData = {
                 sourceControl: processSourceControl(storedData.sourceControl),
@@ -453,8 +643,18 @@
                 infrastructure: validateData(storedData.infrastructure, 'Infrastructure'),
                 project: validateData(storedData.project, 'Project', ['project_name', 'project_short_name', 'doc_link']),
                 stage: validateData(storedData.stage, 'Stage', ['stage']),
-                developed: validateData(storedData.developed, 'Developed', ['developed'])
+                developed: validateData(storedData.developed, 'Developed', ['developed']),
+                codeEditors: validateData(storedData.codeEditors, 'Code Editors'),
+                userInterface: validateData(storedData.userInterface, 'User Interface'),
+                diagrams: validateData(storedData.diagrams, 'Diagrams'),
+                projectTracking: processProjectTracking(storedData.projectTracking),
+                documentation: validateData(storedData.documentation, 'Documentation'),
+                communication: validateData(storedData.communication, 'Communication'),
+                collaboration: validateData(storedData.collaboration, 'Collaboration'),
+                incidentManagement: processIncidentManagement(storedData.incidentManagement)
             };
+
+            console.log(processedData.projectTracking)
 
             // Additional validation for hosting
             if (processedData.hosting) {
@@ -479,9 +679,19 @@
                     integrations: processedData.integrations || { main: [], others: [] },
                     languages: processedData.languages || { main: [], others: [] },
                     hosting: JSON.parse(storedData.hosting) || { type: '', others: [] },
-                    database: processedData.database || { main: [], others: [] }
+                    database: processedData.database || { main: [], others: [] },
                 },
-                stage: processedData.stage?.stage || ''
+                stage: processedData.stage?.stage || '',
+                supporting_tools: {
+                    code_editors: processedData.codeEditors || { main: [], others: [] },
+                    user_interface: processedData.userInterface || { main: [], others: [] },
+                    diagrams: processedData.diagrams || { main: [], others: [] },
+                    project_tracking: processedData.projectTracking.project_tracking || '',
+                    documentation: processedData.documentation || { main: [], others: [] },
+                    communication: processedData.communication || { main: [], others: [] },
+                    collaboration: processedData.collaboration || { main: [], others: [] },
+                    incident_management: processedData.incidentManagement.incident_management || ''
+                }
             };
 
             // Update the summary display
@@ -511,8 +721,17 @@
                 languages_details: arrToList(finalData.architecture.languages?.main?.concat(finalData.architecture.languages?.others) || []),
                 framework_details: arrToList(finalData.architecture.frameworks?.main?.concat(finalData.architecture.frameworks?.others) || []),
                 integration_details: arrToList(finalData.architecture.integrations?.main?.concat(finalData.architecture.integrations?.others) || []),
-                infrastructure_details: arrToList(finalData.architecture.infrastructure?.main?.concat(finalData.architecture.infrastructure?.others) || [])
+                infrastructure_details: arrToList(finalData.architecture.infrastructure?.main?.concat(finalData.architecture.infrastructure?.others) || []),
+                code_editor_details: arrToList(finalData.supporting_tools.code_editors?.main?.concat(finalData.supporting_tools.code_editors?.others) || []),
+                user_interface_details: arrToList(finalData.supporting_tools.user_interface?.main?.concat(finalData.supporting_tools.user_interface?.others) || []),
+                diagram_details: arrToList(finalData.supporting_tools.diagrams?.main?.concat(finalData.supporting_tools.diagrams?.others) || []),
+                project_tracking_details: finalData.supporting_tools.project_tracking,
+                documentation_details: arrToList(finalData.supporting_tools.documentation?.main?.concat(finalData.supporting_tools.documentation?.others) || []),
+                communication_details: arrToList(finalData.supporting_tools.communication?.main?.concat(finalData.supporting_tools.communication?.others) || []),
+                collaboration_details: arrToList(finalData.supporting_tools.collaboration?.main?.concat(finalData.supporting_tools.collaboration?.others) || []),
+                incident_management_details: finalData.supporting_tools.incident_management
             };
+            console.log(finalData.supporting_tools.project_tracking);
 
             // Update all summary elements
             Object.entries(summaryData).forEach(([key, value]) => {
@@ -536,7 +755,15 @@
                 frameworks: finalData.architecture.frameworks,
                 integrations: finalData.architecture.integrations,
                 infrastructure: finalData.architecture.infrastructure,
-                stage: finalData.stage
+                stage: finalData.stage,
+                code_editors: finalData.supporting_tools.code_editors,
+                user_interface: finalData.supporting_tools.user_interface,
+                diagrams: finalData.supporting_tools.diagrams,
+                project_tracking: finalData.supporting_tools.project_tracking,
+                documentation: finalData.supporting_tools.documentation,
+                communication: finalData.supporting_tools.communication,
+                collaboration: finalData.supporting_tools.collaboration,
+                incident_management: finalData.supporting_tools.incident_management
             };
 
             // Update all hidden input fields

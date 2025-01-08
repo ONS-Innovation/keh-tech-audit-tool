@@ -24,25 +24,27 @@ Install necessary dependencies using the make command:
 make install
 ```
 
-To run, please import these credentials into the app:
+To run locally, import these credentials into the app:
 
 ```bash
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
+export API_BUCKET_NAME=<sdp-dev-tech-audit-tool-api-testing/sdp-dev-tech-audit-tool-api> # The latter bucket should be used in production
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
 export AWS_ACCOUNT_NAME=<sdp-sandbox/sdp-dev/sdp-prod>
 export LOCALHOST=<true/false>
 ```
 
+You must also have the API running locally. To find details on how to run the API, [refer to this repository](https://github.com/ONS-Innovation/keh-tech-audit-tool-api)
+
 API_URL, APP_SECRET_KEY and REDIRECT_URI are stored and retrieved from AWS Secrets Manager, there is no need to export them.
 
 The API_URL is set to the production URL to get the latest, working version of the API.
 
-The REDIRECT_URI changes dynamically based on what is set by the LOCALHOST environment variable. When running locally, set `LOCALHOST=TRUE`. When running in production, LOCALHOST will be set to FALSE, and will instead retrieve the REDIRECT_URI from AWS Secrets Manager.
+The REDIRECT_URI changes dynamically based on what is set by the LOCALHOST environment variable. When running locally, set `LOCALHOST=TRUE`. When running in production, LOCALHOST will be set to FALSE, and will instead retrieve the REDIRECT_URI from AWS Secrets Manager. Do not attempt to run the project locally with LOCALHOST=FALSE, this is meant for production only and you will run into an HTTP 403.
 
-The AWS_ENVIRONMENT environment variable states which AWS environment tech-audit-tool is running on. This is important as the Cognito token URLs will change depending on the environment. You can choose between `sandbox`, `dev` and `prod`
+The AWS_ACCOUNT_NAME environment variable states which AWS environment tech-audit-tool is running on. This is important as the Cognito token URLs will change depending on the environment. You can choose between `sdp-sandbox`, `sdp-dev` and `sdp-prod`
 
 On AWS, these environment variables will be set in the task definition on ECS.
 
@@ -254,16 +256,20 @@ export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
 ```
 
 ## Running Tests
+
+### Run all tests
+```bash
+make test
+```
+
 ### Project Creation Tests
 The following test will automatically go through the steps required for creating a project.
 This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
 ```bash
-make test-project-creation
+make test-creation
 ```
 
-### Login Test
+### Navigation Tests
 ```bash
-poetry run python3 tests/test_login.py
+make test-navigation
 ```
-
-If login is successful, cookies will be saved to the `cookies` directory. When running the tests again, the cookies will be used to log in automatically. If the session is expired, a user can login again and the cookies will be updated.

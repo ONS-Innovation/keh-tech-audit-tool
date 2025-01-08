@@ -1,0 +1,293 @@
+{% extends "core.html" %}
+{% from "components/summary/_macro.njk" import onsSummary %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+    }) %}
+    {{ onsLabel({
+        "id": 'error-label',
+        "for": "error-label",
+        "text": 'Please fill in missing data'
+    }) }}
+    {% endcall %}
+    <h1 class="ons-u-mt-m">Supporting Tools Summary</h1>
+    {{ onsSummary({
+            "variant": "hub",
+            "classes": "ons-u-mt-m",
+            "summaries": [
+                {
+                    "groups": [
+                        {
+                            "rows": [
+                                {
+                                    "rowTitle": "Code Editors",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                                {
+                                                    "text": "<div id='code_editor_details'></div>"
+                                                }
+                                            ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for People who live here",
+                                                    "url": url_for('code_editors'),
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "User Interface",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='user_interface_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('user_interface')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Diagrams",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='diagram_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('diagramming_tools')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Project Tracking",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='project_tracking_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('project_tracking')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Documentation",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='documentation_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('documentation')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Communication",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='communication_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('communication')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Collaboration",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='collaboration_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('collaboration')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Incident Management",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='incident_management_details'></div>"
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Mary Smith",
+                                                    "url": url_for('incident_management')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+
+ 
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }) }}
+<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <input id="user" type="hidden" name="user">
+        <input id="project" type="hidden" name="project">
+            <input id="developed" type="hidden" name="developed">
+        {{ onsButton({
+            "text": 'Finish section',
+            "id": "submit-button",
+            "url": url_for('survey'),
+            "classes": 'ons-u-mb-m ons-u-mt-l',
+            "iconType": "check",
+            "iconPosition": "after"
+        }) }}
+                <script>
+                    function load_data() {
+                        var errorPanel = document.getElementById('error-panel');
+                        var sourceControlData = localStorage.getItem('source_control-data');
+                        var hostingData = localStorage.getItem('hosting-data');
+                        var databaseData = localStorage.getItem('database-data');
+                        var hostingJSON = JSON.parse(hostingData);
+
+                        var codeEditorsData = localStorage.getItem('code_editors-data');
+                        var uiDesignData = localStorage.getItem('user_interface-data');
+                        var diagramsData = localStorage.getItem('diagrams-data');
+                        var projectTrackingData = localStorage.getItem('project_tracking-data');
+                        var documentationData = localStorage.getItem('documentation-data');
+                        var communicationData = localStorage.getItem('communication-data');
+                        var collaborationData = localStorage.getItem('collaboration-data');
+                        var incidentManagementData = localStorage.getItem('incident_management-data');
+                    
+
+
+                        var errorList = []
+                        try {
+                            var codeEditorsJSON = JSON.parse(codeEditorsData);
+                            document.getElementById('code_editor_details').innerHTML = arrToList(codeEditorsJSON.others);
+                        } catch (e) {
+                            errorList.push('Code Editors');
+                        }
+
+                        try {
+                            var uiDesignDataJSON = JSON.parse(uiDesignData);
+                            document.getElementById('user_interface_details').innerHTML = arrToList(uiDesignDataJSON.others);
+                        } catch (e) {
+                            errorList.push('User Interface');
+                        }
+
+                        try {
+                            var diagramsDataJSON = JSON.parse(diagramsData);
+                            document.getElementById('diagram_details').innerHTML = arrToList(diagramsDataJSON.others);
+                        } catch (e) {
+                            errorList.push('Diagrams');
+                        }
+
+                        try {
+                            var projectTrackingJSON = JSON.parse(projectTrackingData);
+                            var projectTrackingDetails = projectTrackingJSON.project_tracking;
+                            document.getElementById('project_tracking_details').innerHTML = '<ul>' + '<li>' + projectTrackingDetails + '</li>'  + '</ul>';
+                        } catch (e) {
+                            errorList.push('Project Tracking');
+                        }
+
+                        try {
+                            var documentationDataJSON = JSON.parse(documentationData);
+                            document.getElementById('documentation_details').innerHTML = arrToList(documentationDataJSON.others);
+                        } catch (e) {
+                            errorList.push('Documentation');
+                        }
+
+                        try {
+                            var communicationDataJSON = JSON.parse(communicationData);
+                            document.getElementById('communication_details').innerHTML = arrToList(communicationDataJSON.others);
+                        } catch (e) {
+                            errorList.push('Communication');
+                        }
+
+                        try {
+                            var collaborationDataJSON = JSON.parse(collaborationData);
+                            document.getElementById('collaboration_details').innerHTML = arrToList(collaborationDataJSON.others);
+                        } catch (e) {
+                            errorList.push('Collaboration');
+                        }
+
+                        try {
+                            var incidentManagementJSON = JSON.parse(incidentManagementData);
+                            var incidentManagementDetails = incidentManagementJSON.incident_management;
+                            document.getElementById('incident_management_details').innerHTML = '<ul>' + '<li>' + incidentManagementDetails + '</li>'  + '</ul>';
+                        } catch (e) {
+                            errorList.push('Incident Management');
+                        }
+                        
+                        if (errorList.length > 0) {
+                            errorPanel.classList.remove('ons-u-hidden');
+                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                        }
+                    }
+                    load_data();
+                </script>
+            {% endblock %}
+            {% block scripts %}
+                <style>
+                    body {
+                        height: auto;
+                    }
+                </style>
+            {% endblock %}

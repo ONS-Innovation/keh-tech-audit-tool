@@ -88,14 +88,21 @@
                     ... existingData,
                     ... newData
                 };
-                localStorage.setItem('incident_management-data', JSON.stringify(updatedData));
+                var name = 'incident_management-data';
+                if (localStorage.getItem('edit') === true) {
+                    name = 'incident_management-data-edit';
+                }
+                localStorage.setItem(name, JSON.stringify(updatedData));
             }
             function loadData() {
                 var obj = {
                     "Jira": "jira",
                     "ServiceNow": "servicenow"
                 }
-                var data = JSON.parse(localStorage.getItem('incident_management-data'));
+                var name = 'incident_management-data';
+                if (JSON.parse(localStorage.getItem('edit')) === false) {
+                
+                var data = JSON.parse(localStorage.getItem(name));
                 if (data) {
                     if (data.incident_management != "Jira" && data.incident_management != "ServiceNow") {
                         var option = "other";
@@ -107,6 +114,7 @@
                         document.getElementById('other-input').value = data.incident_management;
                     }
                 }
+            }
             }
             redirectToPrevious();
             loadData();

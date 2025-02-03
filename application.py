@@ -328,17 +328,35 @@ def view_project(project_name):
 
     headers = get_id_token()
     
+    user_email = session.get("email", "No email found")
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     ).json()
+
+    edit = False
     
+    if (projects["user"][0]["email"] or projects["user"][1]["email"] or projects["user"][2]["email"]) == user_email:
+        edit = True
+
     try:
         if projects["message"] is None:
             flash("Project not found. Please try again.")
             return redirect(url_for("dashboard"))
     except Exception:
-        return render_template("view_project.html", project=projects)
+        return render_template("view_project.html", project=projects, edit=edit)
+
+@app.route("/project/<project_name>/edit", methods=["GET"])
+def edit_project(project_name):
+    headers = get_id_token()
+    project = requests.get(
+        f"{API_URL}/api/v1/projects/{project_name}",
+        headers=headers
+    )
+
+    print(type(project.json()))
+
+    return render_template("validate_details.html", project=project.json())
 
 # Improved readibility of the form data
 def map_form_data(form):

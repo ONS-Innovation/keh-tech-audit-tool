@@ -77,16 +77,27 @@
                     "doc_link": doc_link,
                     "complete": complete
                 };
-                localStorage.setItem('project-data', JSON.stringify(data));
+                var name = 'project-data'
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    console.log('hi');
+                    name = 'project-data-edit'
+                }
+                localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
-                var data = JSON.parse(localStorage.getItem('project-data'));
-                if (data) {
-                    document.getElementById('project-name').value = data.project_name;
-                    document.getElementById('project-short-name').value = data.project_short_name;
-                    document.getElementById('documentation-link').value = data.doc_link;
-                    document.getElementById('project-description').value = data.project_description;
+                var name = 'project-data';
+                console.log(JSON.parse(localStorage.getItem('edit')));
+                if (JSON.parse(localStorage.getItem('edit'))){
+                    name = name + '-edit';
                 }
+                    var data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        document.getElementById('project-name').value = data.project_name;
+                        document.getElementById('project-short-name').value = data.project_short_name;
+                        document.getElementById('documentation-link').value = data.doc_link;
+                        document.getElementById('project-description').value = data.project_description;
+                    }
+            
             }
             redirectToPrevious();
             loadData();

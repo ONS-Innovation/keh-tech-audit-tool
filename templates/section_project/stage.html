@@ -71,12 +71,18 @@
                     "stage": stage,
                     "complete": complete
                 };
-                localStorage.setItem('stage-data', JSON.stringify(data));
+                var name = 'stage-data';
+                if (localStorage.getItem('edit') === true) {
+                    name = 'stage-data-edit';
+                }
+                localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
-                var data = JSON.parse(localStorage.getItem('stage-data'));
-                if (data) {
-                    document.getElementById(data.stage).checked = true;
+                if (localStorage.getItem('edit') === false){
+                    var data = JSON.parse(localStorage.getItem('stage-data'));
+                    if (data) {
+                        document.getElementById(data.stage).checked = true;
+                    }
                 }
             }
             redirectToPrevious();

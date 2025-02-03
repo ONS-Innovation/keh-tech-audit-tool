@@ -2,18 +2,23 @@ var langArr = { main: [], others: [] };
 var path = window.location.pathname;
 var page = path.split("/").pop();
 
+var var_name = page + '-data';
+console.log(localStorage.getItem('edit'));
+if (JSON.parse(localStorage.getItem('edit')) === true) {
+    var_name = var_name + '-edit';
+}
 // Stores the data for that page in local storage.
 function storeData() {
-    localStorage.setItem(page + '-data', JSON.stringify(langArr));
+    localStorage.setItem(var_name, JSON.stringify(langArr));
 }
 
 // Loads the data for that page from local storage.
 function loadData() {
-    if (localStorage.getItem(page + '-data') === null) {
-        localStorage.setItem(page + '-data', JSON.stringify(langArr));
+    if (localStorage.getItem(var_name) === null) {
+        localStorage.setItem(var_name, JSON.stringify(langArr));
     }
 
-    langArr = JSON.parse(localStorage.getItem(page + '-data'));
+    langArr = JSON.parse(localStorage.getItem(var_name));
     renderData();
 }
 

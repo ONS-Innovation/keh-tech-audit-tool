@@ -3,4 +3,4 @@
 bucket         = "sdp-prod-tf-state"
 key            = "sdp-prod-ecs-tech-audit-tool/terraform.tfstate"
 region         = "eu-west-2"
-dynamodb_table = "terraform-state-lock"
+dynamodb_table = "sdp-prod-terraform-state-lock"

@@ -334,7 +334,7 @@ def view_project(project_name):
         headers=headers,
     ).json()
 
-    edit = False
+    edit = False # Boolean to check if the user can edit the project
     
     if (projects["user"][0]["email"] or projects["user"][1]["email"] or projects["user"][2]["email"]) == user_email:
         edit = True
@@ -353,8 +353,6 @@ def edit_project(project_name):
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers
     )
-
-    print(type(project.json()))
 
     return render_template("validate_details.html", project=project.json())
 

@@ -456,7 +456,6 @@
             'languages-data', 'code_editors-data', 'user_interface-data', 'diagrams-data', 'project_tracking-data', 'documentation-data', 
             'communication-data', 'collaboration-data', 'incident_management-data'];
 
-            console.log(fields);
             if (edit) {
                 for (let i = 0; i < fields.length; i++) {
                     fields[i] = fields[i] + '-edit'
@@ -578,6 +577,7 @@
 
         function processProjectTracking(projectTrackingData) {
             const parsed = validateData(projectTrackingData, 'Project Tracking', ['project_tracking']);
+            if (!parsed) return '';
 
             return parsed;
         }
@@ -619,13 +619,84 @@
             return youData;
         }
 
+        function api_to_ui(api_data) {
+
+            // Convert technical contact/manager data from API to UI schema
+            for (let i = 0; i < 2; i++) {
+                api_data.user[i]["role"] = api_data.user[i]["grade"];
+                delete api_data.user[i]["grade"];
+                delete api_data.user[i]["roles"];
+
+                api_data.user[i]["contactEmail"] = api_data.user[i]["email"];
+                delete api_data.user[i]["email"];
+            }
+
+            // Convert project data from API to UI schema
+            var project_fields = ["project_name", "project_short_name", "doc_link"];
+            for (let i = 0; i < project_fields.length; i++) {
+                api_data.details[0][project_fields[i]] = api_data.details[0][project_fields[i]];
+                delete api_data.details[0][project_fields[i]];
+            }
+            api_data.details[0]["project_name"] = api_data.details[0]["name"];
+            api_data.details[0]["project_short_name"] = api_data.details[0]["short_name"];
+            api_data.details[0]["doc_link"] = api_data.details[0]["documentation_link"];
+            delete api_data.details[0]["name"];
+            delete api_data.details[0]["short_name"];
+            delete api_data.details[0]["documentation_link"];
+
+
+            // {"outsource_company":null,"partnership_company":null,"developed":"In House","complete":true}
+            // i'll do this developed shit later
+
+            var architecture = [
+                            "database", "languages", "frameworks", "cicd", 
+                            "infrastructure"
+                        ];
+            
+            var supporting_tools = ["code_editors", "user_interface", 
+                            "diagrams", "documentation", "communication", "collaboration"];
+
+
+            
+            
+            var allowed_urls = [];
+            if (edit) {
+                localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
+                localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
+                localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
+                localStorage.setItem("stage-data-edit", JSON.stringify({"stage": api_data.stage}));
+                localStorage.setItem("developed-data-edit", JSON.stringify({"developed": api_data.developed}));
+                localStorage.setItem("project_tracking-data-edit", JSON.stringify({"project_tracking": api_data.supporting_tools.project_tracking}));
+                localStorage.setItem("incident_management-data-edit", JSON.stringify({"incident_management": api_data.supporting_tools.incident_management}));
+
+                for (let i = 0; i < architecture.length; i++) {
+                    var current = architecture[i];
+                    console.log(current);
+                    if (i == 3) {
+                        current = "integrations";
+                    }
+                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.architecture[architecture[i]]));
+                }
+
+                for (let i = 0; i < supporting_tools.length; i++) {
+                    var current = supporting_tools[i];
+                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.supporting_tools[current]));
+                }
+
+            }
+
+
+        }
+
         function load_data() {
             // Reset error panel at the start
             clearErrors();
-
-
-            if (localStorage.getItem('edit')) {
-                var server_data = 'hi';
+            if (edit){
+                var original_data = "{{ project }}";
+                original_data = original_data.replaceAll("&#39;", '"');
+                original_data = JSON.parse(original_data);
+                console.log(JSON.stringify(original_data, null, 4));
+                api_to_ui(original_data);
             }
 
             // Load all data from localStorage
@@ -651,6 +722,8 @@
                 collaboration: localStorage.getItem(fields[18]),
                 incidentManagement: localStorage.getItem(fields[19])
             };
+
+
 
 
             // Process contacts
@@ -686,7 +759,12 @@
                 }
             }
 
-            // Build the final data object
+            if (JSON.parse(localStorage.getItem('edit'))) { 
+                var original_data = "{{ project }}";
+                original_data = original_data.replaceAll("&#39;", '"');
+                original_data = JSON.parse(original_data);
+                console.log(JSON.stringify(original_data, null, 4));
+            }
             const finalData = {
                 user: youData,
                 details: processedData.project,
@@ -753,7 +831,6 @@
                 collaboration_details: arrToList(finalData.supporting_tools.collaboration?.main?.concat(finalData.supporting_tools.collaboration?.others) || []),
                 incident_management_details: finalData.supporting_tools.incident_management
             };
-
             // Update all summary elements
             Object.entries(summaryData).forEach(([key, value]) => {
                 const element = document.getElementById(key);

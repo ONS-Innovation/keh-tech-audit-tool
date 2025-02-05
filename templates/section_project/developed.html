@@ -115,12 +115,26 @@
                     "In House": "in-house"
                 }
                 var name = 'developed-data';
+                var data;
+                var option
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = 'developed-data-edit';
-                }
-                    var data = JSON.parse(localStorage.getItem(name));
+                    data = JSON.parse(localStorage.getItem(name));
+                    console.log(JSON.stringify(data));
+                    console.log(data.developed);
                     if (data) {
-                        var option = obj[data.developed]
+                        option = obj[data.developed[0]]
+                        console.log(option);
+                        if (data.developed === "Outsourced") {
+                            document.getElementById('other-input-1').value = data.outsource_company;
+                        } else if (data.developed === "Partnership") {
+                            document.getElementById('other-input-2').value = data.partnership_company;
+                        }
+                    document.getElementById(option).checked = true;
+                } else {
+                    data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        option = obj[data.developed]
                         if (data.developed === "Outsourced") {
                             document.getElementById('other-input-1').value = data.outsource_company;
                         } else if (data.developed === "Partnership") {
@@ -129,6 +143,8 @@
                     document.getElementById(option).checked = true;
                 
                 }
+                }
+            }
 
             }
             redirectToPrevious();

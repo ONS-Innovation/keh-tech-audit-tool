@@ -89,7 +89,7 @@
                     ... newData
                 };
                 var name = 'incident_management-data';
-                if (localStorage.getItem('edit') === true) {
+                if (JSON.parse(localStorage.getItem('edit'))) {
                     name = 'incident_management-data-edit';
                 }
                 localStorage.setItem(name, JSON.stringify(updatedData));
@@ -100,7 +100,9 @@
                     "ServiceNow": "servicenow"
                 }
                 var name = 'incident_management-data';
-                if (JSON.parse(localStorage.getItem('edit')) === false) {
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = "incident_management-data-edit"
+                }
                 
                 var data = JSON.parse(localStorage.getItem(name));
                 if (data) {
@@ -113,7 +115,7 @@
                     if (data.incident_management) {
                         document.getElementById('other-input').value = data.incident_management;
                     }
-                }
+                
             }
             }
             redirectToPrevious();

@@ -645,6 +645,16 @@
             delete api_data.details[0]["documentation_link"];
 
 
+            console.log(console.log(JSON.stringify(api_data["source_control"])))
+            console.log(JSON.stringify(api_data["source_control"], null, 4));
+            var new_source_control = {
+                "source_control": api_data["source_control"][0]["type"],
+                "links": api_data["source_control"][0]["links"]
+            }
+
+
+            console.log(JSON.stringify(new_source_control, null, 4));
+
             // {"outsource_company":null,"partnership_company":null,"developed":"In House","complete":true}
             // i'll do this developed shit later
 
@@ -659,19 +669,37 @@
 
             
             
-            var allowed_urls = [];
+            var allowed_urls = ["/survey/contact_tech", "/survey/contact_manager", "/survey/project",
+                                "/survey/developed", "/survey/source_control", "/survey/hosting", "/survey/database",
+                                "/survey/languages", "/survey/frameworks", "/survey/integrations", "/survey/infrastructure",
+                                "/survey/code_editors", "/survey/user_interface", "/survey/diagrams",
+                                "/survey/project_tracking", "/survey/documentation", "/survey/communication", 
+                                "/survey/collaboration", "/survey/incident_management"
+                                ];
+            var allowed = false;
+            console.log(document.referrer);
+            for (let i = 0; i < allowed_urls.length; i++) {
+                if (document.referrer.includes(allowed_urls[i])) {
+                    allowed = true;
+                }
+            }
+
+            console.log(allowed)
+            
             if (edit) {
                 localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
                 localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
                 localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
                 localStorage.setItem("stage-data-edit", JSON.stringify({"stage": api_data.stage}));
                 localStorage.setItem("developed-data-edit", JSON.stringify({"developed": api_data.developed}));
+                localStorage.setItem("source_control-data-edit", JSON.stringify(new_source_control));
+                localStorage.setItem("hosting-data-edit", JSON.stringify(api_data.architecture.hosting));
                 localStorage.setItem("project_tracking-data-edit", JSON.stringify({"project_tracking": api_data.supporting_tools.project_tracking}));
                 localStorage.setItem("incident_management-data-edit", JSON.stringify({"incident_management": api_data.supporting_tools.incident_management}));
 
                 for (let i = 0; i < architecture.length; i++) {
                     var current = architecture[i];
-                    console.log(current);
+                    // console.log(current);
                     if (i == 3) {
                         current = "integrations";
                     }
@@ -682,8 +710,8 @@
                     var current = supporting_tools[i];
                     localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.supporting_tools[current]));
                 }
+                }
 
-            }
 
 
         }
@@ -763,7 +791,7 @@
                 var original_data = "{{ project }}";
                 original_data = original_data.replaceAll("&#39;", '"');
                 original_data = JSON.parse(original_data);
-                console.log(JSON.stringify(original_data, null, 4));
+                // console.log(JSON.stringify(original_data, null, 4));
             }
             const finalData = {
                 user: youData,

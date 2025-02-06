@@ -119,11 +119,11 @@
                 var option
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = 'developed-data-edit';
+                }
                     data = JSON.parse(localStorage.getItem(name));
-                    console.log(JSON.stringify(data));
-                    console.log(data.developed);
+                   
                     if (data) {
-                        option = obj[data.developed[0]]
+                        option = obj[data.developed]
                         console.log(option);
                         if (data.developed === "Outsourced") {
                             document.getElementById('other-input-1').value = data.outsource_company;
@@ -140,12 +140,13 @@
                         } else if (data.developed === "Partnership") {
                             document.getElementById('other-input-2').value = data.partnership_company;
                         }
-                    document.getElementById(option).checked = true;
-                
-                }
-                }
-            }
+                        console.log(option)
 
+                    document.getElementById(option).checked = true;
+                        
+                }
+
+                }
             }
             redirectToPrevious();
             loadData();

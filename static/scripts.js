@@ -9,6 +9,7 @@ if (JSON.parse(localStorage.getItem('edit')) === true) {
 }
 // Stores the data for that page in local storage.
 function storeData() {
+    console.log(localStorage.getItem("database-data-edit"));
     localStorage.setItem(var_name, JSON.stringify(langArr));
 }
 

@@ -354,7 +354,9 @@ def edit_project(project_name):
         headers=headers
     )
 
-    return render_template("validate_details.html", project=project.json())
+    edit = True
+
+    return render_template("validate_details.html", project=project.json(), edit=edit)
 
 # Improved readibility of the form data
 def map_form_data(form):

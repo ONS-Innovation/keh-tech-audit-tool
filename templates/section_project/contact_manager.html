@@ -131,11 +131,10 @@
                     "SEO": "seo",
                     "HEO": "heo"
                 }
+                var name = 'contact_manager-data';
                 if (JSON.parse(localStorage.getItem('edit'))) {
-                    var name = 'contact_manager-data';
-                    if (JSON.parse(localStorage.getItem('contact_manager-data'))) { 
-                        name = 'contact_manager-data-edit';
-                    }
+                    name = 'contact_manager-data-edit';
+                }
                     var data = JSON.parse(localStorage.getItem(name));
                     if (data) {
                         document.getElementById('contact-email').value = data.contactEmail;
@@ -147,7 +146,7 @@
                         }
                     }
                 }
-            }
+            
             redirectToPrevious();
             loadData();
         </script>

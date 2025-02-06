@@ -119,7 +119,7 @@
                 };
 
                 var name = 'contact_tech-data';
-                if (localStorage.getItem('edit') === true) {
+                if (JSON.parse(localStorage.getItem('edit'))) {
                     name = 'contact_tech-data-edit';
                 }
                 localStorage.setItem(name, JSON.stringify(data));

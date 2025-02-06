@@ -409,6 +409,13 @@
             ]
         }) }}
     <!--onsubmit="localStorage.clear()"-->
+    {% if edit %}
+        {% set url = 'edit_project' %}
+    {% else %}
+        <h1>TYOOOOOOO</h1>
+
+        {% set url = 'survey' %}
+    {% endif %}
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
         <input id="user" type="hidden" name="user">
             <input id="project" type="hidden" name="project">
@@ -645,16 +652,34 @@
             delete api_data.details[0]["documentation_link"];
 
 
-            console.log(console.log(JSON.stringify(api_data["source_control"])))
             console.log(JSON.stringify(api_data["source_control"], null, 4));
             var new_source_control = {
                 "source_control": api_data["source_control"][0]["type"],
                 "links": api_data["source_control"][0]["links"]
             }
 
+            api_data["architecture"]["hosting"]["type"] = api_data["architecture"]["hosting"]["type"][0]
+            api_data["architecture"]["hosting"]["main"] = []
+            api_data["architecture"]["hosting"]["others"] = api_data["architecture"]["hosting"]["details"]
+            delete api_data["architecture"]["hosting"]["details"]
 
-            console.log(JSON.stringify(new_source_control, null, 4));
+            var developed = api_data["developed"][0];
+            var partnership_company = null;
+            var outsource_company = null;
 
+            if (developed === "Partnership") {
+                partnership_company = api_data["developed"][1][0];
+            } else if (developed === "Outsourced") {
+                outsource_company = api_data["developed"][1][0];
+            } else {
+                partnership_company = null;
+                outsource_company = null;
+            }
+            var new_developed_data = {
+                "developed": developed,
+                "outsource_company": outsource_company,
+                "partnership_company": partnership_company,
+            }
             // {"outsource_company":null,"partnership_company":null,"developed":"In House","complete":true}
             // i'll do this developed shit later
 
@@ -665,33 +690,33 @@
             
             var supporting_tools = ["code_editors", "user_interface", 
                             "diagrams", "documentation", "communication", "collaboration"];
-
-
             
-            
-            var allowed_urls = ["/survey/contact_tech", "/survey/contact_manager", "/survey/project",
-                                "/survey/developed", "/survey/source_control", "/survey/hosting", "/survey/database",
-                                "/survey/languages", "/survey/frameworks", "/survey/integrations", "/survey/infrastructure",
-                                "/survey/code_editors", "/survey/user_interface", "/survey/diagrams",
-                                "/survey/project_tracking", "/survey/documentation", "/survey/communication", 
-                                "/survey/collaboration", "/survey/incident_management"
-                                ];
-            var allowed = false;
-            console.log(document.referrer);
-            for (let i = 0; i < allowed_urls.length; i++) {
-                if (document.referrer.includes(allowed_urls[i])) {
-                    allowed = true;
+            var fields_exist = false;
+            var count = 0;
+            for (let i = 0; i < fields.length; i++) {
+                if (localStorage.getItem(fields[i])) {
+                    console.log(fields[i]);
+                    count++;
                 }
             }
+            if (count === fields.length) {
+                fields_exist = true;
+            }
+            console.log(fields_exist);
+            console.log(count);
+            console.log(fields.length);
+            console.log(localStorage.getItem("database-data-edit"));
 
-            console.log(allowed)
+
             
-            if (edit) {
+            
+            if (edit && !fields_exist) {
+                console.log('hiiii');
                 localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
                 localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
                 localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
                 localStorage.setItem("stage-data-edit", JSON.stringify({"stage": api_data.stage}));
-                localStorage.setItem("developed-data-edit", JSON.stringify({"developed": api_data.developed}));
+                localStorage.setItem("developed-data-edit", JSON.stringify(new_developed_data));
                 localStorage.setItem("source_control-data-edit", JSON.stringify(new_source_control));
                 localStorage.setItem("hosting-data-edit", JSON.stringify(api_data.architecture.hosting));
                 localStorage.setItem("project_tracking-data-edit", JSON.stringify({"project_tracking": api_data.supporting_tools.project_tracking}));
@@ -725,6 +750,7 @@
                 original_data = JSON.parse(original_data);
                 console.log(JSON.stringify(original_data, null, 4));
                 api_to_ui(original_data);
+                console.log(localStorage.getItem('random stuff'));
             }
 
             // Load all data from localStorage
@@ -750,8 +776,6 @@
                 collaboration: localStorage.getItem(fields[18]),
                 incidentManagement: localStorage.getItem(fields[19])
             };
-
-
 
 
             // Process contacts

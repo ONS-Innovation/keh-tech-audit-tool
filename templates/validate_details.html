@@ -410,13 +410,11 @@
         }) }}
     <!--onsubmit="localStorage.clear()"-->
     {% if edit %}
-        {% set url = 'edit_project' %}
+        <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
     {% else %}
-        <h1>TYOOOOOOO</h1>
-
-        {% set url = 'survey' %}
-    {% endif %}
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
+    {% endif %}
+
         <input id="user" type="hidden" name="user">
             <input id="project" type="hidden" name="project">
                 <input id="developed" type="hidden" name="developed">
@@ -425,18 +423,19 @@
                             <input id="database" type="hidden" name="database">
                                 <input id="languages" type="hidden" name="languages">
                                     <input id="frameworks" type="hidden" name="frameworks">
-                                        <input id="integrations" type="hidden" name="integrations">
-                                            <input id="infrastructure" type="hidden" name="infrastructure">
-                                                <input id="stage" type="hidden" name="stage">
-                                                    <input id="code_editors" type="hidden" name="code_editors">
-                                                        <input id="user_interface" type="hidden" name="user_interface">
-                                                            <input id="diagrams" type="hidden" name="diagrams">
-                                                                <input id="project_tracking" type="hidden" name="project_tracking">
-                                                                    <input id="documentation" type="hidden" name="documentation">
-                                                                        <input id="communication" type="hidden" name="communication">
-                                                                            <input id="collaboration" type="hidden" name="collaboration">
-                                                                                <input id="incident_management" type="hidden" name="incident_management">
-                                                    {{ onsButton({
+                        <input id="integrations" type="hidden" name="integrations">
+                            <input id="infrastructure" type="hidden" name="infrastructure">
+                                <input id="stage" type="hidden" name="stage">
+                                    <input id="code_editors" type="hidden" name="code_editors">
+                                        <input id="user_interface" type="hidden" name="user_interface">
+                                            <input id="diagrams" type="hidden" name="diagrams">
+                                                <input id="project_tracking" type="hidden" name="project_tracking">
+                                                    <input id="documentation" type="hidden" name="documentation">
+                                                        <input id="communication" type="hidden" name="communication">
+                                                            <input id="collaboration" type="hidden" name="collaboration">
+                                                                <input id="incident_management" type="hidden" name="incident_management">
+                                                                <input id="project_name" type="hidden" name="project_name">
+    {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
             "classes": 'ons-u-mb-m ons-u-mt-l',
@@ -640,19 +639,15 @@
 
             // Convert project data from API to UI schema
             var project_fields = ["project_name", "project_short_name", "doc_link"];
-            for (let i = 0; i < project_fields.length; i++) {
-                api_data.details[0][project_fields[i]] = api_data.details[0][project_fields[i]];
-                delete api_data.details[0][project_fields[i]];
-            }
+    
             api_data.details[0]["project_name"] = api_data.details[0]["name"];
             api_data.details[0]["project_short_name"] = api_data.details[0]["short_name"];
-            api_data.details[0]["doc_link"] = api_data.details[0]["documentation_link"];
+            api_data.details[0]["doc_link"] = api_data.details[0]["documentation_link"][0];
             delete api_data.details[0]["name"];
             delete api_data.details[0]["short_name"];
             delete api_data.details[0]["documentation_link"];
 
 
-            console.log(JSON.stringify(api_data["source_control"], null, 4));
             var new_source_control = {
                 "source_control": api_data["source_control"][0]["type"],
                 "links": api_data["source_control"][0]["links"]
@@ -695,23 +690,18 @@
             var count = 0;
             for (let i = 0; i < fields.length; i++) {
                 if (localStorage.getItem(fields[i])) {
-                    console.log(fields[i]);
                     count++;
                 }
             }
             if (count === fields.length) {
                 fields_exist = true;
             }
-            console.log(fields_exist);
-            console.log(count);
-            console.log(fields.length);
-            console.log(localStorage.getItem("database-data-edit"));
+
 
 
             
             
             if (edit && !fields_exist) {
-                console.log('hiiii');
                 localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
                 localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
                 localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
@@ -724,7 +714,6 @@
 
                 for (let i = 0; i < architecture.length; i++) {
                     var current = architecture[i];
-                    // console.log(current);
                     if (i == 3) {
                         current = "integrations";
                     }
@@ -748,9 +737,7 @@
                 var original_data = "{{ project }}";
                 original_data = original_data.replaceAll("&#39;", '"');
                 original_data = JSON.parse(original_data);
-                console.log(JSON.stringify(original_data, null, 4));
                 api_to_ui(original_data);
-                console.log(localStorage.getItem('random stuff'));
             }
 
             // Load all data from localStorage
@@ -812,10 +799,10 @@
             }
 
             if (JSON.parse(localStorage.getItem('edit'))) { 
+
                 var original_data = "{{ project }}";
                 original_data = original_data.replaceAll("&#39;", '"');
                 original_data = JSON.parse(original_data);
-                // console.log(JSON.stringify(original_data, null, 4));
             }
             const finalData = {
                 user: youData,
@@ -845,13 +832,13 @@
                     incident_management: processedData.incidentManagement.incident_management || ''
                 }
             };
-
             // Update the summary display
             updateSummaryDisplay(finalData);
             
             // Update hidden form fields
             updateHiddenFields(finalData);
         }
+
 
         function updateSummaryDisplay(finalData) {
             const summaryData = {
@@ -891,7 +878,7 @@
         }
 
         function updateHiddenFields(finalData) {
-            const hiddenFields = {
+            var hiddenFields = {
                 user: finalData.user,
                 project: finalData.details,
                 developed: finalData.developed,
@@ -916,12 +903,17 @@
                 incident_management: finalData.supporting_tools.incident_management
             };
 
+            if (JSON.parse(localStorage.getItem('edit'))) {
+                hiddenFields["project_name"] = "{{ project_name }}";
+            }
+
             // Update all hidden input fields
             Object.entries(hiddenFields).forEach(([key, value]) => {
                 const element = document.getElementById(key);
                 if (element) element.value = JSON.stringify(value);
             });
         }
+
 
         // Initialize the page
         load_data();

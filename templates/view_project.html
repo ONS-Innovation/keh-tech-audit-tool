@@ -310,8 +310,8 @@
         })
     }}
     {% endif %}
-{% endblock %}
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
 <script>
-    document.getElementById("project_details").innerHTML = 'hi';
-    localStorage.setItem('edit', false)
+    removeEdits();
 </script>
+{% endblock %}

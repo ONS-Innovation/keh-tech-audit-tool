@@ -335,9 +335,9 @@ def view_project(project_name):
     ).json()
 
     edit = False # Boolean to check if the user can edit the project
-    
-    for i in range(3):
-        if projects["user"][i]["email"] == user_email:
+
+    for user in projects["user"]:
+        if user["email"] == user_email:
             edit = True
             break
 
@@ -356,9 +356,18 @@ def edit_project(project_name):
         headers=headers
     )
 
+    project = project.json()
+
+    user_email = session.get("email", "No email found")
+    users = [user["email"] for user in project["user"]]
+
+    if user_email not in users:
+        flash("You do not have permission to edit this project.")
+        return redirect(url_for('dashboard'))
+
     edit = True
 
-    return render_template("validate_details.html", project=project.json(), edit=edit, project_name=project_name)
+    return render_template("validate_details.html", project=project, edit=edit, project_name=project_name)
 
 # Improved readibility of the form data
 def map_form_data(form):
@@ -446,23 +455,13 @@ def survey():
     try:
         if form_data.get("project_name"):
             print(form_data["project_name"])
-            """
-            count = 0
-
-            for proj in requests.get(f"{API_URL}/api/v1/projects", headers=headers).json():
-                if count > 1:
-                    print("heloooo")
-                    return redirect("dashboard")
-                if proj["name"] == form_data["project_name"]:
-                    count += 1
-            """
                 
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
                 headers=headers,
             )
-            return redirect("dashboard")
+            return redirect(url_for("dashboard"))
         else:
             projects = requests.post(
                 f"{API_URL}/api/v1/projects",

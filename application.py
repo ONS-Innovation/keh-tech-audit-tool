@@ -454,7 +454,6 @@ def survey():
     }
     try:
         if form_data.get("project_name"):
-            print(form_data["project_name"])
                 
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",

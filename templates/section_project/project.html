@@ -79,14 +79,12 @@
                 };
                 var name = 'project-data'
                 if (JSON.parse(localStorage.getItem('edit'))) {
-                    console.log('hi');
                     name = 'project-data-edit'
                 }
                 localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
                 var name = 'project-data';
-                console.log(JSON.parse(localStorage.getItem('edit')));
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = name + '-edit';
                 }

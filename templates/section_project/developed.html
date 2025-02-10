@@ -124,7 +124,6 @@
                    
                     if (data) {
                         option = obj[data.developed]
-                        console.log(option);
                         if (data.developed === "Outsourced") {
                             document.getElementById('other-input-1').value = data.outsource_company;
                         } else if (data.developed === "Partnership") {
@@ -140,7 +139,6 @@
                         } else if (data.developed === "Partnership") {
                             document.getElementById('other-input-2').value = data.partnership_company;
                         }
-                        console.log(option)
 
                     document.getElementById(option).checked = true;
                         

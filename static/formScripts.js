@@ -168,7 +168,6 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
                 !JSON.parse(projectData)["doc_link"]
             ) {
                 submitBtn.href = '/survey/project';
-                console.log("hello");
                 changeBtnText()
                 return;
             }

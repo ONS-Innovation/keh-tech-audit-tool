@@ -3,13 +3,11 @@ var path = window.location.pathname;
 var page = path.split("/").pop();
 
 var var_name = page + '-data';
-console.log(localStorage.getItem('edit'));
 if (JSON.parse(localStorage.getItem('edit')) === true) {
     var_name = var_name + '-edit';
 }
 // Stores the data for that page in local storage.
 function storeData() {
-    console.log(localStorage.getItem("database-data-edit"));
     localStorage.setItem(var_name, JSON.stringify(langArr));
 }
 

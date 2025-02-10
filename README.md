@@ -270,6 +270,7 @@ make test-creation
 ```
 
 ### Navigation Tests
+The following test will click through buttons and navigational features to ensure that the proper destinations are reached.
 ```bash
 make test-navigation
 ```

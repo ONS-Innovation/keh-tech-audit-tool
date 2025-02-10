@@ -29,7 +29,7 @@ To run locally, import these credentials into the app:
 ```bash
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-export API_BUCKET_NAME=<sdp-dev-tech-audit-tool-api-testing/sdp-dev-tech-audit-tool-api> # The latter bucket should be used in production
+export API_BUCKET_NAME=<sdp-dev-tech-audit-tool-api-testing/sdp-dev-tech-audit-tool-api> # The latter bucket should be used when deploying (switch to dev/sandbox/prod where appropriate)
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
 export AWS_ACCOUNT_NAME=<sdp-sandbox/sdp-dev/sdp-prod>

@@ -99,12 +99,14 @@
                     "Jira": "jira",
                     "ServiceNow": "servicenow"
                 }
+
                 var name = 'incident_management-data';
                 if (JSON.parse(localStorage.getItem('edit'))) {
                     name = "incident_management-data-edit"
                 }
                 
                 var data = JSON.parse(localStorage.getItem(name));
+
                 if (data) {
                     if (data.incident_management != "Jira" && data.incident_management != "ServiceNow") {
                         var option = "other";
@@ -117,6 +119,7 @@
                     }
                 
             }
+
             }
             redirectToPrevious();
             loadData();

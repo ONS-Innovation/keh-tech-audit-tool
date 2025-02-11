@@ -391,9 +391,14 @@ def map_form_data(form):
         "communication",
         "collaboration",
         "incident_management",
-        "project_name"
+        "project_name",
     ]
-    return {key: json.loads(form[key]) for key in keys}
+    try:
+        final_dict = {key: json.loads(form[key]) for key in keys}
+    except Exception as e:
+        keys.pop()
+        final_dict = {key: json.loads(form[key]) for key in keys}
+    return final_dict
 
 
 @app.route("/survey", methods=["GET", "POST"])

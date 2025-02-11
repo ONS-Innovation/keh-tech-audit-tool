@@ -444,8 +444,9 @@
             ]
         }) }}
     <!--onsubmit="localStorage.clear()"-->
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
     {% if edit %}
-        <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
+        <form action="{{ url_for('survey') }}" method="POST" onsubmit="removeEdits()">
     {% else %}
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
     {% endif %}

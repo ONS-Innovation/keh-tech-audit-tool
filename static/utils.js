@@ -10,3 +10,8 @@ function removeEdits() {
         localStorage.removeItem(field);
     }
 }
+
+function removeValidate() {
+    localStorage.removeItem("hosting-validate");
+    localStorage.removeItem("source_control-validate");
+}

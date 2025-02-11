@@ -182,7 +182,7 @@
             <script>
                 if (JSON.parse(localStorage.getItem("source_control-validate")) && JSON.parse(localStorage.getItem("edit"))) {
                     document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');
-                } else if (localStorage.getItem("source_control-validate")) {
+                } else if (JSON.parse(localStorage.getItem("source_control-validate"))) {
                     document.getElementById("save-values-button").href = '/validate_details'
                 }
                 loadData();

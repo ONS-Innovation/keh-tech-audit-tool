@@ -3,6 +3,8 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -10,12 +12,25 @@
         "variant": 'error',
         "type": "error",
     }) %}
+
+
     {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Please fill in missing data'
     }) }}
     {% endcall %}
+    {% if edit %}
+    {{ onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+        "itemsList": [
+            {
+                "url": url_for("view_project", project_name=project.details[0].name),
+                "text": 'Back'
+            },
+        ],
+    }) }}
+    {% endif %}
     <h1 class="ons-u-mt-m">Check your answers</h1>
     {{ onsLabel({
         "id": 'label',
@@ -83,6 +98,26 @@
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for Household accommodation",
                                                     "url": url_for('project')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Stage",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='stage_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('stage')
                                                 }
                                             ]
                                         }
@@ -844,11 +879,11 @@
             const summaryData = {
                 technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
                 delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
+                stage_details: finalData.stage ? `<ul><li>Stage: ${finalData.stage}</li></ul>` : '',
                 project_details: finalData.details ? `<ul>
                     <li>Name: ${finalData.details.project_name}</li>
                     <li>Short Name: ${finalData.details.project_short_name}</li>
                     <li>Documentation Link: ${finalData.details.doc_link}</li>
-                    <li>Stage: ${finalData.stage}</li>
                 </ul>` : '',
                 developed_details: finalData.developed ? `<ul>
                     <li>Developed By: ${finalData.developed.developed}</li>

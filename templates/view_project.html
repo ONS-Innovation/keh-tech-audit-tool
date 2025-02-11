@@ -2,7 +2,7 @@
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' %}
+{% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' + 'Stage: ' + '<p style="font-weight:400">' + project.stage %}
 {% block main %}
 
 

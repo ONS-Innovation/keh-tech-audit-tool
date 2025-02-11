@@ -458,6 +458,7 @@
                             <input id="database" type="hidden" name="database">
                                 <input id="languages" type="hidden" name="languages">
                                     <input id="frameworks" type="hidden" name="frameworks">
+      
                         <input id="integrations" type="hidden" name="integrations">
                             <input id="infrastructure" type="hidden" name="infrastructure">
                                 <input id="stage" type="hidden" name="stage">
@@ -618,6 +619,7 @@
 
         function processProjectTracking(projectTrackingData) {
             const parsed = validateData(projectTrackingData, 'Project Tracking', ['project_tracking']);
+          
             if (!parsed) return '';
 
             return parsed;
@@ -710,8 +712,7 @@
                 "outsource_company": outsource_company,
                 "partnership_company": partnership_company,
             }
-            // {"outsource_company":null,"partnership_company":null,"developed":"In House","complete":true}
-            // i'll do this developed shit later
+        
 
             var architecture = [
                             "database", "languages", "frameworks", "cicd", 
@@ -731,11 +732,7 @@
             if (count === fields.length) {
                 fields_exist = true;
             }
-
-
-
-            
-            
+          
             if (edit && !fields_exist) {
                 localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
                 localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
@@ -799,7 +796,6 @@
                 incidentManagement: localStorage.getItem(fields[19])
             };
 
-
             // Process contacts
             const youData = processContacts(storedData.contactTech, storedData.contactManager);
             // Process all other sections
@@ -823,7 +819,6 @@
                 collaboration: validateData(storedData.collaboration, 'Collaboration'),
                 incidentManagement: processIncidentManagement(storedData.incidentManagement)
             };
-
 
             // Additional validation for hosting
             if (processedData.hosting) {
@@ -905,6 +900,7 @@
                 collaboration_details: arrToList(finalData.supporting_tools.collaboration?.main?.concat(finalData.supporting_tools.collaboration?.others) || []),
                 incident_management_details: finalData.supporting_tools.incident_management
             };
+
             // Update all summary elements
             Object.entries(summaryData).forEach(([key, value]) => {
                 const element = document.getElementById(key);

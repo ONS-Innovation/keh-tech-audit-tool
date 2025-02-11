@@ -5,17 +5,28 @@
 {% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' %}
 {% block main %}
 
-    {{ onsBreadcrumbs({
-        "ariaLabel": 'Breadcrumbs',
-        "itemsList": [
-                {
-                    "url": '/dashboard',
-                    "text": 'Back'
-                }
-            ]
-    }) }}
-    {% set langs = [] %}
 
+{{ onsBreadcrumbs({
+    "ariaLabel": 'Breadcrumbs',
+    "itemsList": [
+        {
+            "url": '/dashboard',
+            "text": 'Back'
+        },
+    ],
+}) }}
+
+    {% if edit %}
+    {{ onsButton({
+        "text": "Edit",
+        "url": url_for('edit_project', project_name=project.details[0].name),
+        "attributes": {
+            "style": "float: right; margin-right: 5em;"
+        }
+    }) }}
+    {% endif %}
+    {% set langs = [] %}
+    <div style="margin-top: 1em;">
     {{ onsSummary({
         "summaries": [
             {
@@ -301,15 +312,9 @@
             }
         ]
     }) }}
+    </div>
     <br>
-    {% if edit %}
-    {{
-        onsButton({
-            "text": "Edit",
-            "url": url_for('edit_project', project_name=project.details[0].name)
-        })
-    }}
-    {% endif %}
+
     <script src="{{ url_for('static', filename='utils.js') }}"></script>
 <script>
     removeEdits();

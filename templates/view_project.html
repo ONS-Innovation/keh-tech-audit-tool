@@ -1,4 +1,5 @@
 {% extends "core.html" %}
+{% include "utils.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
@@ -315,9 +316,5 @@
     </div>
     <br>
 
-    <script src="{{ url_for('static', filename='utils.js') }}"></script>
-<script>
-    removeEdits();
-    removeValidate();
-</script>
+
 {% endblock %}

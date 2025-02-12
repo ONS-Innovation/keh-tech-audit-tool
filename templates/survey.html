@@ -1,4 +1,5 @@
 {% extends "core.html" %}
+{% include "utils.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% macro checkBox() %}
@@ -112,8 +113,6 @@
             "url": url_for('validate_details')
         }) }}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-        <script src="{{ url_for('static', filename='utils.js') }}"></script>
-
     <script>
         function load_data() {
             // Project Details
@@ -155,8 +154,6 @@
         load_data();
         localStorage.setItem("source_control-validate", false);
         localStorage.setItem("hosting-validate", false);
-        removeEdits();
-        removeValidate();
     </script>
 {% endblock %}
 {% block scripts %}

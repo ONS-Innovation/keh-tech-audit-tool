@@ -82,27 +82,34 @@
                 if (project_tracking === 'other') {
                     newData.project_tracking = other_project_tracking;
                 }
-                var existingData = JSON.parse(localStorage.getItem('project_tracking-data')) || {};
+                var name = 'project_tracking-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'project_tracking-data-edit';
+                }
+                var existingData = JSON.parse(localStorage.getItem(name)) || {};
+
                 // Merge new data with existing data
                 var updatedData = {
                     ... existingData,
                     ... newData
                 };
-                localStorage.setItem('project_tracking-data', JSON.stringify(updatedData));
+
+                localStorage.setItem(name, JSON.stringify(updatedData));
+
             }
             function loadData() {
-                var obj = {
-                    "Jira": "jira",
-                    "Trello": "trello"
+                var name = 'project_tracking-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'project_tracking-data-edit';
                 }
-                var data = JSON.parse(localStorage.getItem('project_tracking-data'));
+                var data = JSON.parse(localStorage.getItem(name));
+
                 if (data) {
                     if (data.project_tracking != "Jira" && data.project_tracking != "Trello") {
                         var option = "other";
                     } else {
-                        var option = obj[data.project_tracking];
+                        var option = data.project_tracking.toLowerCase();
                     }
-                    console.log(option);
                     document.getElementById(option).checked = true;
                     if (data.project_tracking) {
                         document.getElementById('other-input').value = data.project_tracking;

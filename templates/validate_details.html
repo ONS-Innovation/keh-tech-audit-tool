@@ -3,6 +3,8 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
+{% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
+
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -10,12 +12,25 @@
         "variant": 'error',
         "type": "error",
     }) %}
+
+
     {{ onsLabel({
         "id": 'label',
         "for": "some-input",
         "text": 'Please fill in missing data'
     }) }}
     {% endcall %}
+    {% if edit %}
+    {{ onsBreadcrumbs({
+        "ariaLabel": 'Breadcrumbs',
+        "itemsList": [
+            {
+                "url": url_for("view_project", project_name=project.details[0].name),
+                "text": 'Back'
+            },
+        ],
+    }) }}
+    {% endif %}
     <h1 class="ons-u-mt-m">Check your answers</h1>
     {{ onsLabel({
         "id": 'label',
@@ -83,6 +98,26 @@
                                                     "text": "Change",
                                                     "ariaLabel": "View answers for Household accommodation",
                                                     "url": url_for('project')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "rowTitle": "Stage",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='stage_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "View answers for Household accommodation",
+                                                    "url": url_for('stage')
                                                 }
                                             ]
                                         }
@@ -409,7 +444,13 @@
             ]
         }) }}
     <!--onsubmit="localStorage.clear()"-->
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
+    {% if edit %}
+        <form action="{{ url_for('survey') }}" method="POST" onsubmit="removeEdits()">
+    {% else %}
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
+    {% endif %}
+
         <input id="user" type="hidden" name="user">
             <input id="project" type="hidden" name="project">
                 <input id="developed" type="hidden" name="developed">
@@ -418,18 +459,20 @@
                             <input id="database" type="hidden" name="database">
                                 <input id="languages" type="hidden" name="languages">
                                     <input id="frameworks" type="hidden" name="frameworks">
-                                        <input id="integrations" type="hidden" name="integrations">
-                                            <input id="infrastructure" type="hidden" name="infrastructure">
-                                                <input id="stage" type="hidden" name="stage">
-                                                    <input id="code_editors" type="hidden" name="code_editors">
-                                                        <input id="user_interface" type="hidden" name="user_interface">
-                                                            <input id="diagrams" type="hidden" name="diagrams">
-                                                                <input id="project_tracking" type="hidden" name="project_tracking">
-                                                                    <input id="documentation" type="hidden" name="documentation">
-                                                                        <input id="communication" type="hidden" name="communication">
-                                                                            <input id="collaboration" type="hidden" name="collaboration">
-                                                                                <input id="incident_management" type="hidden" name="incident_management">
-                                                    {{ onsButton({
+      
+                        <input id="integrations" type="hidden" name="integrations">
+                            <input id="infrastructure" type="hidden" name="infrastructure">
+                                <input id="stage" type="hidden" name="stage">
+                                    <input id="code_editors" type="hidden" name="code_editors">
+                                        <input id="user_interface" type="hidden" name="user_interface">
+                                            <input id="diagrams" type="hidden" name="diagrams">
+                                                <input id="project_tracking" type="hidden" name="project_tracking">
+                                                    <input id="documentation" type="hidden" name="documentation">
+                                                        <input id="communication" type="hidden" name="communication">
+                                                            <input id="collaboration" type="hidden" name="collaboration">
+                                                                <input id="incident_management" type="hidden" name="incident_management">
+                                                                <input id="project_name" type="hidden" name="project_name">
+    {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
             "classes": 'ons-u-mb-m ons-u-mt-l',
@@ -441,6 +484,27 @@
 </form>
 <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <script>
+            localStorage.setItem('redirect_url', window.location.href);
+            var current_url = window.location.href.split("/");
+            var trail = current_url[current_url.length - 1];
+            var edit = false;
+            if (trail === "edit") {
+                edit = true;
+            }
+
+            localStorage.setItem("edit", edit)
+            
+            var fields = ['contact_tech-data', 'contact_manager-data', 'project-data', 'developed-data', 'stage-data', 
+            'source_control-data', 'hosting-data', 'database-data', 'frameworks-data', 'infrastructure-data', 'integrations-data', 
+            'languages-data', 'code_editors-data', 'user_interface-data', 'diagrams-data', 'project_tracking-data', 'documentation-data', 
+            'communication-data', 'collaboration-data', 'incident_management-data'];
+
+            if (edit) {
+                for (let i = 0; i < fields.length; i++) {
+                    fields[i] = fields[i] + '-edit'
+                }
+            }
+
         function displayError(message) {
             const errorPanel = document.getElementById('error-panel');
             // Show the error panel
@@ -556,9 +620,8 @@
 
         function processProjectTracking(projectTrackingData) {
             const parsed = validateData(projectTrackingData, 'Project Tracking', ['project_tracking']);
-            console.log(parsed);
+          
             if (!parsed) return '';
-            console.log('hi');
 
             return parsed;
         }
@@ -600,35 +663,139 @@
             return youData;
         }
 
+        function api_to_ui(api_data) {
+
+            // Convert technical contact/manager data from API to UI schema
+            for (let i = 0; i < 2; i++) {
+                api_data.user[i]["role"] = api_data.user[i]["grade"];
+                delete api_data.user[i]["grade"];
+                delete api_data.user[i]["roles"];
+
+                api_data.user[i]["contactEmail"] = api_data.user[i]["email"];
+                delete api_data.user[i]["email"];
+            }
+
+            // Convert project data from API to UI schema
+            var project_fields = ["project_name", "project_short_name", "doc_link"];
+    
+            api_data.details[0]["project_name"] = api_data.details[0]["name"];
+            api_data.details[0]["project_short_name"] = api_data.details[0]["short_name"];
+            api_data.details[0]["doc_link"] = api_data.details[0]["documentation_link"][0];
+            delete api_data.details[0]["name"];
+            delete api_data.details[0]["short_name"];
+            delete api_data.details[0]["documentation_link"];
+
+
+            var new_source_control = {
+                "source_control": api_data["source_control"][0]["type"],
+                "links": api_data["source_control"][0]["links"]
+            }
+
+            api_data["architecture"]["hosting"]["type"] = api_data["architecture"]["hosting"]["type"][0]
+            api_data["architecture"]["hosting"]["main"] = []
+            api_data["architecture"]["hosting"]["others"] = api_data["architecture"]["hosting"]["details"]
+            delete api_data["architecture"]["hosting"]["details"]
+
+            var developed = api_data["developed"][0];
+            var partnership_company = null;
+            var outsource_company = null;
+
+            if (developed === "Partnership") {
+                partnership_company = api_data["developed"][1][0];
+            } else if (developed === "Outsourced") {
+                outsource_company = api_data["developed"][1][0];
+            } else {
+                partnership_company = null;
+                outsource_company = null;
+            }
+            var new_developed_data = {
+                "developed": developed,
+                "outsource_company": outsource_company,
+                "partnership_company": partnership_company,
+            }
+        
+
+            var architecture = [
+                            "database", "languages", "frameworks", "cicd", 
+                            "infrastructure"
+                        ];
+            
+            var supporting_tools = ["code_editors", "user_interface", 
+                            "diagrams", "documentation", "communication", "collaboration"];
+            
+            var fields_exist = false;
+            var count = 0;
+            for (let i = 0; i < fields.length; i++) {
+                if (localStorage.getItem(fields[i])) {
+                    count++;
+                }
+            }
+            if (count === fields.length) {
+                fields_exist = true;
+            }
+          
+            if (edit && !fields_exist) {
+                localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
+                localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
+                localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
+                localStorage.setItem("stage-data-edit", JSON.stringify({"stage": api_data.stage}));
+                localStorage.setItem("developed-data-edit", JSON.stringify(new_developed_data));
+                localStorage.setItem("source_control-data-edit", JSON.stringify(new_source_control));
+                localStorage.setItem("hosting-data-edit", JSON.stringify(api_data.architecture.hosting));
+                localStorage.setItem("project_tracking-data-edit", JSON.stringify({"project_tracking": api_data.supporting_tools.project_tracking}));
+                localStorage.setItem("incident_management-data-edit", JSON.stringify({"incident_management": api_data.supporting_tools.incident_management}));
+
+                for (let i = 0; i < architecture.length; i++) {
+                    var current = architecture[i];
+                    if (i == 3) {
+                        current = "integrations";
+                    }
+                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.architecture[architecture[i]]));
+                }
+
+                for (let i = 0; i < supporting_tools.length; i++) {
+                    var current = supporting_tools[i];
+                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.supporting_tools[current]));
+                }
+                }
+
+
+
+        }
+
         function load_data() {
             // Reset error panel at the start
             clearErrors();
+            if (edit){
+                var original_data = "{{ project }}";
+                original_data = original_data.replaceAll("&#39;", '"');
+                original_data = JSON.parse(original_data);
+                api_to_ui(original_data);
+            }
 
             // Load all data from localStorage
             const storedData = {
-                contactTech: localStorage.getItem('contact_tech-data'),
-                contactManager: localStorage.getItem('contact_manager-data'),
-                project: localStorage.getItem('project-data'),
-                developed: localStorage.getItem('developed-data'),
-                stage: localStorage.getItem('stage-data'),
-                sourceControl: localStorage.getItem('source_control-data'),
-                hosting: localStorage.getItem('hosting-data'),
-                database: localStorage.getItem('database-data'),
-                frameworks: localStorage.getItem('frameworks-data'),
-                infrastructure: localStorage.getItem('infrastructure-data'),
-                integrations: localStorage.getItem('integrations-data'),
-                languages: localStorage.getItem('languages-data'),
-                codeEditors: localStorage.getItem('code_editors-data'),
-                userInterface: localStorage.getItem('user_interface-data'),
-                diagrams: localStorage.getItem('diagrams-data'),
-                projectTracking: localStorage.getItem('project_tracking-data'),
-                documentation: localStorage.getItem('documentation-data'),
-                communication: localStorage.getItem('communication-data'),
-                collaboration: localStorage.getItem('collaboration-data'),
-                incidentManagement: localStorage.getItem('incident_management-data')
+                contactTech: localStorage.getItem(fields[0]),
+                contactManager: localStorage.getItem(fields[1]),
+                project: localStorage.getItem(fields[2]),
+                developed: localStorage.getItem(fields[3]),
+                stage: localStorage.getItem(fields[4]),
+                sourceControl: localStorage.getItem(fields[5]),
+                hosting: localStorage.getItem(fields[6]),
+                database: localStorage.getItem(fields[7]),
+                frameworks: localStorage.getItem(fields[8]),
+                infrastructure: localStorage.getItem(fields[9]),
+                integrations: localStorage.getItem(fields[10]),
+                languages: localStorage.getItem(fields[11]),
+                codeEditors: localStorage.getItem(fields[12]),
+                userInterface: localStorage.getItem(fields[13]),
+                diagrams: localStorage.getItem(fields[14]),
+                projectTracking: localStorage.getItem(fields[15]),
+                documentation: localStorage.getItem(fields[16]),
+                communication: localStorage.getItem(fields[17]),
+                collaboration: localStorage.getItem(fields[18]),
+                incidentManagement: localStorage.getItem(fields[19])
             };
-
-            console.log(storedData.projectTracking);
 
             // Process contacts
             const youData = processContacts(storedData.contactTech, storedData.contactManager);
@@ -654,8 +821,6 @@
                 incidentManagement: processIncidentManagement(storedData.incidentManagement)
             };
 
-            console.log(processedData.projectTracking)
-
             // Additional validation for hosting
             if (processedData.hosting) {
                 if ((processedData.hosting.type === "Cloud" || processedData.hosting.type === "Hybrid") 
@@ -664,7 +829,12 @@
                 }
             }
 
-            // Build the final data object
+            if (JSON.parse(localStorage.getItem('edit'))) { 
+
+                var original_data = "{{ project }}";
+                original_data = original_data.replaceAll("&#39;", '"');
+                original_data = JSON.parse(original_data);
+            }
             const finalData = {
                 user: youData,
                 details: processedData.project,
@@ -693,7 +863,6 @@
                     incident_management: processedData.incidentManagement.incident_management || ''
                 }
             };
-
             // Update the summary display
             updateSummaryDisplay(finalData);
             
@@ -701,22 +870,23 @@
             updateHiddenFields(finalData);
         }
 
+
         function updateSummaryDisplay(finalData) {
             const summaryData = {
                 technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
                 delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
+                stage_details: finalData.stage ? `<ul><li>Stage: ${finalData.stage}</li></ul>` : '',
                 project_details: finalData.details ? `<ul>
                     <li>Name: ${finalData.details.project_name}</li>
                     <li>Short Name: ${finalData.details.project_short_name}</li>
                     <li>Documentation Link: ${finalData.details.doc_link}</li>
-                    <li>Stage: ${finalData.stage}</li>
                 </ul>` : '',
                 developed_details: finalData.developed ? `<ul>
                     <li>Developed By: ${finalData.developed.developed}</li>
                     <li>Partnership/Outsource Company: ${finalData.developed.partnership_company || finalData.developed.outsource_company || 'N/A'}</li>
                 </ul>` : '',
-                source_control_details: processSourceControl(localStorage.getItem('source_control-data')),
-                hosting_details: processHosting(localStorage.getItem('hosting-data')),
+                source_control_details: processSourceControl(localStorage.getItem(fields[5])),
+                hosting_details: processHosting(localStorage.getItem(fields[6])),
                 database_details: arrToList(finalData.architecture.database?.main?.concat(finalData.architecture.database?.others) || []),
                 languages_details: arrToList(finalData.architecture.languages?.main?.concat(finalData.architecture.languages?.others) || []),
                 framework_details: arrToList(finalData.architecture.frameworks?.main?.concat(finalData.architecture.frameworks?.others) || []),
@@ -731,7 +901,6 @@
                 collaboration_details: arrToList(finalData.supporting_tools.collaboration?.main?.concat(finalData.supporting_tools.collaboration?.others) || []),
                 incident_management_details: finalData.supporting_tools.incident_management
             };
-            console.log(finalData.supporting_tools.project_tracking);
 
             // Update all summary elements
             Object.entries(summaryData).forEach(([key, value]) => {
@@ -741,7 +910,7 @@
         }
 
         function updateHiddenFields(finalData) {
-            const hiddenFields = {
+            var hiddenFields = {
                 user: finalData.user,
                 project: finalData.details,
                 developed: finalData.developed,
@@ -766,12 +935,17 @@
                 incident_management: finalData.supporting_tools.incident_management
             };
 
+            if (JSON.parse(localStorage.getItem('edit'))) {
+                hiddenFields["project_name"] = "{{ project_name }}";
+            }
+
             // Update all hidden input fields
             Object.entries(hiddenFields).forEach(([key, value]) => {
                 const element = document.getElementById(key);
                 if (element) element.value = JSON.stringify(value);
             });
         }
+
 
         // Initialize the page
         load_data();

@@ -102,7 +102,11 @@
                 } else {
                     data.complete = false;
                 }
-                localStorage.setItem('developed-data', JSON.stringify(data));
+                var name = 'developed-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'developed-data-edit';
+                }
+                localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
                 var obj = {
@@ -110,15 +114,36 @@
                     "Partnership": "partnership",
                     "In House": "in-house"
                 }
-                var data = JSON.parse(localStorage.getItem('developed-data'));
-                if (data) {
-                    var option = obj[data.developed]
-                    if (data.developed === "Outsourced") {
-                        document.getElementById('other-input-1').value = data.outsource_company;
-                    } else if (data.developed === "Partnership") {
-                        document.getElementById('other-input-2').value = data.partnership_company;
-                    }
+                var name = 'developed-data';
+                var data;
+                var option
+                if (JSON.parse(localStorage.getItem('edit'))){
+                    name = 'developed-data-edit';
+                }
+                    data = JSON.parse(localStorage.getItem(name));
+                   
+                    if (data) {
+                        option = obj[data.developed]
+                        if (data.developed === "Outsourced") {
+                            document.getElementById('other-input-1').value = data.outsource_company;
+                        } else if (data.developed === "Partnership") {
+                            document.getElementById('other-input-2').value = data.partnership_company;
+                        }
                     document.getElementById(option).checked = true;
+                } else {
+                    data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        option = obj[data.developed]
+                        if (data.developed === "Outsourced") {
+                            document.getElementById('other-input-1').value = data.outsource_company;
+                        } else if (data.developed === "Partnership") {
+                            document.getElementById('other-input-2').value = data.partnership_company;
+                        }
+
+                    document.getElementById(option).checked = true;
+                        
+                }
+
                 }
             }
             redirectToPrevious();

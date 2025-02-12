@@ -46,7 +46,7 @@ variable "container_image" {
 variable "container_ver" {
   description = "Container tag"
   type        = string
-  default     = "v0.0.1"
+  default     = "v0.0.2"
 }
 
 variable "container_port" {

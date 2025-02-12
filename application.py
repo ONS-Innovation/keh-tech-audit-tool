@@ -328,17 +328,46 @@ def view_project(project_name):
 
     headers = get_id_token()
     
+    user_email = session.get("email", "No email found")
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     ).json()
-    
+
+    edit = False # Boolean to check if the user can edit the project
+
+    for user in projects["user"]:
+        if user["email"] == user_email:
+            edit = True
+            break
+
     try:
         if projects["message"] is None:
             flash("Project not found. Please try again.")
             return redirect(url_for("dashboard"))
     except Exception:
-        return render_template("view_project.html", project=projects)
+        return render_template("view_project.html", project=projects, edit=edit)
+
+@app.route("/project/<project_name>/edit", methods=["GET"])
+def edit_project(project_name):
+    headers = get_id_token()
+    project = requests.get(
+        f"{API_URL}/api/v1/projects/{project_name}",
+        headers=headers
+    )
+
+    project = project.json()
+
+    user_email = session.get("email", "No email found")
+    users = [user["email"] for user in project["user"]]
+
+    if user_email not in users:
+        flash("You do not have permission to edit this project.")
+        return redirect(url_for('dashboard'))
+
+    edit = True
+
+    return render_template("validate_details.html", project=project, edit=edit, project_name=project_name)
 
 # Improved readibility of the form data
 def map_form_data(form):
@@ -362,8 +391,14 @@ def map_form_data(form):
         "communication",
         "collaboration",
         "incident_management",
+        "project_name",
     ]
-    return {key: json.loads(form[key]) for key in keys}
+    try:
+        final_dict = {key: json.loads(form[key]) for key in keys}
+    except Exception as e:
+        keys.pop()
+        final_dict = {key: json.loads(form[key]) for key in keys}
+    return final_dict
 
 
 @app.route("/survey", methods=["GET", "POST"])
@@ -423,11 +458,20 @@ def survey():
         },
     }
     try:
-        projects = requests.post(
-            f"{API_URL}/api/v1/projects",
-            json=data,
-            headers=headers,
-        )
+        if form_data.get("project_name"):
+                
+            requests.put(
+                f"{API_URL}/api/v1/projects/{form_data['project_name']}",
+                json=data,
+                headers=headers,
+            )
+            return redirect(url_for("dashboard"))
+        else:
+            projects = requests.post(
+                f"{API_URL}/api/v1/projects",
+                json=data,
+                headers=headers,
+            )
     except Exception:
         try:
             logger.error(f"Request was not blocked but returned: {projects.json()}")

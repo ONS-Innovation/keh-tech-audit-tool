@@ -83,17 +83,18 @@
                     .display = "none";
                 function storeHostingData() { // Store hosting data in local storage
                     var hostingType = document.querySelector('input[name="role"]:checked').value;
-                    var data = JSON.parse(localStorage.getItem('hosting-data')) || {};
-
+                    var name = 'hosting-data';
+                    if (JSON.parse(localStorage.getItem('edit'))) {
+                        name = 'hosting-data-edit';
+                    }
+                    var data = JSON.parse(localStorage.getItem(name)) || {};
                     data.type = hostingType;
 
                     if (data.type === "On-premises") {
                         data.others = [];
                     }
 
-                    localStorage.setItem('hosting-data', JSON.stringify(data));
-
-                    console.log(localStorage.getItem('hosting-data'));
+                    localStorage.setItem(name, JSON.stringify(data));
 
                     if (hostingType === "Hybrid" || hostingType === "Cloud") {
                         window.location.href = "/survey/hosting?stage=2";
@@ -101,23 +102,36 @@
                         
                         if (
                             JSON.parse(localStorage.getItem("hosting-validate")) &&
-                            JSON.parse(localStorage.getItem("hosting-data")).type === "On-premises"
+                            JSON.parse(localStorage.getItem(name)).type === "On-premises" && 
+                            localStorage.getItem("redirect_url")
                         ) {
-                            window.location.href = '/validate_details';
-                        } else {
+                            window.location.href = localStorage.getItem("redirect_url");
+                        } else if (
+                            JSON.parse(localStorage.getItem("hosting-validate")) &&
+                            JSON.parse(localStorage.getItem(name)).type === "On-premises"
+                        ){
+                            window.location.href = "/validate_details";
+
+                        }
+                        else {
                             window.location.href = "{{ url_for('database') }}";
                         }
                     }
                 }
                 function loadHostingData() {
-                    var data = JSON.parse(localStorage.getItem('hosting-data'));
-                    if (data) {
-                        try {
-                            document.getElementById(data.type).checked = true;
-                        } catch {
-                            console.error("Error loading hosting data");
+                    var name = 'hosting-data';
+                    if (JSON.parse(localStorage.getItem('edit'))) {
+                        name = 'hosting-data-edit';
+                    }
+                    
+                        var data = JSON.parse(localStorage.getItem(name));
+                        if (data) {
+                            try {
+                                document.getElementById(data.type).checked = true;
+                            } catch {
+                                console.error("Error loading hosting data");
+                            }
                         }
                     }
-                }
             </script>
         {% endblock %}

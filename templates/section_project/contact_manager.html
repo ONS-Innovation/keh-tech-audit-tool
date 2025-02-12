@@ -119,25 +119,29 @@
                     "role": role,
                     "complete": complete
                 };
-                localStorage.setItem('contact_manager-data', JSON.stringify(data));
+                var name = 'contact_manager-data'
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'contact_manager-data-edit';
+                }
+                localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
-                var obj = {
-                    "Tech Lead": "tech-lead",
-                    "SEO": "seo",
-                    "HEO": "heo"
+                var name = 'contact_manager-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'contact_manager-data-edit';
                 }
-                var data = JSON.parse(localStorage.getItem('contact_manager-data'));
-                if (data) {
-                    document.getElementById('contact-email').value = data.contactEmail;
-                    try {
-                        document.getElementById(data.role).checked = true;
-                    } catch {
-                        document.getElementById("other").checked = true;
-                        document.getElementById('other-input').value = data.role;
+                    var data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        document.getElementById('contact-email').value = data.contactEmail;
+                        try {
+                            document.getElementById(data.role).checked = true;
+                        } catch {
+                            document.getElementById("other").checked = true;
+                            document.getElementById('other-input').value = data.role;
+                        }
                     }
                 }
-            }
+            
             redirectToPrevious();
             loadData();
         </script>

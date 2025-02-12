@@ -1,11 +1,15 @@
 // Redirect to previous page
 function redirectToPrevious(){
     var url = new URL(document.referrer).pathname;
-    if (url === '/validate_details' 
+    var trail = url.split("/")[url.split('/').length - 1];
+
+    const regex = /\/survey\/(.+?)\/edit/;
+    if (url === '/validate_details'
         || url === '/survey/project_summary' 
         || url === '/survey/tech_summary' 
         || url === '/survey/architecture_summary'
-        || url === '/survey/supporting_tools_summary') {
+        || url === '/survey/supporting_tools_summary'
+        || trail === "edit") {
         document.getElementById('save-values-button').href = new URL(document.referrer);
     }
 }
@@ -164,7 +168,6 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
                 !JSON.parse(projectData)["doc_link"]
             ) {
                 submitBtn.href = '/survey/project';
-                console.log("hello");
                 changeBtnText()
                 return;
             }

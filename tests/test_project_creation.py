@@ -126,8 +126,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert self.project_name in driver.find_element(By.ID, "my-projects").text
         self.assert_project_details()
         
-        time.sleep(10)
-
     def tearDown(self):
         self.driver.close()
 
@@ -333,7 +331,9 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
         add_btn = driver.find_element(By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]')
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+
         self.click_link(driver, "Save and continue")
+
 
     def complete_hosting(self, driver):
         """Complete details on hosting services

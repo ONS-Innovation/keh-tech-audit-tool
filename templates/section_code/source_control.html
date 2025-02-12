@@ -82,31 +82,36 @@
                 if (source_control === 'other') {
                     newData.source_control = other_source_control;
                 }
-                var existingData = JSON.parse(localStorage.getItem('source_control-data')) || {};
+                var name = 'source_control-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'source_control-data-edit';
+                }
+                var existingData = JSON.parse(localStorage.getItem(name)) || {};
                 // Merge new data with existing data
                 var updatedData = {
                     ... existingData,
                     ... newData
                 };
-                localStorage.setItem('source_control-data', JSON.stringify(updatedData));
+                localStorage.setItem(name, JSON.stringify(updatedData));
             }
             function loadData() {
-                var obj = {
-                    "Github": "github",
-                    "Gitlab": "gitlab"
+                var name = 'source_control-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'source_control-data-edit';
                 }
-                var data = JSON.parse(localStorage.getItem('source_control-data'));
-                if (data) {
-                    if (data.source_control != "Github" && data.source_control != "Gitlab") {
-                        var option = "other";
-                    } else {
-                        var option = obj[data.source_control];
+                    var data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        if (data.source_control != "Github" && data.source_control != "Gitlab") {
+                            var option = "other";
+                        } else {
+                            var option = data.source_control.toLowerCase();
+                        }
+                        document.getElementById(option).checked = true;
+                        if (data.source_control) {
+                            document.getElementById('other-input').value = data.source_control;
+                        }
                     }
-                    document.getElementById(option).checked = true;
-                    if (data.source_control) {
-                        document.getElementById('other-input').value = data.source_control;
-                    }
-                }
+                
             }
             loadData();
         </script>

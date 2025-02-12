@@ -71,12 +71,22 @@
                     "stage": stage,
                     "complete": complete
                 };
-                localStorage.setItem('stage-data', JSON.stringify(data));
+                var name = 'stage-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'stage-data-edit';
+                }
+                localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
-                var data = JSON.parse(localStorage.getItem('stage-data'));
-                if (data) {
-                    document.getElementById(data.stage).checked = true;
+                var name = 'stage-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'stage-data-edit';
+                }
+                if (JSON.parse(localStorage.getItem('edit'))){
+                    var data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        document.getElementById(data.stage).checked = true;
+                    }
                 }
             }
             redirectToPrevious();

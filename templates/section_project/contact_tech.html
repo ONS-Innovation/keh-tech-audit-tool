@@ -125,11 +125,6 @@
                 localStorage.setItem(name, JSON.stringify(data));
             }
             function loadData() {
-                var obj = {
-                    "Tech Lead": "tech-lead",
-                    "SEO": "seo",
-                    "HEO": "heo"
-                }
                 var name = 'contact_tech-data';
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = 'contact_tech-data-edit';

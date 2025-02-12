@@ -95,10 +95,6 @@
                 localStorage.setItem(name, JSON.stringify(updatedData));
             }
             function loadData() {
-                var obj = {
-                    "Github": "github",
-                    "Gitlab": "gitlab"
-                }
                 var name = 'source_control-data';
                 if (JSON.parse(localStorage.getItem('edit'))) {
                     name = 'source_control-data-edit';
@@ -108,7 +104,7 @@
                         if (data.source_control != "Github" && data.source_control != "Gitlab") {
                             var option = "other";
                         } else {
-                            var option = obj[data.source_control];
+                            var option = data.source_control.toLowerCase();
                         }
                         document.getElementById(option).checked = true;
                         if (data.source_control) {

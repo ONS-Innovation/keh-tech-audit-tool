@@ -98,11 +98,6 @@
 
             }
             function loadData() {
-                var obj = {
-                    "Jira": "jira",
-                    "Trello": "trello"
-                }
-
                 var name = 'project_tracking-data';
                 if (JSON.parse(localStorage.getItem('edit'))) {
                     name = 'project_tracking-data-edit';
@@ -113,7 +108,7 @@
                     if (data.project_tracking != "Jira" && data.project_tracking != "Trello") {
                         var option = "other";
                     } else {
-                        var option = obj[data.project_tracking];
+                        var option = data.project_tracking.toLowerCase();
                     }
                     document.getElementById(option).checked = true;
                     if (data.project_tracking) {

@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import ast
 
 import boto3
 import requests
@@ -318,21 +319,21 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # Sanitize project name to prevent path traversal and injection attacks
-    if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
-        flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
-        return redirect(url_for("dashboard"))
     
-    if len(project_name) > 128:
-        flash("Project name is too long. Please try again.")
-        return redirect(url_for("dashboard"))
-
     headers = get_id_token()
     
     user_email = session.get("email", "No email found")
+
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
-    ).json()
+    )
+
+    if projects.status_code != HTTPStatus.OK or not project_name:
+        flash("Project does not exist")
+        return redirect(url_for("dashboard"))
+    
+    projects = projects.json()
 
     edit = False # Boolean to check if the user can edit the project
 
@@ -459,22 +460,24 @@ def survey():
     }
     try:
         if form_data.get("project_name"):
-                
-            requests.put(
+            if len(json.loads(request.form["project_users"])) == 3:
+                data["user"].append(json.loads(request.form["project_users"])[2])
+            projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
                 headers=headers,
             )
-            return redirect(url_for("dashboard"))
+            flash("Project updated successfully!")
+            return redirect(url_for("view_project", project_name=form_data["project_name"]))
         else:
             projects = requests.post(
                 f"{API_URL}/api/v1/projects",
                 json=data,
                 headers=headers,
             )
-    except Exception:
+    except Exception as e:
         try:
-            logger.error(f"Request was not blocked but returned: {projects.json()}")
+            logger.error(f"Request was not blocked but returned: {e}")
         except Exception as second_error:
             logger.error(f"{second_error.__class__.__name__}: {second_error}")
 

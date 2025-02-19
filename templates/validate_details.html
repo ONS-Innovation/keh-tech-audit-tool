@@ -472,6 +472,8 @@
                                                             <input id="collaboration" type="hidden" name="collaboration">
                                                                 <input id="incident_management" type="hidden" name="incident_management">
                                                                 <input id="project_name" type="hidden" name="project_name">
+                                                                <input id="project_users" name="project_users" type="hidden">
+
     {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
@@ -771,6 +773,7 @@
                 original_data = original_data.replaceAll("&#39;", '"');
                 original_data = JSON.parse(original_data);
                 api_to_ui(original_data);
+                localStorage.setItem("original_data", JSON.stringify(original_data));
             }
 
             // Load all data from localStorage
@@ -937,7 +940,9 @@
 
             if (JSON.parse(localStorage.getItem('edit'))) {
                 hiddenFields["project_name"] = "{{ project_name }}";
+                hiddenFields["project_users"] = JSON.parse(localStorage.getItem("original_data")).user;
             }
+        
 
             // Update all hidden input fields
             Object.entries(hiddenFields).forEach(([key, value]) => {

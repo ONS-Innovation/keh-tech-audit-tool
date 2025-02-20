@@ -137,7 +137,7 @@ techNavItems = [
     {"text": "Details", "url": "/pre-survey/technology"},
     {"text": "Languages", "url": "/survey/languages"},
     {"text": "Frameworks", "url": "/survey/frameworks"},
-    {"text": "Integrations", "url": "/survey/integrations"},
+    {"text": "Build and Deployment", "url": "/survey/integrations"},
     {"text": "Infrastructure", "url": "/survey/infrastructure"},
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]

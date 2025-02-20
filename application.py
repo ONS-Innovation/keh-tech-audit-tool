@@ -1,9 +1,6 @@
 import json
 import logging
 import os
-import re
-import ast
-
 import boto3
 import requests
 from botocore.exceptions import ClientError

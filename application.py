@@ -107,7 +107,7 @@ items_none = []
 # Automatically loads the navigation depending on what page the user is on.
 mainNavItems = [
     {"text": "Dashboard", "url": "/dashboard"},
-    {"text": "Pre-Survey", "url": "/pre-survey"},
+    {"text": "Information", "url": "/pre-survey"},
     {"text": "Survey", "url": "/survey"},
     {"text": "Submit", "url": "/validate_details"},
 ]

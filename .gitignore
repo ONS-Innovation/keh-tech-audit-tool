@@ -51,5 +51,7 @@ terraform.rc
 terraform/service/highest_priority.txt
 terraform/service/highest_alb_listener_priority.txt
 
+script.sh
+
 cookies/*
 *.pkl

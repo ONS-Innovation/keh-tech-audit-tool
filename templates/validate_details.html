@@ -451,27 +451,27 @@
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
     {% endif %}
 
-        <input id="user" type="hidden" name="user">
-            <input id="project" type="hidden" name="project">
-                <input id="developed" type="hidden" name="developed">
-                    <input id="source_control" type="hidden" name="source_control">
-                        <input id="hosting" type="hidden" name="hosting">
-                            <input id="database" type="hidden" name="database">
-                                <input id="languages" type="hidden" name="languages">
-                                    <input id="frameworks" type="hidden" name="frameworks">
-      
-                        <input id="integrations" type="hidden" name="integrations">
-                            <input id="infrastructure" type="hidden" name="infrastructure">
-                                <input id="stage" type="hidden" name="stage">
-                                    <input id="code_editors" type="hidden" name="code_editors">
-                                        <input id="user_interface" type="hidden" name="user_interface">
-                                            <input id="diagrams" type="hidden" name="diagrams">
-                                                <input id="project_tracking" type="hidden" name="project_tracking">
-                                                    <input id="documentation" type="hidden" name="documentation">
-                                                        <input id="communication" type="hidden" name="communication">
-                                                            <input id="collaboration" type="hidden" name="collaboration">
-                                                                <input id="incident_management" type="hidden" name="incident_management">
-                                                                <input id="project_name" type="hidden" name="project_name">
+    <input id="user" type="hidden" name="user">
+    <input id="project" type="hidden" name="project">
+    <input id="developed" type="hidden" name="developed">
+    <input id="source_control" type="hidden" name="source_control">
+    <input id="hosting" type="hidden" name="hosting">
+    <input id="database" type="hidden" name="database">
+    <input id="languages" type="hidden" name="languages">
+    <input id="frameworks" type="hidden" name="frameworks">
+
+    <input id="integrations" type="hidden" name="integrations">
+    <input id="infrastructure" type="hidden" name="infrastructure">
+    <input id="stage" type="hidden" name="stage">
+    <input id="code_editors" type="hidden" name="code_editors">
+    <input id="user_interface" type="hidden" name="user_interface">
+    <input id="diagrams" type="hidden" name="diagrams">
+    <input id="project_tracking" type="hidden" name="project_tracking">
+    <input id="documentation" type="hidden" name="documentation">
+    <input id="communication" type="hidden" name="communication">
+    <input id="collaboration" type="hidden" name="collaboration">
+    <input id="incident_management" type="hidden" name="incident_management">
+    <input id="project_name" type="hidden" name="project_name">
     {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
@@ -491,7 +491,6 @@
             if (trail === "edit") {
                 edit = true;
             }
-
             localStorage.setItem("edit", edit)
             
             var fields = ['contact_tech-data', 'contact_manager-data', 'project-data', 'developed-data', 'stage-data', 
@@ -579,7 +578,7 @@
 
         function arrToList(arr) {
             if (!arr || arr.length === 0) return '';
-            return `<ul>${arr.map(item => `<li>${item}</li>`).join('')}</ul>`;
+            return `${arr.map(item => `${item}`).join(', ')}`;
         }
 
         function processSourceControl(sourceControlData) {
@@ -591,13 +590,12 @@
                 links: parsed.links || []
             }];
 
-            let details = `<ul><li>Type: ${finalSourceControl[0].type}</li>`;
+            let details = finalSourceControl[0].type;
             if (finalSourceControl[0].links) {
                 finalSourceControl[0].links.forEach(link => {
-                    details += `<li>${link.description}: ${link.url}</li>`;
+                    details += `<br>${link.description}: ${link.url}`;
                 });
             }
-            details += '</ul>';
             
             return details;
         }
@@ -607,7 +605,7 @@
             if (!parsed) return '';
 
             if (parsed.type === "On-premises") {
-                return "<ul><li>On-Premises</li></ul>";
+                return "On-Premises";
             }
 
             if ((parsed.type === "Cloud" || parsed.type === "Hybrid") && (!parsed.others || parsed.others.length === 0)) {
@@ -664,7 +662,6 @@
         }
 
         function api_to_ui(api_data) {
-
             // Convert technical contact/manager data from API to UI schema
             for (let i = 0; i < 2; i++) {
                 api_data.user[i]["role"] = api_data.user[i]["grade"];
@@ -758,9 +755,6 @@
                     localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.supporting_tools[current]));
                 }
                 }
-
-
-
         }
 
         function load_data() {
@@ -871,20 +865,21 @@
         }
 
 
-        function updateSummaryDisplay(finalData) {
+        function updateSummaryDisplay(finalData) {        
             const summaryData = {
                 technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
                 delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
-                stage_details: finalData.stage ? `<ul><li>Stage: ${finalData.stage}</li></ul>` : '',
-                project_details: finalData.details ? `<ul>
-                    <li>Name: ${finalData.details.project_name}</li>
-                    <li>Short Name: ${finalData.details.project_short_name}</li>
-                    <li>Documentation Link: ${finalData.details.doc_link}</li>
-                </ul>` : '',
-                developed_details: finalData.developed ? `<ul>
-                    <li>Developed By: ${finalData.developed.developed}</li>
-                    <li>Partnership/Outsource Company: ${finalData.developed.partnership_company || finalData.developed.outsource_company || 'N/A'}</li>
-                </ul>` : '',
+                stage_details: finalData.stage ? `${finalData.stage}` : '',
+                project_details: finalData.details ? `
+                    <p>Name: ${finalData.details.project_name}</p>
+                    <p>Short Name: ${finalData.details.project_short_name}</p>
+                    <p>Documentation Link: ${finalData.details.doc_link}</p>
+                ` : '',
+                developed_details: finalData.developed ? `
+                    ${finalData.developed.developed}
+                    <br>
+                    ${finalData.developed.partnership_company || finalData.developed.outsource_company || ''}
+                ` : '',
                 source_control_details: processSourceControl(localStorage.getItem(fields[5])),
                 hosting_details: processHosting(localStorage.getItem(fields[6])),
                 database_details: arrToList(finalData.architecture.database?.main?.concat(finalData.architecture.database?.others) || []),

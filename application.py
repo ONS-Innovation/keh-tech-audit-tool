@@ -406,11 +406,9 @@ def map_form_data(form):
 
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
-    # ONLY GET AND POST ARE ALLOWED HENCE NO NEED FOR SECOND IF STATEMENT
-    # IF METHOD IS 'GET' THEN THE SURVEY IS RENDERED
     if request.method == "GET":
         return render_template("survey.html")
-    # IF METHOD IS 'NOT GET' THEN THE POST PROCESS BEGINS
+    
     try:
         headers = {
             "Authorization": f"{session['id_token']}",
@@ -419,7 +417,7 @@ def survey():
     except KeyError:
         return redirect(url_for("home"))
 
-    # Improved readibility of the form data
+    # Map form data
     form_data = map_form_data(request.form)
 
     developed_company = ""
@@ -428,8 +426,22 @@ def survey():
     elif form_data["developed"]["developed"] == "Partnership":
         developed_company = form_data["developed"]["partnership_company"]
 
+    try:
+        previous_users = json.loads(request.form["project_users"])
+    except Exception:
+        previous_users = []
+    new_users = []
+    for user in form_data["user"]:
+        if "Technical Contact" in user["roles"] or "Delivery Manager" in user["roles"]:
+            new_users.append(user)
+    for user in previous_users:
+        if "Technical Contact" in user["roles"] and "Delivery Manager" in user["roles"]:
+            break
+        if user not in new_users:
+            new_users.append(user)
+
     data = {
-        "user": [u for u in form_data["user"]],
+        "user": new_users,
         "details": [
             {
                 "name": form_data["project"]["project_name"],
@@ -460,10 +472,14 @@ def survey():
             "incident_management": form_data["incident_management"],
         },
     }
+
     try:
         if form_data.get("project_name"):
-            if len(json.loads(request.form["project_users"])) == 3:
-                data["user"].append(json.loads(request.form["project_users"])[2])
+            if "project_users" in request.form:
+                project_users = json.loads(request.form["project_users"])
+                if len(project_users) > 2:
+                    data["user"].extend(project_users[2:])
+            
             projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
@@ -472,16 +488,16 @@ def survey():
             flash("Project updated successfully!")
             return redirect(url_for("view_project", project_name=form_data["project_name"]))
         else:
+            # This is a new project creation
             projects = requests.post(
                 f"{API_URL}/api/v1/projects",
                 json=data,
                 headers=headers,
             )
     except Exception as e:
-        try:
-            logger.error(f"Request was not blocked but returned: {e}")
-        except Exception as second_error:
-            logger.error(f"{second_error.__class__.__name__}: {second_error}")
+        logger.error(f"Request was not blocked but returned: {e}")
+        flash("An error occurred while saving the project")
+        return redirect(url_for("dashboard"))
 
     return redirect(url_for("dashboard"))
 

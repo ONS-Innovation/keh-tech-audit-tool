@@ -666,6 +666,16 @@
         }
 
         function api_to_ui(api_data) {
+            // Store additional users (editors) separately
+            const additionalUsers = api_data.user.filter(user => 
+                !user.roles.includes('Technical Contact') && 
+                !user.roles.includes('Delivery Manager')
+            );
+            if (additionalUsers.length > 0) {
+                localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers));
+            } else {
+                localStorage.removeItem('additional_users-edit');
+            }
 
             // Convert technical contact/manager data from API to UI schema
             for (let i = 0; i < 2; i++) {
@@ -940,7 +950,14 @@
 
             if (JSON.parse(localStorage.getItem('edit'))) {
                 hiddenFields["project_name"] = "{{ project_name }}";
-                hiddenFields["project_users"] = JSON.parse(localStorage.getItem("original_data")).user;
+                
+                // Combine current users with any additional users from before
+                const additionalUsers = JSON.parse(localStorage.getItem('additional_users-edit') || '[]');
+                if (additionalUsers.length > 0) {
+                    hiddenFields["project_users"] = [...finalData.user, ...additionalUsers];
+                } else {
+                    hiddenFields["project_users"] = finalData.user;
+                }
             }
         
 

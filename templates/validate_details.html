@@ -850,13 +850,7 @@
                 technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
                 delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
                 stage_details: finalData.stage ? `${finalData.stage}` : '',
-                project_details: finalData.details ? `
-                    <p>Name: ${finalData.details.project_name}</p>
-                    <p>Short Name: ${finalData.details.project_short_name}</p>
-                    <p>Documentation Link: ${finalData.details.doc_link}</p>
-                    <p>Description: ${finalData.details.project_description}</p>
-                    <p>Stage: ${finalData.stage}</p>
-                ` : '',
+                project_details: 'Project Name: <p style="font-weight:400">' + finalData.details.project_name + '</p>' + 'Short Name: <p style="font-weight:400">' + finalData.details.project_short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + finalData.details.doc_link + '</p>' + 'Project Description: <p style="font-weight:400">' + finalData.details.project_description + '</p>' + 'Stage: ' + '<p style="font-weight:400">' + finalData.stage,
                 developed_details: finalData.developed ? `
                     ${finalData.developed.developed}
                     <br>

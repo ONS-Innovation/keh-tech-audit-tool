@@ -163,9 +163,9 @@
 
                         try {
                             var languagesDataJSON = JSON.parse(languagesData);
-                            var languages_details = "Primary: " + arrToList(languagesDataJSON.main);
+                            var languages_details = `Primary: ${languagesDataJSON.main.map(item => `${item}`).join(', ')}`;
                             if (languagesDataJSON.others.length > 0) {
-                                languages_details += "<br>Other: " + arrToList(languagesDataJSON.others);
+                                languages_details += `<br>Other: ${languagesDataJSON.others.map(item => `${item}`).join(', ')}`;
                             }
                             if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
                                 errorList.push('Languages data');
@@ -180,7 +180,7 @@
                             if (frameworksDataJSON.others.length === 0) {
                                 errorList.push('Frameworks data');
                             }
-                            var frameworks_details = arrToList(frameworksDataJSON.others);
+                            var frameworks_details = frameworksDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('framework_details').innerHTML = frameworks_details;
                         } catch (e) {
                             errorList.push('Frameworks data');
@@ -191,7 +191,7 @@
                             if (integrationsDataJSON.others.length === 0) {
                                 errorList.push('Integrations data');
                             }
-                            var integrations_details = arrToList(integrationsDataJSON.others);
+                            var integrations_details = integrationsDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('integration_details').innerHTML = integrations_details;
                         } catch (e) {
                             errorList.push('Integrations data');
@@ -202,7 +202,7 @@
                             if (infrastructureDataJSON.others.length === 0) {
                                 errorList.push('Infrastructure data');
                             }
-                            var infrastructure_details = arrToList(infrastructureDataJSON.others);
+                            var infrastructure_details = infrastructureDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
                         } catch (e) {
                             errorList.push('Infrastructure data');

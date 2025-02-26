@@ -104,26 +104,6 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Stage",
-                                    "rowItems": [
-                                        {
-                                            "valueList": [
-                                            {
-                                                "text": "<div id='stage_details'></div>"
-                                            }
-                                        ],
-
-                                            "actions": [
-                                                {
-                                                    "text": "Change",
-                                                    "ariaLabel": "View answers for Household accommodation",
-                                                    "url": url_for('stage')
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
                                     "rowTitle": "Developed",
                                     "rowItems": [
                                         {
@@ -802,7 +782,7 @@
                 frameworks: validateData(storedData.frameworks, 'Frameworks'),
                 integrations: validateData(storedData.integrations, 'CI/CD'),
                 infrastructure: validateData(storedData.infrastructure, 'Infrastructure'),
-                project: validateData(storedData.project, 'Project', ['project_name', 'project_short_name', 'doc_link']),
+                project: validateData(storedData.project, 'Project', ['project_name', 'project_short_name', 'doc_link', 'project_description']),
                 stage: validateData(storedData.stage, 'Stage', ['stage']),
                 developed: validateData(storedData.developed, 'Developed', ['developed']),
                 codeEditors: validateData(storedData.codeEditors, 'Code Editors'),
@@ -874,6 +854,8 @@
                     <p>Name: ${finalData.details.project_name}</p>
                     <p>Short Name: ${finalData.details.project_short_name}</p>
                     <p>Documentation Link: ${finalData.details.doc_link}</p>
+                    <p>Description: ${finalData.details.project_description}</p>
+                    <p>Stage: ${finalData.stage}</p>
                 ` : '',
                 developed_details: finalData.developed ? `
                     ${finalData.developed.developed}

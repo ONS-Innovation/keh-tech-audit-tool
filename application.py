@@ -427,17 +427,17 @@ def survey():
         developed_company = form_data["developed"]["partnership_company"]
 
     try:
-        previous_users = json.loads(request.form["project_users"])
+        previous_users = json.loads(request.form["project_users"]) # checks if projects users gets sent through
     except Exception:
         previous_users = []
     new_users = []
     for user in form_data["user"]:
         if "Technical Contact" in user["roles"] or "Delivery Manager" in user["roles"]:
-            new_users.append(user)
+            new_users.append(user) # append the technical contact and delivery manager
     for user in previous_users:
         if "Technical Contact" in user["roles"] and "Delivery Manager" in user["roles"]:
             break
-        if user not in new_users:
+        if user not in new_users: # append the rest of the users if not found in new_users
             new_users.append(user)
 
     data = {

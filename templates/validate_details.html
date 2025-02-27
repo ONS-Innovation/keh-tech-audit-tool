@@ -668,13 +668,13 @@
         function api_to_ui(api_data) {
             // Store additional users (editors) separately
             const additionalUsers = api_data.user.filter(user => 
-                !user.roles.includes('Technical Contact') && 
-                !user.roles.includes('Delivery Manager')
-            );
+                !user.roles.includes('Technical Contact') && // exclude technical contact
+                !user.roles.includes('Delivery Manager') // exclude delivery manager
+            ); // basically checks if there are any additional users other than tech contact and delivery manager
             if (additionalUsers.length > 0) {
-                localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers));
+                localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers)); // set additional users to local storage
             } else {
-                localStorage.removeItem('additional_users-edit');
+                localStorage.removeItem('additional_users-edit'); // if there are no additional users, remove the key
             }
 
             // Convert technical contact/manager data from API to UI schema

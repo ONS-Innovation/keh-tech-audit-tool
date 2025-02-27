@@ -243,7 +243,7 @@
                 try {
                     var projectTrackingJSON = JSON.parse(projectTrackingData);
                     var projectTrackingDetails = projectTrackingJSON.project_tracking;
-                    document.getElementById('project_tracking_details').innerHTML = projectTrackingDetails;
+                    document.getElementById('project_tracking_details').textContent = projectTrackingDetails;
                 } catch (e) {
                     errorList.push('Project Tracking');
                 }

@@ -272,7 +272,7 @@
                 try {
                     var incidentManagementJSON = JSON.parse(incidentManagementData);
                     var incidentManagementDetails = incidentManagementJSON.incident_management;
-                    document.getElementById('incident_management_details').innerHTML = incidentManagementDetails;
+                    document.getElementById('incident_management_details').textContent = incidentManagementDetails;
                 } catch (e) {
                     errorList.push('Incident Management');
                 }

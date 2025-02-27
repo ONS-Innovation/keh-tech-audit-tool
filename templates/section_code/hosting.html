@@ -82,6 +82,7 @@
                     .style
                     .display = "none";
                 function storeHostingData() { // Store hosting data in local storage
+                try {
                     var hostingType = document.querySelector('input[name="role"]:checked').value;
                     var name = 'hosting-data';
                     if (JSON.parse(localStorage.getItem('edit'))) {
@@ -117,6 +118,9 @@
                             window.location.href = "{{ url_for('database') }}";
                         }
                     }
+                } catch (e) {
+                    window.location.href = "{{ url_for('database') }}";
+                }
                 }
                 function loadHostingData() {
                     var name = 'hosting-data';

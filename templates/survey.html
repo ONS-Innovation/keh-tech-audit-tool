@@ -106,12 +106,20 @@
                 }
             ]
         }) }}
+        <div class="ons-u-mb-m ons-u-mt-l" style="display: flex; justify-content: space-between; gap: 10px;">
+            {{ onsButton({
+                "id": "submit-btn",
+                "text": '<div id="submit-btn-text">Continue to submission</div>',
+                "classes": 'ons-u-mb-m ons-u-mt-l',
+                "url": url_for('validate_details')
+            }) }}
     {{ onsButton({
-            "id": "submit-btn",
-            "text": '<div id="submit-btn-text">Continue to Submission</div>',
+            "id": "validate-btn",
+            "text": '<div id="validate-btn-text">Continue to submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
-            "url": url_for('validate_details')
-        }) }}
+                "url": url_for('validate_details')
+            }) }}
+        </div>
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
     <script>
         function load_data() {
@@ -146,7 +154,7 @@
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
             collaborationData, incidentManagementData);
-            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
+            updateSectionStatus('user_details', [projectData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
             updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
@@ -155,11 +163,4 @@
         localStorage.setItem("source_control-validate", false);
         localStorage.setItem("hosting-validate", false);
     </script>
-{% endblock %}
-{% block scripts %}
-    <style>
-        body {
-            height: auto;
-        }
-    </style>
 {% endblock %}

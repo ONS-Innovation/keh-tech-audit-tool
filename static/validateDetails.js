@@ -325,50 +325,58 @@ function processContacts(techData, managerData) {
  * Initializes error list for tracking validation issues
  */
 function initializeErrorList() {
+    // Create global error list
     window.errorList = [];
-    window.allErrorList = []; // Track all errors for debugging, not just Project errors
+    window.allErrorList = []; // Keep track of all errors for debugging
+    
+    // Clear any existing error panel
+    const errorPanel = document.getElementById('error-panel');
+    if (errorPanel) {
+        errorPanel.style.display = 'none';
+        const errorList = document.getElementById('error-list');
+        if (errorList) errorList.innerHTML = '';
+    }
 }
 
 /**
- * Displays errors in the UI
+ * Displays error list in the UI if there are any errors
+ * Only shows Project section errors since other sections are not required
  */
 function displayErrors() {
+    if (!window.errorList || window.errorList.length === 0) return;
+    
     const errorPanel = document.getElementById('error-panel');
-    const errorHeader = document.getElementById('error-header');
     const errorList = document.getElementById('error-list');
     
-    if (!errorPanel || !errorHeader || !errorList) {
-        console.error('Error: Missing error display elements');
-        return;
-    }
+    if (!errorPanel || !errorList) return;
     
     // Clear existing errors
     errorList.innerHTML = '';
     
-    // Filter errors to only show Project section errors
+    // Filter to only show Project section errors
     const projectErrors = window.errorList.filter(error => 
-        error.includes('Project section')
+        error.includes('Project section') || 
+        error.includes('project_name') || 
+        error.includes('project_short_name') || 
+        error.includes('doc_link') ||
+        error.includes('Project Name') ||
+        error.includes('Project Short Name') ||
+        error.includes('Documentation Link')
     );
     
-    // Display errors
+    // Add each Project error as a list item
     if (projectErrors.length > 0) {
-        errorPanel.classList.remove('ons-u-hidden');
-        errorHeader.textContent = 'There is a problem';
-        
         projectErrors.forEach(error => {
-            const listItem = document.createElement('li');
-            listItem.textContent = error;
-            errorList.appendChild(listItem);
+            const li = document.createElement('li');
+            li.textContent = error;
+            errorList.appendChild(li);
         });
+        
+        // Show the error panel
+        errorPanel.style.display = 'block';
     } else {
-        errorPanel.classList.add('ons-u-hidden');
-    }
-    
-    // Log all errors to console for debugging
-    if (window.allErrorList.length > 0) {
-        console.group('All validation errors:');
-        window.allErrorList.forEach(error => console.log(error));
-        console.groupEnd();
+        // Hide the panel if no Project errors
+        errorPanel.style.display = 'none';
     }
 }
 
@@ -524,60 +532,82 @@ const fieldLabels = {
 };
 
 /**
- * Validates a data section against required and optional fields
- * @param {Object} data - The data section to validate
- * @param {string} sectionName - The name of the section
- * @param {Array} requiredFields - Fields that are required in this section
- * @param {Array} optionalFields - Fields that are optional in this section
- * @returns {Object|null} - The validated data or null if validation fails
+ * Validates data against required and optional fields
+ * @param {Object} data - Data object to validate
+ * @param {string} sectionName - Name of the section being validated
+ * @param {Array} requiredFields - Array of field names that are required
+ * @param {Array} optionalFields - Array of field names that are optional
+ * @returns {Object|null} The valid data object or null if validation failed
  */
 function validateData(data, sectionName, requiredFields, optionalFields = []) {
     if (!data) {
-        // Only add to visible error list for Project section
+        console.log(`${sectionName} section data is missing`);
+        // Only add to error list if it's the Project section
+        // Store all errors in allErrorList for debugging, but only Project errors in the main errorList
+        window.allErrorList.push(`${sectionName} section data is missing`);
         if (sectionName === 'Project') {
-            console.log(`${sectionName} section is missing`);
-            window.errorList.push(`${sectionName} section is missing`);
+            window.errorList.push(`${sectionName} section data is missing`);
         }
-        
-        // Add to allErrorList for debugging
-        window.allErrorList.push(`${sectionName} section is missing`);
         return null;
     }
     
-    // Check for required fields
+    // Special handling for Project section - collect errors but allow partial data
+    if (sectionName === 'Project') {
+        if (!data || Object.keys(data).length === 0) {
+            console.log(`${sectionName} section data is empty`);
+            window.errorList.push(`${sectionName} section data is empty`);
+            return {};
+        }
+        
+        const missingFields = [];
+        
+        for (const field of requiredFields) {
+            if (!data[field] || data[field] === '') {
+                missingFields.push(field);
+            }
+        }
+        
+        if (missingFields.length > 0) {
+            // Convert technical field names to user-friendly labels
+            const missingFieldsLabels = missingFields.map(field => 
+                fieldLabels[field] || field // Use friendly label if available, otherwise use the field name
+            );
+            
+            const missingFieldsList = missingFieldsLabels.join(', ');
+            console.log(`${sectionName} section is missing required fields: ${missingFieldsList}`);
+            window.errorList.push(`${sectionName} section is missing required fields: ${missingFieldsList}`);
+            
+            // Mark the missing fields in the data for UI highlighting
+            missingFields.forEach(field => {
+                data[`${field}_missing`] = true;
+            });
+        }
+        
+        return data;
+    }
+    
+    // For other sections, check required fields normally but don't add to visible error list
     const missingFields = [];
+    
     for (const field of requiredFields) {
-        if (!data[field] || data[field] === "" || 
-            (Array.isArray(data[field]) && data[field].length === 0)) {
-            const friendlyLabel = fieldLabels[field] || field;
-            missingFields.push(friendlyLabel);
+        if (!data[field] || data[field] === '') {
+            missingFields.push(field);
         }
     }
     
     if (missingFields.length > 0) {
-        const missingFieldsList = missingFields.join(", ");
+        // Convert technical field names to user-friendly labels
+        const missingFieldsLabels = missingFields.map(field => 
+            fieldLabels[field] || field // Use friendly label if available, otherwise use the field name
+        );
         
-        // Special handling for Project section, which is the only required section
-        if (sectionName === 'Project') {
-            console.log(`${sectionName} section is missing required fields: ${missingFieldsList}`);
-            window.errorList.push(`${sectionName} section is missing required fields: ${missingFieldsList}`);
-            
-            // Mark fields that are missing for UI highlighting
-            data._missingFields = missingFields;
-            
-            // For Project section, return the data even with missing fields 
-            // This allows partially completed project data to be displayed
-            return data;
-        } else {
-            // For non-Project sections, log errors but don't show in UI
-            console.log(`${sectionName} section is missing required fields: ${missingFieldsList}`);
-            
-            // Add to allErrorList for debugging but not to the main errorList that's displayed
-            window.allErrorList.push(`${sectionName} section is missing required fields: ${missingFieldsList}`);
-            
-            // For non-Project sections, we'll return the data even if incomplete
-            return data;
-        }
+        const missingFieldsList = missingFieldsLabels.join(', ');
+        console.log(`${sectionName} section is missing required fields: ${missingFieldsList}`);
+        
+        // Add to allErrorList for debugging but not to the main errorList that's displayed
+        window.allErrorList.push(`${sectionName} section is missing required fields: ${missingFieldsList}`);
+        
+        return null;
     }
     
     return data;

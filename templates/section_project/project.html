@@ -11,7 +11,7 @@
         "itemsList": [
             {
                 "title": "More info",
-                "content": "Enter details about the project such as: <ul><li>Project Name</li> <li>Shortened Project Name</li> <li>Documentation link for the project</li></ul>"
+                "content": "Enter details about the project such as: <ul><li>Project Name</li> <li>Shortened Project Name</li> <li>Programme Name</li> <li>Programme Short Name</li> <li>Documentation link for the project</li></ul>"
             }
         ]
     }) }}
@@ -27,6 +27,19 @@
         "id": "project-short-name",
         "label": {
             "text": "What is the short name of the project?"
+        }
+    }) }}
+        {{ onsInput({
+        "id": "programme-name",
+        "label": {
+            "text": "What is the name of the programme?"
+        },
+        
+    }) }}
+        {{ onsInput({
+        "id": "programme-short-name",
+        "label": {
+            "text": "What is the short name of the programme?"
         }
     }) }}
         {{ onsInput({
@@ -54,6 +67,7 @@
         "legendIsQuestionTitle": true
     }) %}
         {% endcall %}
+        <script src="{{ url_for('static', filename='utilityFunctions.js') }}"></script>
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         {{ onsButton({
         "id": "save-values-button",
@@ -63,16 +77,21 @@
             "onclick": "storeData();"
         }
     }) }}
+        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script>
             function storeData() { // Store Details about project in local storage
                 var project_name = document.getElementById('project-name').value;
                 var project_short_name = document.getElementById('project-short-name').value;
+                var programme_name = document.getElementById('programme-name').value;
+                var programme_short_name = document.getElementById('programme-short-name').value;
                 var project_description = document.getElementById('project-description').value;
                 var doc_link = document.getElementById('documentation-link').value;
                 var complete = (project_name !== '' && project_short_name !== '');
                 var data = {
                     "project_name": project_name,
                     "project_short_name": project_short_name,
+                    "programme_name": programme_name,
+                    "programme_short_name": programme_short_name,
                     "project_description": project_description,
                     "doc_link": doc_link,
                     "complete": complete
@@ -87,11 +106,17 @@
                 var name = 'project-data';
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = name + '-edit';
-                }
+                }   
                     var data = JSON.parse(localStorage.getItem(name));
                     if (data) {
                         document.getElementById('project-name').value = data.project_name;
                         document.getElementById('project-short-name').value = data.project_short_name;
+                        if (data.programme_name) {
+                            document.getElementById('programme-name').value = data.programme_name;
+                        }
+                        if (data.programme_short_name) {
+                            document.getElementById('programme-short-name').value = data.programme_short_name;
+                        }
                         document.getElementById('documentation-link').value = data.doc_link;
                         document.getElementById('project-description').value = data.project_description;
                     }

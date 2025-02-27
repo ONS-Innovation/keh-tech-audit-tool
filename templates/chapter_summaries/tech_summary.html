@@ -1,22 +1,7 @@
 {% extends "core.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% block main %}
-    {% call onsPanel({
-        "id": "error-panel",
-        "title": 'Error',
-        "variant": 'error',
-        "type": "error",
-        "classes": "ons-u-hidden"
-    }) %}
-    {{ onsLabel({
-        "id": 'error-label',
-        "for": "error-label",
-        "text": 'Please fill in missing data'
-    }) }}
-    {% endcall %}
     <h1 class="ons-u-mt-m">Technology Details Summary</h1>
     {{ onsSummary({
             "variant": "hub",
@@ -124,33 +109,11 @@
                 <script>
 
                     function load_data() {
-                        var errorPanel = document.getElementById('error-panel');
                         var frameworksData = localStorage.getItem('frameworks-data');
                         var infrastructureData = localStorage.getItem('infrastructure-data');
                         var integrationsData = localStorage.getItem('integrations-data');
                         var languagesData = localStorage.getItem('languages-data');
-                        var errorList = [];
                         localStorage.setItem('validate', false);
-                        try {
-                            if (
-                                (JSON.parse(languagesData)['others'].length === 0 && JSON.parse(languagesData)['main'].length === 0) ||
-                                JSON.parse(frameworksData)['others'].length === 0 ||
-                                JSON.parse(infrastructureData)['others'].length === 0 ||
-                                JSON.parse(integrationsData)['others'].length === 0
-                            ) {
-                                errorPanel.classList.remove('ons-u-hidden');
-                                document
-                                    .getElementById('submit-button')
-                                    .style
-                                    .display = 'none';
-                            }
-                        } catch (e) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            document
-                                .getElementById('submit-button')
-                                .style
-                                .display = 'none';
-                        }
 
                         var finalData = {
                             "architecture": {
@@ -163,64 +126,52 @@
 
                         try {
                             var languagesDataJSON = JSON.parse(languagesData);
-                            var languages_details = "Primary: " + arrToList(languagesDataJSON.main);
-                            if (languagesDataJSON.others.length > 0) {
-                                languages_details += "<br>Other: " + arrToList(languagesDataJSON.others);
+                            var languages_details = "";
+                            if (languagesDataJSON.main.length > 0) {
+                                languages_details += "Primary: " + arrToList(languagesDataJSON.main);
                             }
-                            if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
-                                errorList.push('Languages data');
+                            if (languagesDataJSON.main.length > 0 && languagesDataJSON.others.length > 0) {
+                                languages_details += "<br>";
+                            }
+                            if (languagesDataJSON.others.length > 0) {
+                                languages_details += "Other: " + arrToList(languagesDataJSON.others);
                             }
                             document.getElementById('languages_details').innerHTML = languages_details;
                         } catch (e) {
-                            errorList.push('Languages data');
+                            console.log(e);
                         }
-
-                        try {
-                            var frameworksDataJSON = JSON.parse(frameworksData);
-                            if (frameworksDataJSON.others.length === 0) {
-                                errorList.push('Frameworks data');
+                        const dataMapping = [
+                            {
+                                data: frameworksData,
+                                elementId: 'framework_details',
+                                property: 'others'
+                            },
+                            {
+                                data: integrationsData,
+                                elementId: 'integration_details', 
+                                property: 'others'
+                            },
+                            {
+                                data: infrastructureData,
+                                elementId: 'infrastructure_details',
+                                property: 'others'
                             }
-                            var frameworks_details = arrToList(frameworksDataJSON.others);
-                            document.getElementById('framework_details').innerHTML = frameworks_details;
-                        } catch (e) {
-                            errorList.push('Frameworks data');
-                        }
+                        ];
 
-                        try {
-                            var integrationsDataJSON = JSON.parse(integrationsData);
-                            if (integrationsDataJSON.others.length === 0) {
-                                errorList.push('Integrations data');
+                        dataMapping.forEach(mapping => {
+                            try {
+                                const parsedData = JSON.parse(mapping.data);
+                                if (parsedData[mapping.property].length === 0) {
+                                    throw new Error(`No ${mapping.property} found`);
+                                }
+                                const details = arrToList(parsedData[mapping.property]);
+                                document.getElementById(mapping.elementId).innerHTML = details;
+                            } catch (e) {
+                                console.log(e);
                             }
-                            var integrations_details = arrToList(integrationsDataJSON.others);
-                            document.getElementById('integration_details').innerHTML = integrations_details;
-                        } catch (e) {
-                            errorList.push('Integrations data');
-                        }
-                        
-                        try {
-                            var infrastructureDataJSON = JSON.parse(infrastructureData);
-                            if (infrastructureDataJSON.others.length === 0) {
-                                errorList.push('Infrastructure data');
-                            }
-                            var infrastructure_details = arrToList(infrastructureDataJSON.others);
-                            document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
-                        } catch (e) {
-                            errorList.push('Infrastructure data');
-                        }
-
-                        if (errorList.length > 0) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
-                        }
+                        });
                     }
 
                     load_data();
                 </script>
-            {% endblock %}
-            {% block scripts %}
-                <style>
-                    body {
-                        height: auto;
-                    }
-                </style>
             {% endblock %}

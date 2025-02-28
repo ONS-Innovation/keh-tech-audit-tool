@@ -430,7 +430,7 @@
     {% else %}
     <form action="{{ url_for('survey') }}" method="POST" onsubmit="localStorage.clear()">
     {% endif %}
-
+      
     <input id="user" type="hidden" name="user">
     <input id="project" type="hidden" name="project">
     <input id="developed" type="hidden" name="developed">
@@ -452,6 +452,8 @@
     <input id="collaboration" type="hidden" name="collaboration">
     <input id="incident_management" type="hidden" name="incident_management">
     <input id="project_name" type="hidden" name="project_name">
+    <input id="project_users" type="hidden" name="project_users">
+      
     {{ onsButton({
             "text": 'Save Project',
             "id": "submit-button",
@@ -642,6 +644,17 @@
         }
 
         function api_to_ui(api_data) {
+            // Store additional users (editors) separately
+            const additionalUsers = api_data.user.filter(user => 
+                !user.roles.includes('Technical Contact') && // exclude technical contact
+                !user.roles.includes('Delivery Manager') // exclude delivery manager
+            ); // basically checks if there are any additional users other than tech contact and delivery manager
+            if (additionalUsers.length > 0) {
+                localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers)); // set additional users to local storage
+            } else {
+                localStorage.removeItem('additional_users-edit'); // if there are no additional users, remove the key
+            }
+
             // Convert technical contact/manager data from API to UI schema
             for (let i = 0; i < 2; i++) {
                 api_data.user[i]["role"] = api_data.user[i]["grade"];
@@ -745,6 +758,7 @@
                 original_data = original_data.replaceAll("&#39;", '"');
                 original_data = JSON.parse(original_data);
                 api_to_ui(original_data);
+                localStorage.setItem("original_data", JSON.stringify(original_data));
             }
 
             // Load all data from localStorage
@@ -908,7 +922,16 @@
 
             if (JSON.parse(localStorage.getItem('edit'))) {
                 hiddenFields["project_name"] = "{{ project_name }}";
+                
+                // Combine current users with any additional users from before
+                const additionalUsers = JSON.parse(localStorage.getItem('additional_users-edit') || '[]');
+                if (additionalUsers.length > 0) {
+                    hiddenFields["project_users"] = [...finalData.user, ...additionalUsers];
+                } else {
+                    hiddenFields["project_users"] = finalData.user;
+                }
             }
+        
 
             // Update all hidden input fields
             Object.entries(hiddenFields).forEach(([key, value]) => {

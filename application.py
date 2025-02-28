@@ -1,9 +1,8 @@
 import json
 import logging
 import os
-import re
-
 import boto3
+import re
 import requests
 from botocore.exceptions import ClientError
 from flask import (
@@ -318,21 +317,25 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # Sanitize project name to prevent path traversal and injection attacks
+
     if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
         flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
         return redirect(url_for("dashboard"))
     
-    if len(project_name) > 128:
-        flash("Project name is too long. Please try again.")
-        return redirect(url_for("dashboard"))
-
     headers = get_id_token()
     
     user_email = session.get("email", "No email found")
+
     projects = requests.get(
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
-    ).json()
+    )
+
+    if projects.status_code != HTTPStatus.OK or not project_name:
+        flash("Project does not exist")
+        return redirect(url_for("dashboard"))
+    
+    projects = projects.json()
 
     edit = False # Boolean to check if the user can edit the project
 
@@ -403,11 +406,9 @@ def map_form_data(form):
 
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
-    # ONLY GET AND POST ARE ALLOWED HENCE NO NEED FOR SECOND IF STATEMENT
-    # IF METHOD IS 'GET' THEN THE SURVEY IS RENDERED
     if request.method == "GET":
         return render_template("survey.html")
-    # IF METHOD IS 'NOT GET' THEN THE POST PROCESS BEGINS
+    
     try:
         headers = {
             "Authorization": f"{session['id_token']}",
@@ -416,7 +417,7 @@ def survey():
     except KeyError:
         return redirect(url_for("home"))
 
-    # Improved readibility of the form data
+    # Map form data
     form_data = map_form_data(request.form)
 
     developed_company = ""
@@ -425,8 +426,22 @@ def survey():
     elif form_data["developed"]["developed"] == "Partnership":
         developed_company = form_data["developed"]["partnership_company"]
 
+    try:
+        previous_users = json.loads(request.form["project_users"]) # checks if projects users gets sent through
+    except Exception:
+        previous_users = []
+    new_users = []
+    for user in form_data["user"]:
+        if "Technical Contact" in user["roles"] or "Delivery Manager" in user["roles"]:
+            new_users.append(user) # append the technical contact and delivery manager
+    for user in previous_users:
+        if "Technical Contact" in user["roles"] and "Delivery Manager" in user["roles"]:
+            break
+        if user not in new_users: # append the rest of the users if not found in new_users
+            new_users.append(user)
+
     data = {
-        "user": [u for u in form_data["user"]],
+        "user": new_users,
         "details": [
             {
                 "name": form_data["project"]["project_name"],
@@ -457,26 +472,32 @@ def survey():
             "incident_management": form_data["incident_management"],
         },
     }
+
     try:
         if form_data.get("project_name"):
-                
-            requests.put(
+            if "project_users" in request.form:
+                project_users = json.loads(request.form["project_users"])
+                if len(project_users) > 2:
+                    data["user"].extend(project_users[2:])
+            
+            projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
                 headers=headers,
             )
-            return redirect(url_for("dashboard"))
+            flash("Project updated successfully!")
+            return redirect(url_for("view_project", project_name=form_data["project_name"]))
         else:
+            # This is a new project creation
             projects = requests.post(
                 f"{API_URL}/api/v1/projects",
                 json=data,
                 headers=headers,
             )
-    except Exception:
-        try:
-            logger.error(f"Request was not blocked but returned: {projects.json()}")
-        except Exception as second_error:
-            logger.error(f"{second_error.__class__.__name__}: {second_error}")
+    except Exception as e:
+        logger.error(f"Request was not blocked but returned: {e}")
+        flash("An error occurred while saving the project")
+        return redirect(url_for("dashboard"))
 
     return redirect(url_for("dashboard"))
 

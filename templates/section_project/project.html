@@ -16,6 +16,19 @@
         ]
     }) }}
     <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsInput({
+        "id": "programme-name",
+        "label": {
+            "text": "What is the name of the programme?"
+        },
+        
+    }) }}
+        {{ onsInput({
+        "id": "programme-short-name",
+        "label": {
+            "text": "What is the short name of the programme?"
+        }
+    }) }}
         {{ onsInput({
         "id": "project-name",
         "label": {
@@ -69,13 +82,17 @@
                 var project_short_name = document.getElementById('project-short-name').value;
                 var project_description = document.getElementById('project-description').value;
                 var doc_link = document.getElementById('documentation-link').value;
+                var programme_name = document.getElementById('programme-name').value;
+                var programme_short_name = document.getElementById('programme-short-name').value;
                 var complete = (project_name !== '' && project_short_name !== '');
                 var data = {
                     "project_name": project_name,
                     "project_short_name": project_short_name,
                     "project_description": project_description,
                     "doc_link": doc_link,
-                    "complete": complete
+                    "complete": complete,
+                    "programme_name": programme_name,
+                    "programme_short_name": programme_short_name
                 };
                 var name = 'project-data'
                 if (JSON.parse(localStorage.getItem('edit'))) {
@@ -94,6 +111,8 @@
                         document.getElementById('project-short-name').value = data.project_short_name;
                         document.getElementById('documentation-link').value = data.doc_link;
                         document.getElementById('project-description').value = data.project_description;
+                        document.getElementById('programme-name').value = data.programme_name;
+                        document.getElementById('programme-short-name').value = data.programme_short_name;
                     }
             
             }

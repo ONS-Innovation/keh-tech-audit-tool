@@ -3,7 +3,19 @@
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{% set project_details = 'Project Name: <p style="font-weight:400">' + project.details[0].name + '</p>' + 'Short Name: <p style="font-weight:400">' + project.details[0].short_name + '</p>' + 'Documentation Link: <p style="font-weight:400">' + project.details[0].documentation_link[0] + '</p>' + 'Project Description: <p style="font-weight:400">' + project.details[0].project_description + '</p>' + 'Stage: ' + '<p style="font-weight:400">' + project.stage %}
+{% set project_details = 'Programme Name: <p style="font-weight:400">' + 
+    project.details[0].programme_name + '</p>' +
+    'Programme Short Name: <p style="font-weight:400">' +
+        project.details[0].programme_short_name + '</p>' +
+    'Project Name: <p style="font-weight:400">' +
+        project.details[0].name + '</p>' +
+    'Short Name: <p style="font-weight:400">' +
+        project.details[0].short_name + '</p>' +
+    'Documentation Link: <p style="font-weight:400">' +
+        project.details[0].documentation_link[0] + '</p>' +
+    'Project Description: <p style="font-weight:400">' +
+        project.details[0].project_description + '</p>' +
+    'Stage: <p style="font-weight:400">' + project.stage %}
 {% block main %}
 
 {% with messages = get_flashed_messages() %}
@@ -25,24 +37,19 @@
                 "text": 'Back'
             },
         ],
-    })
-  }}
-
-  {% if edit %}
-    {{
-      onsButton({
+    }) }}
+    {% if edit %}
+        {{ onsButton({
           "text": "Edit",
           "url": url_for('edit_project', project_name=project.details[0].name),
           "attributes": {
               "style": "float: right; margin-right: 5em;"
           }
-      })
-    }}
-  {% endif %}
-  {% set langs = [] %}
-  <div style="margin-top: 1em;">
-    {{
-      onsSummary({
+      }) }}
+    {% endif %}
+    {% set langs = [] %}
+    <div style="margin-top: 1em;">
+        {{ onsSummary({
           "summaries": [
               {
                   "groups": [
@@ -326,8 +333,7 @@
                   ]
               }
           ]
-      })
-    }}
-  </div>
-  <br />
+      }) }}
+    </div>
+    <br/>
 {% endblock %}

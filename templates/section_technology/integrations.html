@@ -4,6 +4,7 @@
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/table/_macro.njk" import onsTable %}
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -19,7 +20,7 @@
     }) }}
     {% endcall %}
     <br>
-        <h1>Integrations</h1>
+        <h1>Build and Deployment</h1>
         {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
@@ -66,13 +67,12 @@
 
     }) }}
         <br>
-            {% from "components/table/_macro.njk" import onsTable %}
             {{ onsTable({
         "caption": "",
         "id": "table-list",
         "ths": [
             {
-                "value": "Integration"
+                "value": "Tools"
             },
             {
                 "value": ""

@@ -330,6 +330,7 @@ def view_project(project_name):
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     )
+    print(projects.json())
 
     if projects.status_code != HTTPStatus.OK or not project_name:
         flash("Project does not exist")
@@ -421,9 +422,9 @@ def survey():
     form_data = map_form_data(request.form)
 
     developed_company = ""
-    if form_data["developed"]["developed"] == "Outsourced":
+    if form_data["developed"].get("developed") == "Outsourced":
         developed_company = form_data["developed"]["outsource_company"]
-    elif form_data["developed"]["developed"] == "Partnership":
+    elif form_data["developed"].get("developed") == "Partnership":
         developed_company = form_data["developed"]["partnership_company"]
 
     try:
@@ -444,34 +445,34 @@ def survey():
         "user": new_users,
         "details": [
             {
-                "name": form_data["project"]["project_name"],
-                "short_name": form_data["project"]["project_short_name"],
-                "documentation_link": [form_data["project"]["doc_link"]],
-                "project_description": form_data["project"]["project_description"],
+                "name": form_data["project"].get("project_name", ""),
+                "short_name": form_data["project"].get("project_short_name", ""),
+                "documentation_link": [form_data["project"].get("doc_link", "")],
+                "project_description": form_data["project"].get("project_description", ""),
                 "programme_name": form_data["project"].get("programme_name", ""),
                 "programme_short_name": form_data["project"].get("programme_short_name", ""),
             }
         ],
-        "developed": [form_data["developed"]["developed"], [developed_company]],
-        "source_control": form_data["source_control"],
+        "developed": [form_data.get("developed", ""), [developed_company]],
+        "source_control": form_data.get("source_control", {}).get("source_control", "") if isinstance(form_data.get("source_control"), dict) else form_data.get("source_control", ""),
         "architecture": {
-            "hosting": form_data["hosting"],
-            "database": form_data["database"],
-            "languages": form_data["languages"],
-            "frameworks": form_data["frameworks"],
-            "cicd": form_data["integrations"],
-            "infrastructure": form_data["infrastructure"],
+            "hosting": form_data.get("hosting", ""),
+            "database": form_data.get("database", ""),
+            "languages": form_data.get("languages", ""),
+            "frameworks": form_data.get("frameworks", ""),
+            "cicd": form_data.get("integrations", ""),
+            "infrastructure": form_data.get("infrastructure", ""),
         },
-        "stage": form_data["stage"],
+        "stage": form_data.get("stage", ""),
         "supporting_tools": {
-            "code_editors": form_data["code_editors"],
-            "user_interface": form_data["user_interface"],
-            "diagrams": form_data["diagrams"],
-            "project_tracking": form_data["project_tracking"],
-            "documentation": form_data["documentation"],
-            "communication": form_data["communication"],
-            "collaboration": form_data["collaboration"],
-            "incident_management": form_data["incident_management"],
+            "code_editors": form_data.get("code_editors", ""),
+            "user_interface": form_data.get("user_interface", ""),
+            "diagrams": form_data.get("diagrams", ""),
+            "project_tracking": form_data.get("project_tracking", ""),
+            "documentation": form_data.get("documentation", ""),
+            "communication": form_data.get("communication", ""),
+            "collaboration": form_data.get("collaboration", ""),
+            "incident_management": form_data.get("incident_management", ""),
         },
     }
 

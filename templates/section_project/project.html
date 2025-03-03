@@ -12,10 +12,14 @@
             {
                 "title": "More info",
                 "content": "<p>Enter the following information about the project:</p>
+                <b>Programme name</b>
+                <p>The full unabbreviated name of your programme, e.g. Statistical Production Platform.</p>
+                <b>Programme short name</b>
+                <p>The commonly used abbreviation or acronym associated with the programme, e.g. SPP.</p>
                 <b>Project name</b>
-                <p>The full unabbreviated name of your project, e.g. Statistical Production Platform.</p>
+                <p>The full unabbreviated name of your project, e.g. Results Data Processing.</p>
                 <b>Shortened Project Name</b>
-                <p>The commonly used abbreviation or acronym associated with the project, e.g. SPP.</p>
+                <p>The commonly used abbreviation or acronym associated with the project, e.g. RDP.</p>
                 <b>Documentation link</b>
                 <p>A high level overview of the project and solution, or the homepage for such documentation.</p>
                 <b>Project Description</b>
@@ -31,33 +35,38 @@
                 {{ onsInput({
         "id": "programme-name",
         "label": {
-            "text": "What is the name of the programme?"
+            "text": "What is the name of the programme?",
+            "description": "The full unabbreviated name of your programme, e.g. Statistical Production Platform."
         },
         
     }) }}
         {{ onsInput({
         "id": "programme-short-name",
         "label": {
-            "text": "What is the short name of the programme?"
+            "text": "What is the short name of the programme?",
+            "description": "The commonly used abbreviation or acronym associated with the programme, e.g. SPP."
         }
     }) }}
         {{ onsInput({
         "id": "project-name",
         "label": {
-            "text": "What is the name of the project?"
+            "text": "What is the name of the project?",
+            "description": "The full unabbreviated name of your project, e.g. Results Data Processing."
         },
         
     }) }}
         {{ onsInput({
         "id": "project-short-name",
         "label": {
-            "text": "What is the short name of the project?"
+            "text": "What is the short name of the project?",
+            "description": "The commonly used abbreviation or acronym associated with the project, e.g. RDP."
         }
     }) }}
         {{ onsInput({
         "id": "documentation-link",
         "label": {
-            "text": "Is there a link to the documentation for this project?"
+            "text": "Is there a link to the documentation for this project?",
+            "description": "A high level overview of the project and solution, or the homepage for such documentation."
         }
     }) }}
         {{ onsTextarea({

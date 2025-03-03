@@ -174,13 +174,13 @@
                     try {
                         var projectDataJSON = JSON.parse(projectData);
                         var project_details = `<p>Programme Name: ${
-                            projectDataJSON.programme_name
+                            escapeHtml(projectDataJSON.programme_name)
                         }</p>
                         <p>Programme Short Name: ${
-                            projectDataJSON.programme_short_name
+                            escapeHtml(projectDataJSON.programme_short_name)
                         }</p>
                         <p>Project Name: ${
-                            projectDataJSON.project_name
+                            escapeHtml(projectDataJSON.project_name)
                         }</p>
                             <p>Project Short Name: ${
                             escapeHtml(projectDataJSON.project_short_name)

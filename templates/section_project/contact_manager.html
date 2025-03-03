@@ -17,22 +17,14 @@
         ]
     }) }}
     <form action="{{ url_for('survey') }}" method="GET">
-        {{ onsLabel({
-        "id": 'contact-email-label',
-        "for": "contact-email",
-        "text": 'Delivery Manager Information',
-        "description": 'Enter the information of the delivery manager for this project.'
-    }) }}
         {{ onsInput({
         "id": "contact-email",
         "type": "email",
         "autocomplete": "email",
         "label": {
             "text": "Email address",
-            "description": "This will be stored and used as a point of contact for the project."
-
-        }
-
+            "description": "Enter the Delivery Manager's email address."
+        },
     }) }}
         {% call onsQuestion({
         "classes": "ons-u-mt-no",

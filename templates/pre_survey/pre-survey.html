@@ -1,74 +1,46 @@
 {% extends "core.html" %}
 {% include "utils.html" %}
 {% from "components/button/_macro.njk" import onsButton %}
-{% from "components/list/_macro.njk" import onsList %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
-    <h1 class="ons-u-mt-m">Pre-survey</h1>
-    <p>To complete this survey you will need to know details such as:</p>
-    {{
-        onsList({
-            "classes": 'ons-u-mb-m',
-            "itemsList": [
-                {
-                    "text": 'Your email and role'
-                },
-                {
-                    "text": 'Project name and documentation URL'
-                },
-                {
-                    "text": 'Where the software was developed'
-                },
-                {
-                    "text": 'Source control of choice'
-                },
-                {
-                    "text": 'Which hosting platforms have been used'
-                },
-                {
-                    "text": 'What databases have been used'
-                },
-                {
-                    "text": 'What languages have been used'
-                },
-                {
-                    "text": 'What CI/CD tools have been used'
-                },
-                {
-                    "text": 'What infrastructure the project uses'
-                },
-                {
-                    "text": 'What code editors have been used'
-                },
-                {
-                    "text": 'What UI Design tools have been used'
-                },
-                {
-                    "text": 'What diagramming tools have been used'
-                },
-                {
-                    "text": 'What project tracking tools have been used?'
-                },
-                {
-                    "text": 'What documentation software have been used?'
-                },
-                {
-                    "text": 'What communication tools have been used?'
-                },
-                {
-                    "text": 'What collaboration tools tools have been used?'
-                },
-                {
-                    "text": 'What incident management tools have been used?'
-                },
-            ]
-        })
-    }}
-
-    {{
-        onsButton({
-            "text": 'Continue',
-            "classes": 'ons-u-mt-xl',
-            "url": url_for('survey')
-        })
-    }}
+    <h1 class="ons-u-mt-m">Information</h1>
+    <p>To complete this survey you will need to provide:</p>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "General Information",
+                "content": "<p>Technical contact and role, project name, whether the solution is in active support and links to documentation.</p>"
+            },
+            {
+                "title": "Development Approach",
+                "content": "<p>Whether the software is developed in-house or by a third party, what programming languages are used and how the source code is managed.</p>"
+            },
+            {
+                "title": "Solution Architecture",
+                "content": "<p>Where the solution is hosted, how data is stored and what infrastructure is used.</p>"
+            },
+            {
+                "title": "Solution Deployment",
+                "content": "<p>How the solution is built and deployed.</p>"
+            },
+            {
+                "title": "Management of Development",
+                "content": "<p>How development and project progress is tracked and any tooling used to compile documentation.</p>"
+            },
+            {
+                "title": "Engineering and Communication Tools",
+                "content": "<p>Tooling used for editing code, designing user interfaces and collaborating with team members.</p>"
+            },
+            {
+                "title": "Solution Support",
+                "content": "<p>How incidents are managed.</p>"
+            }
+        ]
+    }) }}
+    {{ onsButton({
+        "text": 'Continue',
+        "classes": 'ons-u-mt-xl',
+        "url": url_for('survey')
+    }) }}
 {% endblock %}

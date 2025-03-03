@@ -113,12 +113,47 @@ function updateSectionStatus(sectionId, dataItems) { // Update selection status 
 }
 
 function changeBtnText() {
-    // Chnage text of submit button to 'Continue' if the section is not completed
-    document.getElementById('submit-btn-text').innerHTML = 'Continue';
+    document.getElementById('submit-btn-text').innerHTML = 'Fill in missing details';
 }
 
 function displayIncomplete(section) {
     return `<ul><li>'${section}' section is incomplete</li></ul>`
+}
+
+function removeSecondBtn() {
+    var submissionBtn = document.getElementById('submission-btn');
+    if (submissionBtn) {
+        submissionBtn.style.display = 'none';
+    }
+}
+
+function validateDataAndRedirect(data, url, submitBtn, validationFn) {
+    try {
+        const parsedData = JSON.parse(data);
+        if (!validationFn(parsedData)) {
+            submitBtn.href = url;
+            changeBtnText();
+            return true; // Validation failed, needs redirection
+        }
+        return false;
+    } catch (e) {
+        console.log(e);
+        document.getElementById('submit-btn-text').innerHTML = 'Fill in missing details';
+        submitBtn.href = url;
+        return true;
+    }
+}
+
+function validateArrayLength(data) {
+    return data.length > 0;
+}
+
+function validateObjectField(data, field) {
+    return data[field] && data[field].length > 0;
+}
+
+function validateMultipleFields(data, fields) {
+    return fields.every(field => data[field]);
 }
 
 function changeBtnURL(contactTechData, contactManagerData, projectData, 
@@ -128,224 +163,120 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData) {
     // Dynamically change url of submit button based on the completion status of each section
+    var submissionBtn = document.getElementById('submission-btn');
+    var submissionBtnSpan = submissionBtn.querySelector('span');
+    if (submissionBtnSpan) {
+        submissionBtnSpan.style.display = 'flex';
+        submissionBtnSpan.querySelector('svg').style.marginTop = '4px';
+    }
+
     var submitBtn = document.getElementById('submit-btn');
-        var submitBtnSpan = submitBtn.querySelector('span');
-        if (submitBtnSpan) {
-            submitBtnSpan.style.display = 'flex';
-            submitBtnSpan.querySelector('svg').style.marginTop = '2px';
-
+    var submitBtnSpan = submitBtn.querySelector('span');
+    if (submitBtnSpan) {
+        submitBtnSpan.style.display = 'flex';
+        submitBtnSpan.querySelector('svg').style.marginTop = '4px';
+    }
+    
+    // Define all validation checks with their URLs and validation functions
+    const validations = [
+        { 
+            data: contactTechData, 
+            url: '/survey/contact_tech', 
+            validationFn: (data) => validateMultipleFields(data, ['contactEmail', 'role'])
+        },
+        { 
+            data: contactManagerData, 
+            url: '/survey/contact_manager', 
+            validationFn: (data) => validateMultipleFields(data, ['contactEmail', 'role'])
+        },
+        { 
+            data: projectData, 
+            url: '/survey/project', 
+            validationFn: (data) => validateMultipleFields(data, ['project_name', 'project_short_name', 'project_description', 'doc_link'])
+        },
+        { 
+            data: sourceControlData, 
+            url: '/survey/source_control', 
+            validationFn: (data) => validateObjectField(data, 'source_control')
+        },
+        { 
+            data: databaseData, 
+            url: '/survey/database', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: languagesData, 
+            url: '/survey/languages', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: frameworksData, 
+            url: '/survey/frameworks', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: integrationsData, 
+            url: '/survey/integrations', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: infrastructureData, 
+            url: '/survey/infrastructure', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: codeEditorsData, 
+            url: '/survey/code_editors', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: projectTrackingData, 
+            url: '/survey/project_tracking', 
+            validationFn: (data) => data.project_tracking !== undefined && data.project_tracking !== ""
+        },
+        { 
+            data: uiToolsData, 
+            url: '/survey/user_interface', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: diagramToolsData, 
+            url: '/survey/diagrams', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: documentationData, 
+            url: '/survey/documentation', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: communicationData, 
+            url: '/survey/communication', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: collaborationData, 
+            url: '/survey/collaboration', 
+            validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: incidentManagementData, 
+            url: '/survey/incident_management', 
+            validationFn: (data) => data.incident_management !== undefined && data.incident_management !== ""
         }
-        try {
-            if (!JSON.parse(contactTechData)["contactEmail"] || !JSON.parse(contactTechData)["role"]) {
-                submitBtn.href = '/survey/contact_tech';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/pre-survey/project';
-            console.log(e)
-
-            return;
-        }
-        try {
-            if (!JSON.parse(contactManagerData)["contactEmail"] || !JSON.parse(contactManagerData)["role"]) {
-                submitBtn.href = '/survey/contact_manager';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/contact-manager';
-            console.log(e)
-            return;
-        }
-        try {
-            if (
-                !JSON.parse(projectData)["project_name"] ||
-                !JSON.parse(projectData)["project_short_name"] ||
-                !JSON.parse(projectData)["project_description"] ||
-                !JSON.parse(projectData)["doc_link"]
-            ) {
-                submitBtn.href = '/survey/project';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/project';
-            console.log(e);
-            return;
-        }
-        try {
-            if (!JSON.parse(sourceControlData)["source_control"]) {
-                submitBtn.href = '/survey/source_control';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/pre-survey/architecture';
-            console.log(e)
-            return;
-        }
-        try {
-            if (!JSON.parse(databaseData)["others"].length === 0) {
-                submitBtn.href = '/survey/database';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/database';
-            console.log(e);
-            return;
-        }
-        try {
-            if (!JSON.parse(languagesData)["others"].length === 0) {
-                submitBtn.href = '/survey/languages';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/pre-survey/technology';
-            console.log(e);
-            return;
-        }
-        try {
-            if (!JSON.parse(frameworksData)["others"].length === 0) {
-                submitBtn.href = '/survey/frameworks';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/frameworks';
-            console.log(e)
-            return;
-        }
-        try {
-            if (!JSON.parse(integrationsData)["others"].length === 0) {
-                submitBtn.href = '/survey/integrations';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/integrations';
-            console.log(e);
-            return;
-        }
-        try {
-            if (!JSON.parse(infrastructureData)["others"].length === 0) {
-                submitBtn.href = '/survey/infrastructure';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/infrastructure';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(codeEditorsData)["others"].length === 0) {
-                submitBtn.href = '/survey/code_editors';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/code_editors';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(projectTrackingData).length === 0) {
-                submitBtn.href = '/survey/project_tracking';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/project_tracking';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(uiToolsData)["others"].length === 0) {
-                submitBtn.href = '/survey/user_interface';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/user_interface';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(diagramToolsData)["others"].length === 0) {
-                submitBtn.href = '/survey/diagrams';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/diagrams';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(documentationData)["others"].length === 0) {
-                submitBtn.href = '/survey/documentation';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/documentation';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(communicationData)["others"].length === 0) {
-                submitBtn.href = '/survey/communication';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/communication';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(collaborationData)["others"].length === 0) {
-                submitBtn.href = '/survey/collaboration';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            changeBtnText()
-            submitBtn.href = '/survey/collaboration';
-            console.log(e);
-            return;
-        }
-        try {
-            if (JSON.parse(incidentManagementData).length === 0) {
-                submitBtn.href = '/survey/incident_management';
-                changeBtnText()
-                return;
-            }
-        } catch (e) {
-            document.getElementById('submit-btn-text').innerHTML = 'Continue'
-            submitBtn.href = '/survey/incident_management';
-            console.log(e);
-            return;
+    ];
+    
+    // Run through all validations
+    for (const validation of validations) {
+        if (validateDataAndRedirect(validation.data, validation.url, submitBtn, validation.validationFn)) {
+            return; // Stop if any validation fails
         }
     }
+    
+    // If we reach here, all validations have passed
+    removeSecondBtn(); // Remove the second button
+    document.getElementById('submit-btn-text').innerHTML = 'Continue to submission'; // Change button text
+}
 
 function escapeHtml(str) {
         return str.replace(/[&<>"']/g, function(match) {

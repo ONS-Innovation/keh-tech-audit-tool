@@ -448,6 +448,8 @@ def survey():
                 "short_name": form_data["project"]["project_short_name"],
                 "documentation_link": [form_data["project"]["doc_link"]],
                 "project_description": form_data["project"]["project_description"],
+                "programme_name": form_data["project"].get("programme_name", ""),
+                "programme_short_name": form_data["project"].get("programme_short_name", ""),
             }
         ],
         "developed": [form_data["developed"]["developed"], [developed_company]],

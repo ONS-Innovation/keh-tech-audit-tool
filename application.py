@@ -320,10 +320,6 @@ def view_project(project_name):
     if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
         flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
         return redirect(url_for("dashboard"))
-    
-    if len(project_name) > 128:
-        flash("Project name is too long. Please try again.")
-        return redirect(url_for("dashboard"))
 
     headers = get_id_token()
     

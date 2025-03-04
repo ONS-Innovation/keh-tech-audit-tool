@@ -106,7 +106,7 @@ items_none = []
 # Automatically loads the navigation depending on what page the user is on.
 mainNavItems = [
     {"text": "Dashboard", "url": "/dashboard"},
-    {"text": "Pre-Survey", "url": "/pre-survey"},
+    {"text": "Information", "url": "/pre-survey"},
     {"text": "Survey", "url": "/survey"},
     {"text": "Submit", "url": "/validate_details"},
 ]
@@ -136,7 +136,7 @@ techNavItems = [
     {"text": "Details", "url": "/pre-survey/technology"},
     {"text": "Languages", "url": "/survey/languages"},
     {"text": "Frameworks", "url": "/survey/frameworks"},
-    {"text": "Integrations", "url": "/survey/integrations"},
+    {"text": "Build and Deployment", "url": "/survey/integrations"},
     {"text": "Infrastructure", "url": "/survey/infrastructure"},
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
@@ -317,11 +317,14 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # Sanitize project name to prevent path traversal and injection attacks
-
     if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
         flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
         return redirect(url_for("dashboard"))
     
+    if len(project_name) > 128:
+        flash("Project name is too long. Please try again.")
+        return redirect(url_for("dashboard"))
+
     headers = get_id_token()
     
     user_email = session.get("email", "No email found")
@@ -448,6 +451,8 @@ def survey():
                 "short_name": form_data["project"]["project_short_name"],
                 "documentation_link": [form_data["project"]["doc_link"]],
                 "project_description": form_data["project"]["project_description"],
+                "programme_name": form_data["project"].get("programme_name", ""),
+                "programme_short_name": form_data["project"].get("programme_short_name", ""),
             }
         ],
         "developed": [form_data["developed"]["developed"], [developed_company]],

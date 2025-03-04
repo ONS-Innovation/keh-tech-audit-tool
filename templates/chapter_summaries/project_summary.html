@@ -159,7 +159,7 @@
                             escapeHtml(techContactDataJSON.role)
                         })</p>`;
                         if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
-                            user_details += `<p>Manager Contact: ${
+                            user_details += `<p>Delivery Manager Contact: ${
                                 escapeHtml(managerContactDataJSON.contactEmail)
                             } (${
                                 escapeHtml(managerContactDataJSON.role)
@@ -173,8 +173,14 @@
 
                     try {
                         var projectDataJSON = JSON.parse(projectData);
-                        var project_details = `<p>Project Name: ${
-                            projectDataJSON.project_name
+                        var project_details = `<p>Programme Name: ${
+                            escapeHtml(projectDataJSON.programme_name)
+                        }</p>
+                        <p>Programme Short Name: ${
+                            escapeHtml(projectDataJSON.programme_short_name)
+                        }</p>
+                        <p>Project Name: ${
+                            escapeHtml(projectDataJSON.project_name)
                         }</p>
                             <p>Project Short Name: ${
                             escapeHtml(projectDataJSON.project_short_name)

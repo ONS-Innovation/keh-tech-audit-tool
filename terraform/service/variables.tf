@@ -82,13 +82,13 @@ variable "domain_extension" {
 variable "service_cpu" {
   description = "Service CPU"
   type        = string
-  default     = "512"
+  default     = "256"
 }
 
 variable "service_memory" {
   description = "Service memory"
   type        = string
-  default     = "1024"
+  default     = "512"
 }
 
 variable "task_count" {

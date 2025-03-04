@@ -143,13 +143,8 @@
                         try {
                             var sourceControlDataJSON = JSON.parse(sourceControlData);
                             var sourceType = sourceControlDataJSON.source_control;
-                            var source_control_links_label = 'No links added to project.';
-                            if (sourceControlDataJSON.links && sourceControlDataJSON.links.length > 0) {
-                                source_control_links_label = sourceControlDataJSON.links.length > 1
-                                    ? 'Links: '
-                                    : 'Link: ';
-                            }
-                            var source_control = `Type: ${sourceType}<br>${source_control_links_label}` + arrToLinkList(sourceControlDataJSON.links);
+                            var source_control_links_label = sourceControlDataJSON.links && sourceControlDataJSON.links.length > 0 ? '': 'No links added to project.';
+                            var source_control = `${sourceType}<br>${source_control_links_label}${sourceControlDataJSON.links.map(link => `${link.description}: ${link.url}`).join(', ')}`;
                             document.getElementById('source_control_details').innerHTML = source_control;
                         } catch (e) {
                             errorList.push('Source Control');
@@ -160,19 +155,14 @@
                             if (databaseDataJSON.others.length === 0) {
                                 errorList.push('Database');
                             }
-                            var database_details = arrToList(databaseDataJSON.others);
+                            var database_details = `${databaseDataJSON.others.map(item => `${item}`).join(', ')}`;
                             document.getElementById('database_details').innerHTML = database_details;
                         } catch (e) {
                             errorList.push('Database');
                         }
 
                         try {
-                            var hosting_details = `Type: ${
-                                hostingJSON.type
-                            }`;
-                            if (hostingJSON.others && hostingJSON.others.length > 0) {
-                                hosting_details += `<br>Services:` + arrToList(hostingJSON.others);
-                            }
+                            var hosting_details = `${hostingJSON.type}<br>${hostingJSON.others.map(item => `${item}`).join(', ')}`
                             document.getElementById('hosting_details').innerHTML = hosting_details;
                         } catch (e) {
                             errorList.push('Hosting');

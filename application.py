@@ -317,11 +317,10 @@ def dashboard():
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # Sanitize project name to prevent path traversal and injection attacks
-
     if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
         flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
         return redirect(url_for("dashboard"))
-    
+
     headers = get_id_token()
     
     user_email = session.get("email", "No email found")
@@ -477,11 +476,6 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            if "project_users" in request.form:
-                project_users = json.loads(request.form["project_users"])
-                if len(project_users) > 2:
-                    data["user"].extend(project_users[2:])
-            
             projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,

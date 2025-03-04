@@ -3,10 +3,15 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
-    <h1 class="ons-u-mt-m">Information</h1>
+<style>
+    .ons-icon {
+        margin-top: 6px;
+    }
+</style>
+    <h1>Information</h1>
     <p>To complete this survey you will need to provide:</p>
     {{ onsAccordion({
-        "id": "accordion-example",
+        "id": "information-accordion",
         "itemsList": [
             {
                 "title": "General Information",

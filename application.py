@@ -330,26 +330,30 @@ def view_project(project_name):
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     )
-    print(projects.json())
 
-    if projects.status_code != HTTPStatus.OK or not project_name:
+    if projects.status_code != HTTPStatus.OK:
         flash("Project does not exist")
         return redirect(url_for("dashboard"))
     
-    projects = projects.json()
+    try:
+        projects = projects.json()
+        print(projects)
+    except Exception as e:
+        flash("Something went wrong. Please try again.")
+        return redirect(url_for("dashboard"))
 
     edit = False # Boolean to check if the user can edit the project
-
     for user in projects["user"]:
         if user["email"] == user_email:
             edit = True
             break
 
     try:
-        if projects["message"] is None:
-            flash("Project not found. Please try again.")
+        # message is only returned if there is an error. so if it is not None, there is an error
+        if projects["message"]:
+            flash(f"Project not found. Please try again. {projects['message']}")
             return redirect(url_for("dashboard"))
-    except Exception:
+    except:
         return render_template("view_project.html", project=projects, edit=edit)
 
 @app.route("/project/<project_name>/edit", methods=["GET"])
@@ -478,11 +482,6 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            if "project_users" in request.form:
-                project_users = json.loads(request.form["project_users"])
-                if len(project_users) > 2:
-                    data["user"].extend(project_users[2:])
-            
             projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,

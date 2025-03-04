@@ -475,11 +475,6 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            if "project_users" in request.form:
-                project_users = json.loads(request.form["project_users"])
-                if len(project_users) > 2:
-                    data["user"].extend(project_users[2:])
-            
             projects = requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,

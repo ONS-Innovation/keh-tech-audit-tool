@@ -529,7 +529,11 @@
                 // Check if any required fields are missing or empty strings
                 for (const field of requiredFields) {
                     if (!parsedData[field] || parsedData[field] === "") {
-                        displayError(`'${sectionName}' section is missing required field: ${field}`);
+                        if (field === 'project_name') {
+                            displayError(`'${sectionName}' section is missing required field: Project Name`);
+                        } else {
+                            displayError(`'${sectionName}' section is missing required field: ${field}`);
+                        }
                     }
                 }
                 

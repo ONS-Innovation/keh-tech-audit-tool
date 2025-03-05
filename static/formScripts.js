@@ -207,7 +207,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
         { 
             data: languagesData, 
             url: '/survey/languages', 
-            validationFn: (data) => data.others && data.others.length > 0
+            validationFn: (data) => (data.main && data.main.length > 0) || (data.others && data.others.length > 0)
         },
         { 
             data: frameworksData, 

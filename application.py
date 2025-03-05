@@ -337,7 +337,6 @@ def view_project(project_name):
     
     try:
         projects = projects.json()
-        print(projects)
     except Exception as e:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))

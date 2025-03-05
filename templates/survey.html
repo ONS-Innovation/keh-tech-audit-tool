@@ -108,14 +108,14 @@
         }) }}
         <div style="display: flex; justify-content: space-between; gap: 10px;">
     {{ onsButton({
-            "id": "submit-btn",
-            "text": '<div id="submit-btn-text">Continue to Submission</div>',
+            "id": "primary-btn",
+            "text": '<div id="primary-btn-text">Continue to Submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "url": url_for('validate_details')
         }) }}
     {{ onsButton({
-            "id": "submission-btn",
-            "text": '<div id="submission-btn-text">Continue to Submission</div>',
+            "id": "secondary-btn",
+            "text": '<div id="secondary-btn-text">Continue to Submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "variants": "secondary",
             "url": url_for('validate_details')

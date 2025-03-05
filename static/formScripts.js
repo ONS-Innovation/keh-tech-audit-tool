@@ -113,7 +113,7 @@ function updateSectionStatus(sectionId, dataItems) { // Update selection status 
 }
 
 function changeBtnText() {
-    document.getElementById('submit-btn-text').innerHTML = 'Fill in missing details';
+    document.getElementById('primary-btn-text').innerHTML = 'Fill in missing details';
 }
 
 function displayIncomplete(section) {
@@ -121,7 +121,7 @@ function displayIncomplete(section) {
 }
 
 function removeSecondBtn() {
-    var submissionBtn = document.getElementById('submission-btn');
+    var submissionBtn = document.getElementById('secondary-btn');
     if (submissionBtn) {
         submissionBtn.style.display = 'none';
     }
@@ -138,7 +138,7 @@ function validateDataAndRedirect(data, url, submitBtn, validationFn) {
         return false;
     } catch (e) {
         console.log(e);
-        document.getElementById('submit-btn-text').innerHTML = 'Fill in missing details';
+        document.getElementById('primary-btn-text').innerHTML = 'Fill in missing details';
         submitBtn.href = url;
         return true;
     }
@@ -163,14 +163,14 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData) {
     // Dynamically change url of submit button based on the completion status of each section
-    var submissionBtn = document.getElementById('submission-btn');
+    var submissionBtn = document.getElementById('secondary-btn');
     var submissionBtnSpan = submissionBtn.querySelector('span');
     if (submissionBtnSpan) {
         submissionBtnSpan.style.display = 'flex';
         submissionBtnSpan.querySelector('svg').style.marginTop = '4px';
     }
 
-    var submitBtn = document.getElementById('submit-btn');
+    var submitBtn = document.getElementById('primary-btn');
     var submitBtnSpan = submitBtn.querySelector('span');
     if (submitBtnSpan) {
         submitBtnSpan.style.display = 'flex';
@@ -275,7 +275,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
     
     // If we reach here, all validations have passed
     removeSecondBtn(); // Remove the second button
-    document.getElementById('submit-btn-text').innerHTML = 'Continue to submission'; // Change button text
+    document.getElementById('primary-btn-text').innerHTML = 'Continue to submission'; // Change button text
 }
 
 function escapeHtml(str) {

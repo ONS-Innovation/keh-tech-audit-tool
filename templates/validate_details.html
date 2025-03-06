@@ -766,12 +766,17 @@
             // Reset error panel at the start
             clearErrors();
             if (edit){
-                var original_data = "{{ project }}";
-                original_data = original_data.replaceAll("&#39;", '"');
-                original_data = original_data.replace("None", "N/A");
-                original_data = JSON.parse(original_data);
-                api_to_ui(original_data);
-                localStorage.setItem("original_data", JSON.stringify(original_data));
+                try {
+                    var original_data = "{{ project }}";
+                    original_data = original_data.replaceAll("&#39;", '"');
+                    original_data = original_data.replace(/\[None\]/g, '["N/A"]');
+                    original_data = original_data.replace(/: None(?!\])/g, ': null');
+                    original_data = JSON.parse(original_data);
+                    api_to_ui(original_data);
+                    localStorage.setItem("original_data", JSON.stringify(original_data));
+                } catch (e) {
+                    console.log(e);
+                }
             }
 
             // Load all data from localStorage
@@ -826,6 +831,8 @@
             if (JSON.parse(localStorage.getItem('edit'))) { 
                 var original_data = "{{ project }}";
                 original_data = original_data.replaceAll("&#39;", '"');
+                original_data = original_data.replace(/\[None\]/g, '["N/A"]');
+                original_data = original_data.replace(/: None(?!\])/g, ': null');
                 original_data = JSON.parse(original_data);
             }
             const finalData = {

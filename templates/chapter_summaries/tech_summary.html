@@ -1,22 +1,7 @@
 {% extends "core.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% block main %}
-    {% call onsPanel({
-        "id": "error-panel",
-        "title": 'Error',
-        "variant": 'error',
-        "type": "error",
-        "classes": "ons-u-hidden"
-    }) %}
-    {{ onsLabel({
-        "id": 'error-label',
-        "for": "error-label",
-        "text": 'Please fill in missing data'
-    }) }}
-    {% endcall %}
     <h1 class="ons-u-mt-m">Technology Details Summary</h1>
     {{ onsSummary({
             "variant": "hub",
@@ -124,12 +109,10 @@
                 <script>
 
                     function load_data() {
-                        var errorPanel = document.getElementById('error-panel');
                         var frameworksData = localStorage.getItem('frameworks-data');
                         var infrastructureData = localStorage.getItem('infrastructure-data');
                         var integrationsData = localStorage.getItem('integrations-data');
                         var languagesData = localStorage.getItem('languages-data');
-                        var errorList = [];
                         localStorage.setItem('validate', false);
                         try {
                             if (
@@ -138,18 +121,10 @@
                                 JSON.parse(infrastructureData)['others'].length === 0 ||
                                 JSON.parse(integrationsData)['others'].length === 0
                             ) {
-                                errorPanel.classList.remove('ons-u-hidden');
-                                document
-                                    .getElementById('submit-button')
-                                    .style
-                                    .display = 'none';
+                                // No error
                             }
                         } catch (e) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            document
-                                .getElementById('submit-button')
-                                .style
-                                .display = 'none';
+                            // No error
                         }
 
                         var finalData = {
@@ -168,49 +143,48 @@
                                 languages_details += `<br>Other: ${languagesDataJSON.others.map(item => `${item}`).join(', ')}`;
                             }
                             if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
-                                errorList.push('Languages data');
+                                // No error
                             }
                             document.getElementById('languages_details').innerHTML = languages_details;
                         } catch (e) {
-                            errorList.push('Languages data');
+                            // No error
                         }
 
                         try {
                             var frameworksDataJSON = JSON.parse(frameworksData);
                             if (frameworksDataJSON.others.length === 0) {
-                                errorList.push('Frameworks data');
+                                // No error
                             }
                             var frameworks_details = frameworksDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('framework_details').innerHTML = frameworks_details;
                         } catch (e) {
-                            errorList.push('Frameworks data');
+                            // No error
                         }
 
                         try {
                             var integrationsDataJSON = JSON.parse(integrationsData);
                             if (integrationsDataJSON.others.length === 0) {
-                                errorList.push('Integrations data');
+                                // No error
                             }
                             var integrations_details = integrationsDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('integration_details').innerHTML = integrations_details;
                         } catch (e) {
-                            errorList.push('Integrations data');
+                            // No error
                         }
                         
                         try {
                             var infrastructureDataJSON = JSON.parse(infrastructureData);
                             if (infrastructureDataJSON.others.length === 0) {
-                                errorList.push('Infrastructure data');
+                                // No error
                             }
                             var infrastructure_details = infrastructureDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
                         } catch (e) {
-                            errorList.push('Infrastructure data');
+                            // No error
                         }
 
                         if (errorList.length > 0) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                            // No error
                         }
                     }
 

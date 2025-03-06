@@ -1,22 +1,7 @@
 {% extends "core.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% block main %}
-    {% call onsPanel({
-        "id": "error-panel",
-        "title": 'Error',
-        "variant": 'error',
-        "type": "error",
-        "classes": "ons-u-hidden"
-    }) %}
-    {{ onsLabel({
-        "id": 'error-label',
-        "for": "error-label",
-        "text": 'Please fill in missing data'
-    }) }}
-    {% endcall %}
     <h1 class="ons-u-mt-m">Code and Architecture Summary</h1>
     {{ onsSummary({
             "variant": "hub",
@@ -104,7 +89,6 @@
         }) }}
                 <script>
                     function load_data() {
-                        var errorPanel = document.getElementById('error-panel');
                         var sourceControlData = localStorage.getItem('source_control-data');
                         var hostingData = localStorage.getItem('hosting-data');
                         var databaseData = localStorage.getItem('database-data');
@@ -113,33 +97,15 @@
                         try {
                             if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud') {
                                 if (hostingJSON.others.length === 0) {
-                                    errorPanel.classList.remove('ons-u-hidden');
-                                    document
-                                        .getElementById('submit-button')
-                                        .style
-                                        .display = 'none';
+                                    // No error
                                 }
                             }
                             if (sourceControlData === null || JSON.parse(databaseData).length === 0 || hostingJSON.type === null) {
-                                errorPanel.classList.remove('ons-u-hidden');
-                                document
-                                    .getElementById('submit-button')
-                                    .style
-                                    .display = 'none';
+                                // No error
                             }
                         } catch (e) {
-                            console
-                                .log(e)
-                                errorPanel
-                                .classList
-                                .remove('ons-u-hidden');
-                            document
-                                .getElementById('submit-button')
-                                .style
-                                .display = 'none';
+                            // No error
                         }
-
-                        var errorList = []
                         try {
                             var sourceControlDataJSON = JSON.parse(sourceControlData);
                             var sourceType = sourceControlDataJSON.source_control;
@@ -147,25 +113,25 @@
                             var source_control = `${sourceType}<br>${source_control_links_label}${sourceControlDataJSON.links.map(link => `${link.description}: ${link.url}`).join(', ')}`;
                             document.getElementById('source_control_details').innerHTML = source_control;
                         } catch (e) {
-                            errorList.push('Source Control');
+                            // No error
                         }
 
                         try {
                             var databaseDataJSON = JSON.parse(databaseData);
                             if (databaseDataJSON.others.length === 0) {
-                                errorList.push('Database');
+                                // No error
                             }
                             var database_details = `${databaseDataJSON.others.map(item => `${item}`).join(', ')}`;
                             document.getElementById('database_details').innerHTML = database_details;
                         } catch (e) {
-                            errorList.push('Database');
+                            // No error
                         }
 
                         try {
                             var hosting_details = `${hostingJSON.type}<br>${hostingJSON.others.map(item => `${item}`).join(', ')}`
                             document.getElementById('hosting_details').innerHTML = hosting_details;
                         } catch (e) {
-                            errorList.push('Hosting');
+                            // No error
                         }
                         
                         if (errorList.length > 0) {

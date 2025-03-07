@@ -124,6 +124,26 @@
                                     ]
                                 },
                                 {
+                                    "rowTitle": "Stage",
+                                    "rowItems": [
+                                        {
+                                            "valueList": [
+                                            {
+                                                "text": "<div id='stage_details'></div>"
+                                            }
+                                        ],
+
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Change stage details",
+                                                    "url": url_for('stage')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
                                     "rowTitle": "Source Control",
                                     "rowItems": [
                                         {
@@ -486,485 +506,699 @@
                 }
             }
 
-        function displayError(message) {
-            const errorPanel = document.getElementById('error-panel');
-            // Show the error panel
-            errorPanel.style.display = 'block';
+        /**
+         * Core utility functions for data processing
+         */
+        const DataUtils = {
+            // Convert array to comma-separated list
+            arrToList: function(arr) {
+                if (!arr || arr.length === 0) return '';
+                return arr.filter(item => item && item !== "").join(', ');
+            },
             
-            // Find or create the error message container
-            let errorContainer = errorPanel.querySelector('.error-messages');
-            if (!errorContainer) {
-                errorContainer = document.createElement('div');
-                errorContainer.className = 'error-messages';
-                // Add after the label but before any existing content
-                const label = errorPanel.querySelector('label');
-                if (label) {
-                    label.insertAdjacentElement('afterend', errorContainer);
-                } else {
-                    errorPanel.appendChild(errorContainer);
+            // Safely parse JSON with fallback
+            safeJsonParse: function(jsonString, fallback = {}) {
+                try {
+                    return jsonString ? JSON.parse(jsonString) : fallback;
+                } catch (e) {
+                    console.error("JSON parse error:", e);
+                    return fallback;
                 }
-            }
+            },
             
-            // Add the new error message
-            errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
-            document.getElementById('submit-button').style.display = 'none';
-        }
-
-        function clearErrors() {
-            const errorPanel = document.getElementById('error-panel');
-            // Hide the panel
-            errorPanel.style.display = 'none';
-            // Clear only the error messages, not the header or label
-            const errorContainer = errorPanel.querySelector('.error-messages');
-            if (errorContainer) {
-                errorContainer.innerHTML = '';
-            }
-            document.getElementById('submit-button').style.display = 'block';
-        }
-
-        function validateData(data, sectionName, requiredFields = []) {
-            try {
-                const parsedData = JSON.parse(data);
+            // Safely get values with default fallbacks
+            safeGet: function(obj, path, defaultValue = '') {
+                if (!obj) return defaultValue;
+                const parts = path.split('.');
+                let current = obj;
                 
-                // Check if any required fields are missing or empty strings
-                for (const field of requiredFields) {
-                    if (!parsedData[field] || parsedData[field] === "") {
-                        if (field === 'project_name') {
-                            displayError(`'${sectionName}' section is missing required field: Project Name`);
-                        } else {
-                            displayError(`'${sectionName}' section is missing required field: ${field}`);
-                        }
+                for (const part of parts) {
+                    if (current[part] === undefined || current[part] === null) {
+                        return defaultValue;
+                    }
+                    current = current[part];
+                }
+                
+                return current;
+            },
+            
+            // Combine main and other arrays
+            combineArrays: function(obj, property) {
+                if (!obj) return [];
+                const main = obj[property]?.main || [];
+                const others = obj[property]?.others || [];
+                return [...main, ...others].filter(item => item && item !== "");
+            }
+        };
+        
+        /**
+         * Error handling functions
+         */
+        const ErrorHandler = {
+            // Display an error message
+            displayError: function(message) {
+                const errorPanel = document.getElementById('error-panel');
+                errorPanel.style.display = 'block';
+                
+                let errorContainer = errorPanel.querySelector('.error-messages');
+                if (!errorContainer) {
+                    errorContainer = document.createElement('div');
+                    errorContainer.className = 'error-messages';
+                    const label = errorPanel.querySelector('label');
+                    if (label) {
+                        label.insertAdjacentElement('afterend', errorContainer);
+                    } else {
+                        errorPanel.appendChild(errorContainer);
                     }
                 }
                 
-                return parsedData;
-            } catch (e) {
-                displayError(`'${sectionName}' section is incomplete`);
-                return null;
+                errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
+                document.getElementById('submit-button').style.display = 'none';
+            },
+            
+            // Clear all errors
+            clearErrors: function() {
+                const errorPanel = document.getElementById('error-panel');
+                errorPanel.style.display = 'none';
+                const errorContainer = errorPanel.querySelector('.error-messages');
+                if (errorContainer) {
+                    errorContainer.innerHTML = '';
+                }
+                document.getElementById('submit-button').style.display = 'block';
+            },
+            
+            // Validate data and display errors
+            validateData: function(data, sectionName, requiredFields = []) {
+                try {
+                    const parsedData = typeof data === 'string' ? DataUtils.safeJsonParse(data) : data;
+                    
+                    for (const field of requiredFields) {
+                        if (!parsedData[field] || parsedData[field] === "") {
+                            const fieldName = field === 'name' ? 'Project Name' : field;
+                            this.displayError(`'${sectionName}' section is missing required field: ${fieldName}`);
+                        }
+                    }
+                    
+                    return parsedData;
+                } catch (e) {
+                    this.displayError(`'${sectionName}' section is incomplete`);
+                    return null;
+                }
             }
+        };
+
+        function displayError(message) {
+            ErrorHandler.displayError(message);
+        }
+
+        function clearErrors() {
+            ErrorHandler.clearErrors();
+        }
+
+        function validateData(data, sectionName, requiredFields = []) {
+            return ErrorHandler.validateData(data, sectionName, requiredFields);
         }
 
         function arrToList(arr) {
-            if (!arr || arr.length === 0) return '';
-            return `${arr.map(item => `${item}`).join(', ')}`;
+            return DataUtils.arrToList(arr);
         }
 
-        function processSourceControl(sourceControlData) {
-            if (!sourceControlData) return '';
+        /**
+         * Data processors for specific sections
+         */
+        const DataProcessors = {
+            processContacts: function(techData, managerData) {
+                const contacts = [];
+                
+                // Process Technical Contact
+                const techContact = DataUtils.safeJsonParse(techData);
+                const managerContact = DataUtils.safeJsonParse(managerData);
+                
+                if ((!techContact || !techContact.contactEmail) && 
+                    (!managerContact || !managerContact.contactEmail)) {
+                    ErrorHandler.displayError("At least one contact (Technical Contact or Delivery Manager) is required");
+                }
+                
+                // Add technical contact
+                contacts.push({
+                    email: techContact?.contactEmail || "",
+                    roles: ["Technical Contact"],
+                    grade: techContact?.role || ""
+                });
+                
+                // Add delivery manager
+                contacts.push({
+                    email: managerContact?.contactEmail || "",
+                    roles: ["Delivery Manager"],
+                    grade: managerContact?.role || ""
+                });
+                
+                return contacts;
+            },
             
-            try {
-                const parsed = JSON.parse(sourceControlData);
-                if (!parsed || !parsed.source_control) return '';
-
-                const finalSourceControl = [{
-                    type: parsed.source_control,
-                    links: parsed.links || []
-                }];
-
-                let details = finalSourceControl[0].type;
-                if (finalSourceControl[0].links) {
-                    finalSourceControl[0].links.forEach(link => {
-                        details += `<br>${link.description}: ${link.url}`;
+            processSourceControl: function(sourceControlData) {
+                const data = DataUtils.safeJsonParse(sourceControlData);
+                if (!data || !data.source_control) return '';
+                
+                let details = data.source_control;
+                if (data.links && data.links.length > 0) {
+                    data.links.forEach(link => {
+                        if (link.description && link.url) {
+                            details += `<br>${link.description}: ${link.url}`;
+                        }
                     });
                 }
                 
                 return details;
-            } catch (e) {
-                return '';
+            },
+            
+            processHosting: function(hostingData) {
+                const data = DataUtils.safeJsonParse(hostingData);
+                if (!data || !data.type) return '';
+                
+                if (data.type === "On-premises") {
+                    return "On-Premises";
+                }
+                
+                const hostingValues = [];
+                if (data.main && data.main.length) hostingValues.push(...data.main);
+                if (data.others && data.others.length) hostingValues.push(...data.others);
+                
+                return DataUtils.arrToList(hostingValues);
+            },
+            
+            processDeveloped: function(developedData) {
+                const data = DataUtils.safeJsonParse(developedData);
+                if (!data) return '';
+                
+                let result = '';
+                if (data.developed) {
+                    result += 'Developed: <p style="font-weight:400">' + data.developed + '</p>';
+                    
+                    if (data.developed === "Partnership" && data.partnership_company) {
+                        result += `Partnership Company: <p style="font-weight:400">${data.partnership_company}</p>`;
+                    } else if (data.developed === "Outsourced" && data.outsource_company) {
+                        result += `Outsourced Company: <p style="font-weight:400">${data.outsource_company}</p>`;
+                    }
+                } else if (Array.isArray(data) && data.length > 0) {
+                    // Handle old format
+                    result += 'Developed: <p style="font-weight:400">' + data[0] + '</p>';
+                    if ((data[0] === "Partnership" || data[0] === "Outsourced") && data[1] && data[1][0]) {
+                        result += `${data[0]} Company: <p style="font-weight:400">${data[1][0]}</p>`;
+                    }
+                }
+                
+                return result;
+            },
+            
+            processProjectDetails: function(projectData) {
+                const data = DataUtils.safeJsonParse(projectData);
+                if (!data) return '';
+                
+                let details = '';
+                
+                // Process for both API and form data formats
+                const name = data.name || (data.details && data.details[0]?.name);
+                const shortName = data.short_name || (data.details && data.details[0]?.short_name);
+                const programmeName = data.programme_name || '';
+                const programmeShortName = data.programme_short_name || '';
+                const docLink = Array.isArray(data.documentation_link) ? 
+                    data.documentation_link[0] : 
+                    (data.details && data.details[0]?.documentation_link[0]);
+                
+                if (programmeName) {
+                    details += 'Programme Name: <p style="font-weight:400">' + programmeName + '</p>';
+                }
+                if (programmeShortName) {
+                    details += 'Programme Short Name: <p style="font-weight:400">' + programmeShortName + '</p>';
+                }
+                if (name) {
+                    details += 'Project Name: <p style="font-weight:400">' + name + '</p>';
+                }
+                if (shortName) {
+                    details += 'Short Name: <p style="font-weight:400">' + shortName + '</p>';
+                }
+                if (docLink) {
+                    details += 'Documentation Link: <p style="font-weight:400">' + docLink + '</p>';
+                }
+                
+                return details;
             }
+        };
+
+        // Maintain backward compatibility with existing function names
+        function processSourceControl(sourceControlData) {
+            return DataProcessors.processSourceControl(sourceControlData);
         }
 
         function processHosting(hostingData) {
-            if (!hostingData) return '';
-            
-            try {
-                const parsed = JSON.parse(hostingData);
-                if (!parsed) return '';
-                
-                if (!parsed.type) return '';
-
-                if (parsed.type === "On-premises") {
-                    return "On-Premises";
-                }
-
-                return arrToList(parsed.main ? parsed.main.concat(parsed.others) : parsed.others);
-            } catch (e) {
-                return '';
-            }
-        }
-
-        function processProjectTracking(projectTrackingData) {
-            if (!projectTrackingData) return '';
-            
-            try {
-                const parsed = JSON.parse(projectTrackingData);
-                if (!parsed) return '';
-                
-                return parsed;
-            } catch (e) {
-                return '';
-            }
-        }
-
-        function processIncidentManagement(incidentManagementData) {
-            if (!incidentManagementData) return '';
-            
-            try {
-                const parsed = JSON.parse(incidentManagementData);
-                if (!parsed) return '';
-                
-                return parsed;
-            } catch (e) {
-                return '';
-            }
+            return DataProcessors.processHosting(hostingData);
         }
 
         function processContacts(techData, managerData) {
-            const youData = [];
-            
-            // Process Technical Contact
-            const techContact = techData ? JSON.parse(techData) : null;
-            const managerContact = managerData ? JSON.parse(managerData) : null;
-            
-            if ((!techContact || !techContact.contactEmail) && 
-                (!managerContact || !managerContact.contactEmail)) {
-                displayError("At least one contact (Technical Contact or Delivery Manager) is required");
-                // Continue with empty data instead of returning early
-            }
-            
-            if (techContact && techContact.contactEmail) {
-                youData.push({
-                    email: techContact.contactEmail,
-                    roles: ["Technical Contact"],
-                    grade: techContact.role || ""
-                });
-            } else {
-                youData.push({ email: "", roles: [""], grade: "" });
-            }
-
-            // Process Delivery Manager
-            if (managerContact && managerContact.contactEmail) {
-                youData.push({
-                    email: managerContact.contactEmail,
-                    roles: ["Delivery Manager"],
-                    grade: managerContact.role || ""
-                });
-            } else {
-                youData.push({ email: "", roles: [""], grade: "" });
-            }
-
-            return youData;
+            return DataProcessors.processContacts(techData, managerData);
         }
 
-        function api_to_ui(api_data) {
-            // Store additional users (editors) separately
-            const additionalUsers = api_data.user.filter(user => 
-                !user.roles.includes('Technical Contact') && // exclude technical contact
-                !user.roles.includes('Delivery Manager') // exclude delivery manager
-            ); // basically checks if there are any additional users other than tech contact and delivery manager
-            if (additionalUsers.length > 0) {
-                localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers)); // set additional users to local storage
-            } else {
-                localStorage.removeItem('additional_users-edit'); // if there are no additional users, remove the key
-            }
-
-            // Convert technical contact/manager data from API to UI schema
-            for (let i = 0; i < 2; i++) {
-                api_data.user[i]["role"] = api_data.user[i]["grade"];
-                delete api_data.user[i]["grade"];
-                delete api_data.user[i]["roles"];
-
-                api_data.user[i]["contactEmail"] = api_data.user[i]["email"];
-                delete api_data.user[i]["email"];
-            }
-
-            // Convert project data from API to UI schema
-            var project_fields = ["project_name", "project_short_name", "doc_link", "programme_name", "programme_short_name"];
-    
-            api_data.details[0]["project_name"] = api_data.details[0]["name"];
-            api_data.details[0]["project_short_name"] = api_data.details[0]["short_name"];
-            api_data.details[0]["doc_link"] = api_data.details[0]["documentation_link"][0];
-            delete api_data.details[0]["name"];
-            delete api_data.details[0]["short_name"];
-            delete api_data.details[0]["documentation_link"];
-
-            var new_source_control = {
-                "source_control": api_data["source_control"][0]["type"],
-                "links": api_data["source_control"][0]["links"]
-            }
-
-            api_data["architecture"]["hosting"]["type"] = api_data["architecture"]["hosting"]["type"][0]
-            api_data["architecture"]["hosting"]["main"] = []
-            api_data["architecture"]["hosting"]["others"] = api_data["architecture"]["hosting"]["details"]
-            delete api_data["architecture"]["hosting"]["details"]
-
-            var developed = api_data["developed"][0];
-            var partnership_company = null;
-            var outsource_company = null;
-
-            if (developed === "Partnership") {
-                partnership_company = api_data["developed"][1][0];
-            } else if (developed === "Outsourced") {
-                outsource_company = api_data["developed"][1][0];
-            } else {
-                partnership_company = null;
-                outsource_company = null;
-            }
-            var new_developed_data = {
-                "developed": developed,
-                "outsource_company": outsource_company,
-                "partnership_company": partnership_company,
-            }
-        
-
-            var architecture = [
-                            "database", "languages", "frameworks", "cicd", 
-                            "infrastructure"
-                        ];
-            
-            var supporting_tools = ["code_editors", "user_interface", 
-                            "diagrams", "documentation", "communication", "collaboration"];
-            
-            var fields_exist = false;
-            var count = 0;
-            for (let i = 0; i < fields.length; i++) {
-                if (localStorage.getItem(fields[i])) {
-                    count++;
-                }
-            }
-            if (count === fields.length) {
-                fields_exist = true;
-            }
-          
-            if (edit && !fields_exist) {
-                localStorage.setItem("contact_tech-data-edit", JSON.stringify(api_data.user[0]));
-                localStorage.setItem("contact_manager-data-edit", JSON.stringify(api_data.user[1]));
-                localStorage.setItem("project-data-edit", JSON.stringify(api_data.details[0]));
-                localStorage.setItem("stage-data-edit", JSON.stringify({"stage": api_data.stage}));
-                localStorage.setItem("developed-data-edit", JSON.stringify(new_developed_data));
-                localStorage.setItem("source_control-data-edit", JSON.stringify(new_source_control));
-                localStorage.setItem("hosting-data-edit", JSON.stringify(api_data.architecture.hosting));
-                localStorage.setItem("project_tracking-data-edit", JSON.stringify({"project_tracking": api_data.supporting_tools.project_tracking}));
-                localStorage.setItem("incident_management-data-edit", JSON.stringify({"incident_management": api_data.supporting_tools.incident_management}));
-
-                for (let i = 0; i < architecture.length; i++) {
-                    var current = architecture[i];
-                    if (i == 3) {
-                        current = "integrations";
-                    }
-                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.architecture[architecture[i]]));
-                }
-
-                for (let i = 0; i < supporting_tools.length; i++) {
-                    var current = supporting_tools[i];
-                    localStorage.setItem(current + "-data" + '-edit', JSON.stringify(api_data.supporting_tools[current]));
-                }
-                }
+        function processProjectTracking(projectTrackingData) {
+            return DataUtils.safeJsonParse(projectTrackingData);
         }
 
-        function load_data() {
-            // Reset error panel at the start
-            clearErrors();
-            if (edit){
-                try {
-                    var original_data = "{{ project }}";
-                    original_data = original_data.replaceAll("&#39;", '"');
-                    original_data = original_data.replace(/\[None\]/g, '["N/A"]');
-                    original_data = original_data.replace(/: None(?!\])/g, ': null');
-                    original_data = JSON.parse(original_data);
-                    api_to_ui(original_data);
-                    localStorage.setItem("original_data", JSON.stringify(original_data));
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            // Load all data from localStorage
-            const storedData = {
-                contactTech: localStorage.getItem(fields[0]),
-                contactManager: localStorage.getItem(fields[1]),
-                project: localStorage.getItem(fields[2]),
-                developed: localStorage.getItem(fields[3]),
-                stage: localStorage.getItem(fields[4]),
-                sourceControl: localStorage.getItem(fields[5]),
-                hosting: localStorage.getItem(fields[6]),
-                database: localStorage.getItem(fields[7]),
-                frameworks: localStorage.getItem(fields[8]),
-                infrastructure: localStorage.getItem(fields[9]),
-                integrations: localStorage.getItem(fields[10]),
-                languages: localStorage.getItem(fields[11]),
-                codeEditors: localStorage.getItem(fields[12]),
-                userInterface: localStorage.getItem(fields[13]),
-                diagrams: localStorage.getItem(fields[14]),
-                projectTracking: localStorage.getItem(fields[15]),
-                documentation: localStorage.getItem(fields[16]),
-                communication: localStorage.getItem(fields[17]),
-                collaboration: localStorage.getItem(fields[18]),
-                incidentManagement: localStorage.getItem(fields[19])
-            };
-
-            // Process contacts
-            const youData = processContacts(storedData.contactTech, storedData.contactManager);
-            // Process all other sections
-            const processedData = {
-                sourceControl: processSourceControl(storedData.sourceControl),
-                hosting: processHosting(storedData.hosting),
-                database: validateData(storedData.database, 'Databases'),
-                languages: validateData(storedData.languages, 'Languages'),
-                frameworks: validateData(storedData.frameworks, 'Frameworks'),
-                integrations: validateData(storedData.integrations, 'CI/CD'),
-                infrastructure: validateData(storedData.infrastructure, 'Infrastructure'),
-                project: validateData(storedData.project, 'Project', ['project_name']),
-                stage: validateData(storedData.stage, 'Stage'),
-                developed: validateData(storedData.developed, 'Developed'),
-                codeEditors: validateData(storedData.codeEditors, 'Code Editors'),
-                userInterface: validateData(storedData.userInterface, 'User Interface'),
-                diagrams: validateData(storedData.diagrams, 'Diagrams'),
-                projectTracking: processProjectTracking(storedData.projectTracking),
-                documentation: validateData(storedData.documentation, 'Documentation'),
-                communication: validateData(storedData.communication, 'Communication'),
-                collaboration: validateData(storedData.collaboration, 'Collaboration'),
-                incidentManagement: processIncidentManagement(storedData.incidentManagement)
-            };
-
-
-            if (JSON.parse(localStorage.getItem('edit'))) { 
-                var original_data = "{{ project }}";
-                original_data = original_data.replaceAll("&#39;", '"');
-                original_data = original_data.replace(/\[None\]/g, '["N/A"]');
-                original_data = original_data.replace(/: None(?!\])/g, ': null');
-                original_data = JSON.parse(original_data);
-            }
-            const finalData = {
-                user: youData || [],
-                details: processedData.project || {},
-                developed: processedData.developed || {},
-                source_control: [{
-                    type: JSON.parse(storedData.sourceControl || '{}')?.source_control || '',
-                    links: JSON.parse(storedData.sourceControl || '{}')?.links || []
-                }],
-                architecture: {
-                    frameworks: processedData.frameworks || { main: [], others: [] },
-                    infrastructure: processedData.infrastructure || { main: [], others: [] },
-                    integrations: processedData.integrations || { main: [], others: [] },
-                    languages: processedData.languages || { main: [], others: [] },
-                    hosting: JSON.parse(storedData.hosting || '{}') || { type: '', others: [] },
-                    database: processedData.database || { main: [], others: [] },
-                },
-                stage: processedData.stage?.stage || '',
-                supporting_tools: {
-                    code_editors: processedData.codeEditors || { main: [], others: [] },
-                    user_interface: processedData.userInterface || { main: [], others: [] },
-                    diagrams: processedData.diagrams || { main: [], others: [] },
-                    project_tracking: processedData.projectTracking?.project_tracking || '',
-                    documentation: processedData.documentation || { main: [], others: [] },
-                    communication: processedData.communication || { main: [], others: [] },
-                    collaboration: processedData.collaboration || { main: [], others: [] },
-                    incident_management: processedData.incidentManagement?.incident_management || ''
-                }
-            };
-            // Update the summary display
-            updateSummaryDisplay(finalData);
-            
-            // Update hidden form fields
-            updateHiddenFields(finalData);
+        function processIncidentManagement(incidentManagementData) {
+            return DataUtils.safeJsonParse(incidentManagementData);
         }
 
-
-        function updateSummaryDisplay(finalData) {        
-            const summaryData = {
-                technical_contact: finalData.user[0]?.email ? `${finalData.user[0].email} (${finalData.user[0].grade})` : '',
-                delivery_manager: finalData.user[1]?.email ? `${finalData.user[1].email} (${finalData.user[1].grade})` : '',
-                stage_details: finalData.stage ? `${finalData.stage}` : '',
-                project_details: finalData.details ? 
-                    'Programme Name: <p style="font-weight:400">' + (finalData.details.programme_name || '') + '</p>' + 
-                    'Programme Short Name: <p style="font-weight:400">' + (finalData.details.programme_short_name || '') + '</p>' + 
-                    'Project Name: <p style="font-weight:400">' + (finalData.details.project_name || '') + '</p>' + 
-                    'Short Name: <p style="font-weight:400">' + (finalData.details.project_short_name || '') + '</p>' + 
-                    'Documentation Link: <p style="font-weight:400">' + (finalData.details.doc_link || '') + '</p>' + 
-                    'Project Description: <p style="font-weight:400">' + (finalData.details.project_description || '') + '</p>' + 
-                    'Stage: ' + '<p style="font-weight:400">' + (finalData.stage || '') 
-                    : '',
-                developed_details: finalData.developed ? `
-                    ${finalData.developed.developed || ''}
-                    <br>
-                    ${finalData.developed.partnership_company || finalData.developed.outsource_company || ''}
-                ` : '',
-                source_control_details: processSourceControl(localStorage.getItem(fields[5])),
-                hosting_details: processHosting(localStorage.getItem(fields[6])),
-                database_details: arrToList(finalData.architecture.database?.main?.concat(finalData.architecture.database?.others) || []),
-                languages_details: arrToList(finalData.architecture.languages?.main?.concat(finalData.architecture.languages?.others) || []),
-                framework_details: arrToList(finalData.architecture.frameworks?.main?.concat(finalData.architecture.frameworks?.others) || []),
-                integration_details: arrToList(finalData.architecture.integrations?.main?.concat(finalData.architecture.integrations?.others) || []),
-                infrastructure_details: arrToList(finalData.architecture.infrastructure?.main?.concat(finalData.architecture.infrastructure?.others) || []),
-                code_editor_details: arrToList(finalData.supporting_tools.code_editors?.main?.concat(finalData.supporting_tools.code_editors?.others) || []),
-                user_interface_details: arrToList(finalData.supporting_tools.user_interface?.main?.concat(finalData.supporting_tools.user_interface?.others) || []),
-                diagram_details: arrToList(finalData.supporting_tools.diagrams?.main?.concat(finalData.supporting_tools.diagrams?.others) || []),
-                project_tracking_details: finalData.supporting_tools.project_tracking,
-                documentation_details: arrToList(finalData.supporting_tools.documentation?.main?.concat(finalData.supporting_tools.documentation?.others) || []),
-                communication_details: arrToList(finalData.supporting_tools.communication?.main?.concat(finalData.supporting_tools.communication?.others) || []),
-                collaboration_details: arrToList(finalData.supporting_tools.collaboration?.main?.concat(finalData.supporting_tools.collaboration?.others) || []),
-                incident_management_details: finalData.supporting_tools.incident_management
-            };
-
-            // Update all summary elements
-            Object.entries(summaryData).forEach(([key, value]) => {
-                const element = document.getElementById(key);
-                if (element) element.innerHTML = value;
-            });
-        }
-
-        function updateHiddenFields(finalData) {
-            var hiddenFields = {
-                user: finalData.user,
-                project: finalData.details,
-                developed: finalData.developed,
-                source_control: finalData.source_control,
-                hosting: {
-                    type: [finalData.architecture.hosting.type],
-                    details: finalData.architecture.hosting.others
-                },
-                database: finalData.architecture.database,
-                languages: finalData.architecture.languages,
-                frameworks: finalData.architecture.frameworks,
-                integrations: finalData.architecture.integrations,
-                infrastructure: finalData.architecture.infrastructure,
-                stage: finalData.stage,
-                code_editors: finalData.supporting_tools.code_editors,
-                user_interface: finalData.supporting_tools.user_interface,
-                diagrams: finalData.supporting_tools.diagrams,
-                project_tracking: finalData.supporting_tools.project_tracking,
-                documentation: finalData.supporting_tools.documentation,
-                communication: finalData.supporting_tools.communication,
-                collaboration: finalData.supporting_tools.collaboration,
-                incident_management: finalData.supporting_tools.incident_management
-            };
-
-            if (JSON.parse(localStorage.getItem('edit'))) {
-                hiddenFields["project_name"] = "{{ project_name }}";
+        /**
+         * Data normalization and conversion
+         */
+        const DataNormalizer = {
+            // Convert API format to consistent internal format
+            normalizeApiData: function(apiData) {
+                // Deep clone the original data to avoid modifying it
+                const data = JSON.parse(JSON.stringify(apiData));
                 
-                // Combine current users with any additional users from before
-                const additionalUsers = JSON.parse(localStorage.getItem('additional_users-edit') || '[]');
+                // Extract additional users (non-technical contact, non-delivery manager)
+                const additionalUsers = data.user.filter(user => 
+                    !user.roles.includes('Technical Contact') && 
+                    !user.roles.includes('Delivery Manager')
+                );
+                
                 if (additionalUsers.length > 0) {
-                    hiddenFields["project_users"] = [...finalData.user, ...additionalUsers];
+                    localStorage.setItem('additional_users-edit', JSON.stringify(additionalUsers));
                 } else {
-                    hiddenFields["project_users"] = finalData.user;
+                    localStorage.removeItem('additional_users-edit');
                 }
+                
+                // Transform contact data
+                for (let i = 0; i < Math.min(2, data.user.length); i++) {
+                    data.user[i].contactEmail = data.user[i].email;
+                    data.user[i].role = data.user[i].grade;
+                    delete data.user[i].email;
+                    delete data.user[i].grade;
+                    delete data.user[i].roles;
+                }
+                
+                // Transform source control data
+                const sourceControl = {
+                    source_control: data.source_control[0]?.type || '',
+                    links: data.source_control[0]?.links || []
+                };
+                
+                // Transform hosting data
+                const hosting = {
+                    type: data.architecture.hosting.type[0] || '',
+                    main: [],
+                    others: data.architecture.hosting.details || []
+                };
+                
+                // Prepare normalized data
+                const normalizedData = {
+                    contact_tech: data.user[0] || { contactEmail: '', role: '' },
+                    contact_manager: data.user[1] || { contactEmail: '', role: '' },
+                    project: data.details[0] || {},
+                    developed: data.developed,
+                    stage: { stage: data.stage },
+                    source_control: sourceControl,
+                    hosting: hosting,
+                    database: data.architecture.database,
+                    languages: data.architecture.languages,
+                    frameworks: data.architecture.frameworks,
+                    integrations: data.architecture.cicd,
+                    infrastructure: data.architecture.infrastructure,
+                    code_editors: data.supporting_tools.code_editors,
+                    user_interface: data.supporting_tools.user_interface,
+                    diagrams: data.supporting_tools.diagrams,
+                    project_tracking: { project_tracking: data.supporting_tools.project_tracking },
+                    documentation: data.supporting_tools.documentation,
+                    communication: data.supporting_tools.communication,
+                    collaboration: data.supporting_tools.collaboration,
+                    incident_management: { incident_management: data.supporting_tools.incident_management }
+                };
+                
+                return normalizedData;
+            },
+            
+            // Save normalized data to localStorage
+            saveToLocalStorage: function(normalizedData, isEdit) {
+                const suffix = isEdit ? '-edit' : '';
+                
+                // Store each section in localStorage
+                localStorage.setItem(`contact_tech-data${suffix}`, JSON.stringify(normalizedData.contact_tech));
+                localStorage.setItem(`contact_manager-data${suffix}`, JSON.stringify(normalizedData.contact_manager));
+                localStorage.setItem(`project-data${suffix}`, JSON.stringify(normalizedData.project));
+                localStorage.setItem(`stage-data${suffix}`, JSON.stringify(normalizedData.stage));
+                localStorage.setItem(`developed-data${suffix}`, JSON.stringify(normalizedData.developed));
+                localStorage.setItem(`source_control-data${suffix}`, JSON.stringify(normalizedData.source_control));
+                localStorage.setItem(`hosting-data${suffix}`, JSON.stringify(normalizedData.hosting));
+                localStorage.setItem(`database-data${suffix}`, JSON.stringify(normalizedData.database));
+                localStorage.setItem(`languages-data${suffix}`, JSON.stringify(normalizedData.languages));
+                localStorage.setItem(`frameworks-data${suffix}`, JSON.stringify(normalizedData.frameworks));
+                localStorage.setItem(`integrations-data${suffix}`, JSON.stringify(normalizedData.integrations));
+                localStorage.setItem(`infrastructure-data${suffix}`, JSON.stringify(normalizedData.infrastructure));
+                localStorage.setItem(`code_editors-data${suffix}`, JSON.stringify(normalizedData.code_editors));
+                localStorage.setItem(`user_interface-data${suffix}`, JSON.stringify(normalizedData.user_interface));
+                localStorage.setItem(`diagrams-data${suffix}`, JSON.stringify(normalizedData.diagrams));
+                localStorage.setItem(`project_tracking-data${suffix}`, JSON.stringify(normalizedData.project_tracking));
+                localStorage.setItem(`documentation-data${suffix}`, JSON.stringify(normalizedData.documentation));
+                localStorage.setItem(`communication-data${suffix}`, JSON.stringify(normalizedData.communication));
+                localStorage.setItem(`collaboration-data${suffix}`, JSON.stringify(normalizedData.collaboration));
+                localStorage.setItem(`incident_management-data${suffix}`, JSON.stringify(normalizedData.incident_management));
+            },
+            
+            // Create API format data from processed data
+            createApiFormat: function(processedData) {
+                // Extract users and add any additional users from previous edit
+                const additionalUsers = DataUtils.safeJsonParse(localStorage.getItem('additional_users-edit') || '[]');
+                
+                // Construct the final data format
+                const finalData = {
+                    user: processedData.user || [],
+                    details: processedData.project || {},
+                    developed: processedData.developed || {},
+                    source_control: [{
+                        type: processedData.source_control?.source_control || '',
+                        links: processedData.source_control?.links || []
+                    }],
+                    architecture: {
+                        frameworks: processedData.frameworks || { main: [], others: [] },
+                        infrastructure: processedData.infrastructure || { main: [], others: [] },
+                        integrations: processedData.integrations || { main: [], others: [] },
+                        languages: processedData.languages || { main: [], others: [] },
+                        hosting: {
+                            type: Array.isArray(processedData.hosting?.type) ? 
+                                processedData.hosting.type : 
+                                [processedData.hosting?.type || ''],
+                            details: processedData.hosting?.others || []
+                        },
+                        database: processedData.database || { main: [], others: [] },
+                    },
+                    stage: processedData.stage?.stage || '',
+                    supporting_tools: {
+                        code_editors: processedData.code_editors || { main: [], others: [] },
+                        user_interface: processedData.user_interface || { main: [], others: [] },
+                        diagrams: processedData.diagrams || { main: [], others: [] },
+                        project_tracking: processedData.project_tracking?.project_tracking || '',
+                        documentation: processedData.documentation || { main: [], others: [] },
+                        communication: processedData.communication || { main: [], others: [] },
+                        collaboration: processedData.collaboration || { main: [], others: [] },
+                        incident_management: processedData.incident_management?.incident_management || ''
+                    }
+                };
+                
+                // Add edit-specific properties
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    finalData.project_name = "{{ project_name }}";
+                    if (additionalUsers.length > 0) {
+                        finalData.project_users = [...processedData.user, ...additionalUsers];
+                    } else {
+                        finalData.project_users = processedData.user;
+                    }
+                }
+                
+                return finalData;
             }
+        };
+
+        /**
+         * UI Update functions
+         */
+        const UIUpdater = {
+            // Update the summary display with processed data
+            updateSummaryDisplay: function(data) {
+                // Create summary data object with formatted values
+                const summaryData = {
+                    technical_contact: data.user[0]?.email ? 
+                        `${data.user[0].email} (${data.user[0].grade || ''})` : '',
+                    delivery_manager: data.user[1]?.email ? 
+                        `${data.user[1].email} (${data.user[1].grade || ''})` : '',
+                    stage_details: data.stage || '',
+                    project_details: DataProcessors.processProjectDetails(JSON.stringify({
+                        name: data.details.name,
+                        short_name: data.details.short_name,
+                        programme_name: data.details.programme_name,
+                        programme_short_name: data.details.programme_short_name,
+                        documentation_link: data.details.documentation_link
+                    })),
+                    developed_details: DataProcessors.processDeveloped(JSON.stringify(data.developed)),
+                    source_control_details: data.source_control[0]?.type ? 
+                        `${data.source_control[0].type}${data.source_control[0].links.map(link => 
+                            `<br>${link.description}: ${link.url}`).join('')}` : '',
+                    hosting_details: data.architecture.hosting.type ? 
+                        (data.architecture.hosting.type[0] === "On-premises" ? "On-Premises" : 
+                            DataUtils.arrToList(data.architecture.hosting.details)) : '',
+                    database_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.architecture.database, 'main', []), 
+                        ...DataUtils.safeGet(data.architecture.database, 'others', [])
+                    ]),
+                    languages_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.architecture.languages, 'main', []), 
+                        ...DataUtils.safeGet(data.architecture.languages, 'others', [])
+                    ]),
+                    framework_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.architecture.frameworks, 'main', []), 
+                        ...DataUtils.safeGet(data.architecture.frameworks, 'others', [])
+                    ]),
+                    integration_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.architecture.integrations, 'main', []), 
+                        ...DataUtils.safeGet(data.architecture.integrations, 'others', [])
+                    ]),
+                    infrastructure_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.architecture.infrastructure, 'main', []), 
+                        ...DataUtils.safeGet(data.architecture.infrastructure, 'others', [])
+                    ]),
+                    code_editor_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.code_editors, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.code_editors, 'others', [])
+                    ]),
+                    user_interface_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.user_interface, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.user_interface, 'others', [])
+                    ]),
+                    diagram_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.diagrams, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.diagrams, 'others', [])
+                    ]),
+                    project_tracking_details: data.supporting_tools.project_tracking || '',
+                    documentation_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.documentation, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.documentation, 'others', [])
+                    ]),
+                    communication_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
+                    ]),
+                    collaboration_details: DataUtils.arrToList([
+                        ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
+                        ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])
+                    ]),
+                    incident_management_details: data.supporting_tools.incident_management || ''
+                };
+                
+                // Update all summary elements
+                Object.entries(summaryData).forEach(([key, value]) => {
+                    const element = document.getElementById(key);
+                    if (element) element.innerHTML = value;
+                });
+            },
+            
+            // Update the hidden form fields for submission
+            updateHiddenFields: function(data) {
+                // Map data to form fields
+                const hiddenFields = {
+                    user: data.user,
+                    project: data.details,
+                    developed: data.developed,
+                    source_control: data.source_control,
+                    hosting: {
+                        type: Array.isArray(data.architecture.hosting.type) ? 
+                            data.architecture.hosting.type : 
+                            [data.architecture.hosting.type],
+                        details: data.architecture.hosting.details
+                    },
+                    database: data.architecture.database,
+                    languages: data.architecture.languages,
+                    frameworks: data.architecture.frameworks,
+                    integrations: data.architecture.integrations,
+                    infrastructure: data.architecture.infrastructure,
+                    stage: data.stage,
+                    code_editors: data.supporting_tools.code_editors,
+                    user_interface: data.supporting_tools.user_interface,
+                    diagrams: data.supporting_tools.diagrams,
+                    project_tracking: data.supporting_tools.project_tracking,
+                    documentation: data.supporting_tools.documentation,
+                    communication: data.supporting_tools.communication,
+                    collaboration: data.supporting_tools.collaboration,
+                    incident_management: data.supporting_tools.incident_management
+                };
+                
+                // For edit mode, add project name and users
+                if (data.project_name) {
+                    hiddenFields.project_name = data.project_name;
+                }
+                
+                if (data.project_users) {
+                    hiddenFields.project_users = data.project_users;
+                }
+                
+                // Update all hidden input fields
+                Object.entries(hiddenFields).forEach(([key, value]) => {
+                    const element = document.getElementById(key);
+                    if (element) element.value = JSON.stringify(value);
+                });
+            }
+        };
         
+        /**
+         * Main application controller
+         */
+        const AppController = {
+            // Get field mapping for localStorage keys
+            getFields: function(isEdit) {
+                const suffix = isEdit ? '-edit' : '';
+                return [
+                    `contact_tech-data${suffix}`, `contact_manager-data${suffix}`, `project-data${suffix}`, 
+                    `developed-data${suffix}`, `stage-data${suffix}`, `source_control-data${suffix}`, 
+                    `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
+                    `infrastructure-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
+                    `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
+                    `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
+                    `collaboration-data${suffix}`, `incident_management-data${suffix}`
+                ];
+            },
+            
+            // Load data from API or localStorage
+            loadData: function() {
+                // Reset error panel at start
+                ErrorHandler.clearErrors();
+                
+                const isEdit = JSON.parse(localStorage.getItem('edit') || 'false');
+                const fieldKeys = this.getFields(isEdit);
+                
+                // If in edit mode, load original data from server
+                if (isEdit) {
+                    try {
+                        let originalData = "{{ project }}";
+                        originalData = originalData.replaceAll("&#39;", '"');
+                        originalData = originalData.replace(/\[None\]/g, '["N/A"]');
+                        originalData = originalData.replace(/: None(?!\])/g, ': ""');
+                        originalData = JSON.parse(originalData);
+                        
+                        // Store the original data
+                        localStorage.setItem("original_data", JSON.stringify(originalData));
+                        
+                        // Check if we already have processed this data in localStorage
+                        let fieldsExist = fieldKeys.every(key => localStorage.getItem(key));
+                        
+                        // If not all fields exist in localStorage, normalize and save API data
+                        if (!fieldsExist) {
+                            const normalizedData = DataNormalizer.normalizeApiData(originalData);
+                            DataNormalizer.saveToLocalStorage(normalizedData, true);
+                        }
+                    } catch (e) {
+                        console.error("Error processing original data:", e);
+                    }
+                }
+                
+                // Load data from localStorage
+                const storedData = {
+                    contactTech: localStorage.getItem(fieldKeys[0]),
+                    contactManager: localStorage.getItem(fieldKeys[1]),
+                    project: localStorage.getItem(fieldKeys[2]),
+                    developed: localStorage.getItem(fieldKeys[3]),
+                    stage: localStorage.getItem(fieldKeys[4]),
+                    sourceControl: localStorage.getItem(fieldKeys[5]),
+                    hosting: localStorage.getItem(fieldKeys[6]),
+                    database: localStorage.getItem(fieldKeys[7]),
+                    frameworks: localStorage.getItem(fieldKeys[8]),
+                    infrastructure: localStorage.getItem(fieldKeys[9]),
+                    integrations: localStorage.getItem(fieldKeys[10]),
+                    languages: localStorage.getItem(fieldKeys[11]),
+                    codeEditors: localStorage.getItem(fieldKeys[12]),
+                    userInterface: localStorage.getItem(fieldKeys[13]),
+                    diagrams: localStorage.getItem(fieldKeys[14]),
+                    projectTracking: localStorage.getItem(fieldKeys[15]),
+                    documentation: localStorage.getItem(fieldKeys[16]),
+                    communication: localStorage.getItem(fieldKeys[17]),
+                    collaboration: localStorage.getItem(fieldKeys[18]),
+                    incidentManagement: localStorage.getItem(fieldKeys[19])
+                };
+                
+                // Process and validate data
+                const processedData = {
+                    user: DataProcessors.processContacts(storedData.contactTech, storedData.contactManager),
+                    project: ErrorHandler.validateData(storedData.project, 'Project', ['name']),
+                    developed: ErrorHandler.validateData(storedData.developed, 'Developed'),
+                    stage: ErrorHandler.validateData(storedData.stage, 'Stage'),
+                    source_control: DataUtils.safeJsonParse(storedData.sourceControl),
+                    hosting: DataUtils.safeJsonParse(storedData.hosting),
+                    database: ErrorHandler.validateData(storedData.database, 'Databases'),
+                    languages: ErrorHandler.validateData(storedData.languages, 'Languages'),
+                    frameworks: ErrorHandler.validateData(storedData.frameworks, 'Frameworks'),
+                    integrations: ErrorHandler.validateData(storedData.integrations, 'CI/CD'),
+                    infrastructure: ErrorHandler.validateData(storedData.infrastructure, 'Infrastructure'),
+                    code_editors: ErrorHandler.validateData(storedData.codeEditors, 'Code Editors'),
+                    user_interface: ErrorHandler.validateData(storedData.userInterface, 'User Interface'),
+                    diagrams: ErrorHandler.validateData(storedData.diagrams, 'Diagrams'),
+                    project_tracking: DataUtils.safeJsonParse(storedData.projectTracking),
+                    documentation: ErrorHandler.validateData(storedData.documentation, 'Documentation'),
+                    communication: ErrorHandler.validateData(storedData.communication, 'Communication'),
+                    collaboration: ErrorHandler.validateData(storedData.collaboration, 'Collaboration'),
+                    incident_management: DataUtils.safeJsonParse(storedData.incidentManagement)
+                };
+                
+                // If in edit mode and we didn't get valid data from localStorage, fallback to original data
+                if (isEdit && (!processedData.project || !processedData.project.name)) {
+                    try {
+                        let originalData = JSON.parse(localStorage.getItem("original_data") || "{}");
+                        if (originalData && originalData.details && originalData.details[0]) {
+                            processedData.project = originalData.details[0];
+                        }
+                    } catch (e) {
+                        console.error("Error using fallback data:", e);
+                    }
+                }
+                
+                // Convert to final API format
+                const finalData = DataNormalizer.createApiFormat(processedData);
+                
+                // Update UI with processed data
+                UIUpdater.updateSummaryDisplay(finalData);
+                UIUpdater.updateHiddenFields(finalData);
+            },
+            
+            // Initialize the app
+            init: function() {
+                this.loadData();
+                
+                // Setup validation flags
+                localStorage.setItem("source_control-validate", true);
+                localStorage.setItem("hosting-validate", true);
+            }
+        };
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            AppController.init();
+        });
 
-            // Update all hidden input fields
-            Object.entries(hiddenFields).forEach(([key, value]) => {
-                const element = document.getElementById(key);
-                if (element) element.value = JSON.stringify(value);
-            });
+        // Legacy function for backward compatibility
+        function api_to_ui(api_data) {
+            const normalizedData = DataNormalizer.normalizeApiData(api_data);
+            DataNormalizer.saveToLocalStorage(normalizedData, true);
         }
-
-
-        // Initialize the page
-        load_data();
-        localStorage.setItem("source_control-validate", true);
-        localStorage.setItem("hosting-validate", true);
+        
+        // Legacy function for backward compatibility
+        function load_data() {
+            AppController.loadData();
+        }
+        
+        function removeEdits() {
+            const isEdit = JSON.parse(localStorage.getItem('edit') || 'false');
+            if (isEdit) {
+                const fieldKeys = AppController.getFields(true);
+                fieldKeys.forEach(key => localStorage.removeItem(key));
+                localStorage.removeItem('additional_users-edit');
+            }
+        }
     </script>
 
 

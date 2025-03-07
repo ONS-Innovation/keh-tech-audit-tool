@@ -105,15 +105,14 @@
                 var doc_link = document.getElementById('documentation-link').value;
                 var programme_name = document.getElementById('programme-name').value;
                 var programme_short_name = document.getElementById('programme-short-name').value;
-                var complete = (project_name !== '' && project_short_name !== '');
                 var data = {
-                    "project_name": project_name,
-                    "project_short_name": project_short_name,
-                    "project_description": project_description,
-                    "doc_link": doc_link,
-                    "complete": complete,
                     "programme_name": programme_name,
-                    "programme_short_name": programme_short_name
+                    "programme_short_name": programme_short_name,
+                    "name": project_name,
+                    "short_name": project_short_name,
+                    "project_description": project_description,
+                    "documentation_link": [doc_link],
+                    "complete": project_name.trim() !== ''
                 };
                 var name = 'project-data'
                 if (JSON.parse(localStorage.getItem('edit'))) {
@@ -128,9 +127,9 @@
                 }
                     var data = JSON.parse(localStorage.getItem(name));
                     if (data) {
-                        document.getElementById('project-name').value = data.project_name;
-                        document.getElementById('project-short-name').value = data.project_short_name;
-                        document.getElementById('documentation-link').value = data.doc_link;
+                        document.getElementById('project-name').value = data.name;
+                        document.getElementById('project-short-name').value = data.short_name;
+                        document.getElementById('documentation-link').value = data.documentation_link;
                         document.getElementById('project-description').value = data.project_description;
                         document.getElementById('programme-name').value = data.programme_name;
                         document.getElementById('programme-short-name').value = data.programme_short_name;

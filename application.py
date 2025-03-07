@@ -425,10 +425,10 @@ def survey():
     form_data = map_form_data(request.form)
 
     developed_company = ""
-    if form_data["developed"].get("developed") == "Outsourced":
-        developed_company = form_data["developed"]["outsource_company"]
-    elif form_data["developed"].get("developed") == "Partnership":
-        developed_company = form_data["developed"]["partnership_company"]
+    if form_data.get("developed")[0] == "Outsourced":
+        developed_company = form_data["developed"][1]
+    elif form_data.get("developed")[0] == "Partnership":
+        developed_company = form_data["developed"][1]
 
     try:
         previous_users = json.loads(request.form["project_users"]) # checks if projects users gets sent through
@@ -448,15 +448,15 @@ def survey():
         "user": new_users,
         "details": [
             {
-                "name": form_data["project"].get("project_name", ""),
-                "short_name": form_data["project"].get("project_short_name", ""),
-                "documentation_link": [form_data["project"].get("doc_link", "")],
+                "name": form_data["project"].get("name", ""),
+                "short_name": form_data["project"].get("short_name", ""),
+                "documentation_link": [form_data["project"].get("documentation_link", "")],
                 "project_description": form_data["project"].get("project_description", ""),
                 "programme_name": form_data["project"].get("programme_name", ""),
                 "programme_short_name": form_data["project"].get("programme_short_name", ""),
             }
         ],
-        "developed": [form_data.get("developed", ""), [developed_company]],
+        "developed": [form_data.get("developed", "")[0], developed_company],
         "source_control": form_data.get("source_control", {}).get("source_control", "") if isinstance(form_data.get("source_control"), dict) else form_data.get("source_control", ""),
         "architecture": {
             "hosting": form_data.get("hosting", ""),
@@ -480,21 +480,22 @@ def survey():
     }
 
     try:
-        if form_data.get("project_name"):
-            projects = requests.put(
-                f"{API_URL}/api/v1/projects/{form_data['project_name']}",
-                json=data,
-                headers=headers,
-            )
-            flash("Project updated successfully!")
-            return redirect(url_for("view_project", project_name=form_data["project_name"]))
-        else:
-            # This is a new project creation
-            projects = requests.post(
-                f"{API_URL}/api/v1/projects",
-                json=data,
-                headers=headers,
-            )
+        print(data)
+        # if form_data.get("project_name"):
+        #     projects = requests.put(
+        #         f"{API_URL}/api/v1/projects/{form_data['project_name']}",
+        #         json=data,
+        #         headers=headers,
+        #     )
+        #     flash("Project updated successfully!")
+        #     return redirect(url_for("view_project", project_name=form_data["project_name"]))
+        # else:
+        #     # This is a new project creation
+        #     projects = requests.post(
+        #         f"{API_URL}/api/v1/projects",
+        #         json=data,
+        #         headers=headers,
+        #     )
     except Exception as e:
         logger.error(f"Request was not blocked but returned: {e}")
         flash("An error occurred while saving the project")

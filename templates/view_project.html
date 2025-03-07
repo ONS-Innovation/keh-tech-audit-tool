@@ -115,6 +115,20 @@
                                   ]
                               },
                               {
+                                  "id": "stage-row",
+                                  "rowTitle": "Stage",
+                                  "rowItems": [
+                                      {
+                                          "id": "stage",
+                                          "valueList": [
+                                              {
+                                                  "text": ""
+                                              }
+                                          ],
+                                      }
+                                  ]
+                              },
+                              {
                                   "id": "source-control-row",
                                   "rowTitle": "Source Control",
                                   "rowItems": [
@@ -366,7 +380,8 @@
         if (projects.details[0].short_name) {
             projectDetails += `Short Name: <p style="font-weight:400">${projects.details[0].short_name}</p>`
         }
-        if (projects.details[0].documentation_link[0]) {
+        console.log(projects.details[0]);
+        if (projects.details[0].documentation_link[0] !== '') {
             projectDetails += `Documentation Link: <p style="font-weight:400">${projects.details[0].documentation_link[0]}</p>`
         }
         if (projects.details[0].project_description) {
@@ -393,9 +408,15 @@
                 `${projects.source_control[0].type}<br>` +
                 `${projects.source_control[0].links[0].description}: ${projects.source_control[0].links[0].url}`;
         } 
+
+        // Stage
+        document.getElementById('stage').querySelector('dd').querySelector('span').textContent = 
+            projects.stage;
+
         // Hosting
+        console.log(projects.architecture.hosting);
         document.getElementById('hosting').querySelector('dd').querySelector('span').textContent = 
-            `${projects.architecture.hosting.type[0]}${projects.architecture.hosting.details.length > 0 ? ' - ' + projects.architecture.hosting.details.join(', ') : ''}`;
+            `${projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : 'N/A'}`;
 
         // Database
         document.getElementById('database').querySelector('dd').querySelector('span').textContent = 

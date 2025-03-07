@@ -13,3 +13,4 @@ A project used to survey out what tools, languages and frameworks are being used
 
 ## Rules
 - Do not use a design system component unless it is an existing component located in the folder i.e. do not invent a new component name
+- Use the design system for building UI unless otherwise specified

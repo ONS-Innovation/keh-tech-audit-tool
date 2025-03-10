@@ -1,7 +1,6 @@
 {% extends "core.html" %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
-{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% block main %}
@@ -18,120 +17,107 @@
     }) }}
     {% endcall %}
     <br>
-        <h1>Hosting</h1>
-        {{ onsAccordion({
-        "id": "accordion-example",
-        "itemsList": [
-            {
-                "title": "More info",
-                "content": "<p>Please specify how your solution is hosted: on-premises (e.g as VMs on servers owned by ONS), in the cloud, or hybrid. If your solution is hosted in the cloud or as a hybrid setup, you will be prompted to enter the cloud service providers used (e.g., AWS, Azure, Google Cloud). </p>"
-            }
-        ]
-    }) }}
-        {{ onsLabel({
+    <h1>Hosting</h1>
+    {{ onsLabel({
         "id": 'hosting-label',
         "for": "hosting",
         "text": 'Where is the solution hosted?',
         "description": 'Select the type of hosting.'
     }) }}
-        {{ onsRadios({
-            "dontWrap": true,
-            "name": "role",
-            "radios": [
-                {
-                    "id": "On-premises",
-                    "label": {
-                        "text": "On-premises"
-                    },
-                    "value": "On-premises"
+    {{ onsRadios({
+        "dontWrap": true,
+        "name": "role",
+        "radios": [
+            {
+                "id": "On-premises",
+                "label": {
+                    "text": "On-premises",
+                    "description": "The solution is hosted on servers owned by ONS"
                 },
-                                {
-                    "id": "Cloud",
-                    "label": {
-                        "text": "Cloud"
-                    },
-                    "value": "Cloud"
+                "value": "On-premises"
+            },
+            {
+                "id": "Cloud",
+                "label": {
+                    "text": "Cloud",
+                    "description": "The solution is hosted on cloud service providers like AWS, Azure, or Google Cloud"
                 },
-                {
-                    "id": "Hybrid",
-                    "label": {
-                        "text": "Hybrid"
-                    },
-                    "value": "Hybrid"
-                }
-                
-            ]
-        }) }}
-        <br>
-            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-            <form action="{{ url_for('survey') }}" method="GET">
-                {{ onsButton({
-        "id": "save-values-button",
-        "text": "Save and continue",
-        "url": "#",
-        "attributes": {
-            "onclick": "storeHostingData();"
-        }
+                "value": "Cloud"
+            },
+            {
+                "id": "Hybrid",
+                "label": {
+                    "text": "Hybrid",
+                    "description": "The solution is hosted using a combination of on-premises and cloud services"
+                },
+                "value": "Hybrid"
+            }
+        ]
     }) }}
-            </form>
-            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-            <script>
-                loadHostingData();
-                document
-                    .getElementById("error-panel")
-                    .style
-                    .display = "none";
-                function storeHostingData() { // Store hosting data in local storage
-                    var hostingType = document.querySelector('input[name="role"]:checked').value;
-                    var name = 'hosting-data';
-                    if (JSON.parse(localStorage.getItem('edit'))) {
-                        name = 'hosting-data-edit';
-                    }
-                    var data = JSON.parse(localStorage.getItem(name)) || {};
-                    data.type = hostingType;
+    <br>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <form action="{{ url_for('survey') }}" method="GET">
+        {{ onsButton({
+            "id": "save-values-button",
+            "text": "Save and continue",
+            "url": "#",
+            "attributes": {
+                "onclick": "storeHostingData();"
+            }
+        }) }}
+    </form>
+    <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <script>
+        loadHostingData();
+        document.getElementById("error-panel").style.display = "none";
+        function storeHostingData() { // Store hosting data in local storage
+            var hostingType = document.querySelector('input[name="role"]:checked').value;
+            var name = 'hosting-data';
+            if (JSON.parse(localStorage.getItem('edit'))) {
+                name = 'hosting-data-edit';
+            }
+            var data = JSON.parse(localStorage.getItem(name)) || {};
+            data.type = hostingType;
 
-                    if (data.type === "On-premises") {
-                        data.others = [];
-                    }
+            if (data.type === "On-premises") {
+                data.others = [];
+            }
 
-                    localStorage.setItem(name, JSON.stringify(data));
+            localStorage.setItem(name, JSON.stringify(data));
 
-                    if (hostingType === "Hybrid" || hostingType === "Cloud") {
-                        window.location.href = "/survey/hosting?stage=2";
-                    } else {
-                        
-                        if (
-                            JSON.parse(localStorage.getItem("hosting-validate")) &&
-                            JSON.parse(localStorage.getItem(name)).type === "On-premises" && 
-                            localStorage.getItem("redirect_url")
-                        ) {
-                            window.location.href = localStorage.getItem("redirect_url");
-                        } else if (
-                            JSON.parse(localStorage.getItem("hosting-validate")) &&
-                            JSON.parse(localStorage.getItem(name)).type === "On-premises"
-                        ){
-                            window.location.href = "/validate_details";
-
-                        }
-                        else {
-                            window.location.href = "{{ url_for('database') }}";
-                        }
-                    }
+            if (hostingType === "Hybrid" || hostingType === "Cloud") {
+                window.location.href = "/survey/hosting?stage=2";
+            } else {
+                if (
+                    JSON.parse(localStorage.getItem("hosting-validate")) &&
+                    JSON.parse(localStorage.getItem(name)).type === "On-premises" && 
+                    localStorage.getItem("redirect_url")
+                ) {
+                    window.location.href = localStorage.getItem("redirect_url");
+                } else if (
+                    JSON.parse(localStorage.getItem("hosting-validate")) &&
+                    JSON.parse(localStorage.getItem(name)).type === "On-premises"
+                ){
+                    window.location.href = "/validate_details";
                 }
-                function loadHostingData() {
-                    var name = 'hosting-data';
-                    if (JSON.parse(localStorage.getItem('edit'))) {
-                        name = 'hosting-data-edit';
-                    }
-                    
-                        var data = JSON.parse(localStorage.getItem(name));
-                        if (data) {
-                            try {
-                                document.getElementById(data.type).checked = true;
-                            } catch {
-                                console.error("Error loading hosting data");
-                            }
-                        }
-                    }
-            </script>
-        {% endblock %}
+                else {
+                    window.location.href = "{{ url_for('database') }}";
+                }
+            }
+        }
+        function loadHostingData() {
+            var name = 'hosting-data';
+            if (JSON.parse(localStorage.getItem('edit'))) {
+                name = 'hosting-data-edit';
+            }
+            var data = JSON.parse(localStorage.getItem(name));
+            if (data) {
+                try {
+                    document.getElementById(data.type).checked = true;
+                } catch {
+                    console.error("Error loading hosting data");
+                }
+            }
+        }
+    </script>
+{% endblock %}

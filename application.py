@@ -346,7 +346,7 @@ def view_project(project_name):
         if user["email"] == user_email:
             edit = True
             break
-
+    print(projects)
     try:
         # message is only returned if there is an error. so if it is not None, there is an error
         if projects["message"]:
@@ -424,16 +424,22 @@ def survey():
     # Map form data
     form_data = map_form_data(request.form)
 
+    # If developed is not empty, or fallback
     developed_company = ""
-    if form_data.get("developed")[0] == "Outsourced":
-        developed_company = form_data["developed"][1]
-    elif form_data.get("developed")[0] == "Partnership":
-        developed_company = form_data["developed"][1]
-
+    if form_data.get("developed") != {}:
+        form_data_developed = form_data.get("developed", "")
+        if form_data_developed[0] == "Outsourced":
+            developed_company = form_data_developed[1]
+        elif form_data_developed[0] == "Partnership":
+            developed_company = form_data_developed[1]
+        developed_data = [form_data_developed[0], developed_company]
+    else:
+        developed_data = ["",[""]]
     try:
         previous_users = json.loads(request.form["project_users"]) # checks if projects users gets sent through
     except Exception:
         previous_users = []
+
     new_users = []
     for user in form_data["user"]:
         if "Technical Contact" in user["roles"] or "Delivery Manager" in user["roles"]:
@@ -456,7 +462,7 @@ def survey():
                 "programme_short_name": form_data["project"].get("programme_short_name", ""),
             }
         ],
-        "developed": [form_data.get("developed", "")[0], developed_company],
+        "developed":  developed_data,
         "source_control": form_data.get("source_control", {}).get("source_control", "") if isinstance(form_data.get("source_control"), dict) else form_data.get("source_control", ""),
         "architecture": {
             "hosting": form_data.get("hosting", ""),
@@ -480,22 +486,21 @@ def survey():
     }
 
     try:
-        print(data)
-        # if form_data.get("project_name"):
-        #     projects = requests.put(
-        #         f"{API_URL}/api/v1/projects/{form_data['project_name']}",
-        #         json=data,
-        #         headers=headers,
-        #     )
-        #     flash("Project updated successfully!")
-        #     return redirect(url_for("view_project", project_name=form_data["project_name"]))
-        # else:
-        #     # This is a new project creation
-        #     projects = requests.post(
-        #         f"{API_URL}/api/v1/projects",
-        #         json=data,
-        #         headers=headers,
-        #     )
+        if form_data.get("project_name"):
+            projects = requests.put(
+                f"{API_URL}/api/v1/projects/{form_data['project_name']}",
+                json=data,
+                headers=headers,
+            )
+            flash("Project updated successfully!")
+            return redirect(url_for("view_project", project_name=form_data["project_name"]))
+        else:
+            # This is a new project creation
+            projects = requests.post(
+                f"{API_URL}/api/v1/projects",
+                json=data,
+                headers=headers,
+            )
     except Exception as e:
         logger.error(f"Request was not blocked but returned: {e}")
         flash("An error occurred while saving the project")

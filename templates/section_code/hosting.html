@@ -4,6 +4,16 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% block main %}
+<style>
+
+    .ons-radios__items {
+        width: fit-content !important;
+    }
+    .ons-radios__item {
+        width: 100% !important;
+    }
+
+</style>
     {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',

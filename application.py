@@ -346,7 +346,6 @@ def view_project(project_name):
         if user["email"] == user_email:
             edit = True
             break
-    print(projects)
     try:
         # message is only returned if there is an error. so if it is not None, there is an error
         if projects["message"]:

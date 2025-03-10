@@ -358,14 +358,20 @@
     }
 
     function loadData() {
+        try {
         // Technical Contact
         document.getElementById('technical-contact').querySelector('dd').querySelector('span').textContent = 
-            `${projects.user[0].email} (${projects.user[0].grade})`;
-        console.log(document.getElementById('technical-contact'));
-
-        // Delivery Manager
-        document.getElementById('delivery-manager').querySelector('dd').querySelector('span').textContent = 
-            `${projects.user[1].email} (${projects.user[1].grade})`;
+                `${projects.user[0].email} (${projects.user[0].grade})`;
+        } catch (e) {
+            // No error
+        }
+        try {
+            // Delivery Manager
+            document.getElementById('delivery-manager').querySelector('dd').querySelector('span').textContent = 
+                `${projects.user[1].email} (${projects.user[1].grade})`;
+        } catch (e) {
+            // No error
+        }
 
         let projectDetails = '';
         if (projects.details[0].programme_name) {
@@ -380,9 +386,8 @@
         if (projects.details[0].short_name) {
             projectDetails += `Short Name: <p style="font-weight:400">${projects.details[0].short_name}</p>`
         }
-        console.log(projects.details[0]);
-        if (projects.details[0].documentation_link[0] !== '') {
-            projectDetails += `Documentation Link: <p style="font-weight:400">${projects.details[0].documentation_link[0]}</p>`
+        if (projects.details[0].documentation_link !== '') {
+            projectDetails += `Documentation Link: <p style="font-weight:400">${projects.details[0].documentation_link}</p>`
         }
         if (projects.details[0].project_description) {
             projectDetails += `Project Description: <p style="font-weight:400">${projects.details[0].project_description}</p>`
@@ -393,13 +398,15 @@
             projectDetails;
 
         // Developed
-        console.log(projects.developed);
         if (projects.developed[0] == 'In House') {
             document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
                 `${projects.developed[0]}`;
         } else if (projects.developed[0] != 'In House' && projects.developed[1][0] != '') {
+            document.getElementById('developed').querySelector('dd').querySelector('span').innerHTML = 
+                `Developed: <p style="font-weight:400">${projects.developed[0]}</p>Company:<p style="font-weight:400">${projects.developed[1]}</p>`;
+        } else {
             document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
-                `${projects.developed[0]} - ${projects.developed[1][0]}`;
+                'N/A';
         }
         
         // Source Control
@@ -407,14 +414,16 @@
             document.getElementById('source-control').querySelector('dd').querySelector('span').innerHTML = 
                 `${projects.source_control[0].type}<br>` +
                 `${projects.source_control[0].links[0].description}: ${projects.source_control[0].links[0].url}`;
-        } 
+        } else {
+            document.getElementById('source-control').querySelector('dd').querySelector('span').textContent = 
+                'N/A';
+        }
 
         // Stage
         document.getElementById('stage').querySelector('dd').querySelector('span').textContent = 
-            projects.stage;
+            projects.stage || 'N/A';
 
         // Hosting
-        console.log(projects.architecture.hosting);
         document.getElementById('hosting').querySelector('dd').querySelector('span').textContent = 
             `${projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : 'N/A'}`;
 
@@ -430,7 +439,7 @@
         const mainLangs = projects.architecture.languages.main.join(', ');
         const otherLangs = projects.architecture.languages.others.join(', ');
         document.getElementById('languages').querySelector('dd').querySelector('span').textContent = 
-            `${mainLangs}${otherLangs ? ', ' + otherLangs : ''}`;
+            `${mainLangs}${otherLangs ? ', ' + otherLangs : 'N/A'}`;
 
         // CI/CD
         document.getElementById('cicd').querySelector('dd').querySelector('span').textContent = 

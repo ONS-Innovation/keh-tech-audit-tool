@@ -693,6 +693,7 @@
                 
                 let result = '';
                 if (data.developed) {
+                    // Object format
                     result += 'Developed: <p style="font-weight:400">' + data.developed + '</p>';
                     
                     if (data.developed === "Partnership" && data.partnership_company) {
@@ -701,10 +702,20 @@
                         result += `Outsourced Company: <p style="font-weight:400">${data.outsource_company}</p>`;
                     }
                 } else if (Array.isArray(data) && data.length > 0) {
-                    // Handle old format
+                    // Array format - [development_type, company_name]
                     result += 'Developed: <p style="font-weight:400">' + data[0] + '</p>';
-                    if ((data[0] === "Partnership" || data[0] === "Outsourced") && data[1] && data[1][0]) {
-                        result += `${data[0]} Company: <p style="font-weight:400">${data[1][0]}</p>`;
+                    
+                    // Check for company name in the expected format
+                    if ((data[0] === "Partnership" || data[0] === "Outsourced") && data[1]) {
+                        // Handle both string and array formats for the company name
+                        let companyName = data[1];
+                        if (Array.isArray(data[1])) {
+                            companyName = data[1][0] || '';
+                        }
+                        
+                        if (companyName && companyName !== '') {
+                            result += `${data[0]} Company: <p style="font-weight:400">${companyName}</p>`;
+                        }
                     }
                 }
                 
@@ -722,9 +733,7 @@
                 const shortName = data.short_name || (data.details && data.details[0]?.short_name);
                 const programmeName = data.programme_name || '';
                 const programmeShortName = data.programme_short_name || '';
-                const docLink = Array.isArray(data.documentation_link) ? 
-                    data.documentation_link[0] : 
-                    (data.details && data.details[0]?.documentation_link[0]);
+                const docLink = data.documentation_link || '';
                 
                 if (programmeName) {
                     details += 'Programme Name: <p style="font-weight:400">' + programmeName + '</p>';
@@ -810,12 +819,43 @@
                     others: data.architecture.hosting.details || []
                 };
                 
+                // Process developed data
+                let developedData;
+                if (Array.isArray(data.developed) && data.developed.length > 0) {
+                    // Convert from API array format to object format for the form
+                    const developedType = data.developed[0] || '';
+                    let companyName = '';
+                    
+                    if (data.developed.length > 1) {
+                        if (Array.isArray(data.developed[1])) {
+                            companyName = data.developed[1][0] || '';
+                        } else {
+                            companyName = data.developed[1] || '';
+                        }
+                    }
+                    
+                    developedData = {
+                        developed: developedType,
+                        outsource_company: developedType === 'Outsourced' ? companyName : null,
+                        partnership_company: developedType === 'Partnership' ? companyName : null,
+                        complete: true
+                    };
+                } else {
+                    // Default object if no data
+                    developedData = {
+                        developed: '',
+                        outsource_company: null,
+                        partnership_company: null,
+                        complete: false
+                    };
+                }
+                
                 // Prepare normalized data
                 const normalizedData = {
                     contact_tech: data.user[0] || { contactEmail: '', role: '' },
                     contact_manager: data.user[1] || { contactEmail: '', role: '' },
                     project: data.details[0] || {},
-                    developed: data.developed,
+                    developed: developedData,
                     stage: { stage: data.stage },
                     source_control: sourceControl,
                     hosting: hosting,
@@ -869,11 +909,37 @@
                 // Extract users and add any additional users from previous edit
                 const additionalUsers = DataUtils.safeJsonParse(localStorage.getItem('additional_users-edit') || '[]');
                 
+                // Handle the developed data format
+                let developedData;
+                if (processedData.developed) {
+                    // Check if developed is already an array
+                    if (Array.isArray(processedData.developed)) {
+                        developedData = processedData.developed;
+                    } else if (processedData.developed.developed) {
+                        // It's in object format, convert to array
+                        const developedType = processedData.developed.developed;
+                        let companyName = '';
+                        
+                        if (developedType === 'Outsourced' && processedData.developed.outsource_company) {
+                            companyName = processedData.developed.outsource_company;
+                        } else if (developedType === 'Partnership' && processedData.developed.partnership_company) {
+                            companyName = processedData.developed.partnership_company;
+                        }
+                        
+                        developedData = [developedType, companyName];
+                    } else {
+                        // Fallback
+                        developedData = ["", ""];
+                    }
+                } else {
+                    developedData = ["", ""];
+                }
+                
                 // Construct the final data format
                 const finalData = {
                     user: processedData.user || [],
                     details: processedData.project || {},
-                    developed: processedData.developed || {},
+                    developed: developedData,
                     source_control: [{
                         type: processedData.source_control?.source_control || '',
                         links: processedData.source_control?.links || []
@@ -1076,10 +1142,9 @@
                 // If in edit mode, load original data from server
                 if (isEdit) {
                     try {
-                        let originalData = "{{ project }}";
-                        originalData = originalData.replaceAll("&#39;", '"');
-                        originalData = originalData.replace(/\[None\]/g, '["N/A"]');
-                        originalData = originalData.replace(/: None(?!\])/g, ': ""');
+                        let originalData = '{{ project | tojson | safe }}';
+                        
+                        // Parse the JSON directly - no complex transformations needed
                         originalData = JSON.parse(originalData);
                         
                         // Store the original data
@@ -1095,6 +1160,7 @@
                         }
                     } catch (e) {
                         console.error("Error processing original data:", e);
+                        console.error("Original data:", "{{ project }}");
                     }
                 }
                 

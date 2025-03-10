@@ -83,25 +83,22 @@
                 var developed = document.querySelector('input[name="developed"]:checked').value;
                 var outsource_company = document.getElementById('other-input-1').value;
                 var partnership_company = document.getElementById('other-input-2').value;
-                var complete = true;
-                var data = {
-                    "outsource_company": outsource_company,
-                    "partnership_company": partnership_company,
-                    "developed": developed,
-                    "complete": complete
-                };
+                
+                // Create data in array format that matches what application.py expects
+                var data = [];
+                
+                // First element is the type of development
+                data.push(developed);
+                
+                // Second element is the company name (when applicable)
                 if (developed === "In House") {
-                    data.partnership_company = null;
-                    data.outsource_company = null;
+                    data.push("");
                 } else if (developed === "Outsourced") {
-                    data.partnership_company = null;
-                    data.outsource_company = document.getElementById('other-input-1').value;
+                    data.push(outsource_company);
                 } else if (developed === "Partnership") {
-                    data.outsource_company = null;
-                    data.partnership_company = document.getElementById('other-input-2').value;
-                } else {
-                    data.complete = false;
+                    data.push(partnership_company);
                 }
+                
                 var name = 'developed-data';
                 if (JSON.parse(localStorage.getItem('edit'))) {
                     name = 'developed-data-edit';
@@ -120,30 +117,28 @@
                 if (JSON.parse(localStorage.getItem('edit'))){
                     name = 'developed-data-edit';
                 }
-                    data = JSON.parse(localStorage.getItem(name));
-                   
-                    if (data) {
-                        option = obj[data.developed]
-                        if (data.developed === "Outsourced") {
-                            document.getElementById('other-input-1').value = data.outsource_company;
-                        } else if (data.developed === "Partnership") {
-                            document.getElementById('other-input-2').value = data.partnership_company;
+                data = JSON.parse(localStorage.getItem(name));
+               
+                if (data) {
+                    // Check if data is in new array format or old object format
+                    if (Array.isArray(data)) {
+                        option = obj[data[0]];
+                        if (data[0] === "Outsourced") {
+                            document.getElementById('other-input-1').value = data[1] || "";
+                        } else if (data[0] === "Partnership") {
+                            document.getElementById('other-input-2').value = data[1] || "";
                         }
-                    document.getElementById(option).checked = true;
-                } else {
-                    data = JSON.parse(localStorage.getItem(name));
-                    if (data) {
-                        option = obj[data.developed]
+                        document.getElementById(option).checked = true;
+                    } else if (data.developed) {
+                        // Handle legacy object format
+                        option = obj[data.developed];
                         if (data.developed === "Outsourced") {
-                            document.getElementById('other-input-1').value = data.outsource_company;
+                            document.getElementById('other-input-1').value = data.outsource_company || "";
                         } else if (data.developed === "Partnership") {
-                            document.getElementById('other-input-2').value = data.partnership_company;
+                            document.getElementById('other-input-2').value = data.partnership_company || "";
                         }
-
-                    document.getElementById(option).checked = true;
-                        
-                }
-
+                        document.getElementById(option).checked = true;
+                    }
                 }
             }
             redirectToPrevious();

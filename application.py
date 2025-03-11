@@ -351,7 +351,6 @@ def view_project(project_name):
             flash(f"Project not found. Please try again. {projects['message']}")
             return redirect(url_for("dashboard"))
     except:
-        print(projects)
         return render_template("view_project.html", project=projects, edit=edit)
 
 @app.route("/project/<project_name>/edit", methods=["GET"])

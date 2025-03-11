@@ -1142,10 +1142,10 @@
                 // If in edit mode, load original data from server
                 if (isEdit) {
                     try {
-                        let originalData = '{{ project | tojson | safe }}';
+                        // Using tojson filter to convert Python data to valid JSON
+                        const originalDataStr = {{ project | tojson | safe }};
                         
-                        // Parse the JSON directly - no complex transformations needed
-                        originalData = JSON.parse(originalData);
+                        const originalData = originalDataStr;
                         
                         // Store the original data
                         localStorage.setItem("original_data", JSON.stringify(originalData));
@@ -1160,7 +1160,7 @@
                         }
                     } catch (e) {
                         console.error("Error processing original data:", e);
-                        console.error("Original data:", "{{ project }}");
+                        console.error("Original data:", `{{ project | safe }}`);
                     }
                 }
                 

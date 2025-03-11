@@ -352,6 +352,7 @@ def view_project(project_name):
             flash(f"Project not found. Please try again. {projects['message']}")
             return redirect(url_for("dashboard"))
     except:
+        print(projects)
         return render_template("view_project.html", project=projects, edit=edit)
 
 @app.route("/project/<project_name>/edit", methods=["GET"])
@@ -455,7 +456,7 @@ def survey():
             {
                 "name": form_data["project"].get("name", ""),
                 "short_name": form_data["project"].get("short_name", ""),
-                "documentation_link": [form_data["project"].get("documentation_link", "")],
+                "documentation_link": form_data["project"].get("documentation_link", ""),
                 "project_description": form_data["project"].get("project_description", ""),
                 "programme_name": form_data["project"].get("programme_name", ""),
                 "programme_short_name": form_data["project"].get("programme_short_name", ""),

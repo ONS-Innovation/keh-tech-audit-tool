@@ -3,19 +3,6 @@
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{% set project_details = 'Programme Name: <p style="font-weight:400">' + 
-    project.details[0].programme_name + '</p>' +
-    'Programme Short Name: <p style="font-weight:400">' +
-        project.details[0].programme_short_name + '</p>' +
-    'Project Name: <p style="font-weight:400">' +
-        project.details[0].name + '</p>' +
-    'Short Name: <p style="font-weight:400">' +
-        project.details[0].short_name + '</p>' +
-    'Documentation Link: <p style="font-weight:400">' +
-        project.details[0].documentation_link[0] + '</p>' +
-    'Project Description: <p style="font-weight:400">' +
-        project.details[0].project_description + '</p>' +
-    'Stage: <p style="font-weight:400">' + project.stage %}
 {% block main %}
 
 {% with messages = get_flashed_messages() %}
@@ -27,7 +14,6 @@
   </ul>
 {% endif %}
 {% endwith %}
-
   {{
     onsBreadcrumbs({
         "ariaLabel": 'Breadcrumbs',
@@ -401,9 +387,15 @@
         if (projects.developed[0] == 'In House') {
             document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
                 `${projects.developed[0]}`;
-        } else if (projects.developed[0] != 'In House' && projects.developed[1][0] != '') {
+        } else if (projects.developed[0] != 'In House' && projects.developed[1]) {
+            // Handle both string and array formats for company name
+            let companyName = projects.developed[1];
+            if (Array.isArray(projects.developed[1]) && projects.developed[1][0]) {
+                companyName = projects.developed[1][0];
+            }
+            
             document.getElementById('developed').querySelector('dd').querySelector('span').innerHTML = 
-                `Developed: <p style="font-weight:400">${projects.developed[0]}</p>Company:<p style="font-weight:400">${projects.developed[1]}</p>`;
+                `Developed: <p style="font-weight:400">${projects.developed[0]}</p>Company:<p style="font-weight:400">${companyName}</p>`;
         } else {
             document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
                 'N/A';

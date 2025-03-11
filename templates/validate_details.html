@@ -734,7 +734,8 @@
                 const programmeName = data.programme_name || '';
                 const programmeShortName = data.programme_short_name || '';
                 const docLink = data.documentation_link || '';
-                
+                const projectDescription = data.project_description || '';
+
                 if (programmeName) {
                     details += 'Programme Name: <p style="font-weight:400">' + programmeName + '</p>';
                 }
@@ -749,6 +750,9 @@
                 }
                 if (docLink) {
                     details += 'Documentation Link: <p style="font-weight:400">' + docLink + '</p>';
+                }
+                if (projectDescription) {
+                    details += 'Project Description: <p style="font-weight:400">' + projectDescription + '</p>';
                 }
                 
                 return details;
@@ -909,21 +913,50 @@
                 // Extract users and add any additional users from previous edit
                 const additionalUsers = DataUtils.safeJsonParse(localStorage.getItem('additional_users-edit') || '[]');
                 
+                // Deep clone the data to avoid modifying the original
+                const cleanedData = JSON.parse(JSON.stringify(processedData));
+                
+                // Clean up any 'complete' property from all objects
+                const cleanObject = (obj) => {
+                    if (!obj || typeof obj !== 'object') return;
+                    
+                    // Remove the 'complete' property if present
+                    if ('complete' in obj) {
+                        delete obj.complete;
+                    }
+                    
+                    // Recursively clean all nested objects
+                    Object.values(obj).forEach(value => {
+                        if (value && typeof value === 'object' && !Array.isArray(value)) {
+                            cleanObject(value);
+                        } else if (Array.isArray(value)) {
+                            value.forEach(item => {
+                                if (item && typeof item === 'object') {
+                                    cleanObject(item);
+                                }
+                            });
+                        }
+                    });
+                };
+                
+                // Clean all objects in processedData
+                cleanObject(cleanedData);
+                
                 // Handle the developed data format
                 let developedData;
-                if (processedData.developed) {
+                if (cleanedData.developed) {
                     // Check if developed is already an array
-                    if (Array.isArray(processedData.developed)) {
-                        developedData = processedData.developed;
-                    } else if (processedData.developed.developed) {
+                    if (Array.isArray(cleanedData.developed)) {
+                        developedData = cleanedData.developed;
+                    } else if (cleanedData.developed.developed) {
                         // It's in object format, convert to array
-                        const developedType = processedData.developed.developed;
+                        const developedType = cleanedData.developed.developed;
                         let companyName = '';
                         
-                        if (developedType === 'Outsourced' && processedData.developed.outsource_company) {
-                            companyName = processedData.developed.outsource_company;
-                        } else if (developedType === 'Partnership' && processedData.developed.partnership_company) {
-                            companyName = processedData.developed.partnership_company;
+                        if (developedType === 'Outsourced' && cleanedData.developed.outsource_company) {
+                            companyName = cleanedData.developed.outsource_company;
+                        } else if (developedType === 'Partnership' && cleanedData.developed.partnership_company) {
+                            companyName = cleanedData.developed.partnership_company;
                         }
                         
                         developedData = [developedType, companyName];
@@ -937,36 +970,36 @@
                 
                 // Construct the final data format
                 const finalData = {
-                    user: processedData.user || [],
-                    details: processedData.project || {},
+                    user: cleanedData.user || [],
+                    details: cleanedData.project || {},
                     developed: developedData,
                     source_control: [{
-                        type: processedData.source_control?.source_control || '',
-                        links: processedData.source_control?.links || []
+                        type: cleanedData.source_control?.source_control || '',
+                        links: cleanedData.source_control?.links || []
                     }],
                     architecture: {
-                        frameworks: processedData.frameworks || { main: [], others: [] },
-                        infrastructure: processedData.infrastructure || { main: [], others: [] },
-                        integrations: processedData.integrations || { main: [], others: [] },
-                        languages: processedData.languages || { main: [], others: [] },
+                        frameworks: cleanedData.frameworks || { main: [], others: [] },
+                        infrastructure: cleanedData.infrastructure || { main: [], others: [] },
+                        integrations: cleanedData.integrations || { main: [], others: [] },
+                        languages: cleanedData.languages || { main: [], others: [] },
                         hosting: {
-                            type: Array.isArray(processedData.hosting?.type) ? 
-                                processedData.hosting.type : 
-                                [processedData.hosting?.type || ''],
-                            details: processedData.hosting?.others || []
+                            type: Array.isArray(cleanedData.hosting?.type) ? 
+                                cleanedData.hosting.type : 
+                                [cleanedData.hosting?.type || ''],
+                            details: cleanedData.hosting?.others || []
                         },
-                        database: processedData.database || { main: [], others: [] },
+                        database: cleanedData.database || { main: [], others: [] },
                     },
-                    stage: processedData.stage?.stage || '',
+                    stage: cleanedData.stage?.stage || '',
                     supporting_tools: {
-                        code_editors: processedData.code_editors || { main: [], others: [] },
-                        user_interface: processedData.user_interface || { main: [], others: [] },
-                        diagrams: processedData.diagrams || { main: [], others: [] },
-                        project_tracking: processedData.project_tracking?.project_tracking || '',
-                        documentation: processedData.documentation || { main: [], others: [] },
-                        communication: processedData.communication || { main: [], others: [] },
-                        collaboration: processedData.collaboration || { main: [], others: [] },
-                        incident_management: processedData.incident_management?.incident_management || ''
+                        code_editors: cleanedData.code_editors || { main: [], others: [] },
+                        user_interface: cleanedData.user_interface || { main: [], others: [] },
+                        diagrams: cleanedData.diagrams || { main: [], others: [] },
+                        project_tracking: cleanedData.project_tracking?.project_tracking || '',
+                        documentation: cleanedData.documentation || { main: [], others: [] },
+                        communication: cleanedData.communication || { main: [], others: [] },
+                        collaboration: cleanedData.collaboration || { main: [], others: [] },
+                        incident_management: cleanedData.incident_management?.incident_management || ''
                     }
                 };
                 
@@ -974,9 +1007,9 @@
                 if (JSON.parse(localStorage.getItem('edit'))) {
                     finalData.project_name = "{{ project_name }}";
                     if (additionalUsers.length > 0) {
-                        finalData.project_users = [...processedData.user, ...additionalUsers];
+                        finalData.project_users = [...cleanedData.user, ...additionalUsers];
                     } else {
-                        finalData.project_users = processedData.user;
+                        finalData.project_users = cleanedData.user;
                     }
                 }
                 
@@ -1002,7 +1035,8 @@
                         short_name: data.details.short_name,
                         programme_name: data.details.programme_name,
                         programme_short_name: data.details.programme_short_name,
-                        documentation_link: data.details.documentation_link
+                        documentation_link: data.details.documentation_link,
+                        project_description: data.details.project_description
                     })),
                     developed_details: DataProcessors.processDeveloped(JSON.stringify(data.developed)),
                     source_control_details: data.source_control[0]?.type ? 

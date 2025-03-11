@@ -3,6 +3,7 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
 <style>
 
@@ -28,6 +29,15 @@
     {% endcall %}
     <br>
     <h1>Hosting</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please specify how your solution is hosted: on-premises (e.g as VMs on servers owned by ONS), in the cloud, or hybrid. If your solution is hosted in the cloud or as a hybrid setup, you will be prompted to enter the cloud service providers used (e.g., AWS, Azure, Google Cloud). </p>"
+            }
+        ]
+    }) }}
     {{ onsLabel({
         "id": 'hosting-label',
         "for": "hosting",
@@ -42,7 +52,7 @@
                 "id": "On-premises",
                 "label": {
                     "text": "On-premises",
-                    "description": "The solution is hosted on servers owned by ONS"
+                    "description": "Hosted on servers owned by ONS"
                 },
                 "value": "On-premises"
             },
@@ -50,7 +60,7 @@
                 "id": "Cloud",
                 "label": {
                     "text": "Cloud",
-                    "description": "The solution is hosted on cloud service providers like AWS, Azure, or Google Cloud"
+                    "description": "Hosted on cloud service providers like AWS, Azure, or Google Cloud"
                 },
                 "value": "Cloud"
             },
@@ -58,7 +68,7 @@
                 "id": "Hybrid",
                 "label": {
                     "text": "Hybrid",
-                    "description": "The solution is hosted using a combination of on-premises and cloud services"
+                    "description": "Hosted using a combination of on-premises and cloud services"
                 },
                 "value": "Hybrid"
             }

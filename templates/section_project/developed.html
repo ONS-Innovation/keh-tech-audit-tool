@@ -3,8 +3,18 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
     <h1>Developed</h1>
+    {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Enter details about whether the project was developed in-house, outsourced or in partnership with another company.</p>"
+            }
+        ]
+    }) }}
     <form action="{{ url_for('survey') }}" method="GET">
         {{ onsLabel({
             "id": 'developed-label',
@@ -24,7 +34,7 @@
                     "id": "in-house",
                     "label": {
                         "text": "In House",
-                        "description": "The software was developed internally by your own team"
+                        "description": "Developed internally by your own team"
                     },
                     "value": "In House"
                 },
@@ -32,7 +42,7 @@
                     "id": "outsourced",
                     "label": {
                         "text": "Outsourced",
-                        "description": "The software was developed by an external company"
+                        "description": "Developed by an external company"
                     },
                     "value": "Outsourced",
                     "other": {
@@ -47,7 +57,7 @@
                     "id": "partnership",
                     "label": {
                         "text": "Partnership",
-                        "description": "The software was developed in collaboration with another company"
+                        "description": "Developed in collaboration with another company"
                     },
                     "value": "Partnership",
                     "other": {

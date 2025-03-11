@@ -448,13 +448,22 @@ def survey():
         if user not in new_users: # append the rest of the users if not found in new_users
             new_users.append(user)
 
+    documentation_link = form_data["project"].get("documentation_link", "")
+    if isinstance(documentation_link, str):
+        try:
+            # Try to parse as JSON string that might contain a list
+            documentation_link = json.loads(documentation_link)
+        except json.JSONDecodeError:
+            # If it's a plain string, wrap it in a list
+            documentation_link = [documentation_link]
+    
     data = {
         "user": new_users,
         "details": [
             {
                 "name": form_data["project"].get("name", ""),
                 "short_name": form_data["project"].get("short_name", ""),
-                "documentation_link": form_data["project"].get("documentation_link", ""),
+                "documentation_link": documentation_link,
                 "project_description": form_data["project"].get("project_description", ""),
                 "programme_name": form_data["project"].get("programme_name", ""),
                 "programme_short_name": form_data["project"].get("programme_short_name", ""),

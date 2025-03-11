@@ -405,7 +405,7 @@
         if (projects.source_control[0].type) {
             document.getElementById('source-control').querySelector('dd').querySelector('span').innerHTML = 
                 `${projects.source_control[0].type}<br>` +
-                `${projects.source_control[0].links[0].description}: ${projects.source_control[0].links[0].url}`;
+                `${projects.source_control[0].links.length > 0 ? `${projects.source_control[0].links[0].description}: ${projects.source_control[0].links[0].url}` : ''}`;
         } else {
             document.getElementById('source-control').querySelector('dd').querySelector('span').textContent = 
                 'N/A';

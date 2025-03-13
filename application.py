@@ -1,10 +1,14 @@
 import json
 import logging
 import os
-import boto3
 import re
+from enum import Enum
+from http import HTTPStatus
+
+import boto3
 import requests
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv
 from flask import (
     Flask,
     abort,
@@ -16,10 +20,6 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
-from dotenv import load_dotenv
-
-from enum import Enum
-from http import HTTPStatus
 
 load_dotenv()
 # Basic logging information
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 # AWS S3 bucket settings
 api_bucket_name = os.getenv("API_BUCKET_NAME")
-region_name = 'eu-west-2'
+region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
 
 logging.basicConfig(level=logging.WARNING)
@@ -39,6 +39,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
+
+
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data():
     try:
@@ -51,6 +53,7 @@ def read_auto_complete_data():
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
+
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):
     secret_name = os.getenv(env)
@@ -58,36 +61,32 @@ def get_secret(env):
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-    
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+
     try:
-        secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
+        secret_value_response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
-    secret = secret_value_response.get('SecretString')
+    secret = secret_value_response.get("SecretString")
 
     return secret
+
 
 # SETTING OF API URL: Change if moving to production
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
 if os.getenv("LOCALHOST", "false").lower() == "true":
-    REDIRECT_URI = "http://localhost:8000" # USED DURING DEVELOPMENT
+    REDIRECT_URI = "http://localhost:8000"  # USED DURING DEVELOPMENT
     API_URL = "http://localhost:5000"
 else:
-    REDIRECT_URI = ui_secret['REDIRECT_URI'] # USED DURING PRODUCTION
-    API_URL = ui_secret['API_URL']
+    REDIRECT_URI = ui_secret["REDIRECT_URI"]  # USED DURING PRODUCTION
+    API_URL = ui_secret["API_URL"]
 
 # Standard flask initialisation
 app = Flask(__name__)
-app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))['APP_SECRET_KEY']
+app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))["APP_SECRET_KEY"]
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
@@ -155,12 +154,14 @@ supportingNavItems = [
     {"text": "Summary", "url": "/survey/supporting_tools_summary"},
 ]
 
+
 def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
     except KeyError:
         return redirect(url_for("home"))
     return headers
+
 
 @app.context_processor
 def inject_header():
@@ -222,7 +223,13 @@ def home():
             return redirect(url_for("home"))
 
     CLIENT_ID = AWS_COGNITO_CLIENT_ID
-    return render_template("index.html", items=items_none, CLIENT_ID=CLIENT_ID, REDIRECT_URI=REDIRECT_URI, AWS_ENV=AWS_ENV)
+    return render_template(
+        "index.html",
+        items=items_none,
+        CLIENT_ID=CLIENT_ID,
+        REDIRECT_URI=REDIRECT_URI,
+        AWS_ENV=AWS_ENV,
+    )
 
 
 # Basic sign out
@@ -251,9 +258,7 @@ def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
     AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
-    token_url = (
-        f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
-    )
+    token_url = f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
     payload = {
         "grant_type": "authorization_code",
         "code": f"{code}",
@@ -313,16 +318,17 @@ def dashboard():
         return redirect(url_for("home"))
 
 
-
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
     # Sanitize project name to prevent path traversal and injection attacks
-    if not project_name or not re.match(r'^[a-zA-Z0-9_ -]+$', project_name):
-        flash("Invalid project name. Project names can only contain letters, numbers, hyphens and underscores.")
+    if not project_name or not re.match(r"^[a-zA-Z0-9_ -]+$", project_name):
+        flash(
+            "Invalid project name. Project names can only contain letters, numbers, hyphens and underscores."
+        )
         return redirect(url_for("dashboard"))
 
     headers = get_id_token()
-    
+
     user_email = session.get("email", "No email found")
 
     projects = requests.get(
@@ -333,14 +339,14 @@ def view_project(project_name):
     if projects.status_code != HTTPStatus.OK:
         flash("Project does not exist")
         return redirect(url_for("dashboard"))
-    
+
     try:
         projects = projects.json()
     except Exception as e:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
 
-    edit = False # Boolean to check if the user can edit the project
+    edit = False  # Boolean to check if the user can edit the project
     for user in projects["user"]:
         if user["email"] == user_email:
             edit = True
@@ -353,13 +359,11 @@ def view_project(project_name):
     except:
         return render_template("view_project.html", project=projects, edit=edit)
 
+
 @app.route("/project/<project_name>/edit", methods=["GET"])
 def edit_project(project_name):
     headers = get_id_token()
-    project = requests.get(
-        f"{API_URL}/api/v1/projects/{project_name}",
-        headers=headers
-    )
+    project = requests.get(f"{API_URL}/api/v1/projects/{project_name}", headers=headers)
 
     project = project.json()
 
@@ -368,11 +372,14 @@ def edit_project(project_name):
 
     if user_email not in users:
         flash("You do not have permission to edit this project.")
-        return redirect(url_for('dashboard'))
+        return redirect(url_for("dashboard"))
 
     edit = True
 
-    return render_template("validate_details.html", project=project, edit=edit, project_name=project_name)
+    return render_template(
+        "validate_details.html", project=project, edit=edit, project_name=project_name
+    )
+
 
 # Improved readibility of the form data
 def map_form_data(form):
@@ -410,7 +417,7 @@ def map_form_data(form):
 def survey():
     if request.method == "GET":
         return render_template("survey.html")
-    
+
     try:
         headers = {
             "Authorization": f"{session['id_token']}",
@@ -432,20 +439,24 @@ def survey():
             developed_company = form_data_developed[1]
         developed_data = [form_data_developed[0], developed_company]
     else:
-        developed_data = ["",[""]]
+        developed_data = ["", [""]]
     try:
-        previous_users = json.loads(request.form["project_users"]) # checks if projects users gets sent through
+        previous_users = json.loads(
+            request.form["project_users"]
+        )  # checks if projects users gets sent through
     except Exception:
         previous_users = []
 
     new_users = []
     for user in form_data["user"]:
         if "Technical Contact" in user["roles"] or "Delivery Manager" in user["roles"]:
-            new_users.append(user) # append the technical contact and delivery manager
+            new_users.append(user)  # append the technical contact and delivery manager
     for user in previous_users:
         if "Technical Contact" in user["roles"] and "Delivery Manager" in user["roles"]:
             break
-        if user not in new_users: # append the rest of the users if not found in new_users
+        if (
+            user not in new_users
+        ):  # append the rest of the users if not found in new_users
             new_users.append(user)
 
     documentation_link = form_data["project"].get("documentation_link", "")
@@ -456,7 +467,7 @@ def survey():
         except json.JSONDecodeError:
             # If it's a plain string, wrap it in a list
             documentation_link = [documentation_link]
-    
+
     data = {
         "user": new_users,
         "details": [
@@ -464,13 +475,21 @@ def survey():
                 "name": form_data["project"].get("name", ""),
                 "short_name": form_data["project"].get("short_name", ""),
                 "documentation_link": documentation_link,
-                "project_description": form_data["project"].get("project_description", ""),
+                "project_description": form_data["project"].get(
+                    "project_description", ""
+                ),
                 "programme_name": form_data["project"].get("programme_name", ""),
-                "programme_short_name": form_data["project"].get("programme_short_name", ""),
+                "programme_short_name": form_data["project"].get(
+                    "programme_short_name", ""
+                ),
             }
         ],
-        "developed":  developed_data,
-        "source_control": form_data.get("source_control", {}).get("source_control", "") if isinstance(form_data.get("source_control"), dict) else form_data.get("source_control", ""),
+        "developed": developed_data,
+        "source_control": (
+            form_data.get("source_control", {}).get("source_control", "")
+            if isinstance(form_data.get("source_control"), dict)
+            else form_data.get("source_control", "")
+        ),
         "architecture": {
             "hosting": form_data.get("hosting", ""),
             "database": form_data.get("database", ""),
@@ -500,7 +519,9 @@ def survey():
                 headers=headers,
             )
             flash("Project updated successfully!")
-            return redirect(url_for("view_project", project_name=form_data["project_name"]))
+            return redirect(
+                url_for("view_project", project_name=form_data["project_name"])
+            )
         else:
             # This is a new project creation
             projects = requests.post(
@@ -585,6 +606,7 @@ class Stage(Enum):
     INITIAL = "1"
     SELECT = "2"
 
+
 @app.route("/survey/source_control", methods=["GET"])
 def source_control():
     stage = request.args.get("stage")
@@ -630,41 +652,51 @@ def integrations():
 def infrastructure():
     return render_template("/section_technology/infrastructure.html")
 
+
 # ------------------------
 # SUPPORTING TOOLS SECTION RENDERING
 # ------------------------
+
 
 @app.route("/survey/code_editors", methods=["GET"])
 def code_editors():
     return render_template("/section_supporting_tools/code_editors.html")
 
+
 @app.route("/survey/user_interface", methods=["GET"])
 def user_interface():
     return render_template("/section_supporting_tools/user_interface.html")
+
 
 @app.route("/survey/diagrams", methods=["GET"])
 def diagramming_tools():
     return render_template("/section_supporting_tools/diagrams.html")
 
+
 @app.route("/survey/project_tracking", methods=["GET"])
 def project_tracking():
     return render_template("/section_supporting_tools/project_tracking.html")
+
 
 @app.route("/survey/documentation", methods=["GET"])
 def documentation():
     return render_template("/section_supporting_tools/documentation.html")
 
+
 @app.route("/survey/communication", methods=["GET"])
 def communication():
     return render_template("/section_supporting_tools/communication.html")
+
 
 @app.route("/survey/collaboration", methods=["GET"])
 def collaboration():
     return render_template("/section_supporting_tools/collaboration.html")
 
+
 @app.route("/survey/incident_management", methods=["GET"])
 def incident_management():
     return render_template("/section_supporting_tools/incident_management.html")
+
 
 # ------------------------
 # SUMMARY SECTION RENDERING
@@ -684,6 +716,7 @@ def architecture_summary():
 @app.route("/survey/tech_summary")
 def tech_summary():
     return render_template("chapter_summaries/tech_summary.html")
+
 
 @app.route("/survey/supporting_tools_summary")
 def supporting_tools_summary():

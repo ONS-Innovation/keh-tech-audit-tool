@@ -1,19 +1,18 @@
-import unittest
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from test_utils import TestUtil
-import requests
 import os
 import time
+import unittest
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from test_utils import TestUtil
+
 
 class TestNavigation(unittest.TestCase, TestUtil):
 
     def setUp(self):
         """Set up testing"""
-        if os.getenv("CLIENT").lower() == 'chrome':
+        if os.getenv("CLIENT").lower() == "chrome":
             self.driver = webdriver.Chrome()
         else:
             self.driver = webdriver.Firefox()
@@ -22,16 +21,15 @@ class TestNavigation(unittest.TestCase, TestUtil):
         self.password = os.getenv("TEST_PASSWORD")
         self.wait = WebDriverWait(self.driver, 5)
         self.driver.refresh()
-    
-    def test_dashboard(self):
 
+    def test_dashboard(self):
         """Test if dashboard contents are correct"""
         driver = self.driver
         self.login(driver)
         assert driver.title == "Tech Radar Data Collection"
 
         time.sleep(1)
-    
+
     def test_project_nav(self):
         """Test if project navigation is correct"""
         driver = self.driver
@@ -53,6 +51,7 @@ class TestNavigation(unittest.TestCase, TestUtil):
 
     def tearDown(self):
         self.driver.close()
+
 
 if __name__ == "__main__":
     unittest.main()

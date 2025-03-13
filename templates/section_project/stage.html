@@ -3,8 +3,25 @@
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
     <h1>Project Stage</h1>
+    {{ onsAccordion({
+        "id": "stage-accordion",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<b>Development</b>
+                            <p>The software is being designed, coded, and tested before release.</p>
+
+                            <b>Active Support</b>
+                            <p>The software is released and receives regular updates, bug fixes, and feature enhancements.</p>
+
+                            <b>Unsupported</b>
+                            <p>The software no longer receives updates, fixes, or official assistance.</p>"
+            }
+        ]
+    }) }}
     <form action="{{ url_for('survey') }}" method="GET">
         {{ onsLabel({
             "id": 'developed-label',

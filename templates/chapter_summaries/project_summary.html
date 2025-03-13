@@ -214,7 +214,7 @@
                             }
                             try {
                                 let stageDetailsJSON = JSON.parse(stageData).stage;
-                                document.getElementById('stage_details').innerHTML = stageDetailsJSON;
+                                document.getElementById('stage_details').innerHTML = escapeHtml(stageDetailsJSON);
                                 document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
                             } catch (e) { 
                                 console.log(e);

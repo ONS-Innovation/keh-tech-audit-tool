@@ -320,7 +320,7 @@ def dashboard():
 
 @app.route("/project/<project_name>", methods=["GET"])
 def view_project(project_name):
-    # Sanitize project name to prevent path traversal and injection attacks
+    # Sanitise project name to prevent attacks
     if not project_name or not re.match(r"^[a-zA-Z0-9_ -]+$", project_name):
         flash(
             "Invalid project name. Project names can only contain letters, numbers, hyphens and underscores."
@@ -363,6 +363,12 @@ def view_project(project_name):
 @app.route("/project/<project_name>/edit", methods=["GET"])
 def edit_project(project_name):
     headers = get_id_token()
+    # Sanitise project name to prevent attacks
+    if not project_name or not re.match(r"^[a-zA-Z0-9_ -]+$", project_name):
+        flash(
+            "Invalid project name. Project names can only contain letters, numbers, hyphens and underscores."
+        )
+        return redirect(url_for("dashboard"))
     project = requests.get(f"{API_URL}/api/v1/projects/{project_name}", headers=headers)
 
     project = project.json()

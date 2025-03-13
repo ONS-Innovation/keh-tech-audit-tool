@@ -95,48 +95,31 @@
                         var hostingJSON = JSON.parse(hostingData);
 
                         try {
-                            if (hostingJSON.type === 'Hybrid' || hostingJSON.type === 'Cloud') {
-                                if (hostingJSON.others.length === 0) {
-                                    // No error
-                                }
-                            }
-                            if (sourceControlData === null || JSON.parse(databaseData).length === 0 || hostingJSON.type === null) {
-                                // No error
-                            }
-                        } catch (e) {
-                            // No error
-                        }
-                        try {
                             var sourceControlDataJSON = JSON.parse(sourceControlData);
                             var sourceType = sourceControlDataJSON.source_control;
                             var source_control_links_label = sourceControlDataJSON.links && sourceControlDataJSON.links.length > 0 ? '': 'No links added to project.';
                             var source_control = `${sourceType}<br>${source_control_links_label}${sourceControlDataJSON.links.map(link => `${link.description}: ${link.url}`).join(', ')}`;
                             document.getElementById('source_control_details').innerHTML = source_control;
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
 
                         try {
                             var databaseDataJSON = JSON.parse(databaseData);
                             if (databaseDataJSON.others.length === 0) {
-                                // No error
+                                console.log('No database data');
                             }
                             var database_details = `${databaseDataJSON.others.map(item => `${item}`).join(', ')}`;
                             document.getElementById('database_details').innerHTML = database_details;
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
 
                         try {
                             var hosting_details = `${hostingJSON.type}<br>${hostingJSON.others.map(item => `${item}`).join(', ')}`
                             document.getElementById('hosting_details').innerHTML = hosting_details;
                         } catch (e) {
-                            // No error
-                        }
-                        
-                        if (errorList.length > 0) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
+                            console.log(e);
                         }
                     }
                     load_data();

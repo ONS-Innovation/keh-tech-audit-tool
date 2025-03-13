@@ -165,7 +165,8 @@
                                 }
                                 document.getElementById('user_details').innerHTML = user_details;
                                 document.getElementById('user').value = JSON.stringify(techContactDataJSON);
-                            } catch (e) { // No error
+                            } catch (e) { 
+                                console.log(e);
                             }
                             try {
                                 var projectDataJSON = JSON.parse(projectData);
@@ -208,13 +209,15 @@
                                 }
                                 document.getElementById('project_details').innerHTML = project_details;
                                 document.getElementById('project').value = JSON.stringify(projectDataJSON);
-                            } catch (e) { // No error
+                            } catch (e) { 
+                                console.log(e);
                             }
                             try {
                                 let stageDetailsJSON = JSON.parse(stageData).stage;
                                 document.getElementById('stage_details').innerHTML = stageDetailsJSON;
                                 document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
-                            } catch (e) { // No error
+                            } catch (e) { 
+                                console.log(e);
                             }
                             try {
                                 var developedDataJSON = JSON.parse(developedData)
@@ -228,7 +231,8 @@
                                 }
                                 document.getElementById('developed_details').innerHTML = developed_details;
                                 document.getElementById('developed').value = JSON.stringify(developedDataJSON.developed);
-                            } catch (e) { // No error
+                            } catch (e) { 
+                                console.log(e);
                             }
                             if (errorList.length > 0) {
                                 errorPanel.classList.remove('ons-u-hidden');

@@ -121,10 +121,10 @@
                                 JSON.parse(infrastructureData)['others'].length === 0 ||
                                 JSON.parse(integrationsData)['others'].length === 0
                             ) {
-                                // No error
+                                console.log('Nothing entered.');
                             }
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
 
                         var finalData = {
@@ -143,48 +143,44 @@
                                 languages_details += `<br>Other: ${languagesDataJSON.others.map(item => `${item}`).join(', ')}`;
                             }
                             if (languagesDataJSON.main.length === 0 && languagesDataJSON.others.length === 0) {
-                                // No error
+                                console.log('No languages data');
                             }
                             document.getElementById('languages_details').innerHTML = languages_details;
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
 
                         try {
                             var frameworksDataJSON = JSON.parse(frameworksData);
                             if (frameworksDataJSON.others.length === 0) {
-                                // No error
+                                console.log('No frameworks data');
                             }
                             var frameworks_details = frameworksDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('framework_details').innerHTML = frameworks_details;
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
 
                         try {
                             var integrationsDataJSON = JSON.parse(integrationsData);
                             if (integrationsDataJSON.others.length === 0) {
-                                // No error
+                                console.log('No integrations data');
                             }
                             var integrations_details = integrationsDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('integration_details').innerHTML = integrations_details;
                         } catch (e) {
-                            // No error
+                            console.log(e);
                         }
                         
                         try {
                             var infrastructureDataJSON = JSON.parse(infrastructureData);
                             if (infrastructureDataJSON.others.length === 0) {
-                                // No error
+                                console.log('No infrastructure data');
                             }
                             var infrastructure_details = infrastructureDataJSON.others.map(item => `${item}`).join(', ');
                             document.getElementById('infrastructure_details').innerHTML = infrastructure_details;
                         } catch (e) {
-                            // No error
-                        }
-
-                        if (errorList.length > 0) {
-                            // No error
+                            console.log(e);
                         }
                     }
 

@@ -109,135 +109,17 @@
                 }
             ]
         }) }}
-        <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
     <input id="user" type="hidden" name="user">
-        <input id="project" type="hidden" name="project">
-            <input id="developed" type="hidden" name="developed">
-                <input id="stage" type="hidden" name="stage">
-                    {{ onsButton({
-            "text": 'Finish section',
-            "id": "submit-button",
-            "url": url_for('survey'),
-            "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "check",
-            "iconPosition": "after"
-        }) }}
-            <script>
-                function load_data() {
-                    var errorPanel = document.getElementById('error-panel');
-                    var techContactData = localStorage.getItem('contact_tech-data');
-                    var managerData = localStorage.getItem('contact_manager-data');
-                    var projectData = localStorage.getItem('project-data');
-                    var developedData = localStorage.getItem('developed-data');
-                    var stageData = localStorage.getItem('stage-data');
-                    localStorage.setItem('validate', false);
-                    var errorList = [];
-                    
-                    try {
-                        if (managerData === null) {
-                            errorPanel.classList.remove('ons-u-hidden');
-                            errorList.push('Delivery contact data');
-                            document
-                                .getElementById('submit-button')
-                                .style
-                                .display = 'none';
-                        }
-                    } catch (e) {
-                        errorPanel.classList.remove('ons-u-hidden');
-                        document
-                            .getElementById('submit-button')
-                            .style
-                            .display = 'none';
-                    }
-
-                    try {
-                        var techContactDataJSON = JSON.parse(techContactData);
-                        var managerContactDataJSON = JSON.parse(managerData);
-                        var user_details = `<p>Technical Contact: ${
-                            escapeHtml(techContactDataJSON.contactEmail)
-                        } (${
-                            escapeHtml(techContactDataJSON.role)
-                        })</p>`;
-                        if (managerContactDataJSON && managerContactDataJSON.contactEmail) {
-                            user_details += `<p>Delivery Manager Contact: ${
-                                escapeHtml(managerContactDataJSON.contactEmail)
-                            } (${
-                                escapeHtml(managerContactDataJSON.role)
-                            })</p>`;
-                        }
-                        document.getElementById('user_details').innerHTML = user_details;
-                        document.getElementById('user').value = JSON.stringify(techContactDataJSON);
-                    } catch (e) {
-                        errorList.push('Contact data');
-                    }
-
-                    try {
-                        var projectDataJSON = JSON.parse(projectData);
-                        var project_details = `<p>Programme Name: ${
-                            escapeHtml(projectDataJSON.programme_name)
-                        }</p>
-                        <p>Programme Short Name: ${
-                            escapeHtml(projectDataJSON.programme_short_name)
-                        }</p>
-                        <p>Project Name: ${
-                            escapeHtml(projectDataJSON.project_name)
-                        }</p>
-                            <p>Project Short Name: ${
-                            escapeHtml(projectDataJSON.project_short_name)
-                        }</p>
-                            <p>Documentation Link: ${
-                            escapeHtml(projectDataJSON.doc_link)
-                        }</p>
-                            <p>Project Description: ${
-                            escapeHtml(projectDataJSON.project_description)
-                        }</p>`;
-                        document.getElementById('project_details').innerHTML = project_details;
-                        document.getElementById('project').value = JSON.stringify(projectDataJSON);
-                    } catch (e) {
-                        errorList.push('Project data');
-                    }
-
-                    try {
-                        let stageDetailsJSON = JSON.parse(stageData).stage;
-                        document.getElementById('stage_details').innerHTML = stageDetailsJSON;
-                        document.getElementById('stage').value = JSON.stringify(stageDetailsJSON);
-                    } catch (e) {
-                        errorList.push('Stage data');
-                    }
-
-                    try {
-                        var developedDataJSON = JSON.parse(developedData)
-                        var developed_details = `${
-                            escapeHtml(developedDataJSON.developed)
-                        }`;
-                        if (developedDataJSON.developed === "Outsourced") {
-                            developed_details += ` with: ${
-                                escapeHtml(developedDataJSON.outsource_company)
-                            }`;
-                        } else if (developedDataJSON.developed === "Partnership") {
-                            developed_details += ` with: ${
-                                escapeHtml(developedDataJSON.partnership_company)
-                            }`;
-                        }
-                        document.getElementById('developed_details').innerHTML = developed_details;
-                        document.getElementById('developed').value = JSON.stringify(developedDataJSON.developed);
-                    } catch (e) {
-                        errorList.push('Developed data');
-                        console.log(e)
-                    }
-                    
-                    if (errorList.length > 0) {
-                        errorPanel.classList.remove('ons-u-hidden');
-                        document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
-                    }
-                }
-                load_data();
-            </script>
-                {% endblock %}
-                {% block scripts %}
-                    <style>
-                        body {
-                            height: auto;
-                        }
-                    </style>
-                {% endblock %}
+    <input id="project" type="hidden" name="project">
+    <input id="developed" type="hidden" name="developed">
+    <input id="stage" type="hidden" name="stage">
+    {{ onsButton({
+        "text": 'Finish section',
+        "id": "submit-button",
+        "url": url_for('survey'),
+        "classes": 'ons-u-mb-m ons-u-mt-l',
+        "iconType": "check",
+        "iconPosition": "after"
+    }) }}
+{% endblock %}

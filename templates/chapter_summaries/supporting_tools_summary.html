@@ -1,22 +1,7 @@
 {% extends "core.html" %}
 {% from "components/summary/_macro.njk" import onsSummary %}
-{% from "components/panel/_macro.njk" import onsPanel %}
-{% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% block main %}
-    {% call onsPanel({
-        "id": "error-panel",
-        "title": 'Error',
-        "variant": 'error',
-        "type": "error",
-        "classes": "ons-u-hidden"
-    }) %}
-    {{ onsLabel({
-        "id": 'error-label',
-        "for": "error-label",
-        "text": 'Please fill in missing data'
-    }) }}
-    {% endcall %}
     <h1 class="ons-u-mt-m">Supporting Tools Summary</h1>
     {{ onsSummary({
             "variant": "hub",
@@ -177,119 +162,20 @@
                                             ]
                                         }
                                     ]
-                                },
-
- 
+                                }
                             ]
                         }
                     ]
                 }
             ]
         }) }}
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-    <input id="user" type="hidden" name="user">
-        <input id="project" type="hidden" name="project">
-            <input id="developed" type="hidden" name="developed">
-        {{ onsButton({
-            "text": 'Finish section',
-            "id": "submit-button",
-            "url": url_for('survey'),
-            "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "check",
-            "iconPosition": "after"
-        }) }}
-
-        <script>
-            function load_data() {
-                var errorPanel = document.getElementById('error-panel');
-                var sourceControlData = localStorage.getItem('source_control-data');
-                var hostingData = localStorage.getItem('hosting-data');
-                var databaseData = localStorage.getItem('database-data');
-                var hostingJSON = JSON.parse(hostingData);
-
-                var codeEditorsData = localStorage.getItem('code_editors-data');
-                var uiDesignData = localStorage.getItem('user_interface-data');
-                var diagramsData = localStorage.getItem('diagrams-data');
-                var projectTrackingData = localStorage.getItem('project_tracking-data');
-                var documentationData = localStorage.getItem('documentation-data');
-                var communicationData = localStorage.getItem('communication-data');
-                var collaborationData = localStorage.getItem('collaboration-data');
-                var incidentManagementData = localStorage.getItem('incident_management-data');
-            
-
-
-                var errorList = []
-                try {
-                    var codeEditorsJSON = JSON.parse(codeEditorsData);
-                    document.getElementById('code_editor_details').innerHTML = codeEditorsJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('Code Editors');
-                }
-
-                try {
-                    var uiDesignDataJSON = JSON.parse(uiDesignData);
-                    document.getElementById('user_interface_details').innerHTML = uiDesignDataJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('User Interface');
-                }
-
-                try {
-                    var diagramsDataJSON = JSON.parse(diagramsData);
-                    document.getElementById('diagram_details').innerHTML = diagramsDataJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('Diagrams');
-                }
-
-                try {
-                    var projectTrackingJSON = JSON.parse(projectTrackingData);
-                    var projectTrackingDetails = projectTrackingJSON.project_tracking;
-                    document.getElementById('project_tracking_details').textContent = projectTrackingDetails;
-                } catch (e) {
-                    errorList.push('Project Tracking');
-                }
-
-                try {
-                    var documentationDataJSON = JSON.parse(documentationData);
-                    document.getElementById('documentation_details').innerHTML = documentationDataJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('Documentation');
-                }
-
-                try {
-                    var communicationDataJSON = JSON.parse(communicationData);
-                    document.getElementById('communication_details').innerHTML = communicationDataJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('Communication');
-                }
-
-                try {
-                    var collaborationDataJSON = JSON.parse(collaborationData);
-                    document.getElementById('collaboration_details').innerHTML = collaborationDataJSON.others.map(item => `${item}`).join(', ');
-                } catch (e) {
-                    errorList.push('Collaboration');
-                }
-
-                try {
-                    var incidentManagementJSON = JSON.parse(incidentManagementData);
-                    var incidentManagementDetails = incidentManagementJSON.incident_management;
-                    document.getElementById('incident_management_details').textContent = incidentManagementDetails;
-                } catch (e) {
-                    errorList.push('Incident Management');
-                }
-                
-                if (errorList.length > 0) {
-                    errorPanel.classList.remove('ons-u-hidden');
-                    document.getElementById('error-label').innerHTML = 'Please fill in the following sections: ' + errorList.join(', ');
-                }
-            }
-            load_data();
-        </script>
-
-            {% endblock %}
-            {% block scripts %}
-                <style>
-                    body {
-                        height: auto;
-                    }
-                </style>
-            {% endblock %}
+    <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
+    {{ onsButton({
+        "text": 'Finish section',
+        "id": "submit-button",
+        "url": url_for('survey'),
+        "classes": 'ons-u-mb-m ons-u-mt-l',
+        "iconType": "check",
+        "iconPosition": "after"
+    }) }}
+{% endblock %}

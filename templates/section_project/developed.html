@@ -45,7 +45,7 @@
                     "value": "outsourced",
                     "value": "Outsourced",
                     "other": {
-                        "id": "other-input-1",
+                        "id": "outsourced",
                         "name": "other",
                         "label": {
                             "text": "Outsource Company"
@@ -59,7 +59,7 @@
                     },
                     "value": "Partnership",
                     "other": {
-                        "id": "other-input-2",
+                        "id": "partnership",
                         "name": "other",
                         "label": {
                             "text": "Partnership Company"
@@ -124,18 +124,18 @@
                     if (Array.isArray(data)) {
                         option = obj[data[0]];
                         if (data[0] === "Outsourced") {
-                            document.getElementById('other-input-1').value = data[1] || "";
+                            document.getElementById('outsourced').value = data[1] || "";
                         } else if (data[0] === "Partnership") {
-                            document.getElementById('other-input-2').value = data[1] || "";
+                            document.getElementById('partnership').value = data[1] || "";
                         }
                         document.getElementById(option).checked = true;
                     } else if (data.developed) {
                         // Handle legacy object format
                         option = obj[data.developed];
                         if (data.developed === "Outsourced") {
-                            document.getElementById('other-input-1').value = data.outsource_company || "";
+                            document.getElementById('outsourced').value = data.outsource_company || "";
                         } else if (data.developed === "Partnership") {
-                            document.getElementById('other-input-2').value = data.partnership_company || "";
+                            document.getElementById('partnership').value = data.partnership_company || "";
                         }
                         document.getElementById(option).checked = true;
                     }

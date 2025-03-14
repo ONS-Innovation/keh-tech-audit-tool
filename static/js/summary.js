@@ -24,7 +24,7 @@ class SummaryUtils {
     static updateElement(elementId, content) {
         const element = document.getElementById(elementId);
         if (element) {
-            element.innerHTML = content;
+            element.innerHTML = SummaryUtils.escapeHtml(content);
         }
     }
 }

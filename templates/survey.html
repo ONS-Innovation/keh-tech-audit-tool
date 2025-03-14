@@ -108,14 +108,14 @@
         }) }}
         <div style="display: flex; justify-content: space-between; gap: 10px;">
     {{ onsButton({
-            "id": "primary-btn",
-            "text": '<div id="primary-btn-text">Continue to Submission</div>',
+            "id": "primary-submit-btn",
+            "text": '<div id="primary-submit-btn-text">Continue to Submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "url": url_for('validate_details')
         }) }}
     {{ onsButton({
-            "id": "secondary-btn",
-            "text": '<div id="secondary-btn-text">Continue to Submission</div>',
+            "id": "secondary-submit-btn",
+            "text": '<div id="secondary-submit-btn-text">Continue to Submission</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "variants": "secondary",
             "url": url_for('validate_details')
@@ -164,11 +164,4 @@
         localStorage.setItem("source_control-validate", false);
         localStorage.setItem("hosting-validate", false);
     </script>
-{% endblock %}
-{% block scripts %}
-    <style>
-        body {
-            height: auto;
-        }
-    </style>
 {% endblock %}

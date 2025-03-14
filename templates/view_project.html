@@ -403,9 +403,18 @@
         
         // Source Control
         if (projects.source_control[0].type) {
-            document.getElementById('source-control').querySelector('dd').querySelector('span').innerHTML = 
-                `${projects.source_control[0].type}<br>` +
-                `${projects.source_control[0].links.length > 0 ? `${projects.source_control[0].links[0].description}: ${projects.source_control[0].links[0].url}` : ''}`;
+            let sourceControlHtml = `${projects.source_control[0].type}`;
+            
+            // Add all links, not just the first one
+            if (projects.source_control[0].links && projects.source_control[0].links.length > 0) {
+                projects.source_control[0].links.forEach(link => {
+                    if (link.description && link.url) {
+                        sourceControlHtml += `<br>${link.description}: <a href="${link.url}" target="_blank">${link.url}</a>`;
+                    }
+                });
+            }
+            
+            document.getElementById('source-control').querySelector('dd').querySelector('span').innerHTML = sourceControlHtml;
         } else {
             document.getElementById('source-control').querySelector('dd').querySelector('span').textContent = 
                 'N/A';

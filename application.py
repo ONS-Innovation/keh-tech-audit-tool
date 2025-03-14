@@ -335,7 +335,6 @@ def view_project(project_name):
         f"{API_URL}/api/v1/projects/{project_name}",
         headers=headers,
     )
-
     if projects.status_code != HTTPStatus.OK:
         flash("Project does not exist")
         return redirect(url_for("dashboard"))
@@ -434,17 +433,17 @@ def survey():
 
     # Map form data
     form_data = map_form_data(request.form)
-
     # If developed is not empty, or fallback
     developed_company = ""
-    form_data_developed = form_data.get("developed", ["", [""]])
+    form_data_developed = form_data.get("developed", ["", ""])
     if form_data_developed[0] == "Outsourced":
         developed_company = form_data_developed[1]
+        developed_data = [form_data_developed[0], developed_company]
     elif form_data_developed[0] == "Partnership":
         developed_company = form_data_developed[1]
         developed_data = [form_data_developed[0], developed_company]
     else:
-        developed_data = ["", [""]]
+        developed_data = ["", ""]
     try:
         previous_users = json.loads(
             request.form["project_users"]

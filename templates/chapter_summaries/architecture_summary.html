@@ -67,61 +67,20 @@
                                             ]
                                         }
                                     ]
-                                },
- 
+                                }
                             ]
                         }
                     ]
                 }
             ]
         }) }}
-<script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-    <input id="user" type="hidden" name="user">
-        <input id="project" type="hidden" name="project">
-            <input id="developed" type="hidden" name="developed">
-        {{ onsButton({
-            "text": 'Finish section',
-            "id": "submit-button",
-            "url": url_for('survey'),
-            "classes": 'ons-u-mb-m ons-u-mt-l',
-            "iconType": "check",
-            "iconPosition": "after"
-        }) }}
-                <script>
-                    function load_data() {
-                        var sourceControlData = localStorage.getItem('source_control-data');
-                        var hostingData = localStorage.getItem('hosting-data');
-                        var databaseData = localStorage.getItem('database-data');
-                        var hostingJSON = JSON.parse(hostingData);
-
-                        try {
-                            var sourceControlDataJSON = JSON.parse(sourceControlData);
-                            var sourceType = sourceControlDataJSON.source_control;
-                            var source_control_links_label = sourceControlDataJSON.links && sourceControlDataJSON.links.length > 0 ? '': 'No links added to project.';
-                            var source_control = `${sourceType}<br>${source_control_links_label}${sourceControlDataJSON.links.map(link => `${link.description}: ${link.url}`).join(', ')}`;
-                            document.getElementById('source_control_details').innerHTML = source_control;
-                        } catch (e) {
-                            console.log(e);
-                        }
-
-                        try {
-                            var databaseDataJSON = JSON.parse(databaseData);
-                            if (databaseDataJSON.others.length === 0) {
-                                console.log('No database data');
-                            }
-                            var database_details = `${databaseDataJSON.others.map(item => `${item}`).join(', ')}`;
-                            document.getElementById('database_details').innerHTML = database_details;
-                        } catch (e) {
-                            console.log(e);
-                        }
-
-                        try {
-                            var hosting_details = `${hostingJSON.type}<br>${hostingJSON.others.map(item => `${item}`).join(', ')}`
-                            document.getElementById('hosting_details').innerHTML = hosting_details;
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    }
-                    load_data();
-                </script>
-            {% endblock %}
+    <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
+    {{ onsButton({
+        "text": 'Finish section',
+        "id": "submit-button",
+        "url": url_for('survey'),
+        "classes": 'ons-u-mb-m ons-u-mt-l',
+        "iconType": "check",
+        "iconPosition": "after"
+    }) }}
+{% endblock %}

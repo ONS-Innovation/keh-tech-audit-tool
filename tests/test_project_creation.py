@@ -439,12 +439,12 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         if choice == "partnership":
             driver.implicitly_wait(10)
-            company_name = driver.find_element(By.ID, "other-input-2")
+            company_name = driver.find_element(By.ID, "partnership")
             self.wait.until(EC.element_to_be_clickable(company_name)).click()
             company_name.send_keys("Example Company")
         elif choice == "outsourced":
             driver.implicitly_wait(10)
-            company_name = driver.find_element(By.ID, "other-input-1")
+            company_name = driver.find_element(By.ID, "outsourced")
             self.wait.until(EC.element_to_be_clickable(company_name)).click()
             company_name.send_keys("Example Company")
 

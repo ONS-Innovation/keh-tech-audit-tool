@@ -24,7 +24,7 @@ class SummaryUtils {
     static updateElement(elementId, content) {
         const element = document.getElementById(elementId);
         if (element) {
-            element.innerHTML = SummaryUtils.escapeHtml(content);
+            element.innerHTML = content;
         }
     }
 }
@@ -87,19 +87,15 @@ class ContactProcessor extends SectionProcessor {
 
             let details = '';
             if (techContact) {
-                details += `Technical Contact:<p style="font-weight: 400;">${
-                    SummaryUtils.escapeHtml(techContact.contactEmail)
-                } (${
-                    SummaryUtils.escapeHtml(techContact.role)
-                })</p>`;
+                const email = SummaryUtils.escapeHtml(techContact.contactEmail || '');
+                const role = SummaryUtils.escapeHtml(techContact.role || '');
+                details += `Technical Contact:<br><span style="font-weight: 400;">${email} (${role})</span><br><br>`;
             }
 
             if (manager?.contactEmail) {
-                details += `Delivery Manager Contact:<p style="font-weight: 400;">${
-                    SummaryUtils.escapeHtml(manager.contactEmail)
-                } (${
-                    SummaryUtils.escapeHtml(manager.role)
-                })</p>`;
+                const email = SummaryUtils.escapeHtml(manager.contactEmail || '');
+                const role = SummaryUtils.escapeHtml(manager.role || '');
+                details += `Delivery Manager Contact:<br><span style="font-weight: 400;">${email} (${role})</span>`;
             }
 
             return details;
@@ -134,9 +130,8 @@ class ProjectProcessor extends SectionProcessor {
                 }
                 
                 if (value && value !== '') {
-                    details += `${field.label}:<p style="font-weight: 400;">${
-                        SummaryUtils.escapeHtml(value)
-                    }</p>`;
+                    const escapedValue = SummaryUtils.escapeHtml(value);
+                    details += `${field.label}:<p style="font-weight: 400;">${escapedValue}</p>`;
                 }
             }
 
@@ -173,14 +168,12 @@ class DevelopedProcessor extends SectionProcessor {
             const developed = SummaryUtils.safeJsonParse(developedData);
             if (!developed || !developed[0]) return '';
 
-            let details = `Developed:<p style="font-weight: 400;">${
-                SummaryUtils.escapeHtml(developed[0])
-            }</p>`;
+            const devType = SummaryUtils.escapeHtml(developed[0]);
+            let details = `Developed:<p style="font-weight: 400;">${devType}</p>`;
 
             if ((developed[0] === "Outsourced" || developed[0] === "Partnership") && developed[1]) {
-                details += `${SummaryUtils.escapeHtml(developed[0])}<p style="font-weight: 400;">${
-                    SummaryUtils.escapeHtml(developed[1])
-                }</p>`;
+                const companyName = SummaryUtils.escapeHtml(developed[1]);
+                details += `${devType} Company:<p style="font-weight: 400;">${companyName}</p>`;
             }
 
             return details;

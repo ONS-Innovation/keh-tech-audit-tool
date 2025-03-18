@@ -78,6 +78,7 @@ class ContactProcessor extends SectionProcessor {
         try {
             const techContact = SummaryUtils.safeJsonParse(techContactData);
             const manager = SummaryUtils.safeJsonParse(managerData);
+            console.log(techContact, techContact.contactEmail, techContact.role);
 
             if (!techContact && !manager) {
                 this.errorManager.addError('At least one contact (Technical Contact or Delivery Manager) is required.');
@@ -85,10 +86,22 @@ class ContactProcessor extends SectionProcessor {
                 return '';
             }
 
+            if (techContact && (techContact.contactEmail === '' || techContact.role === '')) {
+                this.errorManager.addError('The Technical Contact email and role are required.');
+                this.errorManager.hideSubmitButton();
+                return '';
+            }
+
+            if (manager && (manager.contactEmail === '' || manager.role === '')) {
+                this.errorManager.addError('The Delivery Manager email and role are required.');
+                this.errorManager.hideSubmitButton();
+                return '';
+            }
+
             let details = '';
             if (techContact) {
-                const email = SummaryUtils.escapeHtml(techContact.contactEmail || '');
-                const role = SummaryUtils.escapeHtml(techContact.role || '');
+                const email = SummaryUtils.escapeHtml(techContact.contactEmail);
+                const role = SummaryUtils.escapeHtml(techContact.role);
                 details += `Technical Contact:<br><span style="font-weight: 400;">${email} (${role})</span><br><br>`;
             }
 

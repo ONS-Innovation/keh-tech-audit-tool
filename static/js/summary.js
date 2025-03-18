@@ -78,7 +78,6 @@ class ContactProcessor extends SectionProcessor {
         try {
             const techContact = SummaryUtils.safeJsonParse(techContactData);
             const manager = SummaryUtils.safeJsonParse(managerData);
-            console.log(techContact, techContact.contactEmail, techContact.role);
 
             if (!techContact && !manager) {
                 this.errorManager.addError('At least one contact (Technical Contact or Delivery Manager) is required.');

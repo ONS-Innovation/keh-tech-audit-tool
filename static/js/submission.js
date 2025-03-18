@@ -38,6 +38,10 @@ const DataUtils = {
         const main = obj[property]?.main || [];
         const others = obj[property]?.others || [];
         return [...main, ...others].filter(item => item && item !== "");
+    },
+
+    displayElements: function(title, value) {
+        return `${title}: <p style="font-weight:400"> ${value}</p>`;
     }
 };
 
@@ -164,16 +168,16 @@ const DataProcessors = {
         let result = '';
         if (data.developed) {
             // Object format
-            result += 'Developed: <p style="font-weight:400">' + data.developed + '</p>';
+            result += DataProcessors.displayElements('Developed', data.developed);
             
             if (data.developed === "Partnership" && data.partnership_company) {
-                result += `Partnership Company: <p style="font-weight:400">${data.partnership_company}</p>`;
+                result += DataProcessors.displayElements('Partnership Company', data.partnership_company);
             } else if (data.developed === "Outsourced" && data.outsource_company) {
-                result += `Outsourced Company: <p style="font-weight:400">${data.outsource_company}</p>`;
+                result += DataProcessors.displayElements('Outsourced Company', data.outsource_company);
             }
         } else if (Array.isArray(data) && data.length > 0) {
             // Array format - [development_type, company_name]
-            result += 'Developed: <p style="font-weight:400">' + data[0] + '</p>';
+            result += DataProcessors.displayElements('Developed', data[0]);
             
             if ((data[0] === "Partnership" || data[0] === "Outsourced") && data[1]) {
                 let companyName = data[1];
@@ -182,7 +186,7 @@ const DataProcessors = {
                 }
                 
                 if (companyName && companyName !== '') {
-                    result += `${data[0]} Company: <p style="font-weight:400">${companyName}</p>`;
+                    result += DataProcessors.displayElements(data[0] + ' Company', companyName);
                 }
             }
         }
@@ -205,22 +209,22 @@ const DataProcessors = {
         const projectDescription = data.project_description || '';
 
         if (programmeName) {
-            details += 'Programme Name: <p style="font-weight:400">' + programmeName + '</p>';
+            details += DataProcessors.displayElements('Programme Name', programmeName);
         }
         if (programmeShortName) {
-            details += 'Programme Short Name: <p style="font-weight:400">' + programmeShortName + '</p>';
+            details += DataProcessors.displayElements('Programme Short Name', programmeShortName);
         }
         if (name) {
-            details += 'Project Name: <p style="font-weight:400">' + name + '</p>';
+            details += DataProcessors.displayElements('Project Name', name);
         }
         if (shortName) {
-            details += 'Short Name: <p style="font-weight:400">' + shortName + '</p>';
+            details += DataProcessors.displayElements('Short Name', shortName);
         }
         if (docLink) {
-            details += 'Documentation Link: <p style="font-weight:400">' + docLink + '</p>';
+            details += DataProcessors.displayElements('Documentation Link', docLink);
         }
         if (projectDescription) {
-            details += 'Project Description: <p style="font-weight:400">' + projectDescription + '</p>';
+            details += DataProcessors.displayElements('Project Description', projectDescription);
         }
         
         return details;

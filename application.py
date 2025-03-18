@@ -70,7 +70,7 @@ def get_secret(env):
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
-    secret = secret_value_response.get("SecretString")
+    secret = secret_value_response.get("SecretString", "")
 
     return secret
 

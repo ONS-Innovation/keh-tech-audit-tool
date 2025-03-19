@@ -48,7 +48,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.integration = random.choice(
             ["Github Actions", "Jenkins", "Travis CI", "Circle CI"]
         )
-        self.infrastructure = random.choice(["AWS", "Azure", "Google Cloud"])
+        self.infrastructure = random.choice(["AWS", "Azure", "GCP"])
         self._test_passed = False
 
     def generate_words(self, num_words, delimiter=" "):

@@ -2,8 +2,8 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
-{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
     <h1>Developed</h1>
     {{ onsAccordion({
@@ -17,15 +17,15 @@
     }) }}
     <form action="{{ url_for('survey') }}" method="GET">
         {{ onsLabel({
-    "id": 'developed-label',
-    "for": "developed",
-    "text": 'Where was this Software Developed?',
-    "description": 'Select the option that best describes how the project was developed.'
-}) }}
+            "id": 'developed-label',
+            "for": "developed",
+            "text": 'Where was this Software Developed?',
+            "description": 'Select the option that best describes how the project was developed.'
+        }) }}
         {% call onsQuestion({
-        "classes": "ons-u-mt-no",
-        "legendIsQuestionTitle": true
-    }) %}
+            "classes": "ons-u-mt-no",
+            "legendIsQuestionTitle": true
+        }) %}
         {{ onsRadios({
             "dontWrap": true,
             "name": "developed",
@@ -33,16 +33,17 @@
                 {
                     "id": "in-house",
                     "label": {
-                        "text": "In House"
+                        "text": "In House",
+                        "description": "Developed internally by your own team"
                     },
                     "value": "In House"
                 },
                 {
                     "id": "outsourced",
                     "label": {
-                        "text": "Outsourced"
+                        "text": "Outsourced",
+                        "description": "Developed by an external company"
                     },
-                    "value": "outsourced",
                     "value": "Outsourced",
                     "other": {
                         "id": "outsourced",
@@ -55,7 +56,8 @@
                 {
                     "id": "partnership",
                     "label": {
-                        "text": "Partnership"
+                        "text": "Partnership",
+                        "description": "Developed in collaboration with another company"
                     },
                     "value": "Partnership",
                     "other": {
@@ -72,6 +74,7 @@
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script src="{{ url_for('static', filename='js/developed.js') }}"></script>
         {{ onsButton({
+
         "id": "save-values-button",
         "url": url_for('stage'),
         "text": "Save and continue",

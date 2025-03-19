@@ -2,12 +2,12 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/radios/_macro.njk" import onsRadios %}
 {% from "components/question/_macro.njk" import onsQuestion %}
-{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
 {% block main %}
     <h1>Project Stage</h1>
     {{ onsAccordion({
-        "id": "accordion-example",
+        "id": "stage-accordion",
         "itemsList": [
             {
                 "title": "More info",
@@ -19,20 +19,20 @@
 
                             <b>Unsupported</b>
                             <p>The software no longer receives updates, fixes, or official assistance.</p>"
-            },
+            }
         ]
     }) }}
     <form action="{{ url_for('survey') }}" method="GET">
         {{ onsLabel({
-    "id": 'developed-label',
-    "for": "developed",
-    "text": 'What stage is the project at?',
-    "description": 'Select the option that best describes the stage of the project.'
-}) }}
+            "id": 'developed-label',
+            "for": "developed",
+            "text": 'What stage is the project at?',
+            "description": 'Select the option that best describes the stage of the project.'
+        }) }}
         {% call onsQuestion({
-        "classes": "ons-u-mt-no",
-        "legendIsQuestionTitle": true
-    }) %}
+            "classes": "ons-u-mt-no",
+            "legendIsQuestionTitle": true
+        }) %}
         {{ onsRadios({
             "dontWrap": true,
             "name": "stage",
@@ -40,36 +40,39 @@
                 {
                     "id": "Development",
                     "label": {
-                        "text": "Development"
+                        "text": "Development",
+                        "description": "The software is being designed, coded, and tested before release"
                     },
                     "value": "Development"
                 },
                 {
                     "id": "Active Support",
                     "label": {
-                        "text": "Active Support"
+                        "text": "Active Support",
+                        "description": "The software is released and receives regular updates, bug fixes, and feature enhancements"
                     },
-                    "value": "Active Support",
+                    "value": "Active Support"
                 },
                 {
                     "id": "Unsupported",
                     "label": {
-                        "text": "Unsupported"
+                        "text": "Unsupported",
+                        "description": "The software no longer receives updates, fixes, or official assistance"
                     },
-                    "value": "Unsupported",
+                    "value": "Unsupported"
                 }
             ]
         }) }}
         {% endcall %}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         {{ onsButton({
-        "id": "save-values-button",
-        "url": url_for('project_summary'),
-        "text": "Save and continue",
-        "attributes": {
-            "onclick": "storeData();"
-        }
-    }) }}
+            "id": "save-values-button",
+            "url": url_for('project_summary'),
+            "text": "Save and continue",
+            "attributes": {
+                "onclick": "storeData();"
+            }
+        }) }}
         <script>
             function storeData() {
                 var stage = document.querySelector('input[name="stage"]:checked').value;

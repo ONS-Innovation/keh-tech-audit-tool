@@ -89,30 +89,6 @@ function loadData() {
                     }
                 }
             }
-        } else if (data.developed) {
-            // Legacy object format
-            const radioId = mapping[data.developed];
-            if (radioId) {
-                document.getElementById(radioId).checked = true;
-                
-                if (data.developed === "Outsourced" || data.developed === "Partnership") {
-                    // Trigger the "other" field to show
-                    const radioInput = document.getElementById(radioId);
-                    if (radioInput) {
-                        // Force the "other" field to expand
-                        const otherWrap = document.getElementById(`${radioId}-other-wrap`);
-                        if (otherWrap) {
-                            otherWrap.style.display = 'block';
-                            const input = otherWrap.querySelector('input[type="text"]');
-                            if (input) {
-                                input.value = data.developed === "Outsourced" ? 
-                                    data.outsource_company || "" : 
-                                    data.partnership_company || "";
-                            }
-                        }
-                    }
-                }
-            }
         }
     } catch (e) {
         console.error('Error loading developed data:', e);

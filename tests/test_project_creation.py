@@ -61,19 +61,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Returns:
             str: Final string of words
         """
-        return delimiter.join(
-            list(
-                map(
-                    str.title,
-                    [
-                        requests.get(
-                            "https://random-word-api.herokuapp.com/word"
-                        ).json()[0]
-                        for word in range(num_words)
-                    ],
-                )
-            )
-        )
+        words = requests.get(
+            f"https://random-word-api.vercel.app/api?words={num_words}"
+        ).json()
+        return delimiter.join(word.title() for word in words[:num_words])
 
     def tearDown(self):
         """Tear down the test - only close the browser if the test passed"""

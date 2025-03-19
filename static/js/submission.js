@@ -168,16 +168,16 @@ const DataProcessors = {
         let result = '';
         if (data.developed) {
             // Object format
-            result += DataProcessors.displayElements('Developed', data.developed);
+            result += DataUtils.displayElements('Developed', data.developed);
             
             if (data.developed === "Partnership" && data.partnership_company) {
-                result += DataProcessors.displayElements('Partnership Company', data.partnership_company);
+                result += DataUtils.displayElements('Partnership Company', data.partnership_company);
             } else if (data.developed === "Outsourced" && data.outsource_company) {
-                result += DataProcessors.displayElements('Outsourced Company', data.outsource_company);
+                result += DataUtils.displayElements('Outsourced Company', data.outsource_company);
             }
         } else if (Array.isArray(data) && data.length > 0) {
             // Array format - [development_type, company_name]
-            result += DataProcessors.displayElements('Developed', data[0]);
+            result += DataUtils.displayElements('Developed', data[0]);
             
             if ((data[0] === "Partnership" || data[0] === "Outsourced") && data[1]) {
                 let companyName = data[1];
@@ -186,7 +186,7 @@ const DataProcessors = {
                 }
                 
                 if (companyName && companyName !== '') {
-                    result += DataProcessors.displayElements(data[0] + ' Company', companyName);
+                    result += DataUtils.displayElements(data[0] + ' Company', companyName);
                 }
             }
         }
@@ -209,22 +209,22 @@ const DataProcessors = {
         const projectDescription = data.project_description || '';
 
         if (programmeName) {
-            details += DataProcessors.displayElements('Programme Name', programmeName);
+            details += DataUtils.displayElements('Programme Name', programmeName);
         }
         if (programmeShortName) {
-            details += DataProcessors.displayElements('Programme Short Name', programmeShortName);
+            details += DataUtils.displayElements('Programme Short Name', programmeShortName);
         }
         if (name) {
-            details += DataProcessors.displayElements('Project Name', name);
+            details += DataUtils.displayElements('Project Name', name);
         }
         if (shortName) {
-            details += DataProcessors.displayElements('Short Name', shortName);
+            details += DataUtils.displayElements('Short Name', shortName);
         }
         if (docLink) {
-            details += DataProcessors.displayElements('Documentation Link', docLink);
+            details += DataUtils.displayElements('Documentation Link', docLink);
         }
         if (projectDescription) {
-            details += DataProcessors.displayElements('Project Description', projectDescription);
+            details += DataUtils.displayElements('Project Description', projectDescription);
         }
         
         return details;

@@ -440,7 +440,9 @@ def survey():
     # If developed is not empty, or fallback
     developed_company = ""
     form_data_developed = form_data.get("developed", ["", ""])
-    if form_data_developed[0] == "Outsourced":
+    if form_data_developed[0] == "In House":
+        developed_data = ["In House", ""]
+    elif form_data_developed[0] == "Outsourced":
         developed_company = form_data_developed[1]
         developed_data = [form_data_developed[0], developed_company]
     elif form_data_developed[0] == "Partnership":

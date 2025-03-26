@@ -175,7 +175,7 @@ const DataProcessors = {
             } else if (data.developed === "Outsourced" && data.outsource_company) {
                 result += DataUtils.displayElements('Outsourced Company', data.outsource_company);
             }
-        } else if (Array.isArray(data) && data.length > 0) {
+        } else if (Array.isArray(data) && data.length > 0 && data[0] !== '') {
             // Array format - [development_type, company_name]
             result += DataUtils.displayElements('Developed', data[0]);
             

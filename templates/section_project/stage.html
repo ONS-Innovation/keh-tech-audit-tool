@@ -89,10 +89,14 @@
             }
             function loadData() {
                 var name = 'stage-data';
-                if (JSON.parse(localStorage.getItem('edit'))) {
-                    name = 'stage-data-edit';
-                }
                 if (JSON.parse(localStorage.getItem('edit'))){
+                    let name = 'stage-data-edit';
+
+                    var data = JSON.parse(localStorage.getItem(name));
+                    if (data) {
+                        document.getElementById(data.stage).checked = true;
+                    }
+                } else {
                     var data = JSON.parse(localStorage.getItem(name));
                     if (data) {
                         document.getElementById(data.stage).checked = true;

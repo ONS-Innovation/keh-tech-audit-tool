@@ -3,19 +3,6 @@
 {% from "components/summary/_macro.njk" import onsSummary %}
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/breadcrumbs/_macro.njk" import onsBreadcrumbs %}
-{% set project_details = 'Programme Name: <p style="font-weight:400">' + 
-    project.details[0].programme_name + '</p>' +
-    'Programme Short Name: <p style="font-weight:400">' +
-        project.details[0].programme_short_name + '</p>' +
-    'Project Name: <p style="font-weight:400">' +
-        project.details[0].name + '</p>' +
-    'Short Name: <p style="font-weight:400">' +
-        project.details[0].short_name + '</p>' +
-    'Documentation Link: <p style="font-weight:400">' +
-        project.details[0].documentation_link[0] + '</p>' +
-    'Project Description: <p style="font-weight:400">' +
-        project.details[0].project_description + '</p>' +
-    'Stage: <p style="font-weight:400">' + project.stage %}
 {% block main %}
 
 {% with messages = get_flashed_messages() %}
@@ -27,7 +14,6 @@
   </ul>
 {% endif %}
 {% endwith %}
-
   {{
     onsBreadcrumbs({
         "ariaLabel": 'Breadcrumbs',
@@ -63,24 +49,24 @@
                                   "rowTitle": "Technical Contact",
                                   "rowItems": [
                                       {
-                                          "id": "sales-dates",
+                                          "id": "technical-contact",
                                           "valueList": [
                                               {
-                                                  "text": project.user[0].email + ' (' + project.user[0].grade + ')'
+                                                  "text": ""
                                               }
                                           ],
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-dates-row",
+                                  "id": "delivery-manager-row",
                                   "rowTitle": "Delivery Manager Contact",
                                   "rowItems": [
                                       {
-                                          "id": "sales-dates",
+                                          "id": "delivery-manager",
                                           "valueList": [
                                               {
-                                                  "text": project.user[1].email + ' (' + project.user[1].grade + ')'
+                                                  "text": ""
                                               },
                                           ],
                                       }
@@ -88,240 +74,251 @@
                               },
                               {
                                   "rowTitle": "Project",
-                                  "id": "sales-value-row",
+                                  "id": "project-details-row",
                                   "rowItems": [
                                       {
-                                          "id": "sales-value",
+                                          "id": "project-details",
                                           "valueList": [
                                               {
-                                                  "text": project_details
+                                                  "text": ""
                                               }
                                           ],
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "development-row",
                                   "rowTitle": "Developed",
                                   "rowItems": [
                                       {
                                           "id": "developed",
                                           "valueList": [
                                               {
-                                                  "text": project.developed[0] + ' ' + project.developed[1] | join(', ')
+                                                  "text": ""
                                               }
                                           ],
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "stage-row",
+                                  "rowTitle": "Stage",
+                                  "rowItems": [
+                                      {
+                                          "id": "stage",
+                                          "valueList": [
+                                              {
+                                                  "text": ""
+                                              }
+                                          ],
+                                      }
+                                  ]
+                              },
+                              {
+                                  "id": "source-control-row",
                                   "rowTitle": "Source Control",
                                   "rowItems": [
                                       {
-                                          "id": "temp",
+                                          "id": "source-control",
                                           "valueList": [
                                               {
-                                                  "text": project.source_control[0].type
-                                              },
-                                              {
-                                                  "text": project.source_control[0].links[0].description | string + ': ' + project.source_control[0].links[0].url
+                                                  "text": ""
                                               }
                                           ],
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "hosting-row",
                                   "rowTitle": "Hosting",
                                   "rowItems": [
                                       {
-                                          "id": "architecture-hosting",
+                                          "id": "hosting",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.hosting.type[0] + '. ' + project.architecture.hosting.details | join(', ')
+                                                  "text": ""
                                               }
                                           ],
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "database-row",
                                   "rowTitle": "Database",
                                   "rowItems": [
                                       {
                                           "id": "database",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.database.others| join(', ')
+                                                  "text": ""
                                               },
                                           ]
                                       }
                                   ]
                               },
                             {
-                                  "id": "sales-reasons-row",
+                                  "id": "frameworks-row",
                                   "rowTitle": "Frameworks",
                                   "rowItems": [
                                       {
                                           "id": "frameworks",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.frameworks.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                           {
-                                  "id": "sales-reasons-row",
+                                  "id": "languages-row",
                                   "rowTitle": "Languages",
                                   "rowItems": [
                                       {
                                           "id": "languages",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.languages.main | join(', ') + '. ' + project.architecture.languages.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "cicd-row",
                                   "rowTitle": "CI/CD",
                                   "rowItems": [
                                       {
                                           "id": "cicd",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.cicd.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                         {
-                                  "id": "sales-reasons-row",
+                                  "id": "infrastructure-row",
                                   "rowTitle": "Infrastructure",
                                   "rowItems": [
                                       {
                                           "id": "infrastructure",
                                           "valueList": [
                                               {
-                                                  "text": project.architecture.infrastructure.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "code-editors-row",
                                   "rowTitle": "Code Editors",
                                   "rowItems": [
                                       {
                                           "id": "code_editors",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.code_editors.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "user-interface-row",
                                   "rowTitle": "User Interface",
                                   "rowItems": [
                                       {
                                           "id": "user_interface",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.user_interface.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "diagrams-row",
                                   "rowTitle": "Diagrams",
                                   "rowItems": [
                                       {
                                           "id": "diagrams",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.diagrams.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "project-tracking-row",
                                   "rowTitle": "Project Tracking",
                                   "rowItems": [
                                       {
                                           "id": "project_tracking",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.project_tracking
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "documentation-row",
                                   "rowTitle": "Documentation",
                                   "rowItems": [
                                       {
                                           "id": "documentation",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.documentation.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "communication-row",
                                   "rowTitle": "Communication",
                                   "rowItems": [
                                       {
                                           "id": "communication",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.communication.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "collaboration-row",
                                   "rowTitle": "Collaboration",
                                   "rowItems": [
                                       {
                                           "id": "collaboration",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.collaboration.others | join(', ')
+                                                  "text": ""
                                               }
                                           ]
                                       }
                                   ]
                               },
                               {
-                                  "id": "sales-reasons-row",
+                                  "id": "incident-management-row",
                                   "rowTitle": "Incident Management",
                                   "rowItems": [
                                       {
                                           "id": "incident_management",
                                           "valueList": [
                                               {
-                                                  "text": project.supporting_tools.incident_management
+                                                  "text": ""
                                               }
                                           ]
                                       }
@@ -336,4 +333,19 @@
       }) }}
     </div>
     <br/>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/view_project.js') }}"></script>
+<script>
+    const projects = {{ project | tojson | safe }};
+    
+    function formatList(items) {
+        if (!items || items.length === 0) return 'N/A';
+        return items.join(', ');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadData(projects);
+    });
+</script>
 {% endblock %}

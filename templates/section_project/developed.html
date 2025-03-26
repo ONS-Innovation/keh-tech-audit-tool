@@ -46,7 +46,7 @@
                     },
                     "value": "Outsourced",
                     "other": {
-                        "id": "other-input-1",
+                        "id": "outsourced",
                         "name": "other",
                         "label": {
                             "text": "Outsource Company"
@@ -61,7 +61,7 @@
                     },
                     "value": "Partnership",
                     "other": {
-                        "id": "other-input-2",
+                        "id": "partnership",
                         "name": "other",
                         "label": {
                             "text": "Partnership Company"
@@ -72,84 +72,15 @@
         }) }}
         {% endcall %}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/developed.js') }}"></script>
         {{ onsButton({
-            "id": "save-values-button",
-            "url": url_for('stage'),
-            "text": "Save and continue",
-            "attributes": {
-                "onclick": "storeData();"
-            }
-        }) }}
-        <script>
-            function storeData() { // Store data about where the software was developed in local storage
-                var developed = document.querySelector('input[name="developed"]:checked').value;
-                var outsource_company = document.getElementById('other-input-1').value;
-                var partnership_company = document.getElementById('other-input-2').value;
-                var complete = true;
-                var data = {
-                    "outsource_company": outsource_company,
-                    "partnership_company": partnership_company,
-                    "developed": developed,
-                    "complete": complete
-                };
-                if (developed === "In House") {
-                    data.partnership_company = null;
-                    data.outsource_company = null;
-                } else if (developed === "Outsourced") {
-                    data.partnership_company = null;
-                    data.outsource_company = document.getElementById('other-input-1').value;
-                } else if (developed === "Partnership") {
-                    data.outsource_company = null;
-                    data.partnership_company = document.getElementById('other-input-2').value;
-                } else {
-                    data.complete = false;
-                }
-                var name = 'developed-data';
-                if (JSON.parse(localStorage.getItem('edit'))) {
-                    name = 'developed-data-edit';
-                }
-                localStorage.setItem(name, JSON.stringify(data));
-            }
-            function loadData() {
-                var obj = {
-                    "Outsourced": "outsourced",
-                    "Partnership": "partnership",
-                    "In House": "in-house"
-                }
-                var name = 'developed-data';
-                var data;
-                var option
-                if (JSON.parse(localStorage.getItem('edit'))){
-                    name = 'developed-data-edit';
-                }
-                    data = JSON.parse(localStorage.getItem(name));
-                   
-                    if (data) {
-                        option = obj[data.developed]
-                        if (data.developed === "Outsourced") {
-                            document.getElementById('other-input-1').value = data.outsource_company;
-                        } else if (data.developed === "Partnership") {
-                            document.getElementById('other-input-2').value = data.partnership_company;
-                        }
-                    document.getElementById(option).checked = true;
-                } else {
-                    data = JSON.parse(localStorage.getItem(name));
-                    if (data) {
-                        option = obj[data.developed]
-                        if (data.developed === "Outsourced") {
-                            document.getElementById('other-input-1').value = data.outsource_company;
-                        } else if (data.developed === "Partnership") {
-                            document.getElementById('other-input-2').value = data.partnership_company;
-                        }
 
-                    document.getElementById(option).checked = true;
-                        
-                }
-
-                }
-            }
-            redirectToPrevious();
-            loadData();
-        </script>
-    </form>
+        "id": "save-values-button",
+        "url": url_for('stage'),
+        "text": "Save and continue",
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+</form>
 {% endblock %}

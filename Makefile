@@ -15,6 +15,11 @@ test-creation:
 test-navigation:
 	poetry run python tests/test_navigation.py
 
+format-tests:
+	poetry run isort tests
+	poetry run black tests
+	poetry run flake8 tests
+
 format-python:
 	poetry run isort .
 	poetry run black .

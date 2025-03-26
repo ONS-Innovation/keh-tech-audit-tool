@@ -123,7 +123,11 @@ class ProjectProcessor extends SectionProcessor {
     processData(projectData) {
         try {
             const project = SummaryUtils.safeJsonParse(projectData);
-            if (!project) return '';
+            if (!project) {
+                this.errorManager.addError('Project details are required.');
+                this.errorManager.hideSubmitButton();
+                return '';
+            }
 
             let details = '';
             const fields = [
@@ -147,14 +151,17 @@ class ProjectProcessor extends SectionProcessor {
                 }
             }
 
-            if (!project.name || project.name === '') {
-                this.errorManager.addError('At least the project name is required.');
+            // Validate project name
+            if (!project.name || project.name.trim() === '') {
+                this.errorManager.addError('Project name is required.');
                 this.errorManager.hideSubmitButton();
             }
 
             return details;
         } catch (e) {
             console.error('Error processing project data:', e);
+            this.errorManager.addError('Error processing project data.');
+            this.errorManager.hideSubmitButton();
             return '';
         }
     }
@@ -180,8 +187,12 @@ class DevelopedProcessor extends SectionProcessor {
             const developed = SummaryUtils.safeJsonParse(developedData);
             if (!developed || !developed[0]) return '';
 
+            let details = '';
             const devType = SummaryUtils.escapeHtml(developed[0]);
-            let details = `Developed:<p style="font-weight: 400;">${devType}</p>`;
+            if (devType === '') {
+                return '';
+            }
+            details += `Developed:<p style="font-weight: 400;">${devType}</p>`;
 
             if ((developed[0] === "Outsourced" || developed[0] === "Partnership") && developed[1]) {
                 const companyName = SummaryUtils.escapeHtml(developed[1]);

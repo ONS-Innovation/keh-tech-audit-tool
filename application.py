@@ -341,7 +341,7 @@ def view_project(project_name):
 
     try:
         projects = projects.json()
-    except Exception as e:
+    except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
 
@@ -416,7 +416,7 @@ def map_form_data(form):
     ]
     try:
         final_dict = {key: json.loads(form[key]) for key in keys}
-    except Exception as e:
+    except Exception:
         keys.pop()
         final_dict = {key: json.loads(form[key]) for key in keys}
     return final_dict
@@ -523,7 +523,7 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            projects = requests.put(
+            requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
                 headers=headers,
@@ -534,7 +534,7 @@ def survey():
             )
         else:
             # This is a new project creation
-            projects = requests.post(
+            requests.post(
                 f"{API_URL}/api/v1/projects",
                 json=data,
                 headers=headers,

@@ -3,9 +3,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -21,9 +21,12 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+      
       - name: Install Poetry
-        run: pipx install poetry==1.7.1
-
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry --version
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

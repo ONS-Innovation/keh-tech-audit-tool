@@ -4,6 +4,7 @@ function formatList(items) {
 }
 
 function loadData(projects) {
+    console.log(projects)
     try {
     // Technical Contact
     document.getElementById('technical-contact').querySelector('dd').querySelector('span').textContent = 
@@ -41,11 +42,16 @@ function loadData(projects) {
     
     try {
     // Project Details
+    try{
     document.getElementById('project-details').querySelector('dd').querySelector('span').innerHTML = 
         projectDetails;
+<<<<<<< Updated upstream
     } catch (e) {
         // No error
     }
+=======
+    }catch{}
+>>>>>>> Stashed changes
 
     try {
     // Developed

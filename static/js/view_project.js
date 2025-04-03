@@ -39,10 +39,15 @@ function loadData(projects) {
         projectDetails += `Project Description: <p style="font-weight:400">${projects.details[0].project_description}</p>`
     }
     
+    try {
     // Project Details
     document.getElementById('project-details').querySelector('dd').querySelector('span').innerHTML = 
         projectDetails;
+    } catch (e) {
+        // No error
+    }
 
+    try {
     // Developed
     if (projects.developed[0] == 'In House') {
         document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
@@ -59,8 +64,12 @@ function loadData(projects) {
     } else {
         document.getElementById('developed').querySelector('dd').querySelector('span').textContent = 
             'N/A';
+    } } 
+    catch (e) {
+        // No error
     }
     
+    try {
     // Source Control
     if (projects.source_control[0].type) {
         let sourceControlHtml = `${projects.source_control[0].type}`;
@@ -78,67 +87,138 @@ function loadData(projects) {
     } else {
         document.getElementById('source-control').querySelector('dd').querySelector('span').textContent = 
             'N/A';
+    }  } catch (e) {
+        // No error
     }
+    
 
+    try {   
     // Stage
     document.getElementById('stage').querySelector('dd').querySelector('span').textContent = 
         projects.stage || 'N/A';
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Hosting
     document.getElementById('hosting').querySelector('dd').querySelector('span').textContent = 
         `${projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : 'N/A'}`;
+    } catch (e) {
+        // No error
+    }
 
+    try {
     // Database
     document.getElementById('database').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.database.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {
     // Frameworks
     document.getElementById('frameworks').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.frameworks.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {
     // Languages
     const mainLangs = projects.architecture.languages.main.join(', ');
     const otherLangs = projects.architecture.languages.others.join(', ');
     document.getElementById('languages').querySelector('dd').querySelector('span').textContent = 
         `${mainLangs}${otherLangs ? ', ' + otherLangs : 'N/A'}`;
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // CI/CD
     document.getElementById('cicd').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.cicd.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Infrastructure
     document.getElementById('infrastructure').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.infrastructure.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {      
     // Code Editors
     document.getElementById('code_editors').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.code_editors.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // User Interface
     document.getElementById('user_interface').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.user_interface.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Diagrams
     document.getElementById('diagrams').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.diagrams.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Project Tracking
     document.getElementById('project_tracking').querySelector('dd').querySelector('span').textContent = 
         projects.supporting_tools.project_tracking || 'N/A';
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Documentation
     document.getElementById('documentation').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.documentation.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Communication
     document.getElementById('communication').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.communication.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Collaboration
     document.getElementById('collaboration').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.collaboration.others);
+    } catch (e) {
+        // No error
+    }
 
+    try {   
     // Incident Management
     document.getElementById('incident_management').querySelector('dd').querySelector('span').textContent = 
         projects.supporting_tools.incident_management || 'N/A';
+    } catch (e) {
+        // No error
+    }
+
+    try {
+    // Project Summary
+    document.getElementById('project_summary').querySelector('dd').querySelector('span').textContent = 
+        projects.project_summary || 'N/A';
+    } catch (e) {
+        // No error
+    }
 }

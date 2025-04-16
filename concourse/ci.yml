@@ -1,0 +1,80 @@
+resources:
+- name: resource-repo
+  type: git
+  icon: github
+  source:
+    uri: https://github.com/ONS-Innovation/keh-tech-audit-tool.git
+    branch: concourse
+
+- name: ui-image
+  type: registry-image
+  icon: docker
+  source:
+    repository: ((image-repo-name))
+    username: ((registry-username))
+    password: ((registry-password))
+    tag: ((container_ver))
+
+jobs:
+- name:  build-and-push
+  public: true
+  plan:
+  - get: resource-repo
+    trigger: true
+
+  - task: build-image
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: concourse/oci-build-task
+      inputs:
+      - name: resource-repo
+      outputs:
+      - name: image
+      params:
+        CONTEXT: resource-repo
+      run: # binary used to build the image
+        path: build
+
+  - put: ui-image
+    params:
+      image: image/image.tar
+      
+  - task: terraform
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: hashicorp/terraform}
+      inputs:
+      - name: resource-repo
+      run:
+        path: sh
+        args:
+        - -cx
+        - |
+          export AWS_ACCESS_KEY_ID=((aws_access_key_id))
+          export AWS_SECRET_ACCESS_KEY=((aws_secret_access_key))
+          git config --global url."https://x-access-token:((github_access_token))@github.com/".insteadOf "https://github.com/"
+          cd resource-repo/terraform/batch
+          terraform init -backend-config=env/dev/backend-dev.tfbackend -reconfigure
+          terraform apply \
+           -var "aws_account_id=((aws_account_id))" \
+           -var "aws_access_key_id=((aws_access_key_id))" \
+           -var "aws_secret_access_key=((aws_secret_access_key))" \
+           -var "aws_secret_name=((aws_secret_name))" \
+           -var "domain=((domain))" \
+           -var "container_ver=((container_ver))" \
+           -var "api_bucket_name=((api_bucket_name))" \
+           -var "api_secret_name=((api_secret_name))" \
+           -var "ui_secret_name=((ui_secret_name))" \
+           -var "aws_account_name=((aws_account_name))" \
+           -var "localhost=((localhost))" \
+           -var container_image=((container_image)) \
+           -var "force_deployment=((force_deployment))"
+           -auto-approve
+          

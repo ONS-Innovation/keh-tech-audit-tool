@@ -49,10 +49,9 @@ override.tf.json
 terraform.rc
 
 # Ignore the terraform/service prority calc
-terraform/service/highest_priority.txt
-terraform/service/highest_alb_listener_priority.txt
 
 script.sh
 
+concourse_vars.yml
 cookies/*
 *.pkl

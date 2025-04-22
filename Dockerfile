@@ -14,12 +14,13 @@ WORKDIR /app
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 RUN pip install poetry==1.8.3
+RUN make load-design
+
 
 # Copy the source code into the container.
 COPY .  /app
 
 RUN poetry install
-RUN make load-design
 # Change ownership of the application files to the non-root user
 RUN chown -R appuser:appuser /app
 

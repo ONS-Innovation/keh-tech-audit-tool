@@ -14,7 +14,7 @@ WORKDIR /app
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 RUN pip install poetry==1.8.3
-RUN ls
+
 
 # Copy the source code into the container.
 COPY .  /app

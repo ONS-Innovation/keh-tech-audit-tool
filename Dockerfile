@@ -19,7 +19,7 @@ RUN pip install poetry==1.8.3
 COPY .  /app
 
 RUN poetry install
-
+RUN make load-design
 # Change ownership of the application files to the non-root user
 RUN chown -R appuser:appuser /app
 

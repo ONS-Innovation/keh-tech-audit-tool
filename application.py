@@ -151,6 +151,7 @@ supportingNavItems = [
     {"text": "Communication", "url": "/survey/communication"},
     {"text": "Collaboration", "url": "/survey/collaboration"},
     {"text": "Incident Management", "url": "/survey/incident_management"},
+    {"text": "Collect All", "url": "/survey/collect_all"},
     {"text": "Summary", "url": "/survey/supporting_tools_summary"},
 ]
 

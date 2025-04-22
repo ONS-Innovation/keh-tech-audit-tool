@@ -60,7 +60,10 @@ jobs:
           export AWS_ACCESS_KEY_ID=((aws_access_key_id))
           export AWS_SECRET_ACCESS_KEY=((aws_secret_access_key))
           git config --global url."https://x-access-token:((github_access_token))@github.com/".insteadOf "https://github.com/"
-          cd resource-repo/terraform/service
+
+          cd resource-repo
+          make load-design
+          cd terraform/service
           terraform init -backend-config=env/dev/backend-dev.tfbackend -reconfigure
           terraform apply \
            -var "aws_account_id=((aws_account_id))" \

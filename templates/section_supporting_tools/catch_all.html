@@ -2,3 +2,13 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+<h1>Catch All</h1>
+{{ onsAccordion({
+    "id": "accordion-example",
+    "itemsList": [
+        {
+            "title": "More info",
+            "content": "<p>Please list tools used, but would not fit appropriately the previous sections. E.g Matchcode, Talend.</p>"
+        }
+    ]
+}) }}

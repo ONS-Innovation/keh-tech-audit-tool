@@ -699,10 +699,13 @@ def communication():
     return render_template("/section_supporting_tools/communication.html")
 
 
+@app.route("/survey/catch_all", methods=["GET"])
+def catch_all():
+    return render_template("/section_supporting_tools/catch_all.html")
+
 @app.route("/survey/collaboration", methods=["GET"])
 def collaboration():
     return render_template("/section_supporting_tools/collaboration.html")
-
 
 @app.route("/survey/incident_management", methods=["GET"])
 def incident_management():

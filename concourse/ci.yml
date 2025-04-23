@@ -21,6 +21,19 @@ jobs:
   plan:
   - get: resource-repo
     trigger: true
+  
+  - task: test
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: hashicorp/terraform}
+      inputs:
+      - name: resource-repo
+      run:
+        path: sh
+        args: ["./resource-repo/concourse/test_script.bash"]
 
   - task: build-image
     privileged: true
@@ -42,19 +55,6 @@ jobs:
   - put: ui-image
     params:
       image: image/image.tar
-  
-  - task: test
-    privileged: true
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: hashicorp/terraform}
-      inputs:
-      - name: resource-repo
-      run:
-        path: sh
-        args: ["./resource-repo/concourse/test_script.bash"]
 
   - task: terraform
     privileged: true

@@ -412,6 +412,7 @@ def map_form_data(form):
         "documentation",
         "communication",
         "collaboration",
+        "catch_all",
         "incident_management",
         "project_name",
     ]

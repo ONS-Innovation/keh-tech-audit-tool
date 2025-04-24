@@ -33,7 +33,7 @@ jobs:
       - name: resource-repo
       run:
         path: sh
-        args: ["resource-repo/concourse/test_script.bash"]
+        args: ["./resource-repo/concourse/scripts/test_script.bash"]
 
   - task: build-image
     privileged: true

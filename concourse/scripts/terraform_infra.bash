@@ -1,3 +1,6 @@
+set -e
+set -x
+
 export AWS_ACCESS_KEY_ID=((aws_access_key_id))
 export AWS_SECRET_ACCESS_KEY=((aws_secret_access_key))
 git config --global url."https://x-access-token:((github_access_token))@github.com/".insteadOf "https://github.com/"

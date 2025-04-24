@@ -65,24 +65,20 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
+      params:
+        aws_access_key_id: ((aws_access_key_id))
+        aws_secret_access_key: ((aws_secret_access_key))
+        aws_account_id: ((aws_account_id))
+        api_secret_name: ((api_secret_name))
+        domain: ((domain))
+        container_ver: ((container_ver))
+        api_bucket_name: ((api_bucket_name))
+        ui_secret_name: ((ui_secret_name))
+        aws_account_name: ((aws_account_name))
+        localhost: ((localhost))
+        container_image: ((container_image))
+        force_deployment: ((force_deployment))
       run:
         path: sh
-        args:
-        - -cx
-        - |
-           cd resource-repo/concourse/scripts \
-           chmod u+x terraform_infra.bash \
-           ./terraform_infra.bash \
-            --aws_account_id=((aws_account_id)) \
-            --aws_access_key_id=((aws_access_key_id)) \
-            --aws_secret_access_key=((aws_secret_access_key)) \
-            --api_secret_name=((api_secret_name)) \
-            --domain=((domain)) \
-            --container_ver=((container_ver)) \
-            --api_bucket_name=((api_bucket_name)) \
-            --ui_secret_name=((ui_secret_name)) \
-            --aws_account_name=((aws_account_name)) \
-            --localhost=((localhost)) \
-            --container_image=((container_image)) \
-            --force_deployment=((force_deployment)) \
+        args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]
           

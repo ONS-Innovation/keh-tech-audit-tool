@@ -1,0 +1,190 @@
+{% extends "core.html" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Miscellaneous</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list tools used, but would not fit appropriately the previous sections, along with a vrief description. E.g Matchcode, Talend.</p>"
+            }
+        ]
+    }) }}
+        {{ onsInput({
+        "id": "miscellaneous-input",
+        "label": {
+            "text": "Enter The name of the tool."
+        }
+    }) }}
+        {{ onsInput({
+        "id": "miscellaneous_desc-input",
+        "label": {
+            "text": "How would you describe this tool?"
+                    "searchButton": {
+                "visuallyHideButtonText": false,
+                "text": 'Add',
+                "iconType": 'check',
+                "attributes": {
+                    "onclick": "addData()"
+                }
+            }
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Miscellaneous"
+            },
+            {
+                "value": "Description"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+    <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                    var name = 'miscellaneous-data';
+                    if (JSON.parse(localStorage.getItem('edit'))) {
+                        name = 'miscellaneous-data-edit';
+                    }
+                var langArr = {
+                    "miscellaneous": "",
+                    "other_miscellaneous": "",
+                    "complete": null,
+                    "mtools": []
+                }
+                function storeData() {
+
+                    localStorage.setItem(name, JSON.stringify(langArr));
+                }
+                function loadData() {
+                    if (localStorage.getItem(name) === null) {
+                        localStorage.setItem(name, JSON.stringify(langArr));
+                    }
+                    langArr = JSON.parse(localStorage.getItem(name));
+                    renderData();
+                }
+                function renderData() {
+                    var tableBody = document.querySelector('#table-list tbody');
+                    tableBody.innerHTML = '';
+                    (langArr.mtools || []).forEach(item => {
+                        var newRow = document.createElement('tr');
+                        newRow.classList.add('ons-table__row');
+                        newRow.innerHTML = `
+            <td class="ons-table__cell">${
+                            escapeHtml(item.url)
+                        }</td>
+            <td class="ons-table__cell">${
+                            escapeHtml(item.description)
+                        }</td>
+            <td class="ons-table__cell">
+                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${
+                            escapeHtml(item.url)
+                        }")'>
+                    <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>
+                </button>
+            </td>
+        `;
+                        tableBody.appendChild(newRow);
+                    });
+                }
+                function removeData(url) {
+                    langArr.mtools = langArr.mtools.filter(item => item.url !== url);
+                    storeData();
+                    renderData();
+                }
+                function showError() {
+                    document
+                        .getElementById('error-panel')
+                        .style
+                        .display = 'block';
+                }
+                function addData(event) {
+                    var mtool = document.getElementById('miscellaneous-input');
+                    var desc = document.getElementById('miscellaneous_desc-input');
+                    var mtool_value = mtool.value;
+                    var desc_value = desc.value;
+                    if (! mtool_value && ! desc_value) {
+                        showError();
+                        return;
+                    }
+                    if (! langArr.mtools) {
+                        langArr.mtools = [];
+                    }
+                    try {
+                        if (langArr.mtools.some(item => item.url.toLowerCase() === link_value.toLowerCase())) {
+                            showError();
+                            return;
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    langArr.mtools.push({url: mtool_value, description: desc_value});
+                    storeData();
+                    renderData();
+                    mtool.value = '';
+                    desc.value = '';
+                    document
+                        .getElementById("error-panel")
+                        .style
+                        .display = "none";
+                }
+                document.getElementById('miscellaneous_desc-input').onkeydown = function (event) {
+                    if (event.key === 'Enter') {
+                        addData(event);
+                    }
+                };
+            </script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+        "id": "save-values-button",
+        "text": "Save and continue",
+        "iconType": "arrow-next",
+        "iconPosition": "after",
+        "url": url_for('hosting'),
+        "attributes": {
+            "onclick": "storeData();"
+        }
+    }) }}
+            </form>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                if (JSON.parse(localStorage.getItem("miscellaneous-validate")) && JSON.parse(localStorage.getItem("edit"))) {
+                    document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');
+                } else if (JSON.parse(localStorage.getItem("miscellaneous-validate"))) {
+                    document.getElementById("save-values-button").href = '/validate_details'
+                }
+                loadData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

@@ -494,6 +494,7 @@ class SupportingToolsSummaryManager {
             'diagram_details': 'diagrams-data',
             'documentation_details': 'documentation-data',
             'communication_details': 'communication-data',
+            'miscellaneous_details': 'miscellaneous-data',
             'collaboration_details': 'collaboration-data'
         };
 

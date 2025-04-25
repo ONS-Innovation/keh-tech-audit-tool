@@ -146,7 +146,7 @@
             var projectTrackingData = localStorage.getItem('project_tracking-data');
             var documentationData = localStorage.getItem('documentation-data');
             var communicationData = localStorage.getItem('communication-data');
-            var catch_allData = localStorage.getItem('catch-all-data');
+            var miscellaneousData = localStorage.getItem('miscellaneous-data');
             var collaborationData = localStorage.getItem('collaboration-data');
             var incidentManagementData = localStorage.getItem('incident_management-data');
             
@@ -155,11 +155,11 @@
             frameworksData, integrationsData, infrastructureData, 
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
-            collaborationData,catch_allData, incidentManagementData);
+            collaborationData,miscellaneousData, incidentManagementData);
             updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
-            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, catch_allData, incidentManagementData]);
+            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, miscellaneousData, incidentManagementData]);
         }
         load_data();
         localStorage.setItem("source_control-validate", false);

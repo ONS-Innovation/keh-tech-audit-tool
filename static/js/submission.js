@@ -542,6 +542,7 @@ const UIUpdater = {
             project_tracking: data.supporting_tools.project_tracking,
             documentation: data.supporting_tools.documentation,
             communication: data.supporting_tools.communication,
+            miscellaneous: data.supporting_tools.miscellaneous,
             collaboration: data.supporting_tools.collaboration,
             incident_management: data.supporting_tools.incident_management
         };
@@ -572,7 +573,7 @@ const AppController = {
             `infrastructure-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
-            `collaboration-data${suffix}`, `incident_management-data${suffix}`
+            `miscellaneous-data${suffix}`,`collaboration-data${suffix}`, `incident_management-data${suffix}`
         ];
     },
     
@@ -621,6 +622,7 @@ const AppController = {
             project_tracking: DataUtils.safeJsonParse(storedData['project_tracking']),
             documentation: ErrorHandler.validateData(storedData['documentation'], 'Documentation'),
             communication: ErrorHandler.validateData(storedData['communication'], 'Communication'),
+            miscellaneous: ErrorHandler.validateData(storedData['miscellaneous'], 'Miscellaneous'),
             collaboration: ErrorHandler.validateData(storedData['collaboration'], 'Collaboration'),
             incident_management: DataUtils.safeJsonParse(storedData['incident_management'])
         };

@@ -19,6 +19,9 @@ jobs:
 - name:  build-and-push
   public: true
   plan:
+  - get: resource-repo
+    trigger: true
+    timeout: 5m
   - task: test-secret
     privileged: true
     config:
@@ -33,9 +36,7 @@ jobs:
       run:
         path: sh
         args: ["./resource-repo/concourse/scripts/test_script.bash"]
-  - get: resource-repo
-    trigger: true
-    timeout: 5m
+
 
   - task: build-image
     privileged: true

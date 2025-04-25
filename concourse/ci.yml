@@ -19,10 +19,7 @@ jobs:
 - name:  build-and-push
   public: true
   plan:
-  - get: resource-repo
-    trigger: true
-  
-  - task: test
+  - task: test-secret
     privileged: true
     config:
       platform: linux
@@ -31,9 +28,14 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
+      params:
+        test_secret: ((test-secret-tat))
       run:
         path: sh
         args: ["./resource-repo/concourse/scripts/test_script.bash"]
+  - get: resource-repo
+    trigger: true
+    timeout: 5m
 
   - task: build-image
     privileged: true
@@ -51,10 +53,12 @@ jobs:
         CONTEXT: resource-repo
       run: # binary used to build the image
         path: build
+    timeout: 10m
 
   - put: ui-image
     params:
       image: image/image.tar
+    timeout: 5m
 
   - task: terraform
     privileged: true
@@ -78,7 +82,9 @@ jobs:
         localhost: ((localhost))
         container_image: ((container_image))
         force_deployment: ((force_deployment))
+        github_access_token: ((github_access_token))
       run:
         path: sh
         args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]
+    timeout: 30m
           

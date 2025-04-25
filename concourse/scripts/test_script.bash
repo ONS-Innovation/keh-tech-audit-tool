@@ -1,1 +1,1 @@
-echo "hello"
+echo $test_secret

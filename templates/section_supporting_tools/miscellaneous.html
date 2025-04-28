@@ -36,18 +36,19 @@
             "text": "Enter The name of the tool."
         }
     }) }}
-        {{ onsInput({
+    {{ onsInput({
         "id": "miscellaneous_desc-input",
         "label": {
             "text": "How would you describe this tool?"
-                    "searchButton": {
-                "visuallyHideButtonText": false,
-                "text": 'Add',
-                "iconType": 'check',
-                "attributes": {
-                    "onclick": "addData()"
-                }
+        },
+        "searchButton": {
+            "visuallyHideButtonText": false,
+            "text": 'Add',
+            "iconType": 'check',
+            "attributes": {
+                "onclick": "addData()"
             }
+        }
     }) }}
         <br>
             {% from "components/table/_macro.njk" import onsTable %}

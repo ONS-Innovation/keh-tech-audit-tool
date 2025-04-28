@@ -74,6 +74,8 @@ jobs:
         aws_account_id: ((aws_account_id))
         api_secret_name: ((api_secret_name))
         test_secret: ((test-secret-tat))
+        aws_access_key_id: ((aws_access_key_id))
+        aws_secret_access_key: ((aws_secret_access_key))
         domain: ((domain))
         container_ver: ((container_ver))
         api_bucket_name: ((api_bucket_name))

@@ -503,6 +503,9 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
             ]),
+            miscellaneous_details: data.miscellaneous[0]?.type ? 
+                `${data.miscellaneous[0].type}${data.miscellaneous[0].mtools.map(mtool => 
+                    `<br>${mtool.description}: <a href="${mtool.url}" target="_blank">${mtool.url}</a>`).join('')}` : '',
             collaboration_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])

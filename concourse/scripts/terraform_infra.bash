@@ -3,6 +3,10 @@ set -x
 
 apk add --no-cache jq
 
+aws_access_key_id=$(echo "$test_secret" | jq .aws_access_key_id)
+aws_secret_access_key=$(echo "$test_secret" | jq .aws_secret_access_key)
+
+
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 git config --global url."https://x-access-token:$github_access_token@github.com/".insteadOf "https://github.com/"

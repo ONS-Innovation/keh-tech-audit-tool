@@ -3,8 +3,8 @@ set -x
 
 apk add --no-cache jq
 
-aws_access_key_id=$(echo "$test_secret" | jq .aws_access_key_id)
-aws_secret_access_key=$(echo "$test_secret" | jq .aws_secret_access_key)
+aws_access_key_id=$(echo "$test_secret" | jq -r .aws_access_key_id)
+aws_secret_access_key=$(echo "$test_secret" | jq -r .aws_secret_access_key)
 
 
 export AWS_ACCESS_KEY_ID=$aws_access_key_id

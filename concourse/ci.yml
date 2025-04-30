@@ -10,8 +10,8 @@ resources:
   type: registry-image
   icon: docker
   source:
-    repository: ((image-repo-name))
-    username: ((registry-username))
+    repository: ((aws_account_sdp_dev)).dkr.ecr.eu-west-2.amazonaws.com/tech-audit-tool
+    username: AWS
     password: ((registry-password))
 
 jobs:
@@ -56,16 +56,7 @@ jobs:
       inputs:
       - name: resource-repo
       params:
-        aws_account_id: ((aws_account_id))
-        api_secret_name: ((api_secret_name))
-        test_secret: ((test-secret-tat))
-        domain: ((domain))
-        api_bucket_name: ((api_bucket_name))
-        ui_secret_name: ((ui_secret_name))
-        aws_account_name: ((aws_account_name))
-        localhost: ((localhost))
-        container_image: ((container_image))
-        force_deployment: ((force_deployment))
+        tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
       run:
         path: sh

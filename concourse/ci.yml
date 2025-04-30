@@ -59,6 +59,7 @@ jobs:
   - put: ui-image
     params:
       image: image/image.tar
+      additional_tags: resource-repo/tag
     timeout: 5m
 
   - task: terraform

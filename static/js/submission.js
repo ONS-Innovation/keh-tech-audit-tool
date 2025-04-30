@@ -505,7 +505,7 @@ const UIUpdater = {
             ]),
             miscellaneous_details: data.miscellaneous[0]?.type ? 
                 `${data.miscellaneous[0].type}${data.miscellaneous[0].mtools.map(mtool => 
-                    `<br>${mtool.description}: <a href="${mtool.url}" target="_blank">${mtool.url}</a>`).join('')}` : '',
+                    `<br>${mtool.description}: <a href="${mtool.name}" target="_blank">${mtool.name}</a>`).join('')}` : '',
             collaboration_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])

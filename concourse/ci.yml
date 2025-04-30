@@ -13,7 +13,6 @@ resources:
     repository: ((image-repo-name))
     username: ((registry-username))
     password: ((registry-password))
-    tag: ((container_ver))
 
 jobs:
 - name:  build-and-push
@@ -22,21 +21,6 @@ jobs:
   - get: resource-repo
     trigger: true
     timeout: 5m
-  - task: test-secret
-    privileged: true
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: hashicorp/terraform}
-      inputs:
-      - name: resource-repo
-      params:
-        test_secret: ((test-secret-tat))
-      run:
-        path: sh
-        args: ["./resource-repo/concourse/scripts/test_script.bash"]
-
 
   - task: build-image
     privileged: true
@@ -76,7 +60,6 @@ jobs:
         api_secret_name: ((api_secret_name))
         test_secret: ((test-secret-tat))
         domain: ((domain))
-        container_ver: ((container_ver))
         api_bucket_name: ((api_bucket_name))
         ui_secret_name: ((ui_secret_name))
         aws_account_name: ((aws_account_name))

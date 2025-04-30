@@ -5,7 +5,7 @@ apk add --no-cache jq
 
 aws_access_key_id=$(echo "$test_secret" | jq -r .aws_access_key_id)
 aws_secret_access_key=$(echo "$test_secret" | jq -r .aws_secret_access_key)
-
+container_ver=$(cat resource-repo/tag)
 
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key

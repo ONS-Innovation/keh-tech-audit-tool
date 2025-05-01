@@ -229,6 +229,26 @@ Delete the service resources by running the following ensuring your reference th
 
   terraform destroy -var-file=env/dev/dev.tfvars
   ```
+### Deployments with Concourse
+
+To setup the deployment pipeline with concourse, you must first allowlist your IP address on the Concourse
+server. IP addresses are flushed everyday at 00:00 so this must be done at the beginning of every working day
+whenever the deployment pipeline needs to be used. Follow the instructions on the [following Concourse page]() to
+login. All our pipelines run on sdp-pipeline-prod, whereas sdp-pipeline-dev is the account used for
+changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod.
+
+When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS.
+First you must unset the presvious AWS_SESSION_TOKEN from the previous step with `unset AWS_SESSION_TOKEN`. We don't want our Concourse account to interfere with our ecs-infra-user account. Proceed then to export the appropriate user credentials.
+
+To then finally set the pipeline, run the following command in the directory's root:
+```bash
+fly -t aws-sdp set-pipeline -p KEH-TAT-UI -c concourse/ci.yml
+```
+
+Once the pipeline has been set, pushing commits into the `concourse` branch will automatically trigger
+a build which will push a docker image to ECR, and the infrastructure finally terraformed.
+
+To change the repository version in ECR, the `tag` file at the root of the directory can be changed e.g `vX.X.X`. Note that terraform infrastructure will not be updated unless this tag is updated.
 
 ### Linting
 

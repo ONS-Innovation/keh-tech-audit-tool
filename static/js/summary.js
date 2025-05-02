@@ -384,13 +384,38 @@ class InfrastructureProcessor extends SectionProcessor {
     }
 }
 
+
+class MiscellaneousProcessor extends SectionProcessor {
+    processData(miscellaneousData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(miscellaneousData);
+            if (!data) return '';
+
+            let miscellaneousHtml = `${data.miscellaneous}`;
+            
+            if (data.mtools && data.mtools.length > 0) {
+                data.mtools.forEach(mtool => {
+                    if (mtool.description && mtool.name) {
+                        miscellaneousHtml += `<br>${SummaryUtils.escapeHtml(mtool.description)}: <a href="${SummaryUtils.escapeHtml(mtool.name)}" target="_blank">${SummaryUtils.escapeHtml(mtool.name)}</a>`;
+                    }
+                });
+            }
+
+            return miscellaneousHtml;
+        } catch (e) {
+            console.error('Error processing miscellanous data:', e);
+            return '';
+        }
+    }
+}
+
 // Supporting Tools Processors
 class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
         try {
             const data = SummaryUtils.safeJsonParse(toolData);
-            if (!data || !data.others) return '';
-
+            if (!data || !data.others || !data.mtools) return '';
+ 
             return data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ');
         } catch (e) {
             console.error('Error processing tool data:', e);
@@ -483,6 +508,7 @@ class SupportingToolsSummaryManager {
     constructor() {
         this.errorManager = new ErrorManager('error-panel', 'error-label');
         this.toolsProcessor = new ToolsProcessor(this.errorManager);
+        this.miscellaneousProcessor = new MiscellaneousProcessor(this.errorManager)
         this.projectTrackingProcessor = new SingleValueProcessor(this.errorManager, 'project_tracking');
         this.incidentManagementProcessor = new SingleValueProcessor(this.errorManager, 'incident_management');
     }
@@ -505,6 +531,11 @@ class SupportingToolsSummaryManager {
             );
             this.toolsProcessor.updateUI(elementId, details);
         }
+
+        const miscellaneousDetails = this.miscellaneousProcessor.processData(
+            localStorage.getItem('miscellaneous-data')
+        );
+        this.miscellaneousProcessor.updateUI('miscellaneous_details', miscellaneousDetails)
 
         // Process project tracking
         const projectTrackingDetails = this.projectTrackingProcessor.processData(

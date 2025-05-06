@@ -396,7 +396,7 @@ class MiscellaneousProcessor extends SectionProcessor {
             if (data.mtools && data.mtools.length > 0) {
                 data.mtools.forEach(mtool => {
                     if (mtool.description && mtool.name) {
-                        miscellaneousHtml += `<br>${SummaryUtils.escapeHtml(mtool.description)}: <a href="${SummaryUtils.escapeHtml(mtool.name)}" target="_blank">${SummaryUtils.escapeHtml(mtool.name)}</a>`;
+                        miscellaneousHtml += `<br>${SummaryUtils.escapeHtml(mtool.name)}: <a href="${SummaryUtils.escapeHtml(mtool.description)}" target="_blank" style="color: black; text-decoration: none">${SummaryUtils.escapeHtml(mtool.description)}</a>`;
                     }
                 });
             }
@@ -508,7 +508,7 @@ class SupportingToolsSummaryManager {
     constructor() {
         this.errorManager = new ErrorManager('error-panel', 'error-label');
         this.toolsProcessor = new ToolsProcessor(this.errorManager);
-        this.miscellaneousProcessor = new MiscellaneousProcessor(this.errorManager)
+        this.miscellaneousProcessor = new MiscellaneousProcessor(this.errorManager);
         this.projectTrackingProcessor = new SingleValueProcessor(this.errorManager, 'project_tracking');
         this.incidentManagementProcessor = new SingleValueProcessor(this.errorManager, 'incident_management');
     }
@@ -535,7 +535,7 @@ class SupportingToolsSummaryManager {
         const miscellaneousDetails = this.miscellaneousProcessor.processData(
             localStorage.getItem('miscellaneous-data')
         );
-        this.miscellaneousProcessor.updateUI('miscellaneous_details', miscellaneousDetails)
+        this.miscellaneousProcessor.updateUI('miscellaneous_details', miscellaneousDetails);
 
         // Process project tracking
         const projectTrackingDetails = this.projectTrackingProcessor.processData(

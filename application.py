@@ -699,11 +699,6 @@ def documentation():
 def communication():
     return render_template("/section_supporting_tools/communication.html")
 
-
-@app.route("/survey/miscellaneous", methods=["GET"])
-def miscellaneous():
-    return render_template("/section_supporting_tools/miscellaneous.html")
-
 @app.route("/survey/collaboration", methods=["GET"])
 def collaboration():
     return render_template("/section_supporting_tools/collaboration.html")
@@ -712,6 +707,9 @@ def collaboration():
 def incident_management():
     return render_template("/section_supporting_tools/incident_management.html")
 
+@app.route("/survey/miscellaneous", methods=["GET"])
+def miscellaneous():
+    return render_template("/section_supporting_tools/miscellaneous.html")
 
 # ------------------------
 # SUMMARY SECTION RENDERING

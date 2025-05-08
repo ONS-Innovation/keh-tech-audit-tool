@@ -1,6 +1,6 @@
 set -euo pipefail
 
-apk add --no-cache aws-cli
+apk add --no-cache aws-cli colima
 
 # Extract credentials from the given user
 aws sts assume-role --output text \

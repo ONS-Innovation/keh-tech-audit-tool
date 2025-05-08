@@ -1,8 +1,6 @@
 set -euo pipefail
 
-apk add --no-cache aws-cli colima
-
-colima start
+apk add --no-cache aws-cli podman
 
 # Extract credentials from the given user
 aws sts assume-role --output text \

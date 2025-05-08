@@ -25,7 +25,7 @@ jobs:
       inputs:
       - name: resource-repo
       params:
-        account_id: ((aws_account_sdp_dev))
+        aws_account_id: ((aws_account_sdp_dev))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
       run: # binary used to build the image
         path: sh

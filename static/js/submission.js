@@ -503,9 +503,31 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
             ]),
-            miscellaneous_details: data.miscellaneous[0]?.type ? 
-                `${data.miscellaneous[0].type}${data.miscellaneous[0].mtools.map(mtool => 
-                    `<br>${mtool.description}: <a href="${mtool.name}" target="_blank">${mtool.name}</a>`).join('')}` : '',
+            miscellaneous_details: (() => {
+                const raw = localStorage.getItem("miscellaneous-data");
+                const obj = raw ? JSON.parse(raw) : { mtools: [] };
+              
+                if (!Array.isArray(obj.mtools) || obj.mtools.length === 0) {
+                  return "";
+                }
+              
+                // Minimal HTML escape function
+                const escape = str => (
+                  str == null ? "" :
+                  String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;")
+                );
+              
+                return obj.mtools
+                  .map(m =>
+                    `${escape(m.name)}: <span style="font-weight:400;">${escape(m.description)}</span>`
+                  )
+                  .join("<br>");
+              })(),
             collaboration_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])

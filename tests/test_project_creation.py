@@ -140,6 +140,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         """Assert that the validation page has the correct details"""
         driver = self.driver
         assert driver.current_url == "http://localhost:8000/validate_details"
+        import time; time.sleep(5)
         assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
         assert (
             "testmanager@ons.gov.uk"

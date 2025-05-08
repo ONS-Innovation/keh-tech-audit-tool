@@ -14,3 +14,5 @@ export AWS_SECRET_ACCESS_KEY="$(cat SecretAccessKey)"
 export AWS_SESSION_TOKEN="$(cat SessionToken)"
 
 echo "${AWS_ACCESS_KEY_ID}"
+echo "${AWS_SECRET_ACCESS_KEY}"
+echo "${AWS_SESSION_TOKEN}"

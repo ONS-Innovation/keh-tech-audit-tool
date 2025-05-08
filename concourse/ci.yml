@@ -9,7 +9,6 @@ resources:
 jobs:
 - name:  build-and-push
   public: true
-  privileged: true
   plan:
   - get: resource-repo
     trigger: true

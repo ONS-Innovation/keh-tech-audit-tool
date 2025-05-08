@@ -2,6 +2,8 @@ set -euo pipefail
 
 apk add --no-cache aws-cli colima
 
+colima start
+
 # Extract credentials from the given user
 aws sts assume-role --output text \
     --role-arn "${aws_role_arn}" \

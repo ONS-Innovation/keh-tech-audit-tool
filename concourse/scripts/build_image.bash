@@ -1,8 +1,11 @@
 
 cd ../..
 
-docker build -t tech-audit-tool .
+aws ecr get-login-password --region region | podman login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.region.amazonaws.com
 
-docker tag tech-audit-tool:latest ${account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech-audit-tool:latest
+podman pull ${aws_account_id}.dkr.ecr.region.amazonaws.com/tech_audit_tool:latest
 
-docker push ${account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech-audit-tool:latest
+podman run -d ${aws_account_id}.dkr.ecr.region.amazonaws.com/tech_audit_tool:latest
+
+podman tag tech_audit_tool:latest ${aws_account_id}.dkr.ecr.region.amazonaws.com/tech_audit_tool:latest
+podman push ${aws_account_id}.dkr.ecr.region.amazonaws.com/tech_audit_tool:latest

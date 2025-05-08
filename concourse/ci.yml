@@ -25,7 +25,7 @@ jobs:
       - name: resource-repo
       params:
         acccount_id: ((aws_account_sdp_dev))
-        aws_role_arn: arn:aws:iam::((aws_role_arn_sdp_dev)):role/sdp-concourse-dev
+        aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
       run: # binary used to build the image
         path: sh
         args: ["./resource-repo/concourse/scripts/build_image.bash"]

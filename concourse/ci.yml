@@ -28,7 +28,11 @@ jobs:
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
       run: # binary used to build the image
         path: sh
-        args: ["./resource-repo/concourse/scripts/build_image.bash"]
+        args:
+        - exc
+        - |
+          ./resource-repo/concourse/scripts/assume_role.bash
+          ./resource-repo/concourse/scripts/build_image.bash
     timeout: 10m
 
   - task: terraform

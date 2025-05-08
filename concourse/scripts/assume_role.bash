@@ -5,6 +5,9 @@ set -x
 apk add --no-cache aws-cli podman
 
 # Extract credentials from the given user
+
+echo "${aws_account_id}"
+
 aws sts assume-role --output text \
     --role-arn "${aws_role_arn}" \
     --role-session-name concourse-pipeline-run \

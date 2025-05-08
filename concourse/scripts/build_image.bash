@@ -1,8 +1,6 @@
 set -e
 set -x
 
-cd ../..
-
 echo ${aws_account_id}
 
 export STORAGE_DRIVER=vfs

@@ -346,8 +346,8 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         driver.implicitly_wait(10)
         email = driver.find_element(By.ID, "contact-email")
-        self.wait.until(EC.element_to_be_clickable(email)).click()
         email.send_keys("test@ons.gov.uk")
+        self.wait.until(EC.element_to_be_clickable(email)).click()
 
         choice = self.click_radio(driver, ["Grade 6", "Grade 7", "SEO", "HEO", "other"])
 
@@ -782,42 +782,25 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         """
         logging.info("Testing complete_miscellaneous...")
         driver.implicitly_wait(10)
-        # 1) Navigate to the section
-        #    You probably have a summary button you click to open the form:
-        link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[N]
-        # Replace N with the zero‑based index of the “Miscellaneous” button in your summary list
-        self.wait.until(EC.element_to_be_clickable(link)).click()
-        self.click_link(driver, "Continue")
 
-            # add two miscellaneous tools
-        misc_tools = [
-                ("Matchcode", "A code-matching tool"),
-                ("Talend",    "An ETL & data integration suite"),
-                ]
 
-        #for tool fill the name and description fileds and click add
-        for name, desc in misc_tools:
+        #Find the two inputs
+        name_input = driver.find_element(By.ID, "miscellaneous-input")
+        desc_input = driver.find_element(By.ID, "miscellaneous_desc-input")
 
-            #Find the two inputs
-            name_input = self.wait.until(EC.element_to_be_clickable(
-                driver.find_element(By.ID, "miscellaneous-input")
-            ))
-            desc_input = driver.find_element(By.ID, "miscellaneous_desc-input")
+        name_input.send_keys("Matchcode")
 
-            name_input.clear()
-            name_input.send_keys(name)
+        desc_input.send_keys("A code-matching tool")
 
-            desc_input.clear()
-            desc_input.send_keys(desc)
-
-            # the Add button is the searchButton in the macro
-            add_btn = driver.find_element(
-                By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
-            )
-            self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        # the Add button is the searchButton in the macro
+        add_btn = driver.find_element(
+            By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
+        )
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         
         # 4) Finally click Save and continue
         self.click_link(driver, "Save and continue")
+        self.click_link(driver, "Finish section")
 
 
     def complete_incident_management(self, driver):
@@ -835,7 +818,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.wait.until(EC.element_to_be_clickable(other_input)).click()
             other_input.send_keys("Zendesk")
         self.click_link(driver, "Save and continue")
-        self.click_link(driver, "Finish section")
 
 
 if __name__ == "__main__":

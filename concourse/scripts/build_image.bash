@@ -1,6 +1,8 @@
-./assume_role.bash
 
 cd ../..
+
+./concourse/scripts/assume_role.bash
+
 
 docker build -t tech-audit-tool .
 

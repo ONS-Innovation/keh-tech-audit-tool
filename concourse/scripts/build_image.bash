@@ -1,3 +1,4 @@
+set -euo pipefail
 set -e
 set -x
 

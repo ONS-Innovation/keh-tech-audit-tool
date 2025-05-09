@@ -10,6 +10,6 @@ aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs logi
 
 podman build -t tech_audit_tool:latest resource-repo
 
-podman tag tech_audit_tool:latest ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech_audit_tool:latest
+podman tag tech_audit_tool:latest ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech-audit-tool:latest
 
-podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech_audit_tool:latest
+podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/tech-audit-tool:latest

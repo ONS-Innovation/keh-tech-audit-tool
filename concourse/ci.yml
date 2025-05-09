@@ -33,7 +33,6 @@ jobs:
         - |
           chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
           chmod u+x ./resource-repo/concourse/scripts/build_image.bash
-          ./resource-repo/concourse/scripts/assume_role.bash
           ./resource-repo/concourse/scripts/build_image.bash
     timeout: 10m
 

@@ -328,6 +328,14 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text) > 0
         )
+        assert (
+            "Matchcode"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+        )
+        assert (
+            "A code-matching tool"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+        )
 
     def complete_contact_details(self, driver):
         """Complete contact details i.e technical contact and delivery manager

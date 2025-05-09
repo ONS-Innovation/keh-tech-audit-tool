@@ -14,6 +14,8 @@ aws sts assume-role --output text \
     --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
     | awk -F '\t' '{print $1 > ("AccessKeyId")}{print $2 > ("SecretAccessKey")}{print $3 > ("SessionToken")}'
 
+aws sts get-caller-identity --output=json
+
 export AWS_ACCESS_KEY_ID="$(cat AccessKeyId)"
 export AWS_SECRET_ACCESS_KEY="$(cat SecretAccessKey)"
 export AWS_SESSION_TOKEN="$(cat SessionToken)"

@@ -4,7 +4,7 @@ resources:
   icon: github
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool.git
-    branch: concourse
+    branch: ((branch))
 
 jobs:
 - name:  build-and-push
@@ -33,7 +33,6 @@ jobs:
         - |
           chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
           chmod u+x ./resource-repo/concourse/scripts/build_image.bash
-          source ./resource-repo/concourse/scripts/assume_role.bash
           ./resource-repo/concourse/scripts/build_image.bash
     timeout: 10m
 

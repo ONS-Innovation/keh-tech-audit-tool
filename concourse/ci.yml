@@ -26,6 +26,7 @@ jobs:
       params:
         aws_account_id: ((aws_account_sdp_dev))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+        tag: ((tag))
       run: # binary used to build the image
         path: sh
         args:

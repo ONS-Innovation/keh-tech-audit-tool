@@ -523,12 +523,7 @@ def survey():
             "communication": form_data.get("communication", ""),
             "collaboration": form_data.get("collaboration", ""),
             "miscellaneous": form_data.get("miscellaneous", ""),
-            "incident_management": form_data.get("incident_management", ""),
-            "miscellaneous": (
-            form_data.get("miscellaneous", {}).get("miscellaneous", "")
-            if isinstance(form_data.get("miscellaneous"), dict)
-            else form_data.get("miscellaneous", "")
-        )
+            "incident_management": form_data.get("incident_management", "")
         },
     }
 

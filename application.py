@@ -248,7 +248,7 @@ def autocomplete(search):
     if search in array_data:
         # Formats the data into a list of dictionaries with the key 'en' and
         # the value of the search result. This is the format needed for ONS autosuggest.
-        result = [{"en": language.capitalize()} for language in array_data[search]]
+        result = [{"en": tech} for tech in array_data[search]]
         return json.dumps(result)
     else:
         abort(404, description=f"No autocomplete data found for type: {search}")

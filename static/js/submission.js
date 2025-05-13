@@ -421,10 +421,13 @@ const DataNormalizer = {
                 communication: cleanedData.communication || { main: [], others: [] },
                 collaboration: cleanedData.collaboration || { main: [], others: [] },
                 incident_management: cleanedData.incident_management?.incident_management || '',
-                miscellaneous: [{
-                    name: cleanedData.miscellaneous.mtools?.name || '',
-                    description: cleanedData.miscellaneous.mtools?.description || ''
-                }]
+                "miscellaneous": Array.isArray(cleanedData.miscellaneous)
+                    ? cleanedData.miscellaneous
+                    : (
+                        cleanedData.miscellaneous.mtools
+                        ? cleanedData.miscellaneous.mtools
+                        : []
+                    )
             }
         };
         

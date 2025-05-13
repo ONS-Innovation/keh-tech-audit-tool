@@ -412,10 +412,13 @@ def map_form_data(form):
         "documentation",
         "communication",
         "collaboration",
-        "miscellaneous",
         "incident_management",
+        "miscellaneous",
         "project_name",
     ]
+    for key in keys:
+        if key == "miscellaneous":
+            print(form[key])
     try:
         final_dict = {key: json.loads(form[key]) for key in keys}
     except Exception:
@@ -520,6 +523,11 @@ def survey():
             "communication": form_data.get("communication", ""),
             "collaboration": form_data.get("collaboration", ""),
             "incident_management": form_data.get("incident_management", ""),
+            "miscellaneous": (
+            form_data.get("miscellaneous", {}).get("miscellaneous", "")
+            if isinstance(form_data.get("miscellaneous"), dict)
+            else form_data.get("miscellaneous", "")
+        )
         },
     }
 

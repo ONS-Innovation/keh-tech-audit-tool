@@ -300,7 +300,7 @@ const DataNormalizer = {
                 complete: false
             };
         }
-        
+        console.log(data.supporting_tools)
         // Prepare normalized data
         return {
             contact_tech: data.user[0] || { contactEmail: '', role: '' },
@@ -322,7 +322,8 @@ const DataNormalizer = {
             documentation: data.supporting_tools.documentation,
             communication: data.supporting_tools.communication,
             collaboration: data.supporting_tools.collaboration,
-            incident_management: { incident_management: data.supporting_tools.incident_management }
+            incident_management: { incident_management: data.supporting_tools.incident_management },
+            miscellaneous: data.supporting_tools.miscellaneous
         };
     },
     
@@ -419,7 +420,11 @@ const DataNormalizer = {
                 documentation: cleanedData.documentation || { main: [], others: [] },
                 communication: cleanedData.communication || { main: [], others: [] },
                 collaboration: cleanedData.collaboration || { main: [], others: [] },
-                incident_management: cleanedData.incident_management?.incident_management || ''
+                incident_management: cleanedData.incident_management?.incident_management || '',
+                miscellaneous: [{
+                    name: cleanedData.miscellaneous.mtools?.name || '',
+                    description: cleanedData.miscellaneous.mtools?.description || ''
+                }]
             }
         };
         

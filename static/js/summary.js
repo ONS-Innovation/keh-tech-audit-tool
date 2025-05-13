@@ -384,26 +384,24 @@ class InfrastructureProcessor extends SectionProcessor {
     }
 }
 
-
 class MiscellaneousProcessor extends SectionProcessor {
     processData(miscellaneousData) {
         try {
             const data = SummaryUtils.safeJsonParse(miscellaneousData);
-            if (!data) return '';
+            if (!data || !data.miscellaneous || !Array.isArray(data.miscellaneous)) return '';
 
-            let miscellaneousHtml = `${data.miscellaneous}`;
-            
-            if (data.mtools && data.mtools.length > 0) {
-                data.mtools.forEach(mtool => {
-                    if (mtool.description && mtool.name) {
-                        miscellaneousHtml += `<br>${SummaryUtils.escapeHtml(mtool.name)}: <a href="${SummaryUtils.escapeHtml(mtool.description)}" target="_blank" style="color: black; text-decoration: none">${SummaryUtils.escapeHtml(mtool.description)}</a>`;
-                    }
-                });
-            }
+            let html = '';
+            data.miscellaneous.forEach(item => {
+                if (item.name && item.description) {
+                    const name = SummaryUtils.escapeHtml(item.name);
+                    const description = SummaryUtils.escapeHtml(item.description);
+                    html += `${name}: <span style="font-weight: 400;">${description}</span><br>`;
+                }
+            });
 
-            return miscellaneousHtml;
+            return html;
         } catch (e) {
-            console.error('Error processing miscellanous data:', e);
+            console.error('Error processing miscellaneous data:', e);
             return '';
         }
     }

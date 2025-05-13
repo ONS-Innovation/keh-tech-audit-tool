@@ -235,20 +235,28 @@ To setup the deployment pipeline with concourse, you must first allowlist your I
 server. IP addresses are flushed everyday at 00:00 so this must be done at the beginning of every working day
 whenever the deployment pipeline needs to be used. Follow the instructions on the [following Concourse page]() to
 login. All our pipelines run on sdp-pipeline-prod, whereas sdp-pipeline-dev is the account used for
-changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod.
+changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN).
 
-When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS.
-First you must unset the presvious AWS_SESSION_TOKEN from the previous step with `unset AWS_SESSION_TOKEN`. We don't want our Concourse account to interfere with our ecs-infra-user account. Proceed then to export the appropriate user credentials.
+When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS. The credentials for this are stored on
+AWS Secrets Manager so you do not need to set up anything yourself.
 
-To then finally set the pipeline, run the following command in the directory's root:
+To set the pipeline, run the following script:
 ```bash
-fly -t aws-sdp set-pipeline -p KEH-TAT-UI -c concourse/ci.yml
+chmod u+x ./concourse/scripts/set_pipeline.bash
+.concourse/scripts/set_pipeline.bash KEH-TAT-UI
+```
+Note that you only have to run chmod the first time running the script in order to give permissions.
+This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
+
+The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
+If you wish to set a pipeline for another branch without checking out, you can run the following:
+```bash
+.concourse/scripts/set_pipeline.bash KEH-TAT-UI <branch_name>
 ```
 
-Once the pipeline has been set, pushing commits into the `concourse` branch will automatically trigger
-a build which will push a docker image to ECR, and the infrastructure finally terraformed.
+Once the pipeline has been set, you can manually trigger a build in the Concourse UI, or run the following command:
 
-To change the repository version in ECR, the `tag` file at the root of the directory can be changed e.g `vX.X.X`. Note that terraform infrastructure will not be updated unless this tag is updated.
+
 
 ### Linting
 

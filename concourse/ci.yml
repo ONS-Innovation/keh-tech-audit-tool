@@ -11,7 +11,7 @@ jobs:
   public: true
   plan:
   - get: resource-repo
-    trigger: true
+    trigger: false
     timeout: 5m
   - task: build-image
     privileged: true
@@ -50,6 +50,7 @@ jobs:
       params:
         tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
+        tag: ((tag))
       run:
         path: sh
         args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]

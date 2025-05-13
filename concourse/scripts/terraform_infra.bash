@@ -21,8 +21,6 @@ localhost=$(echo "$tat_secrets_ui" | jq -r .localhost)
 container_image=$(echo "$tat_secrets_ui" | jq -r .container_image)
 force_deployment=$(echo "$tat_secrets_ui" | jq -r .force_deployment)
 
-tag=$(git rev-parse HEAD)
-
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
@@ -36,7 +34,7 @@ terraform apply \
 -var "aws_secret_access_key=$aws_secret_access_key" \
 -var "api_secret_name=$api_secret_name" \
 -var "domain=$domain" \
--var "container_ver=$tag" \
+-var "container_ver=${tag}" \
 -var "api_bucket_name=$api_bucket_name" \
 -var "ui_secret_name=$ui_secret_name" \
 -var "aws_account_name=$aws_account_name" \

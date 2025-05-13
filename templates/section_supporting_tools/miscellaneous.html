@@ -96,7 +96,7 @@
                 function renderData() {
                     var tableBody = document.querySelector('#table-list tbody');
                     tableBody.innerHTML = '';
-                    (langArr.miscellaneous || []).forEach(item => {
+                    (langArr.miscellaneous || langArr || []).forEach(item => {
                         var newRow = document.createElement('tr');
                         newRow.classList.add('ons-table__row');
                         newRow.innerHTML = `
@@ -118,7 +118,13 @@
                     });
                 }
                 function removeData(name) {
-                    langArr.miscellaneous = langArr.miscellaneous.filter(item => item.name !== name);
+                    if (langArr.miscellaneous) {
+                        langArr.miscellaneous = langArr.miscellaneous.filter(item => item.name !== name);
+                    } else if (langArr) {
+                        langArr = langArr.filter(item => item.name !== name);
+                    } else {
+                        langArr.miscellaneous = [];
+                    }
                     storeData();
                     renderData();
                 }

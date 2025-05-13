@@ -491,6 +491,7 @@
     <input id="incident_management" type="hidden" name="incident_management">
     <input id="project_name" type="hidden" name="project_name">
     <input id="project_users" type="hidden" name="project_users">
+    <input id="miscellaneous" type="hidden" name="miscellaneous">
       
     {{ onsButton({
             "text": 'Save Project',
@@ -520,5 +521,6 @@
 </script>
 
 <script src="{{ url_for('static', filename='js/submission.js') }}"></script>
+<script src="{{ url_for('static', filename='js/summary.js') }}"></script>
 
 {% endblock %}

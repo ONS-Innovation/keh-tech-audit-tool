@@ -80,10 +80,7 @@
                         name = 'miscellaneous-data-edit';
                     }
                 var langArr = {
-                    "miscellaneous": "",
-                    "other_miscellaneous": "",
-                    "complete": null,
-                    "mtools": []
+                    "miscellaneous": []
                 }
                 function storeData() {
 
@@ -99,7 +96,7 @@
                 function renderData() {
                     var tableBody = document.querySelector('#table-list tbody');
                     tableBody.innerHTML = '';
-                    (langArr.mtools || []).forEach(item => {
+                    (langArr.miscellaneous || []).forEach(item => {
                         var newRow = document.createElement('tr');
                         newRow.classList.add('ons-table__row');
                         newRow.innerHTML = `
@@ -121,7 +118,7 @@
                     });
                 }
                 function removeData(name) {
-                    langArr.mtools = langArr.mtools.filter(item => item.name !== name);
+                    langArr.miscellaneous = langArr.miscellaneous.filter(item => item.name !== name);
                     storeData();
                     renderData();
                 }
@@ -140,18 +137,18 @@
                         showError();
                         return;
                     }
-                    if (! langArr.mtools) {
-                        langArr.mtools = [];
+                    if (! langArr.miscellaneous) {
+                        langArr.miscellaneous = [];
                     }
                     try {
-                        if (langArr.mtools.some(item => item.name.toLowerCase() === mtool_value.toLowerCase())) {
+                        if (langArr.miscellaneous.some(item => item.name.toLowerCase() === mtool_value.toLowerCase())) {
                             showError();
                             return;
                         }
                     } catch (e) {
                         console.log(e);
                     }
-                    langArr.mtools.push({name: mtool_value, description: desc_value});
+                    langArr.miscellaneous.push({name: mtool_value, description: desc_value});
                     storeData();
                     renderData();
                     mtool.value = '';

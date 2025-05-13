@@ -228,6 +228,32 @@ const DataProcessors = {
         }
         
         return details;
+    },
+    
+    processMiscellaneous: function(miscData) {
+        // Handle both array and object-wrapped formats for miscellaneous list
+        let list;
+        if (typeof miscData === 'string') {
+            try {
+                list = JSON.parse(miscData);
+            } catch {
+                list = [];
+            }
+        } else {
+            list = miscData;
+        }
+        if (!list) return '';
+        // If wrapped in object { miscellaneous: [...] }, extract the array
+        let items = Array.isArray(list) ? list : (Array.isArray(list.miscellaneous) ? list.miscellaneous : []);
+        let html = '';
+        items.forEach(item => {
+            if (item.name && item.description) {
+                const name = SummaryUtils.escapeHtml(item.name);
+                const description = SummaryUtils.escapeHtml(item.description);
+                html += `${name}: <span style="font-weight: 400;">${description}</span><br>`;
+            }
+        });
+        return html;
     }
 };
 
@@ -419,6 +445,9 @@ const DataNormalizer = {
                 documentation: cleanedData.documentation || { main: [], others: [] },
                 communication: cleanedData.communication || { main: [], others: [] },
                 collaboration: cleanedData.collaboration || { main: [], others: [] },
+                miscellaneous: Array.isArray(cleanedData.miscellaneous)
+                    ? cleanedData.miscellaneous
+                    : (cleanedData.miscellaneous?.miscellaneous || []),
                 incident_management: cleanedData.incident_management?.incident_management || ''
             }
         };
@@ -503,31 +532,7 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
             ]),
-            miscellaneous_details: (() => {
-                const raw = localStorage.getItem("miscellaneous-data");
-                const obj = raw ? JSON.parse(raw) : { mtools: [] };
-              
-                if (!Array.isArray(obj.mtools) || obj.mtools.length === 0) {
-                  return "";
-                }
-              
-                // Minimal HTML escape function
-                const escape = str => (
-                  str == null ? "" :
-                  String(str)
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#39;")
-                );
-              
-                return obj.mtools
-                  .map(m =>
-                    `${escape(m.name)}: <span style="font-weight:400;">${escape(m.description)}</span>`
-                  )
-                  .join("<br>");
-              })(),
+            miscellaneous_details: DataProcessors.processMiscellaneous(data.supporting_tools.miscellaneous),
             collaboration_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])

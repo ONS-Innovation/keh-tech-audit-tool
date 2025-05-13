@@ -416,9 +416,7 @@ def map_form_data(form):
         "miscellaneous",
         "project_name",
     ]
-    for key in keys:
-        if key == "miscellaneous":
-            print(form[key])
+    
     try:
         final_dict = {key: json.loads(form[key]) for key in keys}
     except Exception:

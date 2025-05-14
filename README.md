@@ -254,8 +254,10 @@ If you wish to set a pipeline for another branch without checking out, you can r
 .concourse/scripts/set_pipeline.bash KEH-TAT-UI <branch_name>
 ```
 
-Once the pipeline has been set, you can manually trigger a build in the Concourse UI, or run the following command:
-
+Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
+```bash
+fly -t aws-sdp trigger-job -j KEH-TAT-UI-<branch-name>/build-and-push
+```
 
 
 ### Linting

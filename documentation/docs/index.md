@@ -288,6 +288,16 @@ make test-project-creation
             developed.html
             project.html
             stage.html
+        section_supporting_tools/ #HTML templates for supporting tools
+            code_editors.html
+            collaboration.html
+            communication.html
+            diagrams.html
+            documentation.html
+            incident_management.html
+            miscellaneous.html
+            project_tracking.html
+            user_interface.html
         section_technology/
             frameworks.html # Allows user to add frameworks
             infrastructure.html # Allows user to add infrastructure

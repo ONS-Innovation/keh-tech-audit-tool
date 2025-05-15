@@ -141,4 +141,17 @@ function loadData(projects) {
     // Incident Management
     document.getElementById('incident_management').querySelector('dd').querySelector('span').textContent = 
         projects.supporting_tools.incident_management || 'N/A';
+
+    // Miscellaneous
+const misc = projects.supporting_tools.miscellaneous;
+const miscContainer = document.getElementById('miscellaneous')
+    .querySelector('dd')
+    .querySelector('span');
+if (Array.isArray(misc) && misc.length > 0) {
+    miscContainer.innerHTML = misc
+        .map(item => `<p>${item.name}: <span style="font-weight: 400;">${item.description}</span></p>`)
+        .join('');
+} else {
+    miscContainer.textContent = 'N/A';
+}
 }

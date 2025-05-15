@@ -412,7 +412,7 @@ class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
         try {
             const data = SummaryUtils.safeJsonParse(toolData);
-            if (!data || !data.others || !data.mtools) return '';
+            if (!data || !data.others) return '';
  
             return data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ');
         } catch (e) {

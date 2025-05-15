@@ -112,7 +112,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_communication(driver)
             self.complete_collaboration(driver)
             self.complete_incident_management(driver)
-            self.complete_miscellanious(driver)
+            self.complete_miscellenious(driver)
 
             self.click_link(driver, "Continue to Submission")
 
@@ -140,7 +140,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         """Assert that the validation page has the correct details"""
         driver = self.driver
         assert driver.current_url == "http://localhost:8000/validate_details"
-        import time; time.sleep(5)
         assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
         assert (
             "testmanager@ons.gov.uk"
@@ -330,11 +329,11 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             "Matchcode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
         )
 
     def complete_contact_details(self, driver):
@@ -356,7 +355,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
         email = driver.find_element(By.ID, "contact-email")
         email.send_keys("test@ons.gov.uk")
-        self.wait.until(EC.element_to_be_clickable(email)).click()
 
         choice = self.click_radio(driver, ["Grade 6", "Grade 7", "SEO", "HEO", "other"])
 
@@ -780,7 +778,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
     
-    def complete_miscellanious(self, driver):
+    def complete_miscellenious(self, driver):
         """
             Complete the miscellaneous tools section.
 

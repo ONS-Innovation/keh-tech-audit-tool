@@ -326,7 +326,7 @@ const DataNormalizer = {
                 complete: false
             };
         }
-        console.log(data.supporting_tools)
+
         // Prepare normalized data
         return {
             contact_tech: data.user[0] || { contactEmail: '', role: '' },

@@ -4,7 +4,6 @@ function formatList(items) {
 }
 
 function loadData(projects) {
-    console.log(projects);
     try {
     // Technical Contact
     document.getElementById('technical-contact').querySelector('dd').querySelector('span').textContent = 

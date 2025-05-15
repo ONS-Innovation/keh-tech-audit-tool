@@ -520,8 +520,8 @@ def survey():
             "documentation": form_data.get("documentation", ""),
             "communication": form_data.get("communication", ""),
             "collaboration": form_data.get("collaboration", ""),
-            "miscellaneous": form_data.get("miscellaneous", ""),
-            "incident_management": form_data.get("incident_management", "")
+            "incident_management": form_data.get("incident_management", ""),
+            "miscellaneous": form_data.get("miscellaneous", "")
         },
     }
 

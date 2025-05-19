@@ -7,7 +7,7 @@ resources:
     branch: ((branch))
 
 jobs:
-- name:  build-and-push
+- name:  build-and-push # icon:rocket
   public: true
   plan:
   - get: resource-repo
@@ -23,11 +23,9 @@ jobs:
           repository: hashicorp/terraform
       inputs:
       - name: resource-repo
-      outputs:
-      - name: image
       params:
-        aws_account_id: ((aws_account_sdp_dev))
-        aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+        aws_account_id: ((aws_account_sdp_((env))))
+        aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
         tag: ((tag))
       run: # binary used to build the image
         path: sh
@@ -48,9 +46,8 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
-      - name: image
       params:
-        tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
+        tat_secrets_ui: ((sdp_((env))_secrets_tat_ui))
         github_access_token: ((github_access_token))
         tag: ((tag))
       run:

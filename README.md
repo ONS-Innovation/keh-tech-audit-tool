@@ -234,7 +234,7 @@ Delete the service resources by running the following ensuring your reference th
 #### Allowlisting your IP
 To setup the deployment pipeline with concourse, you must first allowlist your IP address on the Concourse
 server. IP addresses are flushed everyday at 00:00 so this must be done at the beginning of every working day
-whenever the deployment pipeline needs to be used. Follow the instructions on the following [Confluence page](https://confluence.ons.gov.uk/display/KEH/Concourse+Login) to
+whenever the deployment pipeline needs to be used. Follow the instructions on the Confluence page (SDP Homepage > SDP Concourse > Concourse Login) to
 login. All our pipelines run on sdp-pipeline-prod, whereas sdp-pipeline-dev is the account used for
 changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN).
 

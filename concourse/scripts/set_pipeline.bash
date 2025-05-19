@@ -6,6 +6,13 @@ if [[ $# -gt 1 ]]; then
     git rev-parse --verify ${branch}
     if [[ $? -ne 0 ]]; then
         echo "Branch \"${branch}\" does not exist"
+        echo "bailing out..."
+        exit 1
+    fi
+
+    if [[ branch=="main" ]] || [[ branch=="master" ]]; then
+        echo "Please checkout to ${branch} before setting the pipeline"
+        echo "bailing out..."
         exit 1
     fi
 else

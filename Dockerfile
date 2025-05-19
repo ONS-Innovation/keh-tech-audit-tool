@@ -18,7 +18,6 @@ RUN pip install poetry==1.8.3
 # Copy the source code into the container.
 COPY .  /app
 
-RUN ls
 RUN apt update && \
     apt install -y make curl jq unzip
 

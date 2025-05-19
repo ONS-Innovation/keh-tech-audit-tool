@@ -153,8 +153,13 @@ function validateObjectField(data, field) {
 }
 
 function validateMultipleFields(data, fields) {
-    return fields.every(field => data[field]);
-}
+    if (!data) return false;          // <<< guard in case data is null/undefined
+    return fields.every(field => {
+      const val = data[field];
+      // you can also enforce non-empty strings/arrays here:
+      return val !== undefined && val !== null;
+    });
+  }
 
 function changeBtnURL(contactTechData, contactManagerData, projectData, 
     sourceControlData, databaseData, languagesData, 

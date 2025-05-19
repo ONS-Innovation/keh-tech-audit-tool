@@ -79,11 +79,8 @@
                     if (JSON.parse(localStorage.getItem('edit'))) {
                         name = 'miscellaneous-data-edit';
                     }
-                var langArr = {
-                    "miscellaneous": []
-                }
+                var langArr = [];
                 function storeData() {
-
                     localStorage.setItem(name, JSON.stringify(langArr));
                 }
                 function loadData() {
@@ -91,12 +88,13 @@
                         localStorage.setItem(name, JSON.stringify(langArr));
                     }
                     langArr = JSON.parse(localStorage.getItem(name));
+                    
                     renderData();
                 }
                 function renderData() {
                     var tableBody = document.querySelector('#table-list tbody');
                     tableBody.innerHTML = '';
-                    (langArr.miscellaneous || langArr || []).forEach(item => {
+                    (langArr || []).forEach(item => {
                         var newRow = document.createElement('tr');
                         newRow.classList.add('ons-table__row');
                         newRow.innerHTML = `
@@ -118,43 +116,38 @@
                     });
                 }
                 function removeData(name) {
-                    if (langArr.miscellaneous) {
-                        langArr.miscellaneous = langArr.miscellaneous.filter(item => item.name !== name);
-                    } else if (langArr) {
-                        langArr = langArr.filter(item => item.name !== name);
-                    } else {
-                        langArr.miscellaneous = [];
-                    }
+                    langArr = langArr.filter(item => item.name !== name);
                     storeData();
                     renderData();
                 }
                 function showError() {
-                    document
-                        .getElementById('error-panel')
-                        .style
-                        .display = 'block';
+                    const errorPanel = document.getElementById('error-panel');
+                    errorPanel.style.display = 'block';
+                    errorPanel.classList.remove('ons-u-hidden');
+                }
+                function hideError() {
+                    const errorPanel = document.getElementById('error-panel');
+                    errorPanel.style.display = 'none';
+                    errorPanel.classList.add('ons-u-hidden');
                 }
                 function addData(event) {
-                    var mtool = document.getElementById('miscellaneous-input');
-                    var desc = document.getElementById('miscellaneous_desc-input');
-                    var mtool_value = mtool.value;
-                    var desc_value = desc.value;
-                    if (! mtool_value && ! desc_value) {
+                    var mtool = document.getElementById('miscellaneous-input').value;
+                    var desc = document.getElementById('miscellaneous_desc-input').value;
+                    if (!mtool || !desc) {
                         showError();
                         return;
                     }
-                    if (! langArr.miscellaneous) {
-                        langArr.miscellaneous = [];
-                    }
                     try {
-                        if (langArr.miscellaneous.some(item => item.name.toLowerCase() === mtool_value.toLowerCase())) {
+                        if (langArr.some(item => item.name.toLowerCase() === mtool.toLowerCase())) {
                             showError();
                             return;
+                        } else {
+                            hideError();
                         }
                     } catch (e) {
-                        console.log(e);
+                        console.error(e);
                     }
-                    langArr.miscellaneous.push({name: mtool_value, description: desc_value});
+                    langArr.push({name: mtool, description: desc});
                     storeData();
                     renderData();
                     mtool.value = '';
@@ -182,7 +175,6 @@
                 }
                 }) }}
             </form>
-            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
             <script>
                 if (JSON.parse(localStorage.getItem("miscellaneous-validate")) && JSON.parse(localStorage.getItem("edit"))) {
                     document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');

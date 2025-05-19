@@ -388,10 +388,10 @@ class MiscellaneousProcessor extends SectionProcessor {
     processData(miscellaneousData) {
         try {
             const data = SummaryUtils.safeJsonParse(miscellaneousData);
-            if (!data || !data.miscellaneous || !Array.isArray(data.miscellaneous)) return '';
+            if (!data || !Array.isArray(data)) return '';
 
             let html = '';
-            data.miscellaneous.forEach(item => {
+            data.forEach(item => {
                 if (item.name && item.description) {
                     const name = SummaryUtils.escapeHtml(item.name);
                     const description = SummaryUtils.escapeHtml(item.description);

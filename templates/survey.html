@@ -149,13 +149,14 @@
             var miscellaneousData = localStorage.getItem('miscellaneous-data');
             var collaborationData = localStorage.getItem('collaboration-data');
             var incidentManagementData = localStorage.getItem('incident_management-data');
+            var miscellaneousData = localStorage.getItem('miscellaneous-data');
             
             changeBtnURL(contactTechData, contactManagerData, projectData, 
             sourceControlData, databaseData, languagesData, 
             frameworksData, integrationsData, infrastructureData, 
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
-            collaborationData,miscellaneousData, incidentManagementData);
+            collaborationData,miscellaneousData, incidentManagementData, miscellaneousData);
             updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);

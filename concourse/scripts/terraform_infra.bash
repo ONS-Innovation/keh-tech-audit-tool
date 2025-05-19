@@ -10,7 +10,6 @@ aws_secret_access_key=$(echo "$tat_secrets_ui" | jq -r .aws_secret_access_key)
 api_secret_name=$(echo "$tat_secrets_ui" | jq -r .api_secret_name)
 
 domain=$(echo "$tat_secrets_ui" | jq -r .domain)
-container_ver=$(cat resource-repo/tag)
 
 api_bucket_name=$(echo "$tat_secrets_ui" | jq -r .api_bucket_name)
 ui_secret_name=$(echo "$tat_secrets_ui" | jq -r .ui_secret_name)

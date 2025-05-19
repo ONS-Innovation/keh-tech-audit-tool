@@ -23,6 +23,8 @@ jobs:
           repository: hashicorp/terraform
       inputs:
       - name: resource-repo
+      outputs:
+      - name: image
       params:
         aws_account_id: ((aws_account_sdp_dev))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
@@ -37,7 +39,6 @@ jobs:
           source ./resource-repo/concourse/scripts/assume_role.bash
           ./resource-repo/concourse/scripts/build_image.bash
     timeout: 10m
-
   - task: terraform
     privileged: true
     config:
@@ -47,6 +48,7 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
+      - name: image
       params:
         tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
@@ -55,4 +57,4 @@ jobs:
         path: sh
         args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]
     timeout: 30m
-          
+            

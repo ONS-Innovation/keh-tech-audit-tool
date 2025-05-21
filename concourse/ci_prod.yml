@@ -1,0 +1,56 @@
+resources:
+- name: release
+  type: github-release
+  icon: github
+  source:
+    owner: ONS-Innovation
+    repository: keh-tech-audit-tool
+
+jobs:
+- name:  build-and-push
+  public: true
+  plan:
+  - get: release
+    timeout: 5m
+  - task: build-image
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: hashicorp/terraform
+      inputs:
+      - name: resource-repo
+      params:
+        aws_account_id: ((aws_account_sdp_dev))
+        aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+        tag: ((tag))
+      run: # binary used to build the image
+        path: sh
+        args:
+        - -cx
+        - |
+          chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
+          chmod u+x ./resource-repo/concourse/scripts/build_image.bash
+          source ./resource-repo/concourse/scripts/assume_role.bash
+          ./resource-repo/concourse/scripts/build_image.bash
+    timeout: 10m
+  - task: terraform
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: hashicorp/terraform}
+      inputs:
+      - name: resource-repo
+      params:
+        tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
+        github_access_token: ((github_access_token))
+        tag: ((tag))
+      run:
+        path: sh
+        args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]
+    timeout: 30m
+            

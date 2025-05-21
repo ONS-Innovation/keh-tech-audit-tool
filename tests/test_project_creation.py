@@ -112,7 +112,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_communication(driver)
             self.complete_collaboration(driver)
             self.complete_incident_management(driver)
-            self.complete_miscellenious(driver)
+            self.complete_miscellanious(driver)
 
             self.click_link(driver, "Continue to Submission")
 
@@ -778,7 +778,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
     
-    def complete_miscellenious(self, driver):
+    def complete_miscellanious(self, driver):
         """
             Complete the miscellaneous tools section.
 

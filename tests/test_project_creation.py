@@ -112,6 +112,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_communication(driver)
             self.complete_collaboration(driver)
             self.complete_incident_management(driver)
+            self.complete_miscellaneous(driver)
 
             self.click_link(driver, "Continue to Submission")
 
@@ -326,6 +327,14 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text) > 0
         )
+        assert (
+            "Matchcode"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+        )
+        assert (
+            "A code-matching tool"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+        )
 
     def complete_contact_details(self, driver):
         """Complete contact details i.e technical contact and delivery manager
@@ -345,7 +354,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         driver.implicitly_wait(10)
         email = driver.find_element(By.ID, "contact-email")
-        self.wait.until(EC.element_to_be_clickable(email)).click()
         email.send_keys("test@ons.gov.uk")
 
         choice = self.click_radio(driver, ["Grade 6", "Grade 7", "SEO", "HEO", "other"])
@@ -769,6 +777,38 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
+    
+    def complete_miscellaneous(self, driver):
+        """
+            Complete the miscellaneous tools section.
+
+        Args:
+            driver (webdriver): the Selenium driver
+            tools (List[Tuple[str,str]]): list of (name, description) to add
+        
+        """
+        logging.info("Testing complete_miscellaneous...")
+        driver.implicitly_wait(10)
+
+
+        #Find the two inputs
+        name_input = driver.find_element(By.ID, "miscellaneous-input")
+        desc_input = driver.find_element(By.ID, "miscellaneous_desc-input")
+
+        name_input.send_keys("Matchcode")
+
+        desc_input.send_keys("A code-matching tool")
+
+        # the Add button is the searchButton in the macro
+        add_btn = driver.find_element(
+            By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
+        )
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        
+        # 4) Finally click Save and continue
+        self.click_link(driver, "Save and continue")
+        self.click_link(driver, "Finish section")
+
 
     def complete_incident_management(self, driver):
         """Completes the incident management section of the project creation process.
@@ -785,7 +825,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.wait.until(EC.element_to_be_clickable(other_input)).click()
             other_input.send_keys("Zendesk")
         self.click_link(driver, "Save and continue")
-        self.click_link(driver, "Finish section")
 
 
 if __name__ == "__main__":

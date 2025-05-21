@@ -384,13 +384,36 @@ class InfrastructureProcessor extends SectionProcessor {
     }
 }
 
+class MiscellaneousProcessor extends SectionProcessor {
+    processData(miscellaneousData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(miscellaneousData);
+            if (!data || !Array.isArray(data)) return '';
+
+            let html = '';
+            data.forEach(item => {
+                if (item.name && item.description) {
+                    const name = SummaryUtils.escapeHtml(item.name);
+                    const description = SummaryUtils.escapeHtml(item.description);
+                    html += `${name}: <span style="font-weight: 400;">${description}</span><br>`;
+                }
+            });
+
+            return html;
+        } catch (e) {
+            console.error('Error processing miscellaneous data:', e);
+            return '';
+        }
+    }
+}
+
 // Supporting Tools Processors
 class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
         try {
             const data = SummaryUtils.safeJsonParse(toolData);
             if (!data || !data.others) return '';
-
+ 
             return data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ');
         } catch (e) {
             console.error('Error processing tool data:', e);
@@ -483,6 +506,7 @@ class SupportingToolsSummaryManager {
     constructor() {
         this.errorManager = new ErrorManager('error-panel', 'error-label');
         this.toolsProcessor = new ToolsProcessor(this.errorManager);
+        this.miscellaneousProcessor = new MiscellaneousProcessor(this.errorManager);
         this.projectTrackingProcessor = new SingleValueProcessor(this.errorManager, 'project_tracking');
         this.incidentManagementProcessor = new SingleValueProcessor(this.errorManager, 'incident_management');
     }
@@ -494,6 +518,7 @@ class SupportingToolsSummaryManager {
             'diagram_details': 'diagrams-data',
             'documentation_details': 'documentation-data',
             'communication_details': 'communication-data',
+            'miscellaneous_details': 'miscellaneous-data',
             'collaboration_details': 'collaboration-data'
         };
 
@@ -504,6 +529,11 @@ class SupportingToolsSummaryManager {
             );
             this.toolsProcessor.updateUI(elementId, details);
         }
+
+        const miscellaneousDetails = this.miscellaneousProcessor.processData(
+            localStorage.getItem('miscellaneous-data')
+        );
+        this.miscellaneousProcessor.updateUI('miscellaneous_details', miscellaneousDetails);
 
         // Process project tracking
         const projectTrackingDetails = this.projectTrackingProcessor.processData(

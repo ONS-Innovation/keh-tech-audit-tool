@@ -148,17 +148,18 @@
             var communicationData = localStorage.getItem('communication-data');
             var collaborationData = localStorage.getItem('collaboration-data');
             var incidentManagementData = localStorage.getItem('incident_management-data');
+            var miscellaneousData = localStorage.getItem('miscellaneous-data');
             
             changeBtnURL(contactTechData, contactManagerData, projectData, 
             sourceControlData, databaseData, languagesData, 
             frameworksData, integrationsData, infrastructureData, 
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
-            collaborationData, incidentManagementData);
+            collaborationData, incidentManagementData, miscellaneousData);
             updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
-            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
+            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, miscellaneousData, incidentManagementData]);
         }
         load_data();
         localStorage.setItem("source_control-validate", false);

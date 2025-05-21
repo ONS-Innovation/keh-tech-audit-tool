@@ -13,6 +13,7 @@ if [[ $# -gt 1 ]]; then
     if [[ ${branch} == "main" ]] || [[ ${branch} == "master" ]]; then
         echo "Please checkout to ${branch} before setting the pipeline"
         echo "bailing out..."
+
         exit 1
     fi
 else

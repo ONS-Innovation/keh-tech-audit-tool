@@ -151,6 +151,7 @@ supportingNavItems = [
     {"text": "Communication", "url": "/survey/communication"},
     {"text": "Collaboration", "url": "/survey/collaboration"},
     {"text": "Incident Management", "url": "/survey/incident_management"},
+    {"text": "Miscellaneous", "url": "/survey/miscellaneous"},
     {"text": "Summary", "url": "/survey/supporting_tools_summary"},
 ]
 
@@ -248,7 +249,7 @@ def autocomplete(search):
     if search in array_data:
         # Formats the data into a list of dictionaries with the key 'en' and
         # the value of the search result. This is the format needed for ONS autosuggest.
-        result = [{"en": language.capitalize()} for language in array_data[search]]
+        result = [{"en": tech} for tech in array_data[search]]
         return json.dumps(result)
     else:
         abort(404, description=f"No autocomplete data found for type: {search}")
@@ -412,8 +413,10 @@ def map_form_data(form):
         "communication",
         "collaboration",
         "incident_management",
+        "miscellaneous",
         "project_name",
     ]
+    
     try:
         final_dict = {key: json.loads(form[key]) for key in keys}
     except Exception:
@@ -518,6 +521,7 @@ def survey():
             "communication": form_data.get("communication", ""),
             "collaboration": form_data.get("collaboration", ""),
             "incident_management": form_data.get("incident_management", ""),
+            "miscellaneous": form_data.get("miscellaneous", "")
         },
     }
 
@@ -697,16 +701,17 @@ def documentation():
 def communication():
     return render_template("/section_supporting_tools/communication.html")
 
-
 @app.route("/survey/collaboration", methods=["GET"])
 def collaboration():
     return render_template("/section_supporting_tools/collaboration.html")
-
 
 @app.route("/survey/incident_management", methods=["GET"])
 def incident_management():
     return render_template("/section_supporting_tools/incident_management.html")
 
+@app.route("/survey/miscellaneous", methods=["GET"])
+def miscellaneous():
+    return render_template("/section_supporting_tools/miscellaneous.html")
 
 # ------------------------
 # SUMMARY SECTION RENDERING

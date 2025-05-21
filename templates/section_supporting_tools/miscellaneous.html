@@ -1,0 +1,187 @@
+{% extends "core.html" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Miscellaneous</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list tools used, but would not fit appropriately the previous sections, along with a brief description. E.g Matchcode, Talend.</p>"
+            }
+        ]
+    }) }}
+        {{ onsInput({
+        "id": "miscellaneous-input",
+        "label": {
+            "text": "Enter the name of the tool"
+        }
+    }) }}
+    {{ onsInput({
+        "id": "miscellaneous_desc-input",
+        "label": {
+            "text": "How would you describe this tool?"
+        },
+        "searchButton": {
+            "visuallyHideButtonText": false,
+            "text": 'Add',
+            "iconType": 'check',
+            "attributes": {
+                "type": "button",
+                "onclick": "addData()"
+            }
+        }
+    }) }}
+        <br>
+            {% from "components/table/_macro.njk" import onsTable %}
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Miscellaneous"
+            },
+            {
+                "value": "Description"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+    <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+                    var name = 'miscellaneous-data';
+                    if (JSON.parse(localStorage.getItem('edit'))) {
+                        name = 'miscellaneous-data-edit';
+                    }
+                var langArr = [];
+                function storeData() {
+                    localStorage.setItem(name, JSON.stringify(langArr));
+                }
+                function loadData() {
+                    if (localStorage.getItem(name) === null) {
+                        localStorage.setItem(name, JSON.stringify(langArr));
+                    }
+                    langArr = JSON.parse(localStorage.getItem(name));
+                    
+                    renderData();
+                }
+                function renderData() {
+                    var tableBody = document.querySelector('#table-list tbody');
+                    tableBody.innerHTML = '';
+                    (langArr || []).forEach(item => {
+                        var newRow = document.createElement('tr');
+                        newRow.classList.add('ons-table__row');
+                        newRow.innerHTML = `
+            <td class="ons-table__cell">${
+                            escapeHtml(item.name)
+                        }</td>
+            <td class="ons-table__cell">${
+                            escapeHtml(item.description)
+                        }</td>
+            <td class="ons-table__cell">
+                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${
+                            escapeHtml(item.name)
+                        }")'>
+                    <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>
+                </button>
+            </td>
+        `;
+                        tableBody.appendChild(newRow);
+                    });
+                }
+                function removeData(name) {
+                    langArr = langArr.filter(item => item.name !== name);
+                    storeData();
+                    renderData();
+                }
+                function showError() {
+                    const errorPanel = document.getElementById('error-panel');
+                    errorPanel.style.display = 'block';
+                    errorPanel.classList.remove('ons-u-hidden');
+                }
+                function hideError() {
+                    const errorPanel = document.getElementById('error-panel');
+                    errorPanel.style.display = 'none';
+                    errorPanel.classList.add('ons-u-hidden');
+                }
+                function addData(event) {
+                    var mtool = document.getElementById('miscellaneous-input').value;
+                    var desc = document.getElementById('miscellaneous_desc-input').value;
+                    if (!mtool || !desc) {
+                        showError();
+                        return;
+                    }
+                    try {
+                        if (langArr.some(item => item.name.toLowerCase() === mtool.toLowerCase())) {
+                            showError();
+                            return;
+                        } else {
+                            hideError();
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    langArr.push({name: mtool, description: desc});
+                    storeData();
+                    renderData();
+                    mtool.value = '';
+                    desc.value = '';
+                    document
+                        .getElementById("error-panel")
+                        .style
+                        .display = "none";
+                }
+                document.getElementById('miscellaneous_desc-input').onkeydown = function (event) {
+                    if (event.key === 'Enter') {
+                        addData(event);
+                    }
+                };
+            </script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {{ onsButton({
+                "id": "save-values-button",
+                "text": "Save and continue",
+                "iconType": "arrow-next",
+                "iconPosition": "after",
+                "url": url_for('supporting_tools_summary'),
+                "attributes": {
+                    "onclick": "storeData();"
+                }
+                }) }}
+            </form>
+            <script>
+                if (JSON.parse(localStorage.getItem("miscellaneous-validate")) && JSON.parse(localStorage.getItem("edit"))) {
+                    document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');
+                } else if (JSON.parse(localStorage.getItem("miscellaneous-validate"))) {
+                    document.getElementById("save-values-button").href = '/validate_details'
+                }
+                loadData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

@@ -19,10 +19,10 @@ else
     branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-if [[ ${branch} == "main" ]] || [[ ${branch} == "master" ]]; then
+if [[ ${branch} == "main" || ${branch} == "master" ]]; then
     env="prod"
 else
     env="dev"
 fi
 
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch} -v branch=${branch} -v tag=${tag} -v env=${env}
+fly -t aws-sdp set-pipeline -c concourse/ci_${env}.yml -p ${repo_name}-${branch} -v branch=${branch} -v tag=${tag}

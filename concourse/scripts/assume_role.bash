@@ -1,6 +1,4 @@
 set -euo pipefail
-set -e
-set -x
 
 apk add --no-cache aws-cli podman
 

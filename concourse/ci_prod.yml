@@ -1,17 +1,16 @@
 resources:
-- name: resource-repo
-  type: git
+- name: release
+  type: github-release
   icon: github
   source:
-    uri: https://github.com/ONS-Innovation/keh-tech-audit-tool.git
-    branch: ((branch))
+    owner: ONS-Innovation
+    repository: keh-tech-audit-tool
 
 jobs:
-- name:  build-and-push # icon:rocket
+- name:  build-and-push
   public: true
   plan:
-  - get: resource-repo
-    trigger: false
+  - get: release
     timeout: 5m
   - task: build-image
     privileged: true
@@ -24,8 +23,8 @@ jobs:
       inputs:
       - name: resource-repo
       params:
-        aws_account_id: ((aws_account_sdp_((env))))
-        aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
+        aws_account_id: ((aws_account_sdp_dev))
+        aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
         tag: ((tag))
       run: # binary used to build the image
         path: sh
@@ -47,7 +46,7 @@ jobs:
       inputs:
       - name: resource-repo
       params:
-        tat_secrets_ui: ((sdp_((env))_secrets_tat_ui))
+        tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
         tag: ((tag))
       run:

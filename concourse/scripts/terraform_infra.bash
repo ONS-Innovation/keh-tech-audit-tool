@@ -1,5 +1,4 @@
-set -e
-set -x
+set -euo pipefail
 
 apk add --no-cache jq
 

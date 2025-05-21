@@ -12,8 +12,8 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "Languages",
-                                    "rowItems": [
+                                    "title": "Languages",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                                 {
@@ -31,8 +31,8 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Frameworks",
-                                    "rowItems": [
+                                    "title": "Frameworks",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
@@ -50,8 +50,8 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "CI/CD",
-                                    "rowItems": [
+                                    "title": "CI/CD",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
@@ -69,8 +69,8 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Infrastructure",
-                                    "rowItems": [
+                                    "title": "Infrastructure",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
@@ -96,7 +96,7 @@
     <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
     {{ onsButton({
         "text": 'Finish section',
-        "id": "submit-button",
+        "id": "submit-button-btn",
         "url": url_for('survey'),
         "classes": 'ons-u-mb-m ons-u-mt-l',
         "iconType": "check",

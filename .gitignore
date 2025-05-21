@@ -8,7 +8,6 @@ templates/layout/_dsTemplate.njk
 node_modules
 .DS_Store
 .env
-.design-system-version
 
 # .tfstate files
 # Exclude tfstate.backup file as it contains sensitive data loaded in from

@@ -1,16 +1,17 @@
 resources:
-- name: release
-  type: github-release
+- name: resource-repo
+  type: git
   icon: github
   source:
-    owner: ONS-Innovation
-    repository: keh-tech-audit-tool
+    uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
+    tag_filter: v*
+    branch: main
 
 jobs:
 - name:  build-and-push
   public: true
   plan:
-  - get: release
+  - get: resource-repo
     timeout: 5m
   - task: build-image
     privileged: true
@@ -25,7 +26,7 @@ jobs:
       params:
         aws_account_id: ((aws_account_sdp_dev))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
-        tag: ((tag))
+        tag: v1.2.5
       run: # binary used to build the image
         path: sh
         args:
@@ -48,9 +49,15 @@ jobs:
       params:
         tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
-        tag: ((tag))
+        tag: v1.2.5
       run:
         path: sh
-        args: ["./resource-repo/concourse/scripts/terraform_infra.bash"]
+        args:
+        - -cx
+        - |
+          echo $(cat ./resource-repo/version)
+          export tag=$(cat ./resource-repo/version)
+          chmod u+x ./resource-repo/concourse/scripts/terraform_infra.bash
+          ./resource-repo/concourse/scripts/terraform_infra.bash
     timeout: 30m
             

@@ -26,16 +26,17 @@ jobs:
       params:
         aws_account_id: ((aws_account_sdp_dev))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
-        tag: v1.2.5
       run: # binary used to build the image
         path: sh
         args:
         - -cx
         - |
-          chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
-          chmod u+x ./resource-repo/concourse/scripts/build_image.bash
-          source ./resource-repo/concourse/scripts/assume_role.bash
-          ./resource-repo/concourse/scripts/build_image.bash
+          cd resource-repo
+          export tag=$(git tag --points-at HEAD | tail -n 1)
+          chmod u+x ./concourse/scripts/assume_role.bash
+          chmod u+x ./concourse/scripts/build_image.bash
+          source ./concourse/scripts/assume_role.bash
+          ./concourse/scripts/build_image.bash
     timeout: 10m
   - task: terraform
     privileged: true
@@ -49,14 +50,13 @@ jobs:
       params:
         tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
         github_access_token: ((github_access_token))
-        tag: v1.2.5
       run:
         path: sh
         args:
         - -cx
         - |
           cd resource-repo
-          git tag --contains HEAD
+          export tag=$(git tag --points-at HEAD | tail -n 1)
           chmod u+x ./concourse/scripts/terraform_infra.bash
           ./concourse/scripts/terraform_infra.bash
     timeout: 30m

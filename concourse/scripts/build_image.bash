@@ -5,6 +5,8 @@ export PODMAN_SYSTEMD_UNIT=concourse-task
 
 tag=$(cat resource-repo/tag.txt)
 
+echo ${tag}
+
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
 podman build -t tech-audit-tool:${tag} resource-repo

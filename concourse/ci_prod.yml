@@ -55,9 +55,9 @@ jobs:
         args:
         - -cx
         - |
-          echo $(cat ./resource-repo/version)
-          export tag=$(cat ./resource-repo/version)
-          chmod u+x ./resource-repo/concourse/scripts/terraform_infra.bash
-          ./resource-repo/concourse/scripts/terraform_infra.bash
+          cd resource-repo
+          git tag --contains HEAD
+          chmod u+x ./concourse/scripts/terraform_infra.bash
+          ./concourse/scripts/terraform_infra.bash
     timeout: 30m
             

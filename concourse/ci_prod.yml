@@ -32,7 +32,7 @@ jobs:
         - -cx
         - |
           cd resource-repo
-          export tag=$(git tag --points-at HEAD | tail -n 1)
+          export tag="test"
           chmod u+x ./concourse/scripts/assume_role.bash
           chmod u+x ./concourse/scripts/build_image.bash
           source ./concourse/scripts/assume_role.bash

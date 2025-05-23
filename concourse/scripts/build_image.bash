@@ -1,4 +1,4 @@
-set -euo pipefail
+set -euxo pipefail
 
 export STORAGE_DRIVER=vfs
 export PODMAN_SYSTEMD_UNIT=concourse-task

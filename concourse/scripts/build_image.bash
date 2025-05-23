@@ -3,9 +3,7 @@ set -euo pipefail
 export STORAGE_DRIVER=vfs
 export PODMAN_SYSTEMD_UNIT=concourse-task
 
-tag=$(cat resource-repo/tag.txt)
-
-echo ${tag}
+tag=$(git tag --points-at HEAD | tail -n 1)
 
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 

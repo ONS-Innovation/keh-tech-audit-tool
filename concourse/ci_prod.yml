@@ -32,8 +32,6 @@ jobs:
         - -cx
         - |
           cd resource-repo
-          tag=$(git tag --points-at HEAD | tail -n 1)
-          echo ${tag} > tag.txt
           chmod u+x ./concourse/scripts/assume_role.bash
           chmod u+x ./concourse/scripts/build_image.bash
           source ./concourse/scripts/assume_role.bash
@@ -57,8 +55,6 @@ jobs:
         - -cx
         - |
           cd resource-repo
-          tag=$(git tag --points-at HEAD | tail -n 1)
-          echo ${tag} > tag.txt
           chmod u+x ./concourse/scripts/terraform_infra.bash
           ./concourse/scripts/terraform_infra.bash
     timeout: 30m

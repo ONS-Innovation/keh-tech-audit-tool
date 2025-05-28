@@ -512,8 +512,12 @@ const UIUpdater = {
         
         // Update all summary elements
         Object.entries(summaryData).forEach(([key, value]) => {
-            const element = document.getElementById(key);
-            if (element) element.innerHTML = value;
+            //const element = document.getElementById(key);
+            const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
+            if (element){
+                element.innerHTML = value;
+            }
+    
         });
     },
     
@@ -555,8 +559,11 @@ const UIUpdater = {
         }
         
         Object.entries(hiddenFields).forEach(([key, value]) => {
-            const element = document.getElementById(key);
-            if (element) element.value = JSON.stringify(value);
+            //const element = document.getElementById(key);
+            const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
+            if (element) {
+                element.value = JSON.stringify(value);
+            }
         });
     }
 };

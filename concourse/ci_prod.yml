@@ -5,7 +5,7 @@ resources:
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
     tag_filter: v*
-    branch: main
+    branch: ((branch))
 
 jobs:
 - name:  build-and-push
@@ -32,6 +32,7 @@ jobs:
         - -cx
         - |
           cd resource-repo
+          git rev-parse --abbrev-ref HEAD
           chmod u+x ./concourse/scripts/assume_role.bash
           chmod u+x ./concourse/scripts/build_image.bash
           source ./concourse/scripts/assume_role.bash

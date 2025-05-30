@@ -1,5 +1,7 @@
 set -euxo pipefail
 
+aws sts get-caller-identity
+
 export STORAGE_DRIVER=vfs
 export PODMAN_SYSTEMD_UNIT=concourse-task
 

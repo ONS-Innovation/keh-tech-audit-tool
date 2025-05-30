@@ -4,14 +4,23 @@ resources:
   icon: github
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
-    tag_filter: v*
     branch: ((branch))
+
+- name: release
+  type: github-release
+  icon: github
+  source:
+    owner: ONS-Innovation
+    repository: keh-tech-audit-tool
 
 jobs:
 - name:  build-and-push
   public: true
   plan:
   - get: resource-repo
+    timeout: 5m
+  - get: release
+    trigger: true
     timeout: 5m
   - task: build-image
     privileged: true
@@ -23,20 +32,22 @@ jobs:
           repository: hashicorp/terraform
       inputs:
       - name: resource-repo
+      - name: release
       params:
-        aws_account_id: ((aws_account_sdp_dev))
-        aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+        aws_account_id: ((aws_account_sdp_prod))
+        aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
+        tat_secrets_ui: ((sdp_prod_secrets_tat_ui))
       run: # binary used to build the image
         path: sh
         args:
         - -cx
         - |
-          cd resource-repo
+          export tag=v$(cat release/version)
           git rev-parse --abbrev-ref HEAD
-          chmod u+x ./concourse/scripts/assume_role.bash
-          chmod u+x ./concourse/scripts/build_image.bash
-          source ./concourse/scripts/assume_role.bash
-          ./concourse/scripts/build_image.bash
+          chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
+          chmod u+x ./resource-repo/concourse/scripts/build_image.bash
+          source ./resource-repo/concourse/scripts/assume_role.bash
+          ./resource-repo/concourse/scripts/build_image.bash
     timeout: 10m
   - task: terraform
     privileged: true
@@ -47,16 +58,17 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
+      - name: release
       params:
-        tat_secrets_ui: ((sdp_dev_secrets_tat_ui))
+        tat_secrets_ui: ((sdp_prod_secrets_tat_ui))
         github_access_token: ((github_access_token))
       run:
         path: sh
         args:
         - -cx
         - |
-          cd resource-repo
-          chmod u+x ./concourse/scripts/terraform_infra.bash
-          ./concourse/scripts/terraform_infra.bash
+          export tag=v$(cat release/version)
+          chmod u+x ./resource-repo/concourse/scripts/terraform_infra.bash
+          ./resource-repo/concourse/scripts/terraform_infra.bash
     timeout: 30m
             

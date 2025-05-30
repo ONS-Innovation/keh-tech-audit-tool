@@ -1,6 +1,6 @@
 set -euxo pipefail
 
-apk add --no-cache aws-cli podman
+apk add --no-cache aws-cli podman jq
 
 aws sts assume-role --output text \
     --role-arn "${aws_role_arn}" \

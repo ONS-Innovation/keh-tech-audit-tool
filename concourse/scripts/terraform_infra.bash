@@ -24,8 +24,12 @@ export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
 git config --global url."https://x-access-token:$github_access_token@github.com/".insteadOf "https://github.com/"
 
+if [[ ${env} != "prod" ]]; then
+    env="dev"
+fi
+
 cd resource-repo/terraform/service
-terraform init -backend-config=env/dev/backend-dev.tfbackend -reconfigure
+terraform init -backend-config=env/${env}/backend-${env}.tfbackend -reconfigure
 terraform apply \
 -var "aws_account_id=$aws_account_id" \
 -var "aws_access_key_id=$aws_access_key_id" \

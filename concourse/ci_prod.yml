@@ -69,6 +69,7 @@ jobs:
         - |
           export tag=v$(cat release/version)
           chmod u+x ./resource-repo/concourse/scripts/terraform_infra.bash
+          export env="prod"
           ./resource-repo/concourse/scripts/terraform_infra.bash
     timeout: 30m
             

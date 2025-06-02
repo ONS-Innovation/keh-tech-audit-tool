@@ -84,11 +84,18 @@
                     localStorage.setItem(name, JSON.stringify(langArr));
                 }
                 function loadData() {
-                    if (localStorage.getItem(name) === null) {
+                    let raw = localStorage.getItem(name);
+                    try {
+                        let parsed = JSON.parse(raw);
+                        if (!Array.isArray(parsed)) {
+                            throw new Error("Invalid data format");
+                        }
+                        langArr = parsed;
+                    } catch (e) {
+                        console.warn("Resetting langArr due to invalid or missing data:", e);
+                        langArr = [];
                         localStorage.setItem(name, JSON.stringify(langArr));
                     }
-                    langArr = JSON.parse(localStorage.getItem(name));
-                    
                     renderData();
                 }
                 function renderData() {

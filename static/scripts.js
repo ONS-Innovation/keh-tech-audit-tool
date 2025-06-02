@@ -13,13 +13,26 @@ function storeData() {
 
 // Loads the data for that page from local storage.
 function loadData() {
-    if (localStorage.getItem(var_name) === null) {
-        localStorage.setItem(var_name, JSON.stringify(langArr));
+    const stored = localStorage.getItem(var_name);
+    let parsed = DataUtils.safeJsonParse(stored, null);
+
+    // Fallback if data is missing or invalid
+    if (!parsed || typeof parsed !== 'object') {
+        console.warn("No valid stored data found. Initializing langArr.");
+        langArr = { main: [], others: [] };
+        storeData(); // save the empty structure
+    } else {
+        // Ensure main and others are arrays
+        langArr = {
+            main: Array.isArray(parsed.main) ? parsed.main : [],
+            others: Array.isArray(parsed.others) ? parsed.others : []
+        };
     }
 
-    langArr = JSON.parse(localStorage.getItem(var_name));
+    console.log("Initialized langArr:", langArr);
     renderData();
 }
+
 
 // Renders data from the local storage into the table. This is used when we add multiple entries.
 // For example, when we use Autosuggest on /database we can add multiple lines of data to the table.
@@ -100,21 +113,28 @@ function showError() {
 
 // Adds the data from the autosuggest to local storage and re-renders the table.
 function addData(event) {
-    var lang = document.getElementById(page + '-input').value;
+    const inputElement = document.getElementById(page + '-input');
+    const lang = inputElement?.value?.trim();
+
     if (!lang) {
         showError();
         return;
     }
 
-    if (!langArr.main) {
-        langArr.main = [];
+    console.log("langArr before adding:", langArr);
+
+    // Ensure langArr is properly initialized
+    if (!langArr || typeof langArr !== 'object') {
+        console.warn("langArr was not an object. Reinitializing.");
+        langArr = { main: [], others: [] };
     }
 
-    if (!langArr.others) {
-        langArr.others = [];
-    }
+    // Ensure arrays are valid
+    if (!Array.isArray(langArr.main)) langArr.main = [];
+    if (!Array.isArray(langArr.others)) langArr.others = [];
 
-    if ([...langArr.main, ...langArr.others].map(v => v.toLowerCase()).includes(lang.toLowerCase())) {
+    const allLangs = [...langArr.main, ...langArr.others].map(v => v.toLowerCase());
+    if (allLangs.includes(lang.toLowerCase())) {
         showError();
         return;
     }
@@ -123,9 +143,10 @@ function addData(event) {
     storeData();
     renderData();
 
-    document.getElementById(page + '-input').value = "";
+    inputElement.value = "";
     document.getElementById('error-panel').classList.add('ons-u-hidden');
 }
+
 
 // When the user is entering in the Autosuggest, if they press enter then it will add the data.
 document.getElementById(page + '-input').onkeydown = function(event) {

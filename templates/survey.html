@@ -16,16 +16,16 @@
                         {
                             "rows": [
                                 {
+                                    "id": "user-details",
                                     "title": "Project Details",
                                     "itemsList": [
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='user_details'></div>"
+                                                    "text": ""
                                                 }
                                             ],
-                                            "id": "user-details", 
-
+                                            
                                             "iconType": "chevron",
                                             "actions": [
                                                 {
@@ -37,16 +37,16 @@
                                         }
                                     ]
                                 },
-                                {
+                                {   
+                                    "id": "project-details",
                                     "title": "Code and Architecture",
                                     "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='project_details'></div>"
+                                                "text": ""
                                             }
                                         ],
-                                        "id": "project-details",
                                             "iconType": "chevron", 
                                             "actions": [
                                                 {   
@@ -58,16 +58,16 @@
                                         }
                                     ]
                                 },
-                                {
+                                {   
+                                    "id": "developed-details",
                                     "title": "Technology Details",
                                     "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='developed_details'></div>"
+                                                "text": ""
                                             }
                                         ],
-                                        "id": "developed-details",
                                             "iconType": "chevron",
                                             "actions": [
                                                 {
@@ -80,15 +80,15 @@
                                     ]
                                 },
                                 {
+                                    "id": "supporting-tools",
                                     "title": "Supporting Tools",
                                     "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='supporting_tools'></div>"
+                                                "text": ""
                                             }
                                         ],
-                                        "id": "supporting-tools",
                                             "iconType": "chevron",
                                             "actions": [
                                                 {
@@ -155,10 +155,10 @@
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
             collaborationData, incidentManagementData);
-            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
-            updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
-            updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
-            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
+            updateSectionStatus('user-details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
+            updateSectionStatus('project-details', [sourceControlData, hostingData, databaseData]);
+            updateSectionStatus('developed-details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+            updateSectionStatus('supporting-tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
         }
         load_data();
         localStorage.setItem("source_control-validate", false);

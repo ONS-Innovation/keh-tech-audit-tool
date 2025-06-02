@@ -83,27 +83,26 @@ function updateSectionStatus(sectionId, dataItems) { // Update selection status 
             return false;
         }).length;
         var totalCount = dataItems.length;
-        var sectionIdWithDash = sectionId.replace(/_/g, '-');
-        var sectionElementWithDash = document.getElementById(sectionIdWithDash);
-        var actionSpan = sectionElementWithDash.querySelectorAll('dd span')[1];
+        var actionSpan = sectionElement.querySelector('.ons-summary__values span');
+        var actionSpan2 = sectionElement.querySelector('.ons-summary__actions span');
+        var dtSpan = sectionElement.querySelector('dt span');
         if (completedCount === 0) {
-            sectionElement.innerHTML = 'Not Started';
-            if (actionSpan) {
-                actionSpan.innerHTML = 'Start section';
-            }
+            actionSpan.innerHTML = 'Not Started';
+            actionSpan2.textContent = 'Start section';
         } else if (completedCount < totalCount) {
-            sectionElement.innerHTML = 'Partially completed';
-            if (actionSpan) {
-                actionSpan.innerHTML = 'Continue with section';
+            actionSpan.innerHTML = 'Partially completed';
+            actionSpan2.textContent = 'Continue with section';
+            if (dtSpan) {
+                dtSpan.innerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+                        ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
+                        'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
+                        '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>';
             }
         } else {
-            sectionElement.innerHTML = 'Completed';
-            if (actionSpan) {
-                actionSpan.textContent = 'Change section';
-            }
-            var span = sectionElementWithDash.querySelector('dt span');
-            if (span) {
-                span.innerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
+            actionSpan.innerHTML = 'Completed';
+            actionSpan2.textContent = 'Change section';
+            if (dtSpan) {
+                dtSpan.innerHTML = '<span class="ons-summary__item-title-icon ons-summary__item-title-icon--check"><svg class="ons-icon" viewBox="0 0 13 10"' +
                         ' xmlns="http://www.w3.org/2000/svg" focusable="false" fill="currentColor"> <path d="M14.35,3.9l-.71-.71a.5.5,0,0,0-.71,0' +
                         'h0L5.79,10.34,3.07,7.61a.51.51,0,0,0-.71,0l-.71.71a.51.51,0,0,0,0,.71l3.78,3.78a.5.5,0,0,0,.71,0h0L14.35,4.6A.5.5,0,0,0,' +
                         '14.35,3.9Z" transform="translate(-1.51 -3.04)"></path> </svg></span>';

@@ -21,7 +21,7 @@
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='user_details'></div>"
+                                                    "text": "<div id='user-details'></div>"
                                                 }
                                             ],
                                           "id": "user-details",
@@ -43,7 +43,7 @@
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='project_details'></div>"
+                                                "text": "<div id='project-details'></div>"
                                             }
                                         ],
                                         "id": "project-details",
@@ -64,7 +64,7 @@
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='developed_details'></div>"
+                                                "text": "<div id='developed-details'></div>"
                                             }
                                         ],
                                         "id": "developed-details",
@@ -85,7 +85,7 @@
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='supporting_tools'></div>"
+                                                "text": "<div id='supporting-tools'></div>"
                                             }
                                         ],
                                         "id": "supporting-tools",
@@ -156,10 +156,10 @@
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
             collaborationData, incidentManagementData, miscellaneousData);
-            updateSectionStatus('user_details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
-            updateSectionStatus('project_details', [sourceControlData, hostingData, databaseData]);
-            updateSectionStatus('developed_details', [frameworksData, infrastructureData, integrationsData, languagesData]);
-            updateSectionStatus('supporting_tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, miscellaneousData, incidentManagementData]);
+            updateSectionStatus('user-details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
+            updateSectionStatus('project-details', [sourceControlData, hostingData, databaseData]);
+            updateSectionStatus('developed-details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+            updateSectionStatus('supporting-tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, miscellaneousData, incidentManagementData]);
         }
         load_data();
         localStorage.setItem("source_control-validate", false);

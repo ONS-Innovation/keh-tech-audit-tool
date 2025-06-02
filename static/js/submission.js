@@ -65,7 +65,7 @@ const ErrorHandler = {
         }
         
         errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
-        document.getElementById('submit-button').style.display = 'none';
+        document.getElementById('submit-button-btn').style.display = 'none';
     },
     
     // Clear all errors
@@ -76,7 +76,7 @@ const ErrorHandler = {
         if (errorContainer) {
             errorContainer.innerHTML = '';
         }
-        document.getElementById('submit-button').style.display = 'block';
+        document.getElementById('submit-button-btn').style.display = 'block';
     },
     
     // Validate data and display errors

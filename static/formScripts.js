@@ -165,7 +165,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
     frameworksData, integrationsData, infrastructureData, 
     codeEditorsData, uiToolsData, diagramToolsData, 
     projectTrackingData, documentationData, communicationData, 
-    collaborationData, incidentManagementData) {
+    collaborationData, incidentManagementData, miscellaneousData) {
     // Dynamically change url of submit button based on the completion status of each section
     var submissionBtn = document.getElementById('secondary-submit-btn');
     var submissionBtnSpan = submissionBtn.querySelector('span');
@@ -267,6 +267,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
             data: incidentManagementData, 
             url: '/survey/incident_management', 
             validationFn: (data) => data.incident_management !== undefined && data.incident_management !== ""
+        },
+        {
+            data: miscellaneousData,
+            url: '/survey/miscellaneous',
+            validationFn: (data) => Array.isArray(data) && data.length > 0
         }
     ];
     

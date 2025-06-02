@@ -18,8 +18,12 @@ RUN pip install poetry==1.8.3
 # Copy the source code into the container.
 COPY .  /app
 
-RUN poetry install
+RUN apt update && \
+    apt install -y make curl jq unzip
 
+RUN make load-design
+
+RUN poetry install
 # Change ownership of the application files to the non-root user
 RUN chown -R appuser:appuser /app
 

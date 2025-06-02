@@ -228,6 +228,32 @@ const DataProcessors = {
         }
         
         return details;
+    },
+    
+    processMiscellaneous: function(miscData) {
+        // Handle both array and object-wrapped formats for miscellaneous list
+        let list;
+        if (typeof miscData === 'string') {
+            try {
+                list = JSON.parse(miscData);
+            } catch {
+                list = [];
+            }
+        } else {
+            list = miscData;
+        }
+        if (!list) return '';
+        // If wrapped in object { miscellaneous: [...] }, extract the array
+        let items = Array.isArray(list) ? list : (Array.isArray(list.miscellaneous) ? list.miscellaneous : []);
+        let html = '';
+        items.forEach(item => {
+            if (item.name && item.description) {
+                const name = SummaryUtils.escapeHtml(item.name);
+                const description = SummaryUtils.escapeHtml(item.description);
+                html += `${name}: <span style="font-weight: 400;">${description}</span><br>`;
+            }
+        });
+        return html;
     }
 };
 
@@ -300,7 +326,7 @@ const DataNormalizer = {
                 complete: false
             };
         }
-        
+
         // Prepare normalized data
         return {
             contact_tech: data.user[0] || { contactEmail: '', role: '' },
@@ -322,7 +348,8 @@ const DataNormalizer = {
             documentation: data.supporting_tools.documentation,
             communication: data.supporting_tools.communication,
             collaboration: data.supporting_tools.collaboration,
-            incident_management: { incident_management: data.supporting_tools.incident_management }
+            incident_management: { incident_management: data.supporting_tools.incident_management },
+            miscellaneous: data.supporting_tools.miscellaneous
         };
     },
     
@@ -419,6 +446,9 @@ const DataNormalizer = {
                 documentation: cleanedData.documentation || { main: [], others: [] },
                 communication: cleanedData.communication || { main: [], others: [] },
                 collaboration: cleanedData.collaboration || { main: [], others: [] },
+                miscellaneous: Array.isArray(cleanedData.miscellaneous)
+                    ? cleanedData.miscellaneous
+                    : (cleanedData.miscellaneous?.miscellaneous || []),
                 incident_management: cleanedData.incident_management?.incident_management || ''
             }
         };
@@ -503,6 +533,7 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
             ]),
+            miscellaneous_details: DataProcessors.processMiscellaneous(data.supporting_tools.miscellaneous),
             collaboration_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])
@@ -547,7 +578,8 @@ const UIUpdater = {
             documentation: data.supporting_tools.documentation,
             communication: data.supporting_tools.communication,
             collaboration: data.supporting_tools.collaboration,
-            incident_management: data.supporting_tools.incident_management
+            incident_management: data.supporting_tools.incident_management,
+            miscellaneous: data.supporting_tools.miscellaneous
         };
         
         if (data.project_name) {
@@ -579,7 +611,7 @@ const AppController = {
             `infrastructure-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
-            `collaboration-data${suffix}`, `incident_management-data${suffix}`
+            `miscellaneous-data${suffix}`,`collaboration-data${suffix}`, `incident_management-data${suffix}`
         ];
     },
     
@@ -629,7 +661,8 @@ const AppController = {
             documentation: ErrorHandler.validateData(storedData['documentation'], 'Documentation'),
             communication: ErrorHandler.validateData(storedData['communication'], 'Communication'),
             collaboration: ErrorHandler.validateData(storedData['collaboration'], 'Collaboration'),
-            incident_management: DataUtils.safeJsonParse(storedData['incident_management'])
+            incident_management: DataUtils.safeJsonParse(storedData['incident_management']),
+            miscellaneous: ErrorHandler.validateData(storedData['miscellaneous'], 'Miscellaneous')
         };
         
         if (isEdit && (!processedData.project || !processedData.project.name)) {

@@ -229,6 +229,38 @@ Delete the service resources by running the following ensuring your reference th
 
   terraform destroy -var-file=env/dev/dev.tfvars
   ```
+### Deployments with Concourse
+
+#### Allowlisting your IP
+To setup the deployment pipeline with concourse, you must first allowlist your IP address on the Concourse
+server. IP addresses are flushed everyday at 00:00 so this must be done at the beginning of every working day
+whenever the deployment pipeline needs to be used. Follow the instructions on the Confluence page (SDP Homepage > SDP Concourse > Concourse Login) to
+login. All our pipelines run on sdp-pipeline-prod, whereas sdp-pipeline-dev is the account used for
+changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN).
+
+#### Setting up a pipeline
+When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS. The credentials for this are stored on
+AWS Secrets Manager so you do not need to set up anything yourself.
+
+To set the pipeline, run the following script:
+```bash
+chmod u+x ./concourse/scripts/set_pipeline.bash
+./concourse/scripts/set_pipeline.bash KEH-TAT-UI
+```
+Note that you only have to run chmod the first time running the script in order to give permissions.
+This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
+
+The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
+If you wish to set a pipeline for another branch without checking out, you can run the following:
+```bash
+./concourse/scripts/set_pipeline.bash KEH-TAT-UI <branch_name>
+```
+
+#### Triggering a pipeline
+Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
+```bash
+fly -t aws-sdp trigger-job -j KEH-TAT-UI-<branch-name>/build-and-push
+```
 
 ### Linting
 

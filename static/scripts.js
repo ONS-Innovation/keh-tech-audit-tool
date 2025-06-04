@@ -6,6 +6,16 @@ var var_name = page + '-data';
 if (JSON.parse(localStorage.getItem('edit')) === true) {
     var_name = var_name + '-edit';
 }
+
+function safeJsonParse(jsonString, fallback = {}) {
+    try {
+        return jsonString ? JSON.parse(jsonString) : fallback;
+    } catch (e) {
+        console.error("JSON parse error:", e);
+        return fallback;
+    }
+}
+
 // Stores the data for that page in local storage.
 function storeData() {
     localStorage.setItem(var_name, JSON.stringify(langArr));
@@ -14,7 +24,7 @@ function storeData() {
 // Loads the data for that page from local storage.
 function loadData() {
     const stored = localStorage.getItem(var_name);
-    let parsed = DataUtils.safeJsonParse(stored, null);
+    let parsed = safeJsonParse(stored, null);
 
     // Fallback if data is missing or invalid
     if (!parsed || typeof parsed !== 'object') {

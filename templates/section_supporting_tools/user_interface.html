@@ -5,7 +5,7 @@
 {% block main %}
     <h1>UI/UX Design</h1>
     {{ onsAccordion({
-        "id": "accordion-example",
+        "id": "user-interface-accordion",
         "itemsList": [
             {
                 "title": "More info",
@@ -14,14 +14,14 @@
         ]
     }) }}
     {{ onsAutosuggest({
-        "id": "user_interface-input",
+        "id": "user-interface-input",
         "input": {
             "label": {
                 "text": "What UI/UX tools were used to develop this project?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "user_interface-input",
+            "id": "user-interface-input",
             "class": "item-inputs",
             "attributes": {
                 "onsubmit": "Enter UI/UX tools",

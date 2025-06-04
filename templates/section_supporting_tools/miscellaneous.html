@@ -22,7 +22,7 @@
     <br>
         <h1>Miscellaneous</h1>
         {{ onsAccordion({
-        "id": "accordion-example",
+        "id": "micellaneous-accordion",
         "itemsList": [
             {
                 "title": "More info",
@@ -37,7 +37,7 @@
         }
     }) }}
     {{ onsInput({
-        "id": "miscellaneous_desc-input",
+        "id": "miscellaneous-desc-input",
         "label": {
             "text": "How would you describe this tool?"
         },
@@ -139,7 +139,7 @@
                 }
                 function addData(event) {
                     var mtool = document.getElementById('miscellaneous-input').value;
-                    var desc = document.getElementById('miscellaneous_desc-input').value;
+                    var desc = document.getElementById('miscellaneous-desc-input').value;
                     if (!mtool || !desc) {
                         showError();
                         return;
@@ -164,7 +164,7 @@
                         .style
                         .display = "none";
                 }
-                document.getElementById('miscellaneous_desc-input').onkeydown = function (event) {
+                document.getElementById('miscellaneous-desc-input').onkeydown = function (event) {
                     if (event.key === 'Enter') {
                         addData(event);
                     }

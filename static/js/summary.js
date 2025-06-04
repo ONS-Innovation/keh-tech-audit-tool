@@ -223,25 +223,25 @@ class SummaryManager {
             localStorage.getItem('contact_tech-data'),
             localStorage.getItem('contact_manager-data')
         );
-        this.contactProcessor.updateUI('user_details', contactDetails);
+        this.contactProcessor.updateUI('user-details', contactDetails);
 
         // Process project information
         const projectDetails = this.projectProcessor.processData(
             localStorage.getItem('project-data')
         );
-        this.projectProcessor.updateUI('project_details', projectDetails);
+        this.projectProcessor.updateUI('project-details', projectDetails);
 
         // Process stage information
         const stageDetails = this.stageProcessor.processData(
             localStorage.getItem('stage-data')
         );
-        this.stageProcessor.updateUI('stage_details', stageDetails);
+        this.stageProcessor.updateUI('stage-details', stageDetails);
 
         // Process development information
         const developedDetails = this.developedProcessor.processData(
             localStorage.getItem('developed-data')
         );
-        this.developedProcessor.updateUI('developed_details', developedDetails);
+        this.developedProcessor.updateUI('developed-details', developedDetails);
 
         // Set hidden input values
         this.setHiddenInputs();
@@ -454,17 +454,17 @@ class ArchitectureSummaryManager {
         const sourceControlDetails = this.sourceControlProcessor.processData(
             localStorage.getItem('source_control-data')
         );
-        this.sourceControlProcessor.updateUI('source_control_details', sourceControlDetails);
+        this.sourceControlProcessor.updateUI('source-control-details', sourceControlDetails);
 
         const hostingDetails = this.hostingProcessor.processData(
             localStorage.getItem('hosting-data')
         );
-        this.hostingProcessor.updateUI('hosting_details', hostingDetails);
+        this.hostingProcessor.updateUI('hosting-details', hostingDetails);
 
         const databaseDetails = this.databaseProcessor.processData(
             localStorage.getItem('database-data')
         );
-        this.databaseProcessor.updateUI('database_details', databaseDetails);
+        this.databaseProcessor.updateUI('database-details', databaseDetails);
     }
 }
 
@@ -482,22 +482,22 @@ class TechSummaryManager {
         const languagesDetails = this.languagesProcessor.processData(
             localStorage.getItem('languages-data')
         );
-        this.languagesProcessor.updateUI('languages_details', languagesDetails);
+        this.languagesProcessor.updateUI('languages-details', languagesDetails);
 
         const frameworkDetails = this.frameworksProcessor.processData(
             localStorage.getItem('frameworks-data')
         );
-        this.frameworksProcessor.updateUI('framework_details', frameworkDetails);
+        this.frameworksProcessor.updateUI('framework-details', frameworkDetails);
 
         const integrationDetails = this.integrationsProcessor.processData(
             localStorage.getItem('integrations-data')
         );
-        this.integrationsProcessor.updateUI('integration_details', integrationDetails);
+        this.integrationsProcessor.updateUI('integration-details', integrationDetails);
 
         const infrastructureDetails = this.infrastructureProcessor.processData(
             localStorage.getItem('infrastructure-data')
         );
-        this.infrastructureProcessor.updateUI('infrastructure_details', infrastructureDetails);
+        this.infrastructureProcessor.updateUI('infrastructure-details', infrastructureDetails);
     }
 }
 
@@ -533,13 +533,13 @@ class SupportingToolsSummaryManager {
         const miscellaneousDetails = this.miscellaneousProcessor.processData(
             localStorage.getItem('miscellaneous-data')
         );
-        this.miscellaneousProcessor.updateUI('miscellaneous_details', miscellaneousDetails);
+        this.miscellaneousProcessor.updateUI('miscellaneous-details', miscellaneousDetails);
 
         // Process project tracking
         const projectTrackingDetails = this.projectTrackingProcessor.processData(
             localStorage.getItem('project_tracking-data')
         );
-        this.projectTrackingProcessor.updateUI('project_tracking_details', projectTrackingDetails);
+        this.projectTrackingProcessor.updateUI('project-tracking-details', projectTrackingDetails);
 
         // Process incident management
         const incidentManagementDetails = this.incidentManagementProcessor.processData(

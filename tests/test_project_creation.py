@@ -474,7 +474,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.click_link(driver, "Save and continue")
 
         driver.implicitly_wait(10)
-        source_control_link = driver.find_element(By.ID, "source_control_link-input")
+        source_control_link = driver.find_element(By.ID, "source_control-link-input")
         self.wait.until(EC.element_to_be_clickable(source_control_link)).click()
         source_control_link.send_keys(self.source_control_link)
 
@@ -650,7 +650,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.click_link(driver, "Continue")
 
         driver.implicitly_wait(10)
-        code_editors = driver.find_element(By.ID, "code_editors-input")
+        code_editors = driver.find_element(By.ID, "code-editors-input")
 
         self.wait.until(EC.element_to_be_clickable(code_editors)).click()
         code_editors.send_keys("VSCode")
@@ -670,7 +670,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         """
         logging.info("Testing complete_user_interface...")
         driver.implicitly_wait(10)
-        user_interface = driver.find_element(By.ID, "user_interface-input")
+        user_interface = driver.find_element(By.ID, "user-interface-input")
 
         self.wait.until(EC.element_to_be_clickable(user_interface)).click()
         user_interface.send_keys("Figma")
@@ -793,7 +793,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         #Find the two inputs
         name_input = driver.find_element(By.ID, "miscellaneous-input")
-        desc_input = driver.find_element(By.ID, "miscellaneous_desc-input")
+        desc_input = driver.find_element(By.ID, "miscellaneous-desc-input")
 
         name_input.send_keys("Matchcode")
 

@@ -1,4 +1,4 @@
-set -euxo pipefail
+set -euo pipefail
 
 apk add --no-cache aws-cli podman jq
 

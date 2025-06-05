@@ -6,7 +6,7 @@ function formatList(items) {
 function loadData(projects) {
     try {
     // Technical Contact
-    document.getElementById('technical-contact').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('technical_contact_row').querySelector('dd').querySelector('span').textContent = 
             `${projects.user[0].email} (${projects.user[0].grade})`;
     } catch (e) {
         // No error

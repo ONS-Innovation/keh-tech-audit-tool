@@ -581,7 +581,7 @@ const UIUpdater = {
             incident_management: data.supporting_tools.incident_management,
             miscellaneous: data.supporting_tools.miscellaneous
         };
-        
+
         if (data.project_name) {
             hiddenFields.project_name = data.project_name;
         }
@@ -591,8 +591,7 @@ const UIUpdater = {
         }
         
         Object.entries(hiddenFields).forEach(([key, value]) => {
-            //const element = document.getElementById(key);
-            const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
+            const element = document.getElementById(key);
             if (element) {
                 element.value = JSON.stringify(value);
             }

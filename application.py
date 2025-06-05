@@ -343,7 +343,7 @@ def view_project(project_name):
     try:
         projects = projects.json()
         sanitized_projects = {key: value for key, value in projects.items() if key not in ["user", "sensitive_field"]}
-        logger.warning(f"view_project: sanitized project data = {sanitized_projects}")
+        logger.warning(f"view_project: number of sanitized fields = {len(sanitized_projects)}")
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))

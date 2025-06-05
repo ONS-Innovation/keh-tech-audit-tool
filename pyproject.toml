@@ -16,6 +16,7 @@ requests = "^2.32.3"
 python-dotenv = "^1.0.1"
 mkdocs = "^1.6.1"
 selenium = "^4.27.1"
+pytest = "^8.4.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"

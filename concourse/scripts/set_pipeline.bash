@@ -1,4 +1,3 @@
-tag=$(git rev-parse HEAD)
 repo_name=${1}
 
 if [[ $# -gt 1 ]]; then
@@ -12,4 +11,17 @@ else
     branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch} -v branch=${branch} -v tag=${tag}
+if [[ ${branch} == "main" || ${branch} == "master" || ${branch} == "concourse-prod" ]]; then
+    env="prod"
+else
+    env="dev"
+fi
+
+if [[ ${env} == "dev" ]]; then
+    tag=$(git rev-parse HEAD)
+else
+    tag=$(git tag | tail -n 1)
+fi
+
+fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch} -v branch=${branch} -v tag=${tag} -v env=${env}
+

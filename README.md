@@ -256,6 +256,8 @@ If you wish to set a pipeline for another branch without checking out, you can r
 ./concourse/scripts/set_pipeline.bash KEH-TAT-UI <branch_name>
 ```
 
+If the branch you are deploying is "main" or "master", it will trigger a deployment to the sdp-prod environment. To set the ECR image tag, you must draft a Github release pointing to the latest release of the main/master branch that has a tag in the form of vX.Y.Z. Drafting up a release will automatically deploy the latest version of the main/master branch with the associated release tag, but you can also manually trigger a build through the Concourse UI or the terminal prompt.
+
 #### Triggering a pipeline
 Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
 ```bash

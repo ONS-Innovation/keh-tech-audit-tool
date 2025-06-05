@@ -65,7 +65,7 @@ const ErrorHandler = {
         }
         
         errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
-        document.getElementById('submit-button').style.display = 'none';
+        document.getElementById('submit-button-btn').style.display = 'none';
     },
     
     // Clear all errors
@@ -76,7 +76,7 @@ const ErrorHandler = {
         if (errorContainer) {
             errorContainer.innerHTML = '';
         }
-        document.getElementById('submit-button').style.display = 'block';
+        document.getElementById('submit-button-btn').style.display = 'block';
     },
     
     // Validate data and display errors
@@ -543,8 +543,12 @@ const UIUpdater = {
         
         // Update all summary elements
         Object.entries(summaryData).forEach(([key, value]) => {
-            const element = document.getElementById(key);
-            if (element) element.innerHTML = value;
+            //const element = document.getElementById(key);
+            const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
+            if (element){
+                element.innerHTML = value;
+            }
+    
         });
     },
     
@@ -577,7 +581,7 @@ const UIUpdater = {
             incident_management: data.supporting_tools.incident_management,
             miscellaneous: data.supporting_tools.miscellaneous
         };
-        
+
         if (data.project_name) {
             hiddenFields.project_name = data.project_name;
         }
@@ -588,7 +592,9 @@ const UIUpdater = {
         
         Object.entries(hiddenFields).forEach(([key, value]) => {
             const element = document.getElementById(key);
-            if (element) element.value = JSON.stringify(value);
+            if (element) {
+                element.value = JSON.stringify(value);
+            }
         });
     }
 };

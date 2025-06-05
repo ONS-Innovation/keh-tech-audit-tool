@@ -158,11 +158,13 @@ function addData(event) {
 }
 
 
-// When the user is entering in the Autosuggest, if they press enter then it will add the data.
-document.getElementById(page + '-input').onkeydown = function(event) {
-    if (event.key === 'Enter') {
-        addData(event);
-    }
-};
+var inputElement = document.getElementById(page + '-input');
+if (inputElement) {
+    inputElement.onkeydown = function(event) {
+        if (event.key === 'Enter') {
+            addData(event);
+        }
+    };
+}
 
 loadData();

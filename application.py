@@ -342,6 +342,8 @@ def view_project(project_name):
 
     try:
         projects = projects.json()
+        sanitized_projects = {key: value for key, value in projects.items() if key not in ["user", "sensitive_field"]}
+        logger.warning(f"view_project: number of sanitized fields = {len(sanitized_projects)}")
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
@@ -418,7 +420,22 @@ def map_form_data(form):
     ]
     
     try:
-        final_dict = {key: json.loads(form[key]) for key in keys}
+        final_dict = {}
+        for key in keys:
+            value = form.get(key, "")
+            if value == "":
+                # Use sensible defaults: list for user, project, developed, etc., else empty string
+                if key in ["user", "developed", "languages", "frameworks", "integrations", "infrastructure", "code_editors", "user_interface", "diagrams", "project_tracking", "documentation", "communication", "collaboration", "incident_management", "miscellaneous"]:
+                    final_dict[key] = []
+                elif key == "project":
+                    final_dict[key] = {}
+                else:
+                    final_dict[key] = ""
+            else:
+                try:
+                    final_dict[key] = json.loads(value)
+                except Exception:
+                    final_dict[key] = value
     except Exception:
         keys.pop()
         final_dict = {key: json.loads(form[key]) for key in keys}
@@ -443,6 +460,16 @@ def survey():
     # If developed is not empty, or fallback
     developed_company = ""
     form_data_developed = form_data.get("developed", ["", ""])
+    # Defensive: always ensure a 2-element list
+    if not isinstance(form_data_developed, list):
+        form_data_developed = ["", ""]
+    elif len(form_data_developed) == 0:
+        form_data_developed = ["", ""]
+    elif len(form_data_developed) == 1:
+        form_data_developed = [form_data_developed[0], ""]
+    elif len(form_data_developed) > 2:
+        form_data_developed = form_data_developed[:2]
+    # Now safe to access indices
     if form_data_developed[0] == "In House":
         developed_data = ["In House", ""]
     elif form_data_developed[0] == "Outsourced":

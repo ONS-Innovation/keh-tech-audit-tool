@@ -396,49 +396,46 @@ def edit_project(project_name):
 # Improved readibility of the form data
 def map_form_data(form):
     keys = [
-        "user",
-        "project",
-        "developed",
-        "source_control",
-        "hosting",
-        "database",
-        "languages",
-        "frameworks",
-        "integrations",
-        "infrastructure",
-        "stage",
-        "code_editors",
-        "user_interface",
-        "diagrams",
-        "project_tracking",
-        "documentation",
-        "communication",
-        "collaboration",
-        "incident_management",
-        "miscellaneous",
-        "project_name",
+        {"key": "user", "default": []},
+        {"key": "project", "default": {}},
+        {"key": "developed", "default": []},
+        {"key": "source_control", "default": ""},
+        {"key": "hosting", "default": ""},
+        {"key": "database", "default": ""},
+        {"key": "languages", "default": []},
+        {"key": "frameworks", "default": []},
+        {"key": "integrations", "default": []},
+        {"key": "infrastructure", "default": []},
+        {"key": "stage", "default": ""},
+        {"key": "code_editors", "default": []},
+        {"key": "user_interface", "default": []},
+        {"key": "diagrams", "default": []},
+        {"key": "project_tracking", "default": []},
+        {"key": "documentation", "default": []},
+        {"key": "communication", "default": []},
+        {"key": "collaboration", "default": []},
+        {"key": "incident_management", "default": []},
+        {"key": "miscellaneous", "default": []},
+        {"key": "project_name", "default": ""},
     ]
-    
     try:
         final_dict = {}
-        for key in keys:
+        for item in keys:
+            key = item["key"]
+            default = item["default"]
             value = form.get(key, "")
             if value == "":
-                # Use sensible defaults: list for user, project, developed, etc., else empty string
-                if key in ["user", "developed", "languages", "frameworks", "integrations", "infrastructure", "code_editors", "user_interface", "diagrams", "project_tracking", "documentation", "communication", "collaboration", "incident_management", "miscellaneous"]:
-                    final_dict[key] = []
-                elif key == "project":
-                    final_dict[key] = {}
-                else:
-                    final_dict[key] = ""
+                final_dict[key] = default
             else:
                 try:
                     final_dict[key] = json.loads(value)
                 except Exception:
                     final_dict[key] = value
     except Exception:
-        keys.pop()
-        final_dict = {key: json.loads(form[key]) for key in keys}
+        # fallback for legacy behaviour
+        keys_list = [item["key"] for item in keys]
+        keys_list.pop()
+        final_dict = {key: json.loads(form[key]) for key in keys_list}
     return final_dict
 
 

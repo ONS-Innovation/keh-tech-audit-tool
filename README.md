@@ -244,8 +244,8 @@ AWS Secrets Manager so you do not need to set up anything yourself.
 
 To set the pipeline, run the following script:
 ```bash
-chmod u+x ./concourse/scripts/set_pipeline.bash
-./concourse/scripts/set_pipeline.bash KEH-TAT-UI
+chmod u+x ./concourse/scripts/set_pipeline.sh
+./concourse/scripts/set_pipeline.sh KEH-TAT-UI
 ```
 Note that you only have to run chmod the first time running the script in order to give permissions.
 This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
@@ -253,7 +253,7 @@ This script will set the branch and pipeline name to whatever branch you are cur
 The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
 If you wish to set a pipeline for another branch without checking out, you can run the following:
 ```bash
-./concourse/scripts/set_pipeline.bash KEH-TAT-UI <branch_name>
+./concourse/scripts/set_pipeline.sh KEH-TAT-UI <branch_name>
 ```
 
 If the branch you are deploying is "main" or "master", it will trigger a deployment to the sdp-prod environment. To set the ECR image tag, you must draft a Github release pointing to the latest release of the main/master branch that has a tag in the form of vX.Y.Z. Drafting up a release will automatically deploy the latest version of the main/master branch with the associated release tag, but you can also manually trigger a build through the Concourse UI or the terminal prompt.

@@ -48,10 +48,10 @@ jobs:
             export tag=((tag))
           fi
           git rev-parse --abbrev-ref HEAD
-          chmod u+x ./resource-repo/concourse/scripts/assume_role.bash
-          chmod u+x ./resource-repo/concourse/scripts/build_image.bash
-          source ./resource-repo/concourse/scripts/assume_role.bash
-          ./resource-repo/concourse/scripts/build_image.bash
+          chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+          chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+          source ./resource-repo/concourse/scripts/assume_role.sh
+          ./resource-repo/concourse/scripts/build_image.sh
     timeout: 10m
   - task: terraform
     privileged: true
@@ -76,8 +76,8 @@ jobs:
           else 
             export tag=((tag))
           fi
-          chmod u+x ./resource-repo/concourse/scripts/terraform_infra.bash
+          chmod u+x ./resource-repo/concourse/scripts/terraform_infra.sh
           export env=((env))
-          ./resource-repo/concourse/scripts/terraform_infra.bash
+          ./resource-repo/concourse/scripts/terraform_infra.sh
     timeout: 30m
             

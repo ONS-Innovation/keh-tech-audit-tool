@@ -490,8 +490,10 @@ const UIUpdater = {
                 `${data.source_control[0].type}${data.source_control[0].links.map(link => 
                     `<br>${link.description}: <a href="${link.url}" target="_blank">${link.url}</a>`).join('')}` : '',
             hosting_details: data.architecture.hosting.type ? 
-                (data.architecture.hosting.type[0] === "On-premises" ? "On-Premises" : 
-                    DataUtils.arrToList(data.architecture.hosting.details)) : '',
+                (data.architecture.hosting.type[0] && data.architecture.hosting.details && data.architecture.hosting.details.length > 0
+                    ? `${data.architecture.hosting.type[0]} (${DataUtils.arrToList(data.architecture.hosting.details)})`
+                    : data.architecture.hosting.type[0] || (data.architecture.hosting.details && data.architecture.hosting.details.length > 0 ? DataUtils.arrToList(data.architecture.hosting.details) : 'N/A'))
+                : (data.architecture.hosting.details && data.architecture.hosting.details.length > 0 ? DataUtils.arrToList(data.architecture.hosting.details) : 'N/A'),
             database_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.database, 'others', [])

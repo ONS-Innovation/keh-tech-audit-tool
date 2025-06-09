@@ -85,8 +85,19 @@ function loadData(projects) {
         projects.stage || 'N/A';
 
     // Hosting
-    document.getElementById('hosting_row').querySelector('dd').querySelector('span').textContent = 
-        `${projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : 'N/A'}`;
+    let hostingType = projects.architecture.hosting.type && projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : '';
+    let hostingProviders = Array.isArray(projects.architecture.hosting.details) && projects.architecture.hosting.details.length > 0 ? formatList(projects.architecture.hosting.details) : '';
+    let hostingDisplay = '';
+    if (hostingType && hostingProviders) {
+        hostingDisplay = `${hostingType} (${hostingProviders})`;
+    } else if (hostingType) {
+        hostingDisplay = hostingType;
+    } else if (hostingProviders) {
+        hostingDisplay = hostingProviders;
+    } else {
+        hostingDisplay = 'N/A';
+    }
+    document.getElementById('hosting_row').querySelector('dd').querySelector('span').textContent = hostingDisplay;
 
     // Database
     document.getElementById('database_row').querySelector('dd').querySelector('span').textContent = 

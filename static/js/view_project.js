@@ -88,12 +88,15 @@ function loadData(projects) {
     let hostingType = projects.architecture.hosting.type && projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : '';
     let hostingProviders = Array.isArray(projects.architecture.hosting.details) && projects.architecture.hosting.details.length > 0 ? formatList(projects.architecture.hosting.details) : '';
     let hostingDisplay = '';
-    if (hostingType && hostingProviders) {
-        hostingDisplay = `${hostingType} (${hostingProviders})`;
+    
+    if (hostingType === 'On-premises') {
+        hostingDisplay = 'On-premises';
+    } else if (hostingType && hostingProviders) {
+        hostingDisplay = `${hostingType}: ${hostingProviders}`;
     } else if (hostingType) {
         hostingDisplay = hostingType;
     } else if (hostingProviders) {
-        hostingDisplay = hostingProviders;
+        hostingDisplay = `Cloud: ${hostingProviders}`;
     } else {
         hostingDisplay = 'N/A';
     }

@@ -294,25 +294,38 @@ class HostingProcessor extends SectionProcessor {
     processData(hostingData) {
         try {
             const data = SummaryUtils.safeJsonParse(hostingData);
-            if (!data) return 'Cloud: N/A';
-            // If data is a string, just show it as 'Cloud: <value>'
+            if (!data) return '';
+            
             if (typeof data === 'string') {
-                return data ? `Cloud: ${SummaryUtils.escapeHtml(data)}` : 'Cloud: N/A';
+                return SummaryUtils.escapeHtml(data);
             }
-            // If data is an array, show first value
+            
             if (Array.isArray(data)) {
-                return data.length > 0 ? `Cloud: ${SummaryUtils.escapeHtml(data[0])}` : 'Cloud: N/A';
+                return data.length > 0 ? SummaryUtils.escapeHtml(data[0]) : '';
             }
-            // If data is an object (legacy), try to show type/provider
+            
             const type = data.type ? SummaryUtils.escapeHtml(data.type) : '';
             const others = data.others ? data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ') : '';
-            if (type && others) return `${type}<br>${others}`;
-            if (type) return `Cloud: ${type}`;
-            if (others) return `Cloud: ${others}`;
-            return 'Cloud: N/A';
+            
+            if (type === 'On-premises') {
+                return 'On-premises';
+            }
+            
+            if (type && others) {
+                return `${type}: ${others}`;
+            }
+            
+            if (type) {
+                return type;
+            }
+            
+            if (others) {
+                return `Cloud: ${others}`;
+            }
+            
+            return '';
         } catch (e) {
-            console.error('Error processing hosting data:', e);
-            return 'Cloud: N/A';
+            return '';
         }
     }
 }

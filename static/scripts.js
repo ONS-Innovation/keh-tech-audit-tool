@@ -18,28 +18,39 @@ function safeJsonParse(jsonString, fallback = {}) {
 
 // Stores the data for that page in local storage.
 function storeData() {
-    localStorage.setItem(var_name, JSON.stringify(langArr));
+    if (!path.includes('hosting')) {
+        console.log("Storing data:", langArr, path);
+        localStorage.setItem(var_name, JSON.stringify(langArr));
+    } 
 }
 
 // Loads the data for that page from local storage.
 function loadData() {
-    const stored = localStorage.getItem(var_name);
-    let parsed = safeJsonParse(stored, null);
-
-    // Fallback if data is missing or invalid
-    if (!parsed || typeof parsed !== 'object') {
-        console.warn("No valid stored data found. Initializing langArr.");
-        langArr = { main: [], others: [] };
-        storeData(); // save the empty structure
-    } else {
-        // Ensure main and others are arrays
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var existingData = JSON.parse(localStorage.getItem(name)) || {};
         langArr = {
-            main: Array.isArray(parsed.main) ? parsed.main : [],
-            others: Array.isArray(parsed.others) ? parsed.others : []
+            main: [],
+            others: Array.isArray(existingData.others) ? existingData.others : []
         };
+    } else {
+        const stored = localStorage.getItem(var_name);
+        let parsed = safeJsonParse(stored, null);
+        // Fallback if data is missing or invalid
+        if (!parsed || typeof parsed !== 'object') {
+            langArr = { main: [], others: [] };
+        } else {
+            // Ensure main and others are arrays
+            langArr = {
+                main: Array.isArray(parsed.main) ? parsed.main : [],
+                others: Array.isArray(parsed.others) ? parsed.others : []
+            };
+        }
     }
 
-    console.log("Initialized langArr:", langArr);
     renderData();
 }
 
@@ -58,39 +69,32 @@ function renderData() {
         var raw = localStorage.getItem(name);
         var data = raw ? JSON.parse(raw) : {};
         var providers = Array.isArray(data.others) ? data.others : [];
-        if (providers.length === 0) {
+        providers.forEach(function(provider, idx) {
             var newRow = document.createElement('tr');
             newRow.classList.add('ons-table__row');
-            newRow.innerHTML = `<td class="ons-table__cell">Cloud: N/A</td><td class="ons-table__cell"></td>`;
+            var cloudCell = document.createElement('td');
+            cloudCell.classList.add('ons-table__cell');
+            cloudCell.textContent = `${provider}`;
+
+            var buttonCell = document.createElement('td');
+            buttonCell.classList.add('ons-table__cell');
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.classList.add('ons-btn', 'ons-btn--secondary', 'ons-btn--small');
+            button.onclick = function() { removeData(provider); };
+            var buttonInner = document.createElement('span');
+            buttonInner.classList.add('ons-btn__inner');
+            var buttonText = document.createElement('span');
+            buttonText.classList.add('ons-btn__text');
+            buttonText.textContent = 'Remove';
+            buttonInner.appendChild(buttonText);
+            button.appendChild(buttonInner);
+            buttonCell.appendChild(button);
+
+            newRow.appendChild(cloudCell);
+            newRow.appendChild(buttonCell);
             tableBody.appendChild(newRow);
-        } else {
-            providers.forEach(function(provider, idx) {
-                var newRow = document.createElement('tr');
-                newRow.classList.add('ons-table__row');
-                var cloudCell = document.createElement('td');
-                cloudCell.classList.add('ons-table__cell');
-                cloudCell.textContent = `Cloud: ${provider}`;
-
-                var buttonCell = document.createElement('td');
-                buttonCell.classList.add('ons-table__cell');
-                var button = document.createElement('button');
-                button.type = 'button';
-                button.classList.add('ons-btn', 'ons-btn--secondary', 'ons-btn--small');
-                button.onclick = function() { removeData(provider); };
-                var buttonInner = document.createElement('span');
-                buttonInner.classList.add('ons-btn__inner');
-                var buttonText = document.createElement('span');
-                buttonText.classList.add('ons-btn__text');
-                buttonText.textContent = 'Remove';
-                buttonInner.appendChild(buttonText);
-                button.appendChild(buttonInner);
-                buttonCell.appendChild(button);
-
-                newRow.appendChild(cloudCell);
-                newRow.appendChild(buttonCell);
-                tableBody.appendChild(newRow);
-            });
-        }
+        });
         return;
     }
 

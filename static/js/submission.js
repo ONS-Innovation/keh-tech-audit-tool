@@ -148,17 +148,25 @@ const DataProcessors = {
     
     processHosting: function(hostingData) {
         const data = DataUtils.safeJsonParse(hostingData);
-        if (!data || !data.type) return '';
+        if (!data) return '';
 
         if (data.type === "On-premises") {
-            return "On-Premises";
+            return "On-premises";
         }
 
-        // Show all providers as comma-separated list
+        if (data.type && Array.isArray(data.others) && data.others.length > 0) {
+            return `${data.type}: ${DataUtils.arrToList(data.others)}`;
+        }
+
+        if (data.type) {
+            return data.type;
+        }
+
         if (Array.isArray(data.others) && data.others.length > 0) {
             return `Cloud: ${DataUtils.arrToList(data.others)}`;
         }
-        return 'Cloud: N/A';
+
+        return '';
     },
     
     processDeveloped: function(developedData) {
@@ -493,14 +501,22 @@ const UIUpdater = {
                 const typeArr = Array.isArray(data.architecture.hosting.type) ? data.architecture.hosting.type : [data.architecture.hosting.type];
                 const type = typeArr[0] || '';
                 const providers = Array.isArray(data.architecture.hosting.details) ? data.architecture.hosting.details : [];
-                if (type === 'On-premises') return 'On-Premises';
-                if ((type === 'Cloud' || type === 'Hybrid') && providers.length > 0) {
-                    return `Cloud: ${DataUtils.arrToList(providers)}`;
+                
+                if (type === 'On-premises') return 'On-premises';
+                
+                if (type && providers.length > 0) {
+                    return `${type}: ${DataUtils.arrToList(providers)}`;
                 }
+                
+                if (type) {
+                    return type;
+                }
+                
                 if (providers.length > 0) {
                     return `Cloud: ${DataUtils.arrToList(providers)}`;
                 }
-                return 'Cloud: N/A';
+                
+                return '';
             })(),
             database_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
@@ -569,12 +585,7 @@ const UIUpdater = {
             project: data.details,
             developed: data.developed,
             source_control: data.source_control,
-            hosting: {
-                type: Array.isArray(data.architecture.hosting.type) ? 
-                    data.architecture.hosting.type : 
-                    [data.architecture.hosting.type],
-                details: data.architecture.hosting.details
-            },
+            hosting: data.architecture.hosting,
             database: data.architecture.database,
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,

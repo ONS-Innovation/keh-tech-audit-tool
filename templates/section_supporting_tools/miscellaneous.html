@@ -157,8 +157,8 @@
                     langArr.push({name: mtool, description: desc});
                     storeData();
                     renderData();
-                    mtool.value = '';
-                    desc.value = '';
+                    document.getElementById('miscellaneous-input').value = '';
+                    document.getElementById('miscellaneous_desc-input').value = '';
                     document
                         .getElementById("error-panel")
                         .style

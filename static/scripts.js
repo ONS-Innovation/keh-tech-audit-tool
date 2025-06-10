@@ -67,7 +67,27 @@ function renderData() {
             providers.forEach(function(provider, idx) {
                 var newRow = document.createElement('tr');
                 newRow.classList.add('ons-table__row');
-                newRow.innerHTML = `<td class="ons-table__cell">Cloud: ${provider}</td><td class="ons-table__cell"><button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick="removeData('${provider}')"><span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span></button></td>`;
+                var cloudCell = document.createElement('td');
+                cloudCell.classList.add('ons-table__cell');
+                cloudCell.textContent = `Cloud: ${provider}`;
+
+                var buttonCell = document.createElement('td');
+                buttonCell.classList.add('ons-table__cell');
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.classList.add('ons-btn', 'ons-btn--secondary', 'ons-btn--small');
+                button.onclick = function() { removeData(provider); };
+                var buttonInner = document.createElement('span');
+                buttonInner.classList.add('ons-btn__inner');
+                var buttonText = document.createElement('span');
+                buttonText.classList.add('ons-btn__text');
+                buttonText.textContent = 'Remove';
+                buttonInner.appendChild(buttonText);
+                button.appendChild(buttonInner);
+                buttonCell.appendChild(button);
+
+                newRow.appendChild(cloudCell);
+                newRow.appendChild(buttonCell);
                 tableBody.appendChild(newRow);
             });
         }

@@ -294,13 +294,25 @@ class HostingProcessor extends SectionProcessor {
     processData(hostingData) {
         try {
             const data = SummaryUtils.safeJsonParse(hostingData);
-            if (!data) return '';
-
+            if (!data) return 'Cloud: N/A';
+            // If data is a string, just show it as 'Cloud: <value>'
+            if (typeof data === 'string') {
+                return data ? `Cloud: ${SummaryUtils.escapeHtml(data)}` : 'Cloud: N/A';
+            }
+            // If data is an array, show first value
+            if (Array.isArray(data)) {
+                return data.length > 0 ? `Cloud: ${SummaryUtils.escapeHtml(data[0])}` : 'Cloud: N/A';
+            }
+            // If data is an object (legacy), try to show type/provider
+            const type = data.type ? SummaryUtils.escapeHtml(data.type) : '';
             const others = data.others ? data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ') : '';
-            return `${data.type}<br>${others}`;
+            if (type && others) return `${type}<br>${others}`;
+            if (type) return `Cloud: ${type}`;
+            if (others) return `Cloud: ${others}`;
+            return 'Cloud: N/A';
         } catch (e) {
             console.error('Error processing hosting data:', e);
-            return '';
+            return 'Cloud: N/A';
         }
     }
 }
@@ -566,4 +578,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const toolsManager = new SupportingToolsSummaryManager();
         toolsManager.loadData();
     }
-}); 
+});

@@ -149,16 +149,16 @@ const DataProcessors = {
     processHosting: function(hostingData) {
         const data = DataUtils.safeJsonParse(hostingData);
         if (!data || !data.type) return '';
-        
+
         if (data.type === "On-premises") {
             return "On-Premises";
         }
-        
-        const hostingValues = [];
-        if (data.main && data.main.length) hostingValues.push(...data.main);
-        if (data.others && data.others.length) hostingValues.push(...data.others);
-        
-        return DataUtils.arrToList(hostingValues);
+
+        // Show all providers as comma-separated list
+        if (Array.isArray(data.others) && data.others.length > 0) {
+            return `Cloud: ${DataUtils.arrToList(data.others)}`;
+        }
+        return 'Cloud: N/A';
     },
     
     processDeveloped: function(developedData) {
@@ -489,11 +489,19 @@ const UIUpdater = {
             source_control_details: data.source_control[0]?.type ? 
                 `${data.source_control[0].type}${data.source_control[0].links.map(link => 
                     `<br>${link.description}: <a href="${link.url}" target="_blank">${link.url}</a>`).join('')}` : '',
-            hosting_details: data.architecture.hosting.type ? 
-                (data.architecture.hosting.type[0] && data.architecture.hosting.details && data.architecture.hosting.details.length > 0
-                    ? `${data.architecture.hosting.type[0]} (${DataUtils.arrToList(data.architecture.hosting.details)})`
-                    : data.architecture.hosting.type[0] || (data.architecture.hosting.details && data.architecture.hosting.details.length > 0 ? DataUtils.arrToList(data.architecture.hosting.details) : 'N/A'))
-                : (data.architecture.hosting.details && data.architecture.hosting.details.length > 0 ? DataUtils.arrToList(data.architecture.hosting.details) : 'N/A'),
+            hosting_details: (() => {
+                const typeArr = Array.isArray(data.architecture.hosting.type) ? data.architecture.hosting.type : [data.architecture.hosting.type];
+                const type = typeArr[0] || '';
+                const providers = Array.isArray(data.architecture.hosting.details) ? data.architecture.hosting.details : [];
+                if (type === 'On-premises') return 'On-Premises';
+                if ((type === 'Cloud' || type === 'Hybrid') && providers.length > 0) {
+                    return `Cloud: ${DataUtils.arrToList(providers)}`;
+                }
+                if (providers.length > 0) {
+                    return `Cloud: ${DataUtils.arrToList(providers)}`;
+                }
+                return 'Cloud: N/A';
+            })(),
             database_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.database, 'others', [])

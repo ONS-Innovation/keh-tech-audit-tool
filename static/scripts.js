@@ -50,6 +50,30 @@ function renderData() {
     var tableBody = document.querySelector('#table-list tbody');
     tableBody.innerHTML = '';
 
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        var providers = Array.isArray(data.others) ? data.others : [];
+        if (providers.length === 0) {
+            var newRow = document.createElement('tr');
+            newRow.classList.add('ons-table__row');
+            newRow.innerHTML = `<td class="ons-table__cell">Cloud: N/A</td><td class="ons-table__cell"></td>`;
+            tableBody.appendChild(newRow);
+        } else {
+            providers.forEach(function(provider, idx) {
+                var newRow = document.createElement('tr');
+                newRow.classList.add('ons-table__row');
+                newRow.innerHTML = `<td class="ons-table__cell">Cloud: ${provider}</td><td class="ons-table__cell"><button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick="removeData('${provider}')"><span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span></button></td>`;
+                tableBody.appendChild(newRow);
+            });
+        }
+        return;
+    }
+
     [...(langArr.main || []), ...(langArr.others || [])].forEach(lang => {
         var newRow = document.createElement('tr');
         newRow.classList.add('ons-table__row');
@@ -110,6 +134,20 @@ function changeListItemType(lang, type) {
 
 // Removes the data from the local storage and re-renders the table.
 function removeData(lang) {
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        if (!Array.isArray(data.others)) data.others = [];
+        data.others = data.others.filter(function(item) { return item !== lang; });
+        localStorage.setItem(name, JSON.stringify(data));
+        renderData();
+        return;
+    }
+
     langArr.main = langArr.main.filter(item => item !== lang);
     langArr.others = langArr.others.filter(item => item !== lang);
     storeData();
@@ -128,6 +166,27 @@ function addData(event) {
 
     if (!lang) {
         showError();
+        return;
+    }
+
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        if (!Array.isArray(data.others)) data.others = [];
+        // Prevent duplicates (case-insensitive)
+        if (data.others.map(v => v.toLowerCase()).includes(lang.toLowerCase())) {
+            showError();
+            return;
+        }
+        data.others.push(lang);
+        localStorage.setItem(name, JSON.stringify(data));
+        renderData();
+        inputElement.value = "";
+        document.getElementById('error-panel').classList.add('ons-u-hidden');
         return;
     }
 

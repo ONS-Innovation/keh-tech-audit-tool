@@ -4,6 +4,8 @@ resources:
   icon: github
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
+    username: ((github_access_token))
+    password: x-oauth-basic
     branch: ((branch))
 
 - name: release
@@ -11,6 +13,8 @@ resources:
   icon: github
   source:
     owner: ONS-Innovation
+    username: ((github_access_token))
+    password: x-oauth-basic
     repository: keh-tech-audit-tool
 
 jobs:

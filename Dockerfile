@@ -19,7 +19,7 @@ RUN pip install poetry==1.8.3
 COPY .  /app
 
 RUN apt update && \
-    apt install -y make curl jq unzip
+    apt install -y make curl jq unzip iptables
 
 RUN make load-design
 

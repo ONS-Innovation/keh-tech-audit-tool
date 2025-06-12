@@ -5,8 +5,6 @@ export PODMAN_SYSTEMD_UNIT=concourse-task
 
 container_image=$(echo "$tat_secrets_ui" | jq -r .container_image)
 
-apk install iptables
-
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
 podman build -t ${container_image}:${tag} resource-repo

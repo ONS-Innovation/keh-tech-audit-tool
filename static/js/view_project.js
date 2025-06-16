@@ -113,8 +113,17 @@ function loadData(projects) {
     // Languages
     const mainLangs = projects.architecture.languages.main.join(', ');
     const otherLangs = projects.architecture.languages.others.join(', ');
-    document.getElementById('languages_row').querySelector('dd').querySelector('span').textContent = 
-        `${mainLangs}${otherLangs ? ', ' + otherLangs : 'N/A'}`;
+    let languagesText = '';
+    if (mainLangs && otherLangs) {
+        languagesText = `${mainLangs}, ${otherLangs}`;
+    } else if (mainLangs) {
+        languagesText = mainLangs;
+    } else if (otherLangs) {
+        languagesText = otherLangs;
+    } else {
+        languagesText = 'N/A';
+    }
+    document.getElementById('languages_row').querySelector('dd').querySelector('span').textContent = languagesText;
 
     // CI/CD
     document.getElementById('cicd_row').querySelector('dd').querySelector('span').textContent = 

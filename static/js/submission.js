@@ -148,7 +148,8 @@ const DataProcessors = {
     
     processHosting: function(hostingData) {
         const data = DataUtils.safeJsonParse(hostingData);
-        if (!data) return '';
+
+        if (!data || !data.type) return '';
 
         if (data.type === "On-premises") {
             return "On-premises";

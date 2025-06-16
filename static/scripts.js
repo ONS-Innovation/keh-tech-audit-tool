@@ -19,7 +19,6 @@ function safeJsonParse(jsonString, fallback = {}) {
 // Stores the data for that page in local storage.
 function storeData() {
     if (!path.includes('hosting')) {
-        console.log("Storing data:", langArr, path);
         localStorage.setItem(var_name, JSON.stringify(langArr));
     } 
 }

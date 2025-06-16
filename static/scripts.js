@@ -18,28 +18,38 @@ function safeJsonParse(jsonString, fallback = {}) {
 
 // Stores the data for that page in local storage.
 function storeData() {
-    localStorage.setItem(var_name, JSON.stringify(langArr));
+    if (!path.includes('hosting')) {
+        localStorage.setItem(var_name, JSON.stringify(langArr));
+    } 
 }
 
 // Loads the data for that page from local storage.
 function loadData() {
-    const stored = localStorage.getItem(var_name);
-    let parsed = safeJsonParse(stored, null);
-
-    // Fallback if data is missing or invalid
-    if (!parsed || typeof parsed !== 'object') {
-        console.warn("No valid stored data found. Initializing langArr.");
-        langArr = { main: [], others: [] };
-        storeData(); // save the empty structure
-    } else {
-        // Ensure main and others are arrays
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var existingData = JSON.parse(localStorage.getItem(name)) || {};
         langArr = {
-            main: Array.isArray(parsed.main) ? parsed.main : [],
-            others: Array.isArray(parsed.others) ? parsed.others : []
+            main: [],
+            others: Array.isArray(existingData.others) ? existingData.others : []
         };
+    } else {
+        const stored = localStorage.getItem(var_name);
+        let parsed = safeJsonParse(stored, null);
+        // Fallback if data is missing or invalid
+        if (!parsed || typeof parsed !== 'object') {
+            langArr = { main: [], others: [] };
+        } else {
+            // Ensure main and others are arrays
+            langArr = {
+                main: Array.isArray(parsed.main) ? parsed.main : [],
+                others: Array.isArray(parsed.others) ? parsed.others : []
+            };
+        }
     }
 
-    console.log("Initialized langArr:", langArr);
     renderData();
 }
 
@@ -49,6 +59,43 @@ function loadData() {
 function renderData() {
     var tableBody = document.querySelector('#table-list tbody');
     tableBody.innerHTML = '';
+
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        var providers = Array.isArray(data.others) ? data.others : [];
+        providers.forEach(function(provider, idx) {
+            var newRow = document.createElement('tr');
+            newRow.classList.add('ons-table__row');
+            var cloudCell = document.createElement('td');
+            cloudCell.classList.add('ons-table__cell');
+            cloudCell.textContent = `${provider}`;
+
+            var buttonCell = document.createElement('td');
+            buttonCell.classList.add('ons-table__cell');
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.classList.add('ons-btn', 'ons-btn--secondary', 'ons-btn--small');
+            button.onclick = function() { removeData(provider); };
+            var buttonInner = document.createElement('span');
+            buttonInner.classList.add('ons-btn__inner');
+            var buttonText = document.createElement('span');
+            buttonText.classList.add('ons-btn__text');
+            buttonText.textContent = 'Remove';
+            buttonInner.appendChild(buttonText);
+            button.appendChild(buttonInner);
+            buttonCell.appendChild(button);
+
+            newRow.appendChild(cloudCell);
+            newRow.appendChild(buttonCell);
+            tableBody.appendChild(newRow);
+        });
+        return;
+    }
 
     [...(langArr.main || []), ...(langArr.others || [])].forEach(lang => {
         var newRow = document.createElement('tr');
@@ -110,6 +157,20 @@ function changeListItemType(lang, type) {
 
 // Removes the data from the local storage and re-renders the table.
 function removeData(lang) {
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        if (!Array.isArray(data.others)) data.others = [];
+        data.others = data.others.filter(function(item) { return item !== lang; });
+        localStorage.setItem(name, JSON.stringify(data));
+        renderData();
+        return;
+    }
+
     langArr.main = langArr.main.filter(item => item !== lang);
     langArr.others = langArr.others.filter(item => item !== lang);
     storeData();
@@ -128,6 +189,27 @@ function addData(event) {
 
     if (!lang) {
         showError();
+        return;
+    }
+
+    if (path.includes('hosting')) {
+        var name = 'hosting-data';
+        if (JSON.parse(localStorage.getItem('edit')) === true) {
+            name = 'hosting-data-edit';
+        }
+        var raw = localStorage.getItem(name);
+        var data = raw ? JSON.parse(raw) : {};
+        if (!Array.isArray(data.others)) data.others = [];
+        // Prevent duplicates (case-insensitive)
+        if (data.others.map(v => v.toLowerCase()).includes(lang.toLowerCase())) {
+            showError();
+            return;
+        }
+        data.others.push(lang);
+        localStorage.setItem(name, JSON.stringify(data));
+        renderData();
+        inputElement.value = "";
+        document.getElementById('error-panel').classList.add('ons-u-hidden');
         return;
     }
 
@@ -158,11 +240,15 @@ function addData(event) {
 }
 
 
+
 // When the user is entering in the Autosuggest, if they press enter then it will add the data.
-document.getElementById(page + '-input').onkeydown = function(event) {
-    if (event.key === 'Enter') {
-        addData(event);
-    }
-};
+var inputElement = document.getElementById(page + '-input');
+if (inputElement) {
+    inputElement.onkeydown = function(event) {
+        if (event.key === 'Enter') {
+            addData(event);
+        }
+    };
+}
 
 loadData();

@@ -12,12 +12,13 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "Code Editors",
-                                    "rowItems": [
+                                    "id":"code_editor_details",
+                                    "title": "Code Editors",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='code_editor_details'></div>"
+                                                    "text": ""
                                                 }
                                             ],
                                             "actions": [
@@ -31,12 +32,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "User Interface",
-                                    "rowItems": [
+                                    "id":"user_interface_details",
+                                    "title": "User Interface",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='user_interface_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -50,12 +52,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Diagrams",
-                                    "rowItems": [
+                                    "id":"diagram_details",
+                                    "title": "Diagrams",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='diagram_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -69,12 +72,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Project Tracking",
-                                    "rowItems": [
+                                    "id":"project_tracking_details",
+                                    "title": "Project Tracking",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='project_tracking_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -88,12 +92,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Documentation",
-                                    "rowItems": [
+                                    "id":"documentation_details",
+                                    "title": "Documentation",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='documentation_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -107,12 +112,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Communication",
-                                    "rowItems": [
+                                    "id":"communication_details",
+                                    "title": "Communication",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='communication_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -126,12 +132,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Collaboration",
-                                    "rowItems": [
+                                    "id":"collaboration_details",
+                                    "title": "Collaboration",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='collaboration_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -145,12 +152,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Incident Management",
-                                    "rowItems": [
+                                    "id":"incident_management_details",
+                                    "title": "Incident Management",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='incident_management_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -162,13 +170,15 @@
                                             ]
                                         }
                                     ]
-                                },                                {
-                                    "rowTitle": "Miscellaneous",
-                                    "rowItems": [
+                                },   
+                                {
+                                    "id":"miscellaneous_details",
+                                    "title": "Miscellaneous",
+                                    "itemsList": [
                                     {
                                         "valueList": [
                                         {
-                                            "text": "<div id='miscellaneous_details'></div>"
+                                            "text": ""
                                         }
                                     ],
                                         "actions": [
@@ -190,7 +200,7 @@
     <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
     {{ onsButton({
         "text": 'Finish section',
-        "id": "submit-button",
+        "id": "submit-button-btn",
         "url": url_for('survey'),
         "classes": 'ons-u-mb-m ons-u-mt-l',
         "iconType": "check",

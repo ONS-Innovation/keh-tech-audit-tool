@@ -12,12 +12,13 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "Source Control",
-                                    "rowItems": [
+                                    "id":"source_control_details",
+                                    "title": "Source Control",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='source_control_details'></div>"
+                                                    "text": ""
                                                 }
                                             ],
                                             "actions": [
@@ -31,12 +32,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Hosting",
-                                    "rowItems": [
+                                    "id":"hosting_details",
+                                    "title": "Hosting",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='hosting_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -50,12 +52,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Database",
-                                    "rowItems": [
+                                    "id":"database_details",
+                                    "title": "Database",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='database_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -77,7 +80,7 @@
     <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
     {{ onsButton({
         "text": 'Finish section',
-        "id": "submit-button",
+        "id": "submit-button-btn",
         "url": url_for('survey'),
         "classes": 'ons-u-mb-m ons-u-mt-l',
         "iconType": "check",

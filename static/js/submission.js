@@ -65,7 +65,7 @@ const ErrorHandler = {
         }
         
         errorContainer.innerHTML += `<ul><li>${message}</li></ul>`;
-        document.getElementById('submit-button').style.display = 'none';
+        document.getElementById('submit-button-btn').style.display = 'none';
     },
     
     // Clear all errors
@@ -76,7 +76,7 @@ const ErrorHandler = {
         if (errorContainer) {
             errorContainer.innerHTML = '';
         }
-        document.getElementById('submit-button').style.display = 'block';
+        document.getElementById('submit-button-btn').style.display = 'block';
     },
     
     // Validate data and display errors
@@ -148,17 +148,26 @@ const DataProcessors = {
     
     processHosting: function(hostingData) {
         const data = DataUtils.safeJsonParse(hostingData);
+
         if (!data || !data.type) return '';
-        
+
         if (data.type === "On-premises") {
-            return "On-Premises";
+            return "On-premises";
         }
-        
-        const hostingValues = [];
-        if (data.main && data.main.length) hostingValues.push(...data.main);
-        if (data.others && data.others.length) hostingValues.push(...data.others);
-        
-        return DataUtils.arrToList(hostingValues);
+
+        if (data.type && Array.isArray(data.others) && data.others.length > 0) {
+            return `${data.type}: ${DataUtils.arrToList(data.others)}`;
+        }
+
+        if (data.type) {
+            return data.type;
+        }
+
+        if (Array.isArray(data.others) && data.others.length > 0) {
+            return `Cloud: ${DataUtils.arrToList(data.others)}`;
+        }
+
+        return '';
     },
     
     processDeveloped: function(developedData) {
@@ -489,9 +498,27 @@ const UIUpdater = {
             source_control_details: data.source_control[0]?.type ? 
                 `${data.source_control[0].type}${data.source_control[0].links.map(link => 
                     `<br>${link.description}: <a href="${link.url}" target="_blank">${link.url}</a>`).join('')}` : '',
-            hosting_details: data.architecture.hosting.type ? 
-                (data.architecture.hosting.type[0] === "On-premises" ? "On-Premises" : 
-                    DataUtils.arrToList(data.architecture.hosting.details)) : '',
+            hosting_details: (() => {
+                const typeArr = Array.isArray(data.architecture.hosting.type) ? data.architecture.hosting.type : [data.architecture.hosting.type];
+                const type = typeArr[0] || '';
+                const providers = Array.isArray(data.architecture.hosting.details) ? data.architecture.hosting.details : [];
+                
+                if (type === 'On-premises') return 'On-premises';
+                
+                if (type && providers.length > 0) {
+                    return `${type}: ${DataUtils.arrToList(providers)}`;
+                }
+                
+                if (type) {
+                    return type;
+                }
+                
+                if (providers.length > 0) {
+                    return `Cloud: ${DataUtils.arrToList(providers)}`;
+                }
+                
+                return '';
+            })(),
             database_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.database, 'others', [])
@@ -543,8 +570,12 @@ const UIUpdater = {
         
         // Update all summary elements
         Object.entries(summaryData).forEach(([key, value]) => {
-            const element = document.getElementById(key);
-            if (element) element.innerHTML = value;
+            //const element = document.getElementById(key);
+            const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
+            if (element){
+                element.innerHTML = value;
+            }
+    
         });
     },
     
@@ -555,12 +586,7 @@ const UIUpdater = {
             project: data.details,
             developed: data.developed,
             source_control: data.source_control,
-            hosting: {
-                type: Array.isArray(data.architecture.hosting.type) ? 
-                    data.architecture.hosting.type : 
-                    [data.architecture.hosting.type],
-                details: data.architecture.hosting.details
-            },
+            hosting: data.architecture.hosting,
             database: data.architecture.database,
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,
@@ -577,7 +603,7 @@ const UIUpdater = {
             incident_management: data.supporting_tools.incident_management,
             miscellaneous: data.supporting_tools.miscellaneous
         };
-        
+
         if (data.project_name) {
             hiddenFields.project_name = data.project_name;
         }
@@ -588,7 +614,9 @@ const UIUpdater = {
         
         Object.entries(hiddenFields).forEach(([key, value]) => {
             const element = document.getElementById(key);
-            if (element) element.value = JSON.stringify(value);
+            if (element) {
+                element.value = JSON.stringify(value);
+            }
         });
     }
 };

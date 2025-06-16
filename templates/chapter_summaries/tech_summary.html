@@ -12,12 +12,13 @@
                         {
                             "rows": [
                                 {
-                                    "rowTitle": "Languages",
-                                    "rowItems": [
+                                    "id":"languages_details",
+                                    "title": "Languages",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                                 {
-                                                    "text": "<div id='languages_details'></div>"
+                                                    "text": ""
                                                 }
                                             ],
                                             "actions": [
@@ -31,12 +32,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Frameworks",
-                                    "rowItems": [
+                                    "id":"framework_details",
+                                    "title": "Frameworks",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='framework_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -50,12 +52,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "CI/CD",
-                                    "rowItems": [
+                                    "id":"integration_details",
+                                    "title": "CI/CD",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='integration_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -69,12 +72,13 @@
                                     ]
                                 },
                                 {
-                                    "rowTitle": "Infrastructure",
-                                    "rowItems": [
+                                    "id":"infrastructure_details",
+                                    "title": "Infrastructure",
+                                    "itemsList": [
                                         {
                                             "valueList": [
                                             {
-                                                "text": "<div id='infrastructure_details'></div>"
+                                                "text": ""
                                             }
                                         ],
                                             "actions": [
@@ -96,7 +100,7 @@
     <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
     {{ onsButton({
         "text": 'Finish section',
-        "id": "submit-button",
+        "id": "submit-button-btn",
         "url": url_for('survey'),
         "classes": 'ons-u-mb-m ons-u-mt-l',
         "iconType": "check",

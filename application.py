@@ -342,6 +342,8 @@ def view_project(project_name):
 
     try:
         projects = projects.json()
+        sanitized_projects = {key: value for key, value in projects.items() if key not in ["user", "sensitive_field"]}
+        logger.info(f"view_project: number of sanitized fields = {len(sanitized_projects)}")
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
@@ -394,34 +396,46 @@ def edit_project(project_name):
 # Improved readibility of the form data
 def map_form_data(form):
     keys = [
-        "user",
-        "project",
-        "developed",
-        "source_control",
-        "hosting",
-        "database",
-        "languages",
-        "frameworks",
-        "integrations",
-        "infrastructure",
-        "stage",
-        "code_editors",
-        "user_interface",
-        "diagrams",
-        "project_tracking",
-        "documentation",
-        "communication",
-        "collaboration",
-        "incident_management",
-        "miscellaneous",
-        "project_name",
+        {"key": "user", "default": []},
+        {"key": "project", "default": {}},
+        {"key": "developed", "default": []},
+        {"key": "source_control", "default": ""},
+        {"key": "hosting", "default": ""},
+        {"key": "database", "default": ""},
+        {"key": "languages", "default": []},
+        {"key": "frameworks", "default": []},
+        {"key": "integrations", "default": []},
+        {"key": "infrastructure", "default": []},
+        {"key": "stage", "default": ""},
+        {"key": "code_editors", "default": []},
+        {"key": "user_interface", "default": []},
+        {"key": "diagrams", "default": []},
+        {"key": "project_tracking", "default": []},
+        {"key": "documentation", "default": []},
+        {"key": "communication", "default": []},
+        {"key": "collaboration", "default": []},
+        {"key": "incident_management", "default": []},
+        {"key": "miscellaneous", "default": []},
+        {"key": "project_name", "default": ""},
     ]
-    
     try:
-        final_dict = {key: json.loads(form[key]) for key in keys}
+        final_dict = {}
+        for item in keys:
+            key = item["key"]
+            default = item["default"]
+            value = form.get(key, "")
+            if value == "":
+                final_dict[key] = default
+            else:
+                try:
+                    final_dict[key] = json.loads(value)
+                except Exception:
+                    final_dict[key] = value
     except Exception:
-        keys.pop()
-        final_dict = {key: json.loads(form[key]) for key in keys}
+        # fallback for legacy behaviour
+        keys_list = [item["key"] for item in keys]
+        keys_list.pop()
+        final_dict = {key: json.loads(form[key]) for key in keys_list}
     return final_dict
 
 
@@ -443,6 +457,16 @@ def survey():
     # If developed is not empty, or fallback
     developed_company = ""
     form_data_developed = form_data.get("developed", ["", ""])
+    # Defensive: always ensure a 2-element list
+    if not isinstance(form_data_developed, list):
+        form_data_developed = ["", ""]
+    elif len(form_data_developed) == 0:
+        form_data_developed = ["", ""]
+    elif len(form_data_developed) == 1:
+        form_data_developed = [form_data_developed[0], ""]
+    elif len(form_data_developed) > 2:
+        form_data_developed = form_data_developed[:2]
+    # Now safe to access indices
     if form_data_developed[0] == "In House":
         developed_data = ["In House", ""]
     elif form_data_developed[0] == "Outsourced":

@@ -22,7 +22,7 @@ class SummaryUtils {
     }
 
     static updateElement(elementId, content) {
-        const element = document.getElementById(elementId);
+        const element = document.getElementById(elementId)?.querySelector('dd.ons-summary__values span.ons-summary__text');
         if (element) {
             element.innerHTML = content;
         }
@@ -295,11 +295,36 @@ class HostingProcessor extends SectionProcessor {
         try {
             const data = SummaryUtils.safeJsonParse(hostingData);
             if (!data) return '';
-
+            
+            if (typeof data === 'string') {
+                return SummaryUtils.escapeHtml(data);
+            }
+            
+            if (Array.isArray(data)) {
+                return data.length > 0 ? SummaryUtils.escapeHtml(data[0]) : '';
+            }
+            
+            const type = data.type ? SummaryUtils.escapeHtml(data.type) : '';
             const others = data.others ? data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ') : '';
-            return `${data.type}<br>${others}`;
+            
+            if (type === 'On-premises') {
+                return 'On-premises';
+            }
+            
+            if (type && others) {
+                return `${type}: ${others}`;
+            }
+            
+            if (type) {
+                return type;
+            }
+            
+            if (others) {
+                return `Cloud: ${others}`;
+            }
+            
+            return '';
         } catch (e) {
-            console.error('Error processing hosting data:', e);
             return '';
         }
     }
@@ -566,4 +591,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const toolsManager = new SupportingToolsSummaryManager();
         toolsManager.loadData();
     }
-}); 
+});

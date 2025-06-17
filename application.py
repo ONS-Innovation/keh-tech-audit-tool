@@ -118,6 +118,7 @@ projectNavItems = [
     {"text": "Project", "url": "/survey/project"},
     {"text": "Developed", "url": "/survey/developed"},
     {"text": "Stage", "url": "/survey/stage"},
+    {"text": "Project Dependencies", "url": "/survey/project_dependencies"},
     {"text": "Summary", "url": "/survey/project_summary"},
 ]
 

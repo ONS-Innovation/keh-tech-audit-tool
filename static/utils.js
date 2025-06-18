@@ -1,6 +1,6 @@
 function removeEdits() {
     localStorage.setItem("edit", false);
-    var fields = ['contact_tech-data-edit', 'contact_manager-data-edit', 'project-data-edit', 'developed-data-edit', 'stage-data-edit', 
+    var fields = ['contact_tech-data-edit', 'contact_manager-data-edit', 'project-data-edit', 'developed-data-edit', 'stage-data-edit', 'project_dependencies-data-edit',
                 'source_control-data-edit', 'hosting-data-edit', 'database-data-edit', 'frameworks-data-edit', 'infrastructure-data-edit', 'integrations-data-edit', 
                 'languages-data-edit', 'code_editors-data-edit', 'user_interface-data-edit', 'diagrams-data-edit', 'project_tracking-data-edit', 'documentation-data-edit', 
                 'communication-data-edit', 'collaboration-data-edit', 'incident_management-data-edit', 'miscellaneous-edit'];

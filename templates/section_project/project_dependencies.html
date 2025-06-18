@@ -20,7 +20,7 @@
     }) }}
     {% endcall %}
     <br>
-        <h1>Miscellaneous</h1>
+        <h1>Project Dependencies</h1>
         {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
@@ -176,7 +176,7 @@
                 "text": "Save and continue",
                 "iconType": "arrow-next",
                 "iconPosition": "after",
-                "url": url_for('stage'),
+                "url": url_for('project_summary'),
                 "attributes": {
                     "onclick": "storeData();"
                 }

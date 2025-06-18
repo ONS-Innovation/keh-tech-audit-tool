@@ -408,6 +408,7 @@ def map_form_data(form):
         {"key": "integrations", "default": []},
         {"key": "infrastructure", "default": []},
         {"key": "stage", "default": ""},
+        {"key": "project_dependencies", "default": []},
         {"key": "code_editors", "default": []},
         {"key": "user_interface", "default": []},
         {"key": "diagrams", "default": []},
@@ -537,6 +538,7 @@ def survey():
             "infrastructure": form_data.get("infrastructure", ""),
         },
         "stage": form_data.get("stage", ""),
+        "project_dependencies": form_data.get("project_dependencies", []),
         "supporting_tools": {
             "code_editors": form_data.get("code_editors", ""),
             "user_interface": form_data.get("user_interface", ""),
@@ -630,6 +632,9 @@ def project():
 def stage():
     return render_template("/section_project/stage.html")
 
+@app.route("/survey/project_dependencies", methods=["GET"])
+def project_dependencies():
+    return render_template("/section_project/project_dependencies.html")
 
 @app.route("/survey/developed", methods=["GET"])
 def developed():

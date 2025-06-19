@@ -30,12 +30,11 @@
             }
         ]
     }) }}
-        {{ onsInput({
-        "id": "project_dependencies-input",
-        "label": {
-            "text": "Enter the name of the Project Dependency"
-        }
-    }) }}
+        <label for="project_dependencies-select">Select a Project Dependency</label>
+<select id="project_dependencies-select" class="ons-input">
+  <option value="">-- Select a project --</option>
+</select>
+<input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" />
     {{ onsInput({
         "id": "project_dependencies_desc-input",
         "label": {
@@ -138,7 +137,9 @@
                     errorPanel.classList.add('ons-u-hidden');
                 }
                 function addData(event) {
-                    var mtool = document.getElementById('project_dependencies-input').value;
+                    var select = document.getElementById('project_dependencies-select');
+                    var manual = document.getElementById('project_dependencies-input').value.trim();
+                    var mtool = manual || select.value;
                     var desc = document.getElementById('project_dependencies_desc-input').value;
                     if (!mtool || !desc) {
                         showError();
@@ -157,12 +158,10 @@
                     langArr.push({name: mtool, description: desc});
                     storeData();
                     renderData();
+                    select.value = '';
                     document.getElementById('project_dependencies-input').value = '';
                     document.getElementById('project_dependencies_desc-input').value = '';
-                    document
-                        .getElementById("error-panel")
-                        .style
-                        .display = "none";
+                    document.getElementById("error-panel").style.display = "none";
                 }
                 document.getElementById('project_dependencies_desc-input').onkeydown = function (event) {
                     if (event.key === 'Enter') {
@@ -170,6 +169,23 @@
                     }
                 };
             </script>
+            <script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/project_names_list')
+      .then(response => response.json())
+      .then(data => {
+        const select = document.getElementById('project_dependencies-select');
+        if (select && Array.isArray(data)) {
+          data.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+          });
+        }
+      });
+});
+</script>
             <form action="{{ url_for('survey') }}" method="GET">
                 {{ onsButton({
                 "id": "save-values-button",

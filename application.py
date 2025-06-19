@@ -803,5 +803,11 @@ def validate_details():
     return render_template("validate_details.html")
 
 
+@app.route('/project_names_list')
+def project_names_list():
+    names = read_project_names_data()
+    return json.dumps(names), 200, {'Content-Type': 'application/json'}
+
+
 if __name__ == "__main__":
     app.run(debug=False)

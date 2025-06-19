@@ -494,6 +494,10 @@ const UIUpdater = {
                 documentation_link: data.details.documentation_link,
                 project_description: data.details.project_description
             })),
+            project_dependencies_details: (() => {
+                const dependencies = DataProcessors.processProjectDependencies(JSON.stringify(data.project_dependencies));
+                return dependencies.length > 0 ? dependencies.join('<br>') : 'No dependencies';
+            })(),
             developed_details: DataProcessors.processDeveloped(JSON.stringify(data.developed)),
             source_control_details: data.source_control[0]?.type ? 
                 `${data.source_control[0].type}${data.source_control[0].links.map(link => 

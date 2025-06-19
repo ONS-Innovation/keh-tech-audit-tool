@@ -53,6 +53,31 @@ def read_auto_complete_data():
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
+#Get project names data from S3 bucket using boto3
+def read_project_names_data():
+    try:
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
+        project_names_data = json.loads(response["Body"].read().decode("utf-8"))
+        # Collect project names from each project in the list
+        project_names = []
+        for project in project_names_data.get("projects", []):
+            # Look for the name in the details key (which may be a list or dict)
+            name = None
+            details = project.get("details")
+            if isinstance(details, list) and details:
+                name = details[0].get("name")
+            elif isinstance(details, dict):
+                name = details.get("name")
+            if name:
+                project_names.append(name)
+            else:
+                project_names.append("Unnamed Project")
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            project_names = []
+        else:
+            abort(500, description=f"Error reading project names data: {e}")
+    return project_names
 
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):

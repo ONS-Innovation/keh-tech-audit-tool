@@ -77,7 +77,7 @@ def read_project_names_data():
             project_names = []
         else:
             abort(500, description=f"Error reading project names data: {e}")
-    return project_names
+    return sorted(project_names)
 
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):

@@ -264,9 +264,10 @@ class SummaryManager {
         this.stageProcessor.updateUI('stage_details', stageDetails);
 
         // Process project dependencies
-        const projectDependencies = localStorage.getItem('project_dependencies-data');
-        const dependenciesDetails = this.projectDependenciesProcessor.processData(projectDependencies);
-        this.projectProcessor.updateUI('project_dependencies_details', dependenciesDetails);
+        const project_dependencies_details = this.projectDependenciesProcessor.processData(
+            localStorage.getItem('project_dependencies-data')
+        );
+        this.projectProcessor.updateUI('project_dependencies_details', project_dependencies_details);
 
         // Process development information
         const developedDetails = this.developedProcessor.processData(

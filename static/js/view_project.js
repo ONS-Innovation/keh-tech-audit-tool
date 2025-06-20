@@ -84,6 +84,19 @@ function loadData(projects) {
     document.getElementById('stage_row').querySelector('dd').querySelector('span').textContent = 
         projects.stage || 'N/A';
 
+    // Project Dependencies
+    const dependencies = projects.project_dependencies;
+    const dependenciesContainer = document.getElementById('project_dependencies_row')
+        .querySelector('dd')
+        .querySelector('span');
+    if (Array.isArray(dependencies) && dependencies.length > 0) {
+        dependenciesContainer.innerHTML = dependencies
+            .map(item => `<p>${item.name}: <span style="font-weight: 400;">${item.description}</span></p>`)
+            .join('');
+    } else {
+        dependenciesContainer.textContent = 'N/A';
+    }
+
     // Hosting
     let hostingType = projects.architecture.hosting.type && projects.architecture.hosting.type[0] ? projects.architecture.hosting.type[0] : '';
     let hostingProviders = Array.isArray(projects.architecture.hosting.details) && projects.architecture.hosting.details.length > 0 ? formatList(projects.architecture.hosting.details) : '';

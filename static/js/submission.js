@@ -343,6 +343,7 @@ const DataNormalizer = {
             project: data.details[0] || {},
             developed: developedData,
             stage: { stage: data.stage },
+            project_dependencies: data.project_dependencies || [],
             source_control: sourceControl,
             hosting: hosting,
             database: data.architecture.database,
@@ -447,6 +448,9 @@ const DataNormalizer = {
                 database: cleanedData.database || { main: [], others: [] },
             },
             stage: cleanedData.stage?.stage || '',
+            project_dependencies: Array.isArray(cleanedData.project_dependencies) ? 
+                cleanedData.project_dependencies : 
+                (cleanedData.project_dependencies?.project_dependencies || []),
             supporting_tools: {
                 code_editors: cleanedData.code_editors || { main: [], others: [] },
                 user_interface: cleanedData.user_interface || { main: [], others: [] },
@@ -486,6 +490,7 @@ const UIUpdater = {
             delivery_manager: data.user[1]?.email ? 
                 `${data.user[1].email} (${data.user[1].grade || ''})` : '',
             stage_details: data.stage || '',
+            project_dependencies_details: data.project_dependencies || [],
             project_details: DataProcessors.processProjectDetails(JSON.stringify({
                 name: data.details.name,
                 short_name: data.details.short_name,
@@ -597,6 +602,7 @@ const UIUpdater = {
             integrations: data.architecture.integrations,
             infrastructure: data.architecture.infrastructure,
             stage: data.stage,
+            project_dependencies: data.project_dependencies,
             code_editors: data.supporting_tools.code_editors,
             user_interface: data.supporting_tools.user_interface,
             diagrams: data.supporting_tools.diagrams,
@@ -631,8 +637,8 @@ const AppController = {
         const suffix = isEdit ? '-edit' : '';
         return [
             `contact_tech-data${suffix}`, `contact_manager-data${suffix}`, `project-data${suffix}`, 
-            `developed-data${suffix}`, `stage-data${suffix}`, `source_control-data${suffix}`, 
-            `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
+            `developed-data${suffix}`, `stage-data${suffix}`, `project_dependencies-data${suffix}`, 
+            `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
             `infrastructure-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
@@ -672,6 +678,7 @@ const AppController = {
             project: ErrorHandler.validateData(storedData['project'], 'Project', ['name']),
             developed: ErrorHandler.validateData(storedData['developed'], 'Developed'),
             stage: ErrorHandler.validateData(storedData['stage'], 'Stage'),
+            project_dependencies: ErrorHandler.validateData(storedData['project_dependencies'], 'Project Dependencies'),
             source_control: DataUtils.safeJsonParse(storedData['source_control']),
             hosting: DataUtils.safeJsonParse(storedData['hosting']),
             database: ErrorHandler.validateData(storedData['database'], 'Databases'),

@@ -263,6 +263,28 @@ const DataProcessors = {
             }
         });
         return html;
+    },
+    
+    processProjectDependencies: function(dependenciesData) {
+        // Accepts a JSON string or array
+        let dependencies = dependenciesData;
+        if (typeof dependenciesData === 'string') {
+            try {
+                dependencies = JSON.parse(dependenciesData);
+            } catch {
+                dependencies = [];
+            }
+        }
+        if (!Array.isArray(dependencies) || dependencies.length === 0) return [];
+        // Format: Project Name: Description
+        return dependencies.map(dep => {
+            if (dep && dep.name) {
+                const name = DataUtils.escapeHtml ? DataUtils.escapeHtml(dep.name) : dep.name;
+                const desc = dep.description ? (DataUtils.escapeHtml ? DataUtils.escapeHtml(dep.description) : dep.description) : '';
+                return desc ? `${name}: <span style=\"font-weight:400\">${desc}</span>` : name;
+            }
+            return '';
+        }).filter(Boolean);
     }
 };
 

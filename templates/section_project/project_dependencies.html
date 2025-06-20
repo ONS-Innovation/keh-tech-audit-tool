@@ -139,14 +139,14 @@
                 function addData(event) {
                     var select = document.getElementById('project_dependencies-select');
                     var manual = document.getElementById('project_dependencies-input').value.trim();
-                    var mtool = manual || select.value;
+                    var prodep = manual || select.value;
                     var desc = document.getElementById('project_dependencies_desc-input').value;
-                    if (!mtool || !desc) {
+                    if (!prodep || !desc) {
                         showError();
                         return;
                     }
                     try {
-                        if (langArr.some(item => item.name.toLowerCase() === mtool.toLowerCase())) {
+                        if (langArr.some(item => item.name.toLowerCase() === prodep.toLowerCase())) {
                             showError();
                             return;
                         } else {
@@ -155,7 +155,7 @@
                     } catch (e) {
                         console.error(e);
                     }
-                    langArr.push({name: mtool, description: desc});
+                    langArr.push({name: prodep, description: desc});
                     storeData();
                     renderData();
                     select.value = '';

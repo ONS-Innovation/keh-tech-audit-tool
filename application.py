@@ -533,6 +533,11 @@ def survey():
             # If it's a plain string, wrap it in a list
             documentation_link = [documentation_link]
 
+    # Ensure project_dependencies is always a list, never None
+    project_dependencies = form_data.get("project_dependencies")
+    if project_dependencies is None:
+        project_dependencies = []
+    print('DEBUG: Raw request.form["project_dependencies"]:', repr(request.form.get("project_dependencies")))
     data = {
         "user": new_users,
         "details": [
@@ -564,7 +569,7 @@ def survey():
             "infrastructure": form_data.get("infrastructure", ""),
         },
         "stage": form_data.get("stage", ""),
-        "project_dependencies": form_data.get("project_dependencies", []),
+        "project_dependencies": project_dependencies,
         "supporting_tools": {
             "code_editors": form_data.get("code_editors", ""),
             "user_interface": form_data.get("user_interface", ""),
@@ -578,6 +583,7 @@ def survey():
         },
     }
 
+    print('DEBUG: Parsed form_data:', repr(form_data))
     try:
         if form_data.get("project_name"):
             requests.put(

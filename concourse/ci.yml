@@ -5,6 +5,7 @@ resources:
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
     branch: ((branch))
+    access_token: ((github_access_token))
 
 - name: release
   type: github-release
@@ -12,6 +13,7 @@ resources:
   source:
     owner: ONS-Innovation
     repository: keh-tech-audit-tool
+    access_token: ((github_access_token))
 
 jobs:
 - name:  build-and-push

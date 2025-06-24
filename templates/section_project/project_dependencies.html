@@ -80,7 +80,8 @@
                     }
                 var langArr = [];
                 function storeData() {
-                    localStorage.setItem(name, JSON.stringify(langArr));
+                    localStorage.setItem('project_dependencies-data', JSON.stringify(langArr));
+                    localStorage.setItem('project_dependencies-data-edit', JSON.stringify(langArr));
                 }
                 function loadData() {
                     let raw = localStorage.getItem(name);
@@ -186,7 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 });
 </script>
-            <form action="{{ url_for('survey') }}" method="GET">
+            <form action="{{ url_for('survey') }}" method="GET" id="project-dependencies-form">
+                <input type="hidden" name="project_dependencies" id="project_dependencies-hidden">
                 {{ onsButton({
                 "id": "save-values-button",
                 "text": "Save and continue",
@@ -198,6 +200,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 }) }}
             </form>
+            <script>
+            function setProjectDependenciesHiddenInput() {
+                var name = 'project_dependencies-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'project_dependencies-data-edit';
+                }
+                var arr = localStorage.getItem(name);
+                document.getElementById('project_dependencies-hidden').value = arr || '[]';
+            }
+            document.getElementById('project-dependencies-form').addEventListener('submit', function(e) {
+                setProjectDependenciesHiddenInput();
+                storeData();
+            });
+            </script>
             <script>
                 if (JSON.parse(localStorage.getItem("project_dependencies-validate")) && JSON.parse(localStorage.getItem("edit"))) {
                     document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');

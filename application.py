@@ -385,7 +385,6 @@ def view_project(project_name):
             flash(f"Project not found. Please try again. {projects['message']}")
             return redirect(url_for("dashboard"))
     except KeyError:
-        print('DEBUG: API returned project_dependencies:', repr(projects.get('project_dependencies')))
         return render_template("view_project.html", project=projects, edit=edit)
     except Exception as e:
         logger.error(f"Error: {e}")

@@ -85,7 +85,7 @@ function loadData(projects) {
         projects.stage || 'N/A';
 
     // Project Dependencies
-    const dependencies = projects.project_dependencies;
+    const dependencies = projects.details[0].project_dependencies;
     const dependenciesContainer = document.getElementById('project_dependencies_row')
         .querySelector('dd')
         .querySelector('span');

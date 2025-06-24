@@ -552,6 +552,7 @@ def survey():
                 "programme_short_name": form_data["project"].get(
                     "programme_short_name", ""
                 ),
+                "project_dependencies": project_dependencies,
             }
         ],
         "developed": developed_data,
@@ -569,7 +570,6 @@ def survey():
             "infrastructure": form_data.get("infrastructure", ""),
         },
         "stage": form_data.get("stage", ""),
-        "project_dependencies": project_dependencies,
         "supporting_tools": {
             "code_editors": form_data.get("code_editors", ""),
             "user_interface": form_data.get("user_interface", ""),

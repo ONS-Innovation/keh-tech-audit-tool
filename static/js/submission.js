@@ -365,7 +365,7 @@ const DataNormalizer = {
             project: data.details[0] || {},
             developed: developedData,
             stage: { stage: data.stage },
-            project_dependencies: data.project_dependencies || [],
+            project_dependencies: data.details[0].project_dependencies || [],
             source_control: sourceControl,
             hosting: hosting,
             database: data.architecture.database,

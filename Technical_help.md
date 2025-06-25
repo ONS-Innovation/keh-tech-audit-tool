@@ -1,14 +1,14 @@
-# Techincal Guidence to add new pages
+# Technical Guidance to add new pages
 
 ### Introduction
 
-The following documentation will provide guidence on adding a new page (new input to record), and what steps it involves.
+The following documentation will provide guidance on adding a new page (new input to record), and what steps it involves.
 
 ### Creating the Page
 
-The initial step will be to create the page that will capture the desired input withing the 'templates/' directory. As an example the 'miscellaneous.html' caputres data related to supporting tools so the page is within 'templates/section_supporting_tools/'. Nake sure the page is connected with the previous page and will direct the user top the sensible nex page/summary page of the correct section.
+The initial step will be to create the page that will capture the desired input within the 'templates/' directory. As an example the 'miscellaneous.html' captures data related to supporting tools so the page is within 'templates/section_supporting_tools/'. Make sure the page is connected with the previous page and will direct the user to the sensible next page/summary page of the correct section.
 
-The pages should be created by following the design systems docuemntation. 
+The pages should be created by following the design systems documentation. 
 
 ```https://service-manual.ons.gov.uk/design-system/components/summary```
 
@@ -22,7 +22,7 @@ Include a section to retrieve the new incoming data in the correct format/correc
 The following files will require changes (most likely): 
 
 
-### applycation.py
+### application.py
 
 
 Include the page in the correct '..NavItems' array.
@@ -37,7 +37,7 @@ example:
 example: {"key": "new html file", "default": expected return type},
 ```
 
-Inlcude a new 'app.route(...)'.
+Include a new 'app.route(...)'.
 example:
 ```bash
     @app.route("/survey/new html file", methods=[GET or POST])
@@ -86,7 +86,7 @@ Add the new data to the 'processedData'.
 ### summary.js 
 
 
-Add a new data processor that extends the sectionrpocessor. 
+Add a new data processor that extends the SectionProcessor. 
 example:
 ```bash
 class NewDataProcessor extends SectionProcessor 
@@ -94,13 +94,13 @@ class NewDataProcessor extends SectionProcessor
 
 Add a new error manager to the 'SummaryManager'.
 
-Include the new data in the 'loadData()' funciton.
+Include the new data in the 'loadData()' function.
 
 
 ### view_project.js 
 
 
-Add a new section where the data is processed and shaped and provides teh default 'N/A' if there is no data given.
+Add a new section where the data is processed and shaped and provides the default 'N/A' if there is no data given.
 
 example:
 ```bash

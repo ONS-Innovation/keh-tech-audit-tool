@@ -536,7 +536,6 @@ def survey():
     project_dependencies = form_data.get("project_dependencies")
     if project_dependencies is None:
         project_dependencies = []
-    print('DEBUG: Raw request.form["project_dependencies"]:', repr(request.form.get("project_dependencies")))
     data = {
         "user": new_users,
         "details": [
@@ -582,7 +581,6 @@ def survey():
         },
     }
 
-    print('DEBUG: Parsed form_data:', repr(form_data))
     try:
         if form_data.get("project_name"):
             requests.put(

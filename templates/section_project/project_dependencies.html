@@ -75,35 +75,12 @@
         ]
     }) }}
     <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project_dependencies.js') }}"></script>
             <script>
-                    var name = 'project_dependencies-data';
-                    if (JSON.parse(localStorage.getItem('edit'))) {
-                        name = 'project_dependencies-data-edit';
-                    }
-                var langArr = [];
-                function storeData() {
-                    localStorage.setItem('project_dependencies-data', JSON.stringify(langArr));
-                    localStorage.setItem('project_dependencies-data-edit', JSON.stringify(langArr));
-                }
-                function loadData() {
-                    let raw = localStorage.getItem(name);
-                    try {
-                        let parsed = JSON.parse(raw);
-                        if (!Array.isArray(parsed)) {
-                            throw new Error("Invalid data format");
-                        }
-                        langArr = parsed;
-                    } catch (e) {
-                        console.warn("Resetting langArr due to invalid or missing data:", e);
-                        langArr = [];
-                        localStorage.setItem(name, JSON.stringify(langArr));
-                    }
-                    renderData();
-                }
                 function renderData() {
                     var tableBody = document.querySelector('#table-list tbody');
                     tableBody.innerHTML = '';
-                    (langArr || []).forEach(item => {
+                    (projectDependencies.langArr || []).forEach(item => {
                         var newRow = document.createElement('tr');
                         newRow.classList.add('ons-table__row');
                         newRow.innerHTML = `
@@ -125,8 +102,8 @@
                     });
                 }
                 function removeData(name) {
-                    langArr = langArr.filter(item => item.name !== name);
-                    storeData();
+                    projectDependencies.langArr = projectDependencies.langArr.filter(item => item.name !== name);
+                    projectDependencies.storeData();
                     renderData();
                 }
                 function showError() {
@@ -149,7 +126,7 @@
                         return;
                     }
                     try {
-                        if (langArr.some(item => item.name.toLowerCase() === prodep.toLowerCase())) {
+                        if (projectDependencies.langArr.some(item => item.name.toLowerCase() === prodep.toLowerCase())) {
                             showError();
                             return;
                         } else {
@@ -158,8 +135,8 @@
                     } catch (e) {
                         console.error(e);
                     }
-                    langArr.push({name: prodep, description: desc});
-                    storeData();
+                    projectDependencies.langArr.push({name: prodep, description: desc});
+                    projectDependencies.storeData();
                     renderData();
                     select.value = '';
                     document.getElementById('project_dependencies-input').value = '';
@@ -172,23 +149,6 @@
                     }
                 };
             </script>
-            <script>
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/project_names_list')
-      .then(response => response.json())
-      .then(data => {
-        const select = document.getElementById('project_dependencies-select');
-        if (select && Array.isArray(data)) {
-          data.forEach(name => {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            select.appendChild(option);
-          });
-        }
-      });
-});
-</script>
             <form action="{{ url_for('survey') }}" method="GET" id="project-dependencies-form">
                 <input type="hidden" name="project_dependencies" id="project_dependencies-hidden">
                 {{ onsButton({
@@ -198,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "iconPosition": "after",
                 "url": url_for('project_summary'),
                 "attributes": {
-                    "onclick": "storeData();"
+                    "onclick": "projectDependencies.storeData();"
                 }
                 }) }}
             </form>
@@ -213,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             document.getElementById('project-dependencies-form').addEventListener('submit', function(e) {
                 setProjectDependenciesHiddenInput();
-                storeData();
+                projectDependencies.storeData();
             });
             </script>
             <script>
@@ -222,7 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (JSON.parse(localStorage.getItem("project_dependencies-validate"))) {
                     document.getElementById("save-values-button").href = '/validate_details'
                 }
-                loadData();
+                projectDependencies.loadData();
+                renderData();
                 redirectToPrevious();
             </script>
         {% endblock %}

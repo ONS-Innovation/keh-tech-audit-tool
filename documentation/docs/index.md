@@ -288,6 +288,7 @@ make test-project-creation
             developed.html
             project.html
             stage.html
+            project_dependencies.html
         section_supporting_tools/ #HTML templates for supporting tools
             code_editors.html
             collaboration.html

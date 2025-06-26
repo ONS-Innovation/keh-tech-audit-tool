@@ -265,12 +265,12 @@ const DataProcessors = {
         return html;
     },
     
-    processProjectDependencies: function(dependenciesData) {
+    processProjectDependencies: function(projectDependenciesData) {
         // Accepts a JSON string or array
-        let dependencies = dependenciesData;
-        if (typeof dependenciesData === 'string') {
+        let dependencies = projectDependenciesData;
+        if (typeof projectDependenciesData === 'string') {
             try {
-                dependencies = JSON.parse(dependenciesData);
+                dependencies = JSON.parse(projectDependenciesData);
             } catch {
                 dependencies = [];
             }
@@ -523,7 +523,7 @@ const UIUpdater = {
             })),
             project_dependencies_details: (() => {
                 const dependencies = DataProcessors.processProjectDependencies(JSON.stringify(data.project_dependencies));
-                return dependencies.length > 0 ? dependencies.join('<br>') : 'No dependencies';
+                return dependencies.length > 0 ? dependencies.join('<br>') : 'N/A';
             })(),
             developed_details: DataProcessors.processDeveloped(JSON.stringify(data.developed)),
             source_control_details: data.source_control[0]?.type ? 

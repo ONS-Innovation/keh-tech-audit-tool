@@ -209,9 +209,9 @@ class DevelopedProcessor extends SectionProcessor {
 
 // Project Dependencies processor
 class ProjectDependenciesProcessor extends SectionProcessor {
-    processData(dependenciesData) {
+    processData(projectDependenciesData) {
         try {
-            const data = SummaryUtils.safeJsonParse(dependenciesData);
+            const data = SummaryUtils.safeJsonParse(projectDependenciesData);
             if (!data || !Array.isArray(data) || data.length === 0) return '';
             let html = '';
             data.forEach(dep => {

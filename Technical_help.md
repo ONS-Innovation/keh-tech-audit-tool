@@ -16,6 +16,12 @@ The pages should be created by following the design systems documentation.
 
 Include a section to retrieve the new incoming data in the correct format/correct section in the 'api_models.py'
 
+```bash
+    "new_data": fields.String(
+        required=False, new_data="Description of new data"
+        ),
+```
+
 
 ## Files Involved
 
@@ -26,19 +32,25 @@ The following files will require changes (most likely):
 
 
 Include the page in the correct '..NavItems' array.
-example:  
+
+example:
+
 ```bash
 example: {"text": "The New page title", "url": "/survey/new html file"},
 ```
 
 Include the new input in the 'map_form_data' array.
+
 example:
+
 ```bash
 example: {"key": "new html file", "default": expected return type},
 ```
 
 Include a new 'app.route(...)'.
+
 example:
+
 ```bash
     @app.route("/survey/new html file", methods=[GET or POST])
     def new_input():
@@ -53,7 +65,8 @@ Add the new data to the 'changeBtnURL(..., newData)'.
 
 Add the new data in the 'validations' array
 
-example: 
+example:
+
 ```bash
         { 
             data: newData, 
@@ -70,12 +83,14 @@ Add a new process function to process the incoming data (see submission.js for e
 
 Add the return value of the new data to the 'normalizeApiData'.
 
-Add the new data to the  'updateSummaryDisplay'.
+Add the new data to the 'updateSummaryDisplay'.
 
 Add the new data to the 'updateHiddenFields'.
 
-Add the return value of the new data to the 'AppController'. 
+Add the return value of the new data to the 'AppController'.
+
 example:
+
 ```bash
 `new-data-data${suffix}`, 
 ```
@@ -86,8 +101,10 @@ Add the new data to the 'processedData'.
 ### summary.js 
 
 
-Add a new data processor that extends the SectionProcessor. 
+Add a new data processor that extends the SectionProcessor.
+
 example:
+
 ```bash
 class NewDataProcessor extends SectionProcessor 
 ```
@@ -103,6 +120,7 @@ Include the new data in the 'loadData()' function.
 Add a new section where the data is processed and shaped and provides the default 'N/A' if there is no data given.
 
 example:
+
 ```bash
     // New data
     document.getElementById('new_data_row').querySelector('dd').querySelector('span').textContent = 
@@ -113,7 +131,9 @@ example:
 
 
 Add the new data to the 'removeEdits()' function.
+
 example:
+
 ```bash
 'new_data-data-edit'
 ```
@@ -121,37 +141,38 @@ example:
 
 ### project_summary.html
 
-Include the new on the page. 
+Include the new on the page.
 
-example: 
+example:
 
 ```bash
-                                {
-                                    "id": "new_data_details",
-                                    "title": "New Data Title",
-                                    "itemsList": [
-                                        {
-                                            "valueList": [
-                                            {
-                                                "text": ""
-                                            }
-                                        ],
-                                            "actions": [
-                                                {
-                                                    "text": "Change",
-                                                    "ariaLabel": "View answers for Mary Smith",
-                                                    "url": url_for('new_data.html')
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
+    {
+        "id": "new_data_details",
+        "title": "New Data Title",
+        "itemsList": [
+            {
+                "valueList": [
+                {
+                    "text": ""
+                }
+            ],
+                "actions": [
+                {
+                    "text": "Change",
+                    "ariaLabel": "View answers for Mary Smith",
+                    "url": url_for('new_data.html')
+                }
+                ]
+            }
+        ]
+    },
 ```
 
 ### survey.html
 
 Add a new variable to the 'load_data()'.
-example: 
+
+example:
 
 ```bash
 var new_dataData = localStorage.getItem('new_data-data');
@@ -161,9 +182,10 @@ var new_dataData = localStorage.getItem('new_data-data');
 
 Add a section for the new data just like in 'project_summary.html'.
 
+Add a new input source to the collection of inputs.
 
-Add a new input source to the collection of inputs. 
-example: 
+example:
+
 ```bash
 <input id="new data html name" type="hidden" name="new data html name">
 ```

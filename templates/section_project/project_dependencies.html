@@ -4,6 +4,7 @@
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/table/_macro.njk" import onsTable %}
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -20,7 +21,7 @@
     }) }}
     {% endcall %}
     <br>
-        <h1>Project Dependencies</h1>
+        <h1 style="margin-bottom: 1.5em;">Project Dependencies</h1>
         {{ onsAccordion({
         "id": "accordion-example",
         "itemsList": [
@@ -30,11 +31,12 @@
             }
         ]
     }) }}
-        <label for="project_dependencies-select">Select a Project Dependency</label>
-<select id="project_dependencies-select" class="ons-input">
+    <div style="margin-bottom: 1.5em;"><label for="project_dependencies-select">Select a Project Dependency</label></div>
+<div style="margin-bottom: 1.5em;"><select id="project_dependencies-select" class="ons-input">
   <option value="">-- Select a project --</option>
-</select>
-<input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" />
+</select></div>
+<div style="margin-bottom: 1.5em;"><input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" /></div>
+<div style="margin-bottom: 2em;">
     {{ onsInput({
         "id": "project_dependencies_desc-input",
         "label": {
@@ -50,8 +52,8 @@
             }
         }
     }) }}
+</div>
         <br>
-            {% from "components/table/_macro.njk" import onsTable %}
             {{ onsTable({
         "caption": "",
         "id": "table-list",

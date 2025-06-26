@@ -5,6 +5,7 @@
 {% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% from "components/table/_macro.njk" import onsTable %}
+{% from "components/select/_macro.njk" import onsSelect %}
 {% block main %}
     {% call onsPanel({
         "id": "error-panel",
@@ -31,10 +32,17 @@
             }
         ]
     }) }}
-    <div style="margin-bottom: 1.5em;"><label for="project_dependencies-select">Select a Project Dependency</label></div>
-<div style="margin-bottom: 1.5em;"><select id="project_dependencies-select" class="ons-input">
-  <option value="">-- Select a project --</option>
-</select></div>
+    <div style="margin-bottom: 1.5em;">
+    {{ onsSelect({
+        "id": "project_dependencies-select",
+        "name": "project_dependencies-select",
+        "label": "Select a Project Dependency",
+        "options": [
+            {"value": "", "text": "-- Select a project --"}
+        ],
+        "classes": "ons-input"
+    }) }}
+</div>
 <div style="margin-bottom: 1.5em;"><input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" /></div>
 <div style="margin-bottom: 2em;">
     {{ onsInput({

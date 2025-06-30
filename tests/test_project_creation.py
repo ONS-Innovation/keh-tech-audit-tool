@@ -437,15 +437,9 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
-        logging.info("Testing project_dependecies...")
+        logging.info("Testing complete_project_dependencies...")
         driver.implicitly_wait(10)
-        # Select the first (non-empty) option from the onsSelect
-       # select = driver.find_element(By.ID, "project_dependencies-select")
-        #options = select.find_elements(By.TAG_NAME, "option")
-       # for option in options:
-        #    if option.get_attribute("value"):
-         #       option.click()
-          #      break
+
         name_dependency = driver.find_element(By.ID, "project_dependencies-input")
         name_dependency.send_keys("Test Project")
         # Add a description
@@ -742,7 +736,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
-        logging.info("Testing project_tracking...")
+        logging.info("Testing complete_project_tracking...")
         driver.implicitly_wait(10)
         choice = self.click_radio(driver, ["jira", "trello", "other"])
         if choice == "other":

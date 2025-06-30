@@ -16,7 +16,9 @@ The pages should be created by following the design systems documentation.
 
 Include a section to retrieve the new incoming data in the correct format/correct section in the 'api_models.py'
 
-```bash
+'https://github.com/ONS-Innovation/keh-tech-audit-tool-api/blob/main/aws_lambda_script/app/api_models.py'
+
+```python
     "new_data": fields.String(
         required=False, new_data="Description of new data"
         ),
@@ -35,7 +37,7 @@ Include the page in the correct '..NavItems' array.
 
 example:
 
-```bash
+```python
 example: {"text": "The New page title", "url": "/survey/new html file"},
 ```
 
@@ -43,7 +45,7 @@ Include the new input in the 'map_form_data' array.
 
 example:
 
-```bash
+```python
 example: {"key": "new html file", "default": expected return type},
 ```
 
@@ -51,7 +53,7 @@ Include a new 'app.route(...)'.
 
 example:
 
-```bash
+```python
     @app.route("/survey/new html file", methods=[GET or POST])
     def new_input():
         return render_template("path to the new html file")
@@ -67,7 +69,7 @@ Add the new data in the 'validations' array
 
 example:
 
-```bash
+```python
         { 
             data: newData, 
             url: 'path to new html file', 
@@ -114,14 +116,14 @@ Add a new error manager to the 'SummaryManager'.
 Include the new data in the 'loadData()' function.
 
 
-### view_project.js 
+### view_project.js
 
 
 Add a new section where the data is processed and shaped and provides the default 'N/A' if there is no data given.
 
 example:
 
-```bash
+```python
     // New data
     document.getElementById('new_data_row').querySelector('dd').querySelector('span').textContent = 
         projects.new_data || 'N/A';
@@ -145,7 +147,7 @@ Include the new on the page.
 
 example:
 
-```bash
+```python
     {
         "id": "new_data_details",
         "title": "New Data Title",

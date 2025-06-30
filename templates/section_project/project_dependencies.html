@@ -33,17 +33,29 @@
         ]
     }) }}
     <div style="margin-bottom: 1.5em;">
+    {{ onsLabel({
+        "id": "project_dependencies-select-label",
+        "for": "project_dependencies-select",
+        "text": "Select a Project Dependency"
+    }) }}
     {{ onsSelect({
         "id": "project_dependencies-select",
         "name": "project_dependencies-select",
-        "label": "Select a Project Dependency",
+        "label": "",
         "options": [
             {"value": "", "text": "-- Select a project --"}
         ],
         "classes": "ons-input"
     }) }}
 </div>
-<div style="margin-bottom: 1.5em;"><input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" /></div>
+<div style="margin-bottom: 1.5em;">
+    {{ onsLabel({
+        "id": "project_dependencies-input-label",
+        "for": "project_dependencies-input",
+        "text": "Or enter a new project name"
+    }) }}
+    <input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" style="max-width: 300px;" />
+</div>
 <div style="margin-bottom: 2em;">
     {{ onsInput({
         "id": "project_dependencies_desc-input",

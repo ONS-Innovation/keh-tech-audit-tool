@@ -55,13 +55,14 @@ def read_auto_complete_data():
 
 #Get project names data from S3 bucket using boto3
 def read_project_names_data():
+    """Reads project names from a JSON file in an S3 bucket."""
     try:
         response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
         project_names_data = json.loads(response["Body"].read().decode("utf-8"))
         # Collect project names from each project in the list
         project_names = []
         for project in project_names_data.get("projects", []):
-            # Look for the name in the details key (which may be a list or dict)
+            # Look for the name in the details key (which is a list or dict)
             name = None
             details = project.get("details")
             if isinstance(details, list) and details:

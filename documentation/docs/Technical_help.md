@@ -14,14 +14,14 @@ The pages should be created by following the design systems documentation.
 
 ### tech-audit-tool-api
 
-Include a section to retrieve the new incoming data in the correct format/correct section in the 'api_models.py'
+Include a section to retrieve the new incoming data in the correct format/correct section in the `api_models.py`
 
 [`api_models.py`](https://github.com/ONS-Innovation/keh-tech-audit-tool-api/blob/main/aws_lambda_script/app/api_models.py)
 
 ```python
     "new_data": fields.String(
         required=False, new_data="Description of new data"
-        ),
+    ),
 ```
 
 ## Files Involved
@@ -30,7 +30,7 @@ The following files will require changes (most likely):
 
 ### application.py
 
-Include the page in the correct '..NavItems' array.
+Include the page in the correct `..NavItems` array.
 
 example:
 
@@ -38,15 +38,15 @@ example:
     {"text": "The New page title", "url": "/survey/new html file"},
 ```
 
-Include the new input in the 'map_form_data' array.
+Include the new input in the `map_form_data` array.
 
 example:
 
 ```python
-example: {"key": "new html file", "default": expected return type},
+    {"key": "new html file", "default": expected return type},
 ```
 
-Include a new 'app.route(...)'.
+Include a new `app.route(...)`.
 
 example:
 
@@ -58,31 +58,31 @@ example:
 
 ### formScripts.js
 
-Add the new data to the 'changeBtnURL(..., newData)'.
+Add the new data to the `changeBtnURL(..., newData)`.
 
-Add the new data in the 'validations' array
+Add the new data in the `validations` array
 
 example:
 
 ```js
-        { 
-            data: newData, 
-            url: 'path to new html file', 
-            validationFn: relevant validation method
-        },
+    { 
+        data: newData, 
+        url: 'path to new html file', 
+        validationFn: relevant validation method
+    },
 ```
 
 ### submission.js
 
 Add a new process function to process the incoming data (see submission.js for examples).
 
-Add the return value of the new data to the 'normalizeApiData()'.
+Add the return value of the new data to the `normalizeApiData()`.
 
-Add the new data to the 'updateSummaryDisplay()'.
+Add the new data to the `updateSummaryDisplay()`.
 
-Add the new data to the 'updateHiddenFields()'.
+Add the new data to the `updateHiddenFields()`.
 
-Add the return value of the new data to the 'AppController()'.
+Add the return value of the new data to the `AppController()`.
 
 example:
 
@@ -90,7 +90,7 @@ example:
 `new-data-data${suffix}`, 
 ```
 
-Add the new data to the 'processedData'.
+Add the new data to the `processedData`.
 
 ### summary.js
 
@@ -102,13 +102,13 @@ example:
 class NewDataProcessor extends SectionProcessor 
 ```
 
-Add a new error manager to the 'SummaryManager'.
+Add a new error manager to the `SummaryManager()`function.
 
-Include the new data in the 'loadData()' function.
+Include the new data in the `loadData()` function.
 
 ### view_project.js
 
-Add a new section where the data is processed and shaped and provides the default 'N/A' if there is no data given.
+Add a new section where the data is processed and shaped and provides the default `N/A` if there is no data given.
 
 example:
 
@@ -120,7 +120,7 @@ example:
 
 ### utils.js
 
-Add the new data to the 'removeEdits()' function.
+Add the new data to the `removeEdits()` function.
 
 example:
 
@@ -159,7 +159,7 @@ example:
 
 ### survey.html
 
-Add a new variable to the 'load_data()'.
+Add a new variable to the `load_data()`.
 
 example:
 
@@ -169,7 +169,7 @@ var new_dataData = localStorage.getItem('new_data-data');
 
 ### validate_details.html
 
-Add a section for the new data just like in 'project_summary.html'.
+Add a section for the new data just like in `project_summary.html`.
 
 Add a new input source to the collection of inputs.
 
@@ -196,7 +196,7 @@ example:
                 {
                     "text": ""
                 }
-                ]
+            ]
         }
     ]
 },

@@ -71,8 +71,6 @@ def read_project_names_data():
                 name = details.get("name")
             if name:
                 project_names.append(name)
-            else:
-                project_names.append("Unnamed Project")
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
             project_names = []
@@ -534,9 +532,8 @@ def survey():
             documentation_link = [documentation_link]
 
     # Ensure project_dependencies is always a list, never None
-    project_dependencies = form_data.get("project_dependencies")
-    if project_dependencies is None:
-        project_dependencies = []
+    project_dependencies = form_data.get("project_dependencies", [])
+    
     data = {
         "user": new_users,
         "details": [

@@ -470,9 +470,7 @@ const DataNormalizer = {
                 database: cleanedData.database || { main: [], others: [] },
             },
             stage: cleanedData.stage?.stage || '',
-            project_dependencies: Array.isArray(cleanedData.project_dependencies) ? 
-                cleanedData.project_dependencies : 
-                (cleanedData.project_dependencies?.project_dependencies || []),
+            project_dependencies: cleanedData.project_dependencies,
             supporting_tools: {
                 code_editors: cleanedData.code_editors || { main: [], others: [] },
                 user_interface: cleanedData.user_interface || { main: [], others: [] },

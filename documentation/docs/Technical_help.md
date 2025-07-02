@@ -19,9 +19,9 @@ Include a section to retrieve the new incoming data in the correct format/correc
 [`api_models.py`](https://github.com/ONS-Innovation/keh-tech-audit-tool-api/blob/main/aws_lambda_script/app/api_models.py)
 
 ```python
-    "new_data": fields.String(
-        required=False, new_data="Description of new data"
-    ),
+"new_data": fields.String(
+    required=False, new_data="Description of new data"
+),
 ```
 
 ## Files Involved
@@ -35,7 +35,7 @@ Include the page in the correct `..NavItems` array.
 example:
 
 ```python
-    {"text": "The New page title", "url": "/survey/new html file"},
+{"text": "The New page title", "url": "/survey/new html file"},
 ```
 
 Include the new input in the `map_form_data` array.
@@ -43,7 +43,7 @@ Include the new input in the `map_form_data` array.
 example:
 
 ```python
-    {"key": "new html file", "default": expected return type},
+{"key": "new html file", "default": expected return type},
 ```
 
 Include a new `app.route(...)`.
@@ -51,9 +51,9 @@ Include a new `app.route(...)`.
 example:
 
 ```python
-    @app.route("/survey/new html file", methods=[GET or POST])
-    def new_input():
-        return render_template("path to the new html file")
+@app.route("/survey/new html file", methods=[GET or POST])
+def new_input():
+    return render_template("path to the new html file")
 ```
 
 ### formScripts.js
@@ -65,11 +65,11 @@ Add the new data in the `validations` array
 example:
 
 ```js
-    { 
-        data: newData, 
-        url: 'path to new html file', 
-        validationFn: relevant validation method
-    },
+{ 
+    data: newData, 
+    url: 'path to new html file', 
+    validationFn: relevant validation method
+},
 ```
 
 ### submission.js
@@ -113,9 +113,9 @@ Add a new section where the data is processed and shaped and provides the defaul
 example:
 
 ```js
-    // New data
-    document.getElementById('new_data_row').querySelector('dd').querySelector('span').textContent = 
-        projects.new_data || 'N/A';
+// New data
+document.getElementById('new_data_row').querySelector('dd').querySelector('span').textContent = 
+    projects.new_data || 'N/A';
 ```
 
 ### utils.js
@@ -135,26 +135,26 @@ Include the new on the page.
 example:
 
 ```js
-    {
-        "id": "new_data_details",
-        "title": "New Data Title",
-        "itemsList": [
+{
+    "id": "new_data_details",
+    "title": "New Data Title",
+    "itemsList": [
+        {
+            "valueList": [
             {
-                "valueList": [
-                {
-                    "text": ""
-                }
-            ],
-                "actions": [
-                {
-                    "text": "Change",
-                    "ariaLabel": "View answers for Mary Smith",
-                    "url": url_for('new_data.html')
-                }
-                ]
+                "text": ""
             }
-        ]
-    },
+        ],
+            "actions": [
+            {
+                "text": "Change",
+                "ariaLabel": "View answers for Mary Smith",
+                "url": url_for('new_data.html')
+            }
+            ]
+        }
+    ]
+},
 ```
 
 ### survey.html

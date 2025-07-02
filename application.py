@@ -53,6 +53,30 @@ def read_auto_complete_data():
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
+#Get project names data from S3 bucket using boto3
+def read_project_names_data():
+    """Reads project names from a JSON file in an S3 bucket."""
+    try:
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
+        project_names_data = json.loads(response["Body"].read().decode("utf-8"))
+        # Collect project names from each project in the list
+        project_names = []
+        for project in project_names_data.get("projects", []):
+            # Look for the name in the details key (which is a list or dict)
+            name = None
+            details = project.get("details")
+            if isinstance(details, list) and details:
+                name = details[0].get("name")
+            elif isinstance(details, dict):
+                name = details.get("name")
+            if name:
+                project_names.append(name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            project_names = []
+        else:
+            abort(500, description=f"Error reading project names data: {e}")
+    return sorted(project_names)
 
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):
@@ -118,6 +142,7 @@ projectNavItems = [
     {"text": "Project", "url": "/survey/project"},
     {"text": "Developed", "url": "/survey/developed"},
     {"text": "Stage", "url": "/survey/stage"},
+    {"text": "Project Dependencies", "url": "/survey/project_dependencies"},
     {"text": "Summary", "url": "/survey/project_summary"},
 ]
 
@@ -407,6 +432,7 @@ def map_form_data(form):
         {"key": "integrations", "default": []},
         {"key": "infrastructure", "default": []},
         {"key": "stage", "default": ""},
+        {"key": "project_dependencies", "default": []},
         {"key": "code_editors", "default": []},
         {"key": "user_interface", "default": []},
         {"key": "diagrams", "default": []},
@@ -505,6 +531,9 @@ def survey():
             # If it's a plain string, wrap it in a list
             documentation_link = [documentation_link]
 
+    # Ensure project_dependencies is always a list, never None
+    project_dependencies = form_data.get("project_dependencies", [])
+    
     data = {
         "user": new_users,
         "details": [
@@ -519,6 +548,7 @@ def survey():
                 "programme_short_name": form_data["project"].get(
                     "programme_short_name", ""
                 ),
+                "project_dependencies": project_dependencies,
             }
         ],
         "developed": developed_data,
@@ -629,6 +659,9 @@ def project():
 def stage():
     return render_template("/section_project/stage.html")
 
+@app.route("/survey/project_dependencies", methods=["GET"])
+def project_dependencies():
+    return render_template("/section_project/project_dependencies.html")
 
 @app.route("/survey/developed", methods=["GET"])
 def developed():
@@ -770,6 +803,12 @@ def supporting_tools_summary():
 @app.route("/validate_details", methods=["GET"])
 def validate_details():
     return render_template("validate_details.html")
+
+
+@app.route('/project_names_list')
+def project_names_list():
+    names = read_project_names_data()
+    return json.dumps(names), 200, {'Content-Type': 'application/json'}
 
 
 if __name__ == "__main__":

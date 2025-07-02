@@ -56,3 +56,5 @@ script.sh
 concourse_vars.yml
 cookies/*
 *.pkl
+
+venv

@@ -26,7 +26,7 @@ Include a section to retrieve the new incoming data in the correct format/correc
 
 ## Files Involved
 
-The following files will require changes (most likely): 
+The following files will require changes (most likely):
 
 ### application.py
 

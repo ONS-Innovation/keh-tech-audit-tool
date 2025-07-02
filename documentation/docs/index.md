@@ -18,6 +18,7 @@ An AWS Cognito is setup to authenticate each user. The application attempts to a
 The session token has a life of 1 day, for development purposes.
 
 ## Testing the UI
+
 ### Setting Up
 
 Install necessary dependencies using the make command:
@@ -65,11 +66,13 @@ make run-ui
 ### Setting up with Docker
 
 To build the image:
+
 ```
 make docker-build
 ```
 
 To run an instance of the image as a container:
+
 ```
 make docker-run
 ```
@@ -247,8 +250,11 @@ make format-python
 This will run `isort`, `black` and `flake8`. Flake8 will ignore `E501 line too long`.
 
 ## Testing
+
 ### Setting Up Test Environment Variables
+
 The following environment variables are used for signing into the Tech Audit Tool through Cognito:
+
 ```
 export TEST_EMAIL=<EMAIL> e.g test@ons.gov.uk
 export TEST_PASSWORD=<PASSWORD> e.g testpassword123
@@ -256,12 +262,16 @@ export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
 ```
 
 ## Running Tests
+
 ### Project Creation Tests
+
 The following test will automatically go through the steps required for creating a project.
 This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
+
 ```
 make test-project-creation
 ```
+
 ## Project layout
 
     mkdocs.yml    # The configuration file.
@@ -327,6 +337,3 @@ make test-project-creation
             providers.tf
             security.tf # Terraform for security groups
             variables.tf # Terraform for various variables needed for deployment
-
-
-

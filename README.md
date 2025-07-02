@@ -1,4 +1,5 @@
 # TECH AUDIT TOOL - UI
+
 ## About
 
 ### Introduction
@@ -16,6 +17,7 @@ An AWS Cognito is setup to authenticate each user. The application attempts to a
 The session token has a life of 1 day, for development purposes.
 
 ## Testing the UI
+
 ### Setting Up
 
 Install necessary dependencies using the make command:
@@ -65,11 +67,13 @@ make run-ui
 ### Setting up with Docker
 
 To build the image:
+
 ```bash
 make docker-build
 ```
 
 To run an instance of the image as a container:
+
 ```bash
 make docker-run
 ```
@@ -229,9 +233,11 @@ Delete the service resources by running the following ensuring your reference th
 
   terraform destroy -var-file=env/dev/dev.tfvars
   ```
+
 ### Deployments with Concourse
 
 #### Allowlisting your IP
+
 To setup the deployment pipeline with concourse, you must first allowlist your IP address on the Concourse
 server. IP addresses are flushed everyday at 00:00 so this must be done at the beginning of every working day
 whenever the deployment pipeline needs to be used. Follow the instructions on the Confluence page (SDP Homepage > SDP Concourse > Concourse Login) to
@@ -239,19 +245,23 @@ login. All our pipelines run on sdp-pipeline-prod, whereas sdp-pipeline-dev is t
 changes to Concourse instance itself. Make sure to export all necessary environment variables from sdp-pipeline-prod (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN).
 
 #### Setting up a pipeline
+
 When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS. The credentials for this are stored on
 AWS Secrets Manager so you do not need to set up anything yourself.
 
 To set the pipeline, run the following script:
+
 ```bash
 chmod u+x ./concourse/scripts/set_pipeline.sh
 ./concourse/scripts/set_pipeline.sh KEH-TAT-UI
 ```
+
 Note that you only have to run chmod the first time running the script in order to give permissions.
 This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
 
 The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
 If you wish to set a pipeline for another branch without checking out, you can run the following:
+
 ```bash
 ./concourse/scripts/set_pipeline.sh KEH-TAT-UI <branch_name>
 ```
@@ -259,7 +269,9 @@ If you wish to set a pipeline for another branch without checking out, you can r
 If the branch you are deploying is "main" or "master", it will trigger a deployment to the sdp-prod environment. To set the ECR image tag, you must draft a Github release pointing to the latest release of the main/master branch that has a tag in the form of vX.Y.Z. Drafting up a release will automatically deploy the latest version of the main/master branch with the associated release tag, but you can also manually trigger a build through the Concourse UI or the terminal prompt.
 
 #### Triggering a pipeline
+
 Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
+
 ```bash
 fly -t aws-sdp trigger-job -j KEH-TAT-UI-<branch-name>/build-and-push
 ```
@@ -281,8 +293,11 @@ make format-python
 This will run `isort`, `black` and `flake8`. Flake8 will ignore `E501 line too long`.
 
 ## Testing
+
 ### Setting Up Test Environment Variables
+
 The following environment variables are used for signing into the Tech Audit Tool through Cognito:
+
 ```bash
 export TEST_EMAIL=<EMAIL> e.g test@ons.gov.uk
 export TEST_PASSWORD=<PASSWORD> e.g testpassword123
@@ -292,19 +307,24 @@ export CLIENT=<CLIENT NAME> e.g Chrome, defaults to Firefox
 ## Running Tests
 
 ### Run all tests
+
 ```bash
 make test
 ```
 
 ### Project Creation Tests
+
 The following test will automatically go through the steps required for creating a project.
 This is useful if you wish to quickly populate the fields after a change has been made instead of populating the fields manually.
+
 ```bash
 make test-creation
 ```
 
 ### Navigation Tests
+
 The following test will click through buttons and navigational features to ensure that the proper destinations are reached.
+
 ```bash
 make test-navigation
 ```

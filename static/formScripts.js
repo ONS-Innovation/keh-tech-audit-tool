@@ -160,7 +160,7 @@ function validateMultipleFields(data, fields) {
     });
   }
 
-function changeBtnURL(contactTechData, contactManagerData, projectData, 
+function changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
     sourceControlData, databaseData, languagesData, 
     frameworksData, integrationsData, infrastructureData, 
     codeEditorsData, uiToolsData, diagramToolsData, 
@@ -197,6 +197,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData,
             data: projectData, 
             url: '/survey/project', 
             validationFn: (data) => validateMultipleFields(data, ['project_name', 'project_short_name', 'project_description', 'doc_link'])
+        },
+        { 
+            data: projectDependenciesData, 
+            url: '/survey/project_dependencies', 
+            validationFn: (data) => Array.isArray(data) && data.length > 0
         },
         { 
             data: sourceControlData, 

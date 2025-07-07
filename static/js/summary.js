@@ -207,6 +207,31 @@ class DevelopedProcessor extends SectionProcessor {
     }
 }
 
+// Project Dependencies processor
+class ProjectDependenciesProcessor extends SectionProcessor {
+    processData(projectDependenciesData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(projectDependenciesData);
+            if (!data || !Array.isArray(data) || data.length === 0) return '';
+            let html = '';
+            data.forEach(dep => {
+                if (dep.name && dep.description) {
+                    const name = SummaryUtils.escapeHtml(dep.name);
+                    const description = SummaryUtils.escapeHtml(dep.description);
+                    html += `${name}: <span style=\"font-weight: 400;\">${description}</span><br>`;
+                } else if (dep.name) {
+                    const name = SummaryUtils.escapeHtml(dep.name);
+                    html += `${name}<br>`;
+                }
+            });
+            return html;
+        } catch (e) {
+            console.error('Error processing project dependencies:', e);
+            return '';
+        }
+    }
+}
+
 // Main summary manager
 class SummaryManager {
     constructor() {
@@ -215,6 +240,7 @@ class SummaryManager {
         this.projectProcessor = new ProjectProcessor(this.errorManager);
         this.stageProcessor = new StageProcessor(this.errorManager);
         this.developedProcessor = new DevelopedProcessor(this.errorManager);
+        this.projectDependenciesProcessor = new ProjectDependenciesProcessor(this.errorManager);
     }
 
     loadData() {
@@ -236,6 +262,12 @@ class SummaryManager {
             localStorage.getItem('stage-data')
         );
         this.stageProcessor.updateUI('stage_details', stageDetails);
+
+        // Process project dependencies
+        const project_dependencies_details = this.projectDependenciesProcessor.processData(
+            localStorage.getItem('project_dependencies-data')
+        );
+        this.projectProcessor.updateUI('project_dependencies_details', project_dependencies_details);
 
         // Process development information
         const developedDetails = this.developedProcessor.processData(

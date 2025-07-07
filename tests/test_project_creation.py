@@ -85,6 +85,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_contact_details(driver)
             self.complete_project_details(driver)
             self.complete_tools_details(driver)
+            self.complete_project_dependecies(driver)
 
             driver.implicitly_wait(10)
             link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[1]
@@ -119,7 +120,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.assert_validation_page()
 
             driver.implicitly_wait(10)
-            button = driver.find_element(By.ID, "submit-button")
+            button = driver.find_element(By.ID, "submit-button-btn")
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             self.wait.until(EC.element_to_be_clickable(button)).click()
             driver.implicitly_wait(10)
@@ -267,9 +268,12 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             or "Bitbucket"
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[4].text
         )
+        assert (    
+            "Test Project"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[5].text
+        )
         assert (
-            self.source_control_link
-            and self.source_control_description
+            "Automated test dependency description"
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[5].text
         )
         assert (
@@ -279,61 +283,61 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             self.database_provider
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[7].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[8].text
         )
         assert (
             self.framework
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[8].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
         )
 
         assert (
             self.language
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
-        )
-        assert (
-            self.integration
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
         )
         assert (
-            self.infrastructure
+            self.integration
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
+        )
+        assert (
+            self.infrastructure
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
         )
 
         assert (
             "VSCode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
         )
         assert (
-            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
+            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
         )
         assert (
             "Draw.io"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text) > 0
         )
         assert (
             "Confluence"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
         )
         assert (
-            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
+            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
         )
         assert (
             "Github"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text) > 0
         )
         assert (
             "Matchcode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
         )
 
     def complete_contact_details(self, driver):
@@ -427,6 +431,32 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         self.click_link(driver, "Save and continue")
 
+    def complete_project_dependecies(self, driver):
+        """Complete project dependencies
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_project_dependencies...")
+        driver.implicitly_wait(10)
+
+        name_dependency = driver.find_element(By.ID, "project_dependencies-input")
+        name_dependency.send_keys("Test Project")
+        # Add a description
+        desc_input = driver.find_element(By.ID, "project_dependencies_desc-input")
+        self.wait.until(EC.element_to_be_clickable(desc_input)).click()
+        desc_input.send_keys("Automated test dependency description")
+        # Click the Add button
+                # the Add button is the searchButton in the macro
+        add_btn = driver.find_element(
+            By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
+        )
+        self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+        # Click Save and continue
+        self.click_link(driver, "Save and continue")
+
+        self.click_link(driver, "Finish section")
+
     def complete_tools_details(self, driver):
         """Complete details used on tooling
 
@@ -452,8 +482,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.click_radio(driver, ["Development", "Active Support", "Unsupported"])
 
         self.click_link(driver, "Save and continue")
-
-        self.click_link(driver, "Finish section")
 
     def complete_source_control(self, driver):
         """Complete details on source control
@@ -708,7 +736,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
-        logging.info("Testing project_tracking...")
+        logging.info("Testing complete_project_tracking...")
         driver.implicitly_wait(10)
         choice = self.click_radio(driver, ["jira", "trello", "other"])
         if choice == "other":

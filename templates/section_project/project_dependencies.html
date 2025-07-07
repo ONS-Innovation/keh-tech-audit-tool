@@ -1,0 +1,137 @@
+{% extends "core.html" %}
+{% from "components/input/_macro.njk" import onsInput %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/panel/_macro.njk" import onsPanel %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/table/_macro.njk" import onsTable %}
+{% from "components/select/_macro.njk" import onsSelect %}
+{% block main %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Project Dependencies</h1>
+        {{ onsAccordion({
+        "id": "accordion-example",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please provide any project dependencies along with a brief description of how your project utilises them.</p>"
+            }
+        ]
+    }) }}
+    <div style="margin-bottom: 1.5em;">
+    {{ onsLabel({
+        "id": "project_dependencies-select-label",
+        "for": "project_dependencies-select",
+        "text": "Select a Project Dependency"
+    }) }}
+    {{ onsSelect({
+        "id": "project_dependencies-select",
+        "name": "project_dependencies-select",
+        "label": "",
+        "options": [
+            {"value": "", "text": "-- Select a project --"}
+        ],
+        "classes": "ons-input"
+    }) }}
+</div>
+<div style="margin-bottom: 1.5em;">
+    {{ onsLabel({
+        "id": "project_dependencies-input-label",
+        "for": "project_dependencies-input",
+        "text": "Or enter a new project name"
+    }) }}
+    <input id="project_dependencies-input" class="ons-input" placeholder="Or enter a new project name" style="max-width: 300px;" />
+</div>
+<div>
+    {{ onsInput({
+        "id": "project_dependencies_desc-input",
+        "label": {
+            "text": "Describe the reason why your project is depended on the listed Project?"
+        },
+        "searchButton": {
+            "visuallyHideButtonText": false,
+            "text": 'Add',
+            "iconType": 'check',
+            "attributes": {
+                "type": "button",
+                "onclick": "addData()"
+            }
+        }
+    }) }}
+</div>
+        <br>
+            {{ onsTable({
+        "caption": "",
+        "id": "table-list",
+        "ths": [
+            {
+                "value": "Project Dependency"
+            },
+            {
+                "value": "Description"
+            },
+            {
+                "value": ""
+            }
+        ],
+        "trs": [
+            {
+                "tds": []
+            }
+        ]
+    }) }}
+    <!-- JS logic for table and form moved to static/js/project_dependencies.js -->
+            <form action="{{ url_for('survey') }}" method="GET" id="project-dependencies-form">
+                <input type="hidden" name="project_dependencies" id="project_dependencies-hidden">
+                {{ onsButton({
+                "id": "save-values-button",
+                "text": "Save and continue",
+                "iconType": "arrow-next",
+                "iconPosition": "after",
+                "url": url_for('project_summary'),
+                "attributes": {
+                    "onclick": "projectDependencies.storeData();"
+                }
+                }) }}
+            </form>
+            <script src="{{ url_for('static', filename='js/project_dependencies.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <script>
+            function setProjectDependenciesHiddenInput() {
+                var name = 'project_dependencies-data';
+                if (JSON.parse(localStorage.getItem('edit'))) {
+                    name = 'project_dependencies-data-edit';
+                }
+                var arr = localStorage.getItem(name);
+                document.getElementById('project_dependencies-hidden').value = arr || '[]';
+            }
+            document.getElementById('project-dependencies-form').addEventListener('submit', function(e) {
+                setProjectDependenciesHiddenInput();
+                projectDependencies.storeData();
+            });
+            </script>
+            <script>
+                if (JSON.parse(localStorage.getItem("project_dependencies-validate")) && JSON.parse(localStorage.getItem("edit"))) {
+                    document.getElementById("save-values-button").href = localStorage.getItem('redirect_url');
+                } else if (JSON.parse(localStorage.getItem("project_dependencies-validate"))) {
+                    document.getElementById("save-values-button").href = '/validate_details'
+                }
+                projectDependencies.loadData();
+                renderData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

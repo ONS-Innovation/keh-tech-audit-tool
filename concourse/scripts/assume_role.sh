@@ -1,7 +1,5 @@
 set -euo pipefail
 
-apk add --no-cache aws-cli podman jq iptables
-
 aws sts assume-role --output text \
     --role-arn "${aws_role_arn}" \
     --role-session-name concourse-pipeline-run \

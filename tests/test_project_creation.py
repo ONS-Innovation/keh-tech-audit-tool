@@ -360,7 +360,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         email = driver.find_element(By.ID, "contact-email")
         email.send_keys("test@ons.gov.uk")
 
-        choice = self.click_radio(driver, ["Grade 6", "Grade 7", "SEO", "HEO", "other"])
+        choice = self.click_radio(driver, ["grade-6", "grade-7", "seo", "heo", "other"])
 
         if choice == "other":
             driver.implicitly_wait(10)
@@ -375,7 +375,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(email)).click()
         email.send_keys("testmanager@ons.gov.uk")
 
-        choice = self.click_radio(driver, ["Grade 6", "Grade 7", "SEO", "HEO", "other"])
+        choice = self.click_radio(driver, ["grade-6", "grade-7", "seo", "heo", "other"])
 
         if choice == "other":
             driver.implicitly_wait(10)
@@ -479,7 +479,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         self.click_link(driver, "Save and continue")
 
-        self.click_radio(driver, ["Development", "Active Support", "Unsupported"])
+        self.click_radio(driver, ["development", "active-support", "unsupported"])
 
         self.click_link(driver, "Save and continue")
 
@@ -528,7 +528,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             driver (webdriver.Firefox): The driver that interacts with the browser
         """
         logging.info("Testing complete_hosting...")
-        choice = self.click_radio(driver, ["On-premises", "Cloud", "Hybrid"])
+        choice = self.click_radio(driver, ["on-premises", "cloud", "hybrid"])
         self.click_link(driver, "Save and continue")
 
         if choice != "On-premises":

@@ -11,7 +11,7 @@ else
     branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-if [[ ${branch} == "main" || ${branch} == "master" || ${branch} == "concourse" ]]; then
+if [[ ${branch} == "main" || ${branch} == "master" ]]; then
     env="prod"
 else
     env="dev"

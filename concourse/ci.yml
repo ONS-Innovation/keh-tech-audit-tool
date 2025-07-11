@@ -13,8 +13,6 @@ jobs:
   plan:
   - get: resource-repo
     timeout: 5m
-    trigger: true
-    timeout: 5m
   - task: build-image
     privileged: true
     config:
@@ -37,7 +35,7 @@ jobs:
           apk add --no-cache aws-cli podman jq iptables curl
 
           if [[ "((env))" == "prod" ]]; then
-            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
             export tag
           else
             export tag=((tag))
@@ -68,7 +66,7 @@ jobs:
           apk add --no-cache jq curl
 
           if [[ "((env))" == "prod" ]]; then
-            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
             export tag
           else 
             export tag=((tag))

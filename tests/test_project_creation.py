@@ -141,12 +141,12 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         """Assert that the validation page has the correct details"""
         driver = self.driver
         assert driver.current_url == "http://localhost:8000/validate_details"
-        assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical_contact").text
+        assert "test@ons.gov.uk" in driver.find_element(By.ID, "technical-contact").text
         assert (
             "testmanager@ons.gov.uk"
-            in driver.find_element(By.ID, "delivery_manager").text
+            in driver.find_element(By.ID, "delivery-manager").text
         )
-        project_details = driver.find_element(By.ID, "project_details").text
+        project_details = driver.find_element(By.ID, "project-details").text
         assert self.programme_name in project_details
         assert self.programme_short_name in project_details
         assert self.project_name in project_details
@@ -156,11 +156,11 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             "In House"
             or (("Outsourced" or "Partnership") and "Example Company")
-            in driver.find_element(By.XPATH, "//div[@id='developed_details']/p[0]").text
+            in driver.find_element(By.XPATH, "//div[@id='developed-details']/p[0]").text
         )
 
         source_control_details = driver.find_element(
-            By.ID, "source_control_details"
+            By.ID, "source-control-details"
         ).text
         assert "github" or "gitlab" or "bitbucket" in source_control_details
         assert (
@@ -171,66 +171,66 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             self.hosting_provider
             or "On-Premises"
-            in driver.find_element(By.XPATH, "//div[@id='hosting_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='hosting-details']").text
         )
         assert (
             self.database_provider
-            in driver.find_element(By.XPATH, "//div[@id='database_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='database-details']").text
         )
 
         assert (
             self.language
-            in driver.find_element(By.XPATH, "//div[@id='languages_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='languages-details']").text
         )
         assert (
             self.framework
-            in driver.find_element(By.XPATH, "//div[@id='framework_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='framework-details']").text
         )
         assert (
             self.integration
-            in driver.find_element(By.XPATH, "//div[@id='integration_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='integration-details']").text
         )
         assert (
             self.infrastructure
-            in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='infrastructure-details']").text
         )
 
         assert (
             "VSCode"
-            in driver.find_element(By.XPATH, "//div[@id='code_editor_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='code-editor-details']").text
         )
         assert (
             "Figma"
-            in driver.find_element(By.XPATH, "//div[@id='user_interface_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='user-interface-details']").text
         )
         assert (
             "Draw.io"
-            in driver.find_element(By.XPATH, "//div[@id='diagram_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='diagram-details']").text
         )
         assert (
             len(
                 driver.find_element(
-                    By.XPATH, "//div[@id='project_tracking_details']"
+                    By.XPATH, "//div[@id='project-tracking-details']"
                 ).text
             )
             > 0
         )
         assert (
             "Confluence"
-            in driver.find_element(By.XPATH, "//div[@id='documentation_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='documentation-details']").text
         )
         assert (
             "Slack"
-            in driver.find_element(By.XPATH, "//div[@id='communication_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='communication-details']").text
         )
         assert (
             "Github"
-            in driver.find_element(By.XPATH, "//div[@id='collaboration_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='collaboration-details']").text
         )
         assert (
             len(
                 driver.find_element(
-                    By.XPATH, "//div[@id='incident_management_details']"
+                    By.XPATH, "//div[@id='incident-management-details']"
                 ).text
             )
             > 0

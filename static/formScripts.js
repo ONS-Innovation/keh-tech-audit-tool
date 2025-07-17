@@ -1,3 +1,59 @@
+const roleIdMap = {
+    "Grade 6": "grade-6",
+    "Grade 7": "grade-7",
+    "SEO": "seo",
+    "HEO": "heo"
+};
+
+const idRoleMap = Object.fromEntries(
+    Object.entries(roleIdMap).map(([k, v]) => [v, k])
+);
+
+// Store contact data in local storage
+function storeContactData(keyBase) {
+    const contactEmail = document.getElementById('contact-email')?.value;
+    const selectedId = document.querySelector('input[name="role"]:checked')?.id;
+
+    let role;
+    if (selectedId === 'other') {
+        role = document.getElementById('other-input').value;
+    } else {
+        role = idRoleMap[selectedId] || selectedId;
+    }
+
+    const complete = contactEmail && role;
+
+    const data = {
+        contactEmail,
+        role,
+        complete
+    };
+
+    const isEdit = JSON.parse(localStorage.getItem('edit'));
+    const key = isEdit ? `${keyBase}-edit` : keyBase;
+
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Load contact data from local storage
+function loadContactData(keyBase) {
+    const isEdit = JSON.parse(localStorage.getItem('edit'));
+    const key = isEdit ? `${keyBase}-edit` : keyBase;
+
+    const data = JSON.parse(localStorage.getItem(key));
+    if (!data) return;
+
+    document.getElementById('contact-email').value = data.contactEmail;
+
+    const roleId = roleIdMap[data.role];
+    if (roleId && document.getElementById(roleId)) {
+        document.getElementById(roleId).checked = true;
+    } else {
+        document.getElementById("other").checked = true;
+        document.getElementById('other-input').value = data.role;
+    }
+}
+
 // Redirect to previous page
 function redirectToPrevious(){
     var url = new URL(document.referrer).pathname;

@@ -90,54 +90,13 @@
         "text": "Save and continue",
         "url": url_for('contact_manager'),
         "attributes": {
-            "onclick": "storeData();"
+            "onclick": "storeContactData('contact_tech-data');"
         }
     }) }}
         <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
         <script>
-            function storeData() { // Store details about the technical contact in local storage
-                var contactEmail = document.getElementById('contact-email').value;
-                var role = document.querySelector('input[name="role"]:checked').value;
-                var otherRole = document.getElementById('other-input').value;
-                if (role === 'other') {
-                    role = otherRole;
-                }
-                let complete = false;
-                if (contactEmail && role) {
-                    complete = true;
-                }
-                var data = {
-                    "contactEmail": contactEmail,
-                    "role": role,
-                    "complete": complete
-                };
-
-                var name = 'contact_tech-data';
-                if (JSON.parse(localStorage.getItem('edit'))) {
-                    name = 'contact_tech-data-edit';
-                }
-                localStorage.setItem(name, JSON.stringify(data));
-            }
-            function loadData() {
-                var name = 'contact_tech-data';
-                if (JSON.parse(localStorage.getItem('edit'))){
-                    name = 'contact_tech-data-edit';
-                }
-                var data = JSON.parse(localStorage.getItem(name));
-
-                    if (data) {
-                        document.getElementById('contact-email').value = data.contactEmail;
-                    
-                        try {
-                            document.getElementById(data.role).checked = true;
-                        } catch {
-                            document.getElementById("other").checked = true;
-                            document.getElementById('other-input').value = data.role;
-                        }
-            }
-        }
             redirectToPrevious();
-            loadData();
+            loadContactData('contact_tech-data');
         </script>
     </form>
 </form>{% endblock %}

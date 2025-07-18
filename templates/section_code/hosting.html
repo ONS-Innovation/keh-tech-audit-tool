@@ -22,7 +22,7 @@
         "type": "error",
     }) %}
     {{ onsLabel({
-        "id": 'label',
+        "id": 'item-already-added-label',
         "for": "some-input",
         "text": 'Item already added.'
     }) }}
@@ -30,7 +30,7 @@
     <br>
     <h1>Hosting</h1>
     {{ onsAccordion({
-        "id": "accordion-example",
+        "id": "hosting-accordion",
         "itemsList": [
             {
                 "title": "More info",
@@ -49,7 +49,7 @@
         "name": "role",
         "radios": [
             {
-                "id": "On-premises",
+                "id": "on-premises",
                 "label": {
                     "text": "On-premises",
                     "description": "Hosted on servers owned by ONS"
@@ -57,7 +57,7 @@
                 "value": "On-premises"
             },
             {
-                "id": "Cloud",
+                "id": "cloud",
                 "label": {
                     "text": "Cloud",
                     "description": "Hosted on cloud service providers like AWS, Azure, or Google Cloud"
@@ -65,7 +65,7 @@
                 "value": "Cloud"
             },
             {
-                "id": "Hybrid",
+                "id": "hybrid",
                 "label": {
                     "text": "Hybrid",
                     "description": "Hosted using a combination of on-premises and cloud services"
@@ -90,6 +90,7 @@
     <script>
         loadHostingData();
         document.getElementById("error-panel").style.display = "none";
+
         function storeHostingData() { // Store hosting data in local storage
             var hostingType = document.querySelector('input[name="role"]:checked').value;
             var name = 'hosting-data';
@@ -125,6 +126,7 @@
                 }
             }
         }
+
         function loadHostingData() {
             var name = 'hosting-data';
             if (JSON.parse(localStorage.getItem('edit'))) {
@@ -133,9 +135,19 @@
             var data = JSON.parse(localStorage.getItem(name));
             if (data) {
                 try {
-                    document.getElementById(data.type).checked = true;
-                } catch {
-                    console.error("Error loading hosting data");
+                    const valueToIdMap = {
+                        "On-premises": "on-premises",
+                        "Cloud": "cloud",
+                        "Hybrid": "hybrid"
+                    };
+                    const radioId = valueToIdMap[data.type];
+                    if (radioId) {
+                        document.getElementById(radioId).checked = true;
+                    } else {
+                        console.warn("Unexpected hosting type:", data.type);
+                    }
+                } catch (err) {
+                    console.error("Error loading hosting data:", err);
                 }
             }
         }

@@ -6,14 +6,14 @@ function formatList(items) {
 function loadData(projects) {
     try {
     // Technical Contact
-    document.getElementById('technical_contact_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('technical-contact-row').querySelector('dd').querySelector('span').textContent = 
             `${projects.user[0].email} (${projects.user[0].grade})`;
     } catch (e) {
         // No error
     }
     try {
         // Delivery Manager
-        document.getElementById('delivery_manager_row').querySelector('dd').querySelector('span').textContent = 
+        document.getElementById('delivery-manager-row').querySelector('dd').querySelector('span').textContent = 
             `${projects.user[1].email} (${projects.user[1].grade})`;
     } catch (e) {
         // No error
@@ -40,12 +40,12 @@ function loadData(projects) {
     }
     
     // Project Details
-    document.getElementById('project_details_row').querySelector('dd').querySelector('span').innerHTML = 
+    document.getElementById('project-details-row').querySelector('dd').querySelector('span').innerHTML = 
         projectDetails;
 
     // Developed
     if (projects.developed[0] == 'In House') {
-        document.getElementById('developed_row').querySelector('dd').querySelector('span').textContent = 
+        document.getElementById('developed-row').querySelector('dd').querySelector('span').textContent = 
             `${projects.developed[0]}`;
     } else if (projects.developed[0] != 'In House' && projects.developed[1]) {
         // Handle both string and array formats for company name
@@ -54,10 +54,10 @@ function loadData(projects) {
             companyName = projects.developed[1][0];
         }
         
-        document.getElementById('developed_row').querySelector('dd').querySelector('span').innerHTML = 
+        document.getElementById('developed-row').querySelector('dd').querySelector('span').innerHTML = 
             `Developed: <p style="font-weight:400">${projects.developed[0]}</p>Company:<p style="font-weight:400">${companyName}</p>`;
     } else {
-        document.getElementById('developed_row').querySelector('dd').querySelector('span').textContent = 
+        document.getElementById('developed-row').querySelector('dd').querySelector('span').textContent = 
             'N/A';
     }
     
@@ -74,19 +74,19 @@ function loadData(projects) {
             });
         }
         
-        document.getElementById('source_control_row').querySelector('dd').querySelector('span').innerHTML = sourceControlHtml;
+        document.getElementById('source-control-row').querySelector('dd').querySelector('span').innerHTML = sourceControlHtml;
     } else {
-        document.getElementById('source_control_row').querySelector('dd').querySelector('span').textContent = 
+        document.getElementById('source-control-row').querySelector('dd').querySelector('span').textContent = 
             'N/A';
     }
 
     // Stage
-    document.getElementById('stage_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('stage-row').querySelector('dd').querySelector('span').textContent = 
         projects.stage || 'N/A';
 
     // Project Dependencies
     const dependencies = projects.details[0].project_dependencies;
-    const dependenciesContainer = document.getElementById('project_dependencies_row')
+    const dependenciesContainer = document.getElementById('project-dependencies-row')
         .querySelector('dd')
         .querySelector('span');
     if (Array.isArray(dependencies) && dependencies.length > 0) {
@@ -113,14 +113,14 @@ function loadData(projects) {
     } else {
         hostingDisplay = 'N/A';
     }
-    document.getElementById('hosting_row').querySelector('dd').querySelector('span').textContent = hostingDisplay;
+    document.getElementById('hosting-row').querySelector('dd').querySelector('span').textContent = hostingDisplay;
 
     // Database
-    document.getElementById('database_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('database-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.database.others);
 
     // Frameworks
-    document.getElementById('frameworks_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('frameworks-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.frameworks.others);
 
     // Languages
@@ -136,51 +136,51 @@ function loadData(projects) {
     } else {
         languagesText = 'N/A';
     }
-    document.getElementById('languages_row').querySelector('dd').querySelector('span').textContent = languagesText;
+    document.getElementById('languages-row').querySelector('dd').querySelector('span').textContent = languagesText;
 
     // CI/CD
-    document.getElementById('cicd_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('cicd-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.cicd.others);
 
     // Infrastructure
-    document.getElementById('infrastructure_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('infrastructure-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.infrastructure.others);
 
     // Code Editors
-    document.getElementById('code_editors_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('code-editors-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.code_editors.others);
 
     // User Interface
-    document.getElementById('user_interface_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('user-interface-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.user_interface.others);
 
     // Diagrams
-    document.getElementById('diagrams_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('diagrams-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.diagrams.others);
 
     // Project Tracking
-    document.getElementById('project_tracking_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('project-tracking-row').querySelector('dd').querySelector('span').textContent = 
         projects.supporting_tools.project_tracking || 'N/A';
 
     // Documentation
-    document.getElementById('documentation_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('documentation-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.documentation.others);
 
     // Communication
-    document.getElementById('communication_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('communication-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.communication.others);
 
     // Collaboration
-    document.getElementById('collaboration_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('collaboration-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.collaboration.others);
 
     // Incident Management
-    document.getElementById('incident_management_row').querySelector('dd').querySelector('span').textContent = 
+    document.getElementById('incident-management-row').querySelector('dd').querySelector('span').textContent = 
         projects.supporting_tools.incident_management || 'N/A';
 
     // Miscellaneous
 const misc = projects.supporting_tools.miscellaneous;
-const miscContainer = document.getElementById('miscellaneous_row')
+const miscContainer = document.getElementById('miscellaneous-row')
     .querySelector('dd')
     .querySelector('span');
 if (Array.isArray(misc) && misc.length > 0) {

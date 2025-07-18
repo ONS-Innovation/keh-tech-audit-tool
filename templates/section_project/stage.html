@@ -38,7 +38,7 @@
             "name": "stage",
             "radios": [
                 {
-                    "id": "Development",
+                    "id": "development",
                     "label": {
                         "text": "Development",
                         "description": "The software is being designed, coded, and tested before release"
@@ -46,7 +46,7 @@
                     "value": "Development"
                 },
                 {
-                    "id": "Active Support",
+                    "id": "active-support",
                     "label": {
                         "text": "Active Support",
                         "description": "The software is released and receives regular updates, bug fixes, and feature enhancements"
@@ -54,7 +54,7 @@
                     "value": "Active Support"
                 },
                 {
-                    "id": "Unsupported",
+                    "id": "unsupported",
                     "label": {
                         "text": "Unsupported",
                         "description": "The software no longer receives updates, fixes, or official assistance"
@@ -70,41 +70,12 @@
             "url": url_for('project_dependencies'),
             "text": "Save and continue",
             "attributes": {
-                "onclick": "storeData();"
+                "onclick": "storeStageData();"
             }
         }) }}
         <script>
-            function storeData() {
-                var stage = document.querySelector('input[name="stage"]:checked').value;
-                var complete = true;
-                var data = {
-                    "stage": stage,
-                    "complete": complete
-                };
-                var name = 'stage-data';
-                if (JSON.parse(localStorage.getItem('edit'))) {
-                    name = 'stage-data-edit';
-                }
-                localStorage.setItem(name, JSON.stringify(data));
-            }
-            function loadData() {
-                var name = 'stage-data';
-                if (JSON.parse(localStorage.getItem('edit'))){
-                    let name = 'stage-data-edit';
-
-                    var data = JSON.parse(localStorage.getItem(name));
-                    if (data) {
-                        document.getElementById(data.stage).checked = true;
-                    }
-                } else {
-                    var data = JSON.parse(localStorage.getItem(name));
-                    if (data) {
-                        document.getElementById(data.stage).checked = true;
-                    }
-                }
-            }
             redirectToPrevious();
-            loadData();
+            loadStageData();
         </script>
     </form>
 {% endblock %}

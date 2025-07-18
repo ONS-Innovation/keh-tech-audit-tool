@@ -505,13 +505,13 @@ const UIUpdater = {
     // Update the summary display with processed data
     updateSummaryDisplay: function(data) {
         const summaryData = {
-            technical_contact: data.user[0]?.email ? 
+            'technical-contact': data.user[0]?.email ? 
                 `${data.user[0].email} (${data.user[0].grade || ''})` : '',
-            delivery_manager: data.user[1]?.email ? 
+            'delivery-manager': data.user[1]?.email ? 
                 `${data.user[1].email} (${data.user[1].grade || ''})` : '',
-            stage_details: data.stage || '',
-            project_dependencies_details: data.project_dependencies || [],
-            project_details: DataProcessors.processProjectDetails(JSON.stringify({
+            'stage-details': data.stage || '',
+            'project-dependencies-details': data.project_dependencies || [],
+            'project-details': DataProcessors.processProjectDetails(JSON.stringify({
                 name: data.details.name,
                 short_name: data.details.short_name,
                 programme_name: data.details.programme_name,
@@ -519,15 +519,15 @@ const UIUpdater = {
                 documentation_link: data.details.documentation_link,
                 project_description: data.details.project_description
             })),
-            project_dependencies_details: (() => {
+            'project-dependencies-details': (() => {
                 const dependencies = DataProcessors.processProjectDependencies(JSON.stringify(data.project_dependencies));
                 return dependencies.length > 0 ? dependencies.join('<br>') : 'N/A';
             })(),
-            developed_details: DataProcessors.processDeveloped(JSON.stringify(data.developed)),
-            source_control_details: data.source_control[0]?.type ? 
+            'developed-details': DataProcessors.processDeveloped(JSON.stringify(data.developed)),
+            'source-control-details': data.source_control[0]?.type ? 
                 `${data.source_control[0].type}${data.source_control[0].links.map(link => 
                     `<br>${link.description}: <a href="${link.url}" target="_blank">${link.url}</a>`).join('')}` : '',
-            hosting_details: (() => {
+            'hosting-details': (() => {
                 const typeArr = Array.isArray(data.architecture.hosting.type) ? data.architecture.hosting.type : [data.architecture.hosting.type];
                 const type = typeArr[0] || '';
                 const providers = Array.isArray(data.architecture.hosting.details) ? data.architecture.hosting.details : [];
@@ -548,58 +548,57 @@ const UIUpdater = {
                 
                 return '';
             })(),
-            database_details: DataUtils.arrToList([
+            'database-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.database, 'others', [])
             ]),
-            languages_details: DataUtils.arrToList([
+            'languages-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.languages, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.languages, 'others', [])
             ]),
-            framework_details: DataUtils.arrToList([
+            'framework-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.frameworks, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.frameworks, 'others', [])
             ]),
-            integration_details: DataUtils.arrToList([
+            'integration-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.integrations, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.integrations, 'others', [])
             ]),
-            infrastructure_details: DataUtils.arrToList([
+            'infrastructure-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'others', [])
             ]),
-            code_editor_details: DataUtils.arrToList([
+            'code-editor-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'others', [])
             ]),
-            user_interface_details: DataUtils.arrToList([
+            'user-interface-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.user_interface, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.user_interface, 'others', [])
             ]),
-            diagram_details: DataUtils.arrToList([
+            'diagram-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.diagrams, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.diagrams, 'others', [])
             ]),
-            project_tracking_details: data.supporting_tools.project_tracking || '',
-            documentation_details: DataUtils.arrToList([
+            'project-tracking-details': data.supporting_tools.project_tracking || '',
+            'documentation-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.documentation, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.documentation, 'others', [])
             ]),
-            communication_details: DataUtils.arrToList([
+            'communication-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.communication, 'others', [])
             ]),
-            miscellaneous_details: DataProcessors.processMiscellaneous(data.supporting_tools.miscellaneous),
-            collaboration_details: DataUtils.arrToList([
+            'miscellaneous-details': DataProcessors.processMiscellaneous(data.supporting_tools.miscellaneous),
+            'collaboration-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.collaboration, 'others', [])
             ]),
-            incident_management_details: data.supporting_tools.incident_management || ''
+            'incident-management-details': data.supporting_tools.incident_management || ''
         };
         
         // Update all summary elements
         Object.entries(summaryData).forEach(([key, value]) => {
-            //const element = document.getElementById(key);
             const element = document.getElementById(key)?.querySelector('dd.ons-summary__values span.ons-summary__text');
             if (element){
                 element.innerHTML = value;

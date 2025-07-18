@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
     loadData();
 });
 
+const mapping = {
+    "Outsourced": "outsourced",
+    "Partnership": "partnership",
+    "In House": "in-house"
+};
+
+const reverseMapping = Object.fromEntries(
+    Object.entries(mapping).map(([k, v]) => [v, k])
+);
+
 /**
  * Stores the "developed" data in localStorage
  * Captures the selected radio button value and any associated company name
@@ -13,7 +23,8 @@ function storeData() {
     const selectedRadio = document.querySelector('input[name="developed"]:checked');
     if (!selectedRadio) return;
 
-    const developed = selectedRadio.value;
+    const id = selectedRadio.id;
+    const developed = reverseMapping[id] || selectedRadio.value;
     let companyName = '';
 
     // Get company name based on selection
@@ -30,8 +41,6 @@ function storeData() {
             }
         }
     }
-
-    console.log(`Saving developed: ${developed}, company: ${companyName}`);
 
     // Create data array
     const data = [developed];
@@ -52,12 +61,6 @@ function storeData() {
  * Sets the appropriate radio button and populates company name if applicable
  */
 function loadData() {
-    const mapping = {
-        "Outsourced": "outsourced",
-        "Partnership": "partnership",
-        "In House": "in-house"
-    };
-
     // Get data from localStorage
     const storageKey = JSON.parse(localStorage.getItem('edit')) ? 
         'developed-data-edit' : 'developed-data';

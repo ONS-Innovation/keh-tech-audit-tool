@@ -464,6 +464,28 @@ class MiscellaneousProcessor extends SectionProcessor {
     }
 }
 
+class PublishingProcessor extends SectionProcessor {
+    processData(publishingData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(publishingData);
+            if (!data) return '';
+
+            let details = '';
+            if (data.main && data.main.length > 0) {
+                details += `Internal: ${data.main.map(item => SummaryUtils.escapeHtml(item)).join(', ')}`;
+            }
+            if (data.others && data.others.length > 0) {
+                if (details) details += '<br>';
+                details += `External: ${data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ')}`;
+            }
+            return details;
+        } catch (e) {
+            console.error('Error processing publishing data:', e);
+            return '';
+        }
+    }
+}
+
 // Supporting Tools Processors
 class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
@@ -533,6 +555,7 @@ class TechSummaryManager {
         this.frameworksProcessor = new FrameworksProcessor(this.errorManager);
         this.integrationsProcessor = new IntegrationsProcessor(this.errorManager);
         this.infrastructureProcessor = new InfrastructureProcessor(this.errorManager);
+        this.publishingProcessor = new PublishingProcessor(this.errorManager);
     }
 
     loadData() {
@@ -555,6 +578,11 @@ class TechSummaryManager {
             localStorage.getItem('infrastructure-data')
         );
         this.infrastructureProcessor.updateUI('infrastructure_details', infrastructureDetails);
+        
+        const publishingDetails = this.publishingProcessor.processData(
+            localStorage.getItem('publishing-data')
+        );
+        this.publishingProcessor.updateUI('publishing_details', publishingDetails);
     }
 }
 

@@ -26,7 +26,7 @@ variable "api_secret_name" {
 }
 
 variable "api_bucket_name" {
-  description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
+  description = "The path to the S3 bucket resource which contains the json files needed by the UI"
   type        = string
   default="sdp-dev-tech-audit-tool-api"
 }

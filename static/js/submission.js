@@ -373,6 +373,7 @@ const DataNormalizer = {
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.cicd,
             infrastructure: data.architecture.infrastructure,
+            publishing: data.architecture.publishing,
             code_editors: data.supporting_tools.code_editors,
             user_interface: data.supporting_tools.user_interface,
             diagrams: data.supporting_tools.diagrams,
@@ -459,6 +460,7 @@ const DataNormalizer = {
             architecture: {
                 frameworks: cleanedData.frameworks || { main: [], others: [] },
                 infrastructure: cleanedData.infrastructure || { main: [], others: [] },
+                publishing: cleanedData.publishing || { main: [], others: [] },
                 integrations: cleanedData.integrations || { main: [], others: [] },
                 languages: cleanedData.languages || { main: [], others: [] },
                 hosting: {
@@ -568,6 +570,10 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'others', [])
             ]),
+            publishing_details: DataUtils.arrToList([
+                ...DataUtils.safeGet(data.architecture.publishing, 'main', []), 
+                ...DataUtils.safeGet(data.architecture.publishing, 'others', [])
+            ]),
             code_editor_details: DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'others', [])
@@ -621,6 +627,7 @@ const UIUpdater = {
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.integrations,
             infrastructure: data.architecture.infrastructure,
+            publishing: data.architecture.publishing,
             stage: data.stage,
             project_dependencies: data.project_dependencies,
             code_editors: data.supporting_tools.code_editors,
@@ -659,7 +666,7 @@ const AppController = {
             `contact_tech-data${suffix}`, `contact_manager-data${suffix}`, `project-data${suffix}`, 
             `developed-data${suffix}`, `stage-data${suffix}`, `project_dependencies-data${suffix}`, 
             `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
-            `infrastructure-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
+            `infrastructure-data${suffix}`, `publishing-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
             `miscellaneous-data${suffix}`,`collaboration-data${suffix}`, `incident_management-data${suffix}`
@@ -706,6 +713,7 @@ const AppController = {
             frameworks: ErrorHandler.validateData(storedData['frameworks'], 'Frameworks'),
             integrations: ErrorHandler.validateData(storedData['integrations'], 'CI/CD'),
             infrastructure: ErrorHandler.validateData(storedData['infrastructure'], 'Infrastructure'),
+            publishing: ErrorHandler.validateData(storedData['publishing'], 'Publishing'),
             code_editors: ErrorHandler.validateData(storedData['code_editors'], 'Code Editors'),
             user_interface: ErrorHandler.validateData(storedData['user_interface'], 'User Interface'),
             diagrams: ErrorHandler.validateData(storedData['diagrams'], 'Diagrams'),

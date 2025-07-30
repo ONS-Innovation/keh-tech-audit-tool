@@ -314,7 +314,26 @@
                                         }
                                     ]
                                 },
-
+                                {
+                                    "id":"publishing_details",
+                                    "title": "Publishing",
+                                    "itemsList": [
+                                        {   
+                                        "valueList": [
+                                            {
+                                                "text": ""
+                                            }
+                                        ],
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Change publishing details",
+                                                    "url": url_for('publishing')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
                                 {
                                     "id":"code_editor_details",
                                     "title": "Code Editors",
@@ -521,6 +540,7 @@
 
     <input id="integrations" type="hidden" name="integrations">
     <input id="infrastructure" type="hidden" name="infrastructure">
+    <input id="publishing" type="hidden" name="publishing">
     <input id="stage" type="hidden" name="stage">
     <input id="project_dependencies" type="hidden" name="project_dependencies">
     <input id="code_editors" type="hidden" name="code_editors">

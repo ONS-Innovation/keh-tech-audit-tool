@@ -103,20 +103,20 @@ function renderData() {
 
         newRow.innerHTML = `
             <td class="ons-table__cell">${lang}</td>
-            ${path.includes('languages') ? `
+            ${(path.includes('languages') || path.includes('publishing') ) ? `
             <td class="ons-table__cell">
                 <div class="ons-input-items">
                     <div class="ons-radios__items">
                         <span class="ons-radios__item">
                             <span class="ons-radio">
                                 <input type="radio" id="${lang}-main" class="ons-radio__input ons-js-radio" value="main" name="${lang}-role" ${langArr.main.includes(lang) ? 'checked' : ''}>
-                                <label class="ons-radio__label" for="${lang}-main">Yes</label>
+                                <label class="ons-radio__label" for="${lang}-main">${path.includes('languages') ? 'Yes' : 'Internal'}</label>
                             </span>
                         </span>
                         <span class="ons-radios__item">
                             <span class="ons-radio">
                                 <input type="radio" id="${lang}-other" class="ons-radio__input ons-js-radio" value="other" name="${lang}-role" ${langArr.others.includes(lang) ? 'checked' : ''}>
-                                <label class="ons-radio__label" for="${lang}-other">No</label>
+                                <label class="ons-radio__label" for="${lang}-other">${path.includes('languages') ? 'No' : 'External'}</label>
                             </span>
                         </span>
                     </div>
@@ -132,7 +132,7 @@ function renderData() {
 
         tableBody.appendChild(newRow);
 
-        if (path.includes('languages')) {
+        if (path.includes('languages') || path.includes('publishing')) {
             // Add event listeners for the radio buttons
             document.getElementById(`${lang}-main`).addEventListener('change', () => changeListItemType(lang, 'main'));
             document.getElementById(`${lang}-other`).addEventListener('change', () => changeListItemType(lang, 'other'));

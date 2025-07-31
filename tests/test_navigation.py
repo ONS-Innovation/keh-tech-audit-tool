@@ -26,6 +26,7 @@ class TestNavigation(unittest.TestCase, TestUtil):
         """Test if dashboard contents are correct"""
         driver = self.driver
         self.login(driver)
+        self.driver.get("http://localhost:8000")
         assert driver.title == "Tech Radar Data Collection"
 
         time.sleep(1)

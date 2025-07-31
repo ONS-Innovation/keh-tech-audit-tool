@@ -109,7 +109,7 @@
         <div style="display: flex; justify-content: space-between; gap: 10px;">
     {{ onsButton({
             "id": "primary-submit-btn",
-            "text": '<div id="primary-submit-btn-text">Continue to Submission</div>',
+            "text": '<div id="primary-submit-btn-text">Fill in missing details</div>',
             "classes": 'ons-u-mb-m ons-u-mt-l',
             "url": url_for('validate_details')
         }) }}
@@ -140,6 +140,7 @@
             var infrastructureData = localStorage.getItem('infrastructure-data');
             var integrationsData = localStorage.getItem('integrations-data');
             var languagesData = localStorage.getItem('languages-data');
+            var publishingData = localStorage.getItem('publishing-data');
             // Supporting Tools Details
             var codeEditorsData = localStorage.getItem('code_editors-data');
             var uiDesignData = localStorage.getItem('user_interface-data');

@@ -234,6 +234,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             validationFn: (data) => data.others && data.others.length > 0
         },
         { 
+            data: publishingData, 
+            url: '/survey/publishing', 
+            validationFn: (data) => (data.main && data.main.length > 0) || (data.others && data.others.length > 0)
+        },
+        { 
             data: codeEditorsData, 
             url: '/survey/code_editors', 
             validationFn: (data) => data.others && data.others.length > 0

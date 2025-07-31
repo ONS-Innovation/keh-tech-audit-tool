@@ -35,10 +35,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.project_short_name = self.generate_words(1, "").lower()
         self.project_desc = self.generate_words(5)
         self.documentation_link = (
-            f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+            f"https://{"".join(self.generate_words(1, "")+"example").lower()}.com"
         )
         self.source_control_link = (
-            f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+            f"https://{"".join(self.generate_words(1, "")+"example").lower()}.com"
         )
         self.source_control_description = self.generate_words(5)
         self.hosting_provider = self.generate_words(1, "")
@@ -49,6 +49,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             ["Github Actions", "Jenkins", "Travis CI", "Circle CI"]
         )
         self.infrastructure = random.choice(["AWS", "Azure", "GCP"])
+        self.publishing = random.choice(["Github", "PyPi", "AWS ECR Public", "AWS ECR Private"])
         self._test_passed = False
 
     def generate_words(self, num_words, delimiter=" "):
@@ -105,6 +106,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_frameworks(driver)
             self.complete_integrations(driver)
             self.complete_infrastructure(driver)
+            self.complete_publishing(driver)
             self.complete_code_editors(driver)
             self.complete_user_interface(driver)
             self.complete_diagrams(driver)
@@ -193,6 +195,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             self.infrastructure
             in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']").text
+        )
+        assert (
+            self.publishing
+            in driver.find_element(By.XPATH, "//div[@id='publishing_details']").text
         )
 
         assert (
@@ -302,42 +308,45 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.infrastructure
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
         )
-
         assert (
-            "VSCode"
+            self.publishing
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
         )
         assert (
-            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
+            "VSCode"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
+        )
+        assert (
+            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
         )
         assert (
             "Draw.io"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text) > 0
         )
         assert (
             "Confluence"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
         )
         assert (
-            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
         )
         assert (
             "Github"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text) > 0
         )
         assert (
             "Matchcode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
         )
 
     def complete_contact_details(self, driver):
@@ -664,7 +673,43 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
 
+    def complete_publishing(self, driver):
+        """Complete details on publishing target used
+
+        Args:
+            driver (webdriver.Firefox): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_publishing...")
+        driver.implicitly_wait(10)
+        publishing = driver.find_element(By.ID, "publishing-input")
+
+        self.wait.until(EC.element_to_be_clickable(publishing)).click()
+
+        publishing_target = self.publishing
+        publishing.send_keys(publishing_target)
+        if publishing_target in ("Github", "AWS ECR Private"):
+            # If the publishing target is Github or AWS ECR Private, select the main target representing internal target
+            add_btn = driver.find_element(
+                By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
+                )
+            self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+            driver.implicitly_wait(10)
+            internal_target = driver.find_element(By.XPATH, '//input[@value="main"]')
+            self.wait.until(EC.element_to_be_clickable(internal_target)).click()
+        else:
+            add_btn = driver.find_element(
+                By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
+            )
+            self.wait.until(EC.element_to_be_clickable(add_btn)).click()
+            driver.implicitly_wait(10)
+            external_target = driver.find_element(By.XPATH, '//input[@value="other"]')
+            self.wait.until(EC.element_to_be_clickable(external_target)).click()
+        # Select the main publishing target
+        driver.implicitly_wait(10)
+        self.click_link(driver, "Save and continue")
+
         self.click_link(driver, "Finish section")
+
 
     def complete_code_editors(self, driver):
         """Completes the code editors section of the project creation process.

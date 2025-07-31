@@ -35,10 +35,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.project_short_name = self.generate_words(1, "").lower()
         self.project_desc = self.generate_words(5)
         self.documentation_link = (
-            f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+            f"https://{"".join(self.generate_words(1, "")+"example").lower()}.com"
         )
         self.source_control_link = (
-            f"https://{"".join(self.generate_words(1, "")).lower()}.com"
+            f"https://{"".join(self.generate_words(1, "")+"example").lower()}.com"
         )
         self.source_control_description = self.generate_words(5)
         self.hosting_provider = self.generate_words(1, "")

@@ -90,6 +90,7 @@
     <script>
         loadHostingData();
         document.getElementById("error-panel").style.display = "none";
+
         function storeHostingData() { // Store hosting data in local storage
             var hostingType = document.querySelector('input[name="role"]:checked').value;
             var name = 'hosting-data';
@@ -125,6 +126,7 @@
                 }
             }
         }
+
         function loadHostingData() {
             var name = 'hosting-data';
             if (JSON.parse(localStorage.getItem('edit'))) {
@@ -133,9 +135,19 @@
             var data = JSON.parse(localStorage.getItem(name));
             if (data) {
                 try {
-                    document.getElementById(data.type).checked = true;
-                } catch {
-                    console.error("Error loading hosting data");
+                    const valueToIdMap = {
+                        "On-premises": "on-premises",
+                        "Cloud": "cloud",
+                        "Hybrid": "hybrid"
+                    };
+                    const radioId = valueToIdMap[data.type];
+                    if (radioId) {
+                        document.getElementById(radioId).checked = true;
+                    } else {
+                        console.warn("Unexpected hosting type:", data.type);
+                    }
+                } catch (err) {
+                    console.error("Error loading hosting data:", err);
                 }
             }
         }

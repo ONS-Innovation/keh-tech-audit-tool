@@ -67,13 +67,18 @@ function loadData() {
 
     try {
         // Handle both array and object formats
-        if (Array.isArray(data)) {
-            const radioId = mapping[data[0]];
+        if (true) {
+            if (Array.isArray(data)) {
+                var data_id = data[0];
+            } else {
+                var data_id = data["developed"];
+            }
+            const radioId = mapping[data_id];
             if (radioId) {
                 document.getElementById(radioId).checked = true;
                 
                 // Set company name if applicable
-                if (data[0] === "Outsourced" || data[0] === "Partnership") {
+                if ((data_id) === "Outsourced" || (data_id) === "Partnership") {
                     // Trigger the "other" field to show
                     const radioInput = document.getElementById(radioId);
                     if (radioInput) {
@@ -83,7 +88,15 @@ function loadData() {
                             otherWrap.style.display = 'block';
                             const input = otherWrap.querySelector('input[type="text"]');
                             if (input) {
-                                input.value = data[1] || "";
+
+                                if (Array.isArray(data)) {
+                                    input.value = data[1] || "";
+                                } else if (data_id == "Outsourced") { 
+                                    input.value = data["outsource_company"] || "aaah";
+                                } else {
+                                    input.value = data["partnership_company"] || "";
+
+                                }
                             }
                         }
                     }

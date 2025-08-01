@@ -70,36 +70,34 @@ function loadData() {
 
     try {
         // Handle both array and object formats
-        if (true) {
-            if (Array.isArray(data)) {
+        if (Array.isArray(data)) {
                 var data_id = data[0];
-            } else {
-                var data_id = data["developed"];
-            }
-            const radioId = mapping[data_id];
-            if (radioId) {
-                document.getElementById(radioId).checked = true;
-                
-                // Set company name if applicable
-                if ((data_id) === "Outsourced" || (data_id) === "Partnership") {
-                    // Trigger the "other" field to show
-                    const radioInput = document.getElementById(radioId);
-                    if (radioInput) {
-                        // Force the "other" field to expand
-                        const otherWrap = document.getElementById(`${radioId}-other-wrap`);
-                        if (otherWrap) {
-                            otherWrap.style.display = 'block';
-                            const input = otherWrap.querySelector('input[type="text"]');
-                            if (input) {
+        } else {
+            var data_id = data["developed"];
+        }
+        const radioId = mapping[data_id];
+        if (radioId) {
+            document.getElementById(radioId).checked = true;
+            
+            // Set company name if applicable
+            if ((data_id) === "Outsourced" || (data_id) === "Partnership") {
+                // Trigger the "other" field to show
+                const radioInput = document.getElementById(radioId);
+                if (radioInput) {
+                    // Force the "other" field to expand
+                    const otherWrap = document.getElementById(`${radioId}-other-wrap`);
+                    if (otherWrap) {
+                        otherWrap.style.display = 'block';
+                        const input = otherWrap.querySelector('input[type="text"]');
+                        if (input) {
 
-                                if (Array.isArray(data)) {
-                                    input.value = data[1] || "";
-                                } else if (data_id == "Outsourced") { 
-                                    input.value = data["outsource_company"] || "aaah";
-                                } else {
-                                    input.value = data["partnership_company"] || "";
+                            if (Array.isArray(data)) {
+                                input.value = data[1] || "";
+                            } else if (data_id == "Outsourced") { 
+                                input.value = data["outsource_company"] || "aaah";
+                            } else {
+                                input.value = data["partnership_company"] || "";
 
-                                }
                             }
                         }
                     }

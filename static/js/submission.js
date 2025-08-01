@@ -574,7 +574,7 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.publishing, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.publishing, 'others', [])
             ]),
-            code_editor_details: DataUtils.arrToList([
+            'code-editor-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'main', []), 
                 ...DataUtils.safeGet(data.supporting_tools.code_editors, 'others', [])
             ]),

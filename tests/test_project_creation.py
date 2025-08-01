@@ -194,7 +194,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             self.infrastructure
-            in driver.find_element(By.XPATH, "//div[@id='infrastructure_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='infrastructure-details']").text
         )
         assert (
             self.publishing
@@ -211,7 +211,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             "Draw"
-            in driver.find_element(By.XPATH, "//div[@id='diagram_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='diagram-details']").text
         )
         assert (
             len(

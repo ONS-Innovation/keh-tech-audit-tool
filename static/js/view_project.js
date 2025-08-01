@@ -146,6 +146,21 @@ function loadData(projects) {
     document.getElementById('infrastructure-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.infrastructure.others);
 
+    // Publishing
+    const internalPub = projects.architecture.publishing.main.join(', ');
+    const externalPub = projects.architecture.publishing.others.join(', ');
+    let publishingText = '';
+    if (internalPub && externalPub) {
+        publishingText = `${internalPub}, ${externalPub}`;
+    } else if (internalPub) {
+        publishingText = internalPub;
+    } else if (externalPub) {
+        publishingText = externalPub;
+    } else {
+        publishingText = 'N/A';
+    }
+    document.getElementById('publishing_row').querySelector('dd').querySelector('span').textContent = publishingText;
+
     // Code Editors
     document.getElementById('code-editors-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.supporting_tools.code_editors.others);

@@ -5,22 +5,13 @@ resources:
   source:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
     branch: ((branch))
-
-- name: release
-  type: github-release
-  icon: github
-  source:
-    owner: ONS-Innovation
-    repository: keh-tech-audit-tool
+    access_token: ((github_access_token))
 
 jobs:
 - name:  build-and-push
   public: true
   plan:
   - get: resource-repo
-    timeout: 5m
-  - get: release
-    trigger: true
     timeout: 5m
   - task: build-image
     privileged: true
@@ -32,18 +23,20 @@ jobs:
           repository: hashicorp/terraform
       inputs:
       - name: resource-repo
-      - name: release
       params:
         aws_account_id: ((aws_account_sdp_((env))))
         aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
-        tat_secrets_ui: ((sdp_((env))_secrets_tat_ui))
+        secrets: ((sdp_((env))_secrets_tat_ui))
       run: # binary used to build the image
         path: sh
         args:
         - -cx
         - |
+          apk add --no-cache aws-cli podman jq iptables curl
+
           if [[ "((env))" == "prod" ]]; then
-            export tag=v$(cat release/version)
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
+            export tag
           else
             export tag=((tag))
           fi
@@ -62,17 +55,19 @@ jobs:
         source: {repository: hashicorp/terraform}
       inputs:
       - name: resource-repo
-      - name: release
       params:
-        tat_secrets_ui: ((sdp_((env))_secrets_tat_ui))
+        secrets: ((sdp_((env))_secrets_tat_ui))
         github_access_token: ((github_access_token))
       run:
         path: sh
         args:
         - -cx
         - |
+          apk add --no-cache jq curl
+
           if [[ "((env))" == "prod" ]]; then
-            export tag=v$(cat release/version)
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
+            export tag
           else 
             export tag=((tag))
           fi

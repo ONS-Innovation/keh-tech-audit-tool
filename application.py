@@ -162,6 +162,7 @@ techNavItems = [
     {"text": "Frameworks", "url": "/survey/frameworks"},
     {"text": "Build and Deployment", "url": "/survey/integrations"},
     {"text": "Infrastructure", "url": "/survey/infrastructure"},
+    {"text": "Publishing", "url": "/survey/publishing"},
     {"text": "Summary", "url": "/survey/tech_summary"},
 ]
 
@@ -431,6 +432,7 @@ def map_form_data(form):
         {"key": "frameworks", "default": []},
         {"key": "integrations", "default": []},
         {"key": "infrastructure", "default": []},
+        {"key": "publishing", "default": []},
         {"key": "stage", "default": ""},
         {"key": "project_dependencies", "default": []},
         {"key": "code_editors", "default": []},
@@ -564,6 +566,7 @@ def survey():
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
             "infrastructure": form_data.get("infrastructure", ""),
+            "publishing": form_data.get("publishing", ""),
         },
         "stage": form_data.get("stage", ""),
         "supporting_tools": {
@@ -722,6 +725,10 @@ def integrations():
 @app.route("/survey/infrastructure", methods=["GET"])
 def infrastructure():
     return render_template("/section_technology/infrastructure.html")
+
+@app.route("/survey/publishing", methods=["GET"])
+def publishing():
+    return render_template("/section_technology/publishing.html")
 
 
 # ------------------------

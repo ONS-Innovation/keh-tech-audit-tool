@@ -2,54 +2,50 @@
 {% from "components/button/_macro.njk" import onsButton %}
 {% from "components/accordion/_macro.njk" import onsAccordion %}
 {% from "components/autosuggest/_macro.njk" import onsAutosuggest %}
+{% from "components/panel/_macro.njk" import onsPanel %}
 {% from "components/label/_macro.njk" import onsLabel %}
 {% block main %}
-    {% from "components/panel/_macro.njk" import onsPanel %}
-    {% from "components/list/_macro.njk" import onsList %}
     {% call onsPanel({
         "id": "error-panel",
         "title": 'Error',
         "variant": 'error',
         "type": "error",
         "classes": "ons-u-hidden"
-
     }) %}
     {{ onsLabel({
-        "id": 'item-already-added-label',
+        "id": 'label',
         "for": "some-input",
         "text": 'Item already added.'
     }) }}
     {% endcall %}
     <br>
-        <h1>Infrastructure</h1>
+        <h1>Languages</h1>
         {{ onsAccordion({
-        "id": "infrastructure-accordion",
+        "id": "publishing-content",
         "itemsList": [
             {
                 "title": "More info",
-                "content": "<p>Please list the infrastructure components used in your project. Thinking about the services used in the following areas may help:</p>
-                            <ul><li>Networking (e.g., AWS Virtual Private Cloud, Subnets, VPNs)</li>
-                            <li>Security (e.g., Web Application Firewall, Security Groups, IAM Roles)</li>
-                            <li>Logging & Monitoring (e.g., CloudWatch, Prometheus, Grafana)</li>
-                            <li>File Storage (e.g., S3 Buckets, GCP Buckets, Azure Blob Storage)</li>
-                            <li>Authentication (e.g., AWS Cognito, OAuth, Active Directory)</li>
-                            <li>Application Hosting (e.g., NGINX HTTP Server, EC2 Instances, GCP App Engine)</li></ul>
-                            <p>If you are using multiple components across different platforms or providers, be sure to include them all for a comprehensive view of your architecture.</p>"
+                "content": "
+                            <p>Please list the publishing target used in the project. Is it internal or external, or both? For both, please capture the information on both internal and external:</p>
+                            <ul><li>Internal publishing target e.g. Private or Internal Github Release/ Tags, Amazon ECR Private Gallery</li>
+                            <li>External publishing target e.g. Public Github Release/ Tags, Artifactory, PyPi, CRAN, Amazon ECR Public Gallery</li>
+                            </ul>
+                "
             }
         ]
     }) }}
         {{ onsAutosuggest({
-        "id": "infrastructure-input",
+        "id": "publishing-input",
         "input": {
             "label": {
-                "text": "What infrastructure is used in the project?",
+                "text": "What publishing target is used?",
                 "description": "Enter your own answer or select from suggestions",
             },
             "autocomplete": "on",
-            "id": "infrastructures-input",
+            "id": "publishing-input-items",
             "class": "item-inputs",
             "attributes": {
-                "onsubmit": "Enter infrastructure",
+                "onsubmit": "Enter publishing target",
             },
             "searchButton": {
                 "visuallyHideButtonText": false,
@@ -68,11 +64,10 @@
         "ariaLimitedResults": "Results have been limited to 10 suggestions. Type more characters to improve your search",
         "moreResults": "Continue entering to improve suggestions",
         "resultsTitle": "Suggestions",
-        "resultsTitleId": "infrastructure-suggestions",
-        "autosuggestData": "/autocomplete/infrastructure.json",
+        "resultsTitleId": "lanuages-suggestions",
+        "autosuggestData": "/autocomplete/publishing.json",
         "noResults": "No suggestions found. You can enter your own answer",
         "typeMore": "Continue entering to get suggestions",
-        
 
     }) }}
         <br>
@@ -82,7 +77,10 @@
         "id": "table-list",
         "ths": [
             {
-                "value": "Infrastructure"
+                "value": "Publishing target"
+            },
+            {
+                "value": "Is this Internal or External publishing target?"
             },
             {
                 "value": ""
@@ -98,15 +96,15 @@
             <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
             <form action="{{ url_for('survey') }}" method="GET">
                 {{ onsButton({
-                            "id": "save-values-button",
-                            "url": url_for('publishing'),
-                            "text": "Save and continue",
-                            "iconType": "arrow-next",
-                            "iconPosition": "after",
-                            "attributes": {
-                                "onclick": "storeData();"
-                            }
-                        }) }}
+                    "id": "save-values-button",
+                    "url": url_for('tech_summary'),
+                    "text": "Save and continue",
+                    "iconType": "arrow-next",
+                    "iconPosition": "after",
+                    "attributes": {
+                        "onclick": "storeData();"
+                    }
+                }) }}
             </form>
             <script>
                 loadData();

@@ -24,7 +24,7 @@ class SummaryUtils {
     static updateElement(elementId, content) {
         const element = document.getElementById(elementId)?.querySelector('dd.ons-summary__values span.ons-summary__text');
         if (element) {
-            element.innerHTML = escapeHTML(content);
+            element.innerHTML = SummaryUtils.escapeHtml(content);
         }
     }
 }

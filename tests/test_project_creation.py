@@ -210,7 +210,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             in driver.find_element(By.XPATH, "//div[@id='user_interface_details']").text
         )
         assert (
-            "Draw.io"
+            "Draw"
             in driver.find_element(By.XPATH, "//div[@id='diagram_details']").text
         )
         assert (

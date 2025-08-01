@@ -102,21 +102,21 @@ function renderData() {
         newRow.classList.add('ons-table__row');
 
         newRow.innerHTML = `
-            <td class="ons-table__cell">${lang}</td>
+            <td class="ons-table__cell">${escapeHTML(lang)}</td>
             ${(path.includes('languages') || path.includes('publishing') ) ? `
             <td class="ons-table__cell">
                 <div class="ons-input-items">
                     <div class="ons-radios__items">
                         <span class="ons-radios__item">
                             <span class="ons-radio">
-                                <input type="radio" id="${lang}-main" class="ons-radio__input ons-js-radio" value="main" name="${lang}-role" ${langArr.main.includes(lang) ? 'checked' : ''}>
-                                <label class="ons-radio__label" for="${lang}-main">${path.includes('languages') ? 'Yes' : 'Internal'}</label>
+                                <input type="radio" id="${escapeHTML(lang)}-main" class="ons-radio__input ons-js-radio" value="main" name="${escapeHTML(lang)}-role" ${langArr.main.includes(lang) ? 'checked' : ''}>
+                                <label class="ons-radio__label" for="${escapeHTML(lang)}-main">${path.includes('languages') ? 'Yes' : 'Internal'}</label>
                             </span>
                         </span>
                         <span class="ons-radios__item">
                             <span class="ons-radio">
-                                <input type="radio" id="${lang}-other" class="ons-radio__input ons-js-radio" value="other" name="${lang}-role" ${langArr.others.includes(lang) ? 'checked' : ''}>
-                                <label class="ons-radio__label" for="${lang}-other">${path.includes('languages') ? 'No' : 'External'}</label>
+                                <input type="radio" id="${escapeHTML(lang)}-other" class="ons-radio__input ons-js-radio" value="other" name="${escapeHTML(lang)}-role" ${langArr.others.includes(lang) ? 'checked' : ''}>
+                                <label class="ons-radio__label" for="${escapeHTML(lang)}-other">${path.includes('languages') ? 'No' : 'External'}</label>
                             </span>
                         </span>
                     </div>
@@ -124,7 +124,7 @@ function renderData() {
             </td>
             ` : ''}
             <td class="ons-table__cell" >
-                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${lang}")'>
+                <button type="button" class="ons-btn ons-btn--secondary ons-btn--small" onclick='removeData("${escapeHTML(lang)}")'>
   <span class="ons-btn__inner"><span class="ons-btn__text">Remove</span></span>
 </button>
             </td>
@@ -134,8 +134,8 @@ function renderData() {
 
         if (path.includes('languages') || path.includes('publishing')) {
             // Add event listeners for the radio buttons
-            document.getElementById(`${lang}-main`).addEventListener('change', () => changeListItemType(lang, 'main'));
-            document.getElementById(`${lang}-other`).addEventListener('change', () => changeListItemType(lang, 'other'));
+            document.getElementById(`${escapeHTML(lang)}-main`).addEventListener('change', () => changeListItemType(lang, 'main'));
+            document.getElementById(`${escapeHTML(lang)}-other`).addEventListener('change', () => changeListItemType(lang, 'other'));
         }
     });
 }
@@ -239,6 +239,18 @@ function addData(event) {
     document.getElementById('error-panel').classList.add('ons-u-hidden');
 }
 
+// Rule: Escape meta-characters
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, m =>
+        ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[m]
+    );
+}
 
 
 // When the user is entering in the Autosuggest, if they press enter then it will add the data.

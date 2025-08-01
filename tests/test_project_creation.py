@@ -320,7 +320,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
         )
         assert (
-            "Draw.io"
+            "Draw"
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
         )
         assert (

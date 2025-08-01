@@ -94,7 +94,7 @@ function loadData() {
                             if (Array.isArray(data)) {
                                 input.value = data[1] || "";
                             } else if (data_id == "Outsourced") { 
-                                input.value = data["outsource_company"] || "aaah";
+                                input.value = data["outsource_company"] || "";
                             } else {
                                 input.value = data["partnership_company"] || "";
 

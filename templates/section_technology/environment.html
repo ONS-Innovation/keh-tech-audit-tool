@@ -1,0 +1,121 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/checkboxes/_macro.njk" import onsCheckboxes %}
+{% block main %}
+    {% from "components/panel/_macro.njk" import onsPanel %}
+    {% from "components/list/_macro.njk" import onsList %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Environment</h1>
+        {{ onsAccordion({
+        "id": "environment-information",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list the environments used in your project (If the project is using sandbox > staging > production, then pre-prod for staging is acceptable.):</p>
+                            <ul><li>Dev (sandbox)</li>
+                            <li>INT</li>
+                            <li>UAT</li>
+                            <li>Pre-Prod (staging)</li>
+                            <li>Prod</li>
+                            <li>Post-Prod</li></ul>
+                        "
+            }
+        ]
+    }) }}
+        
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form action="{{ url_for('survey') }}" method="GET">
+                {%
+                    call onsQuestion({
+                        "title": "What devices do you own?",
+                        "legendIsQuestionTitle": true,
+                        "classes": "ons-u-mt-no"
+                    })
+                %}
+                    {{
+                        onsCheckboxes({
+                            "checkboxesLabel": "Select all that apply",
+                            "dontWrap": true,
+                            "name": "environment",
+                            "checkboxes": [
+                                {
+                                    "id": "environment-dev",
+                                    "label": {
+                                        "text": "DEV"
+                                    },
+                                    "value": "dev"
+                                },
+                                {
+                                    "id": "environment-int",
+                                    "label": {
+                                        "text": "INT"
+                                    },
+                                    "value": "int"
+                                },
+                                {
+                                    "id": "environment-uat",
+                                    "label": {
+                                        "text": "UAT"
+                                    },
+                                    "value": "uat"
+                                },
+                                {
+                                    "id": "environment-pre-prod",
+                                    "label": {
+                                        "text": "PRE-PROD (STAGING)"
+                                    },
+                                    "value": "pre-prod"
+                                },
+                                {
+                                    "id": "environment-prod",
+                                    "label": {
+                                        "text": "PROD"
+                                    },
+                                    "value": "prod"
+                                },
+                                {
+                                    "id": "environment-post-prod",
+                                    "label": {
+                                        "text": "POST-PROD"
+                                    },
+                                    "value": "post-prod"
+                                },
+                            ]
+                        })
+                    }}
+                {% endcall %}
+                
+                {{ onsButton({
+                            "id": "save-values-button",
+                            "url": url_for('infrastructure'),
+                            "text": "Save and continue",
+                            "iconType": "arrow-next",
+                            "iconPosition": "after",
+                            "attributes": {
+                                "onclick": "storeData();"
+                            }
+                        }) }}
+            </form>
+            <script>
+                loadData();
+                redirectToPrevious();
+            </script>
+        {% endblock %}

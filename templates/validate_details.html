@@ -295,6 +295,27 @@
                                     ]
                                 },
                                 {
+                                    "id":"environment_details",
+                                    "title": "Environment",
+                                    "itemsList": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": ""
+                                            }
+                                        ],
+                              
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Change environment details",
+                                                    "url": url_for('environment')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
                                     "id":"infrastructure_details",
                                     "title": "Infrastructure",
                                     "itemsList": [
@@ -539,6 +560,7 @@
     <input id="frameworks" type="hidden" name="frameworks">
 
     <input id="integrations" type="hidden" name="integrations">
+    <input id="environment" type="hidden" name="environment">
     <input id="infrastructure" type="hidden" name="infrastructure">
     <input id="publishing" type="hidden" name="publishing">
     <input id="stage" type="hidden" name="stage">

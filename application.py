@@ -161,6 +161,7 @@ techNavItems = [
     {"text": "Languages", "url": "/survey/languages"},
     {"text": "Frameworks", "url": "/survey/frameworks"},
     {"text": "Build and Deployment", "url": "/survey/integrations"},
+    {"text": "Environment", "url": "/survey/environment"},
     {"text": "Infrastructure", "url": "/survey/infrastructure"},
     {"text": "Publishing", "url": "/survey/publishing"},
     {"text": "Summary", "url": "/survey/tech_summary"},
@@ -431,6 +432,7 @@ def map_form_data(form):
         {"key": "languages", "default": []},
         {"key": "frameworks", "default": []},
         {"key": "integrations", "default": []},
+        {"key": "environment", "default": []},
         {"key": "infrastructure", "default": []},
         {"key": "publishing", "default": []},
         {"key": "stage", "default": ""},
@@ -565,6 +567,7 @@ def survey():
             "languages": form_data.get("languages", ""),
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
+            "environment": form_data.get("environment", ""),
             "infrastructure": form_data.get("infrastructure", ""),
             "publishing": form_data.get("publishing", ""),
         },
@@ -721,6 +724,9 @@ def frameworks():
 def integrations():
     return render_template("/section_technology/integrations.html")
 
+@app.route("/survey/environment", methods=["GET"])
+def environment():
+    return render_template("/section_technology/environment.html")
 
 @app.route("/survey/infrastructure", methods=["GET"])
 def infrastructure():

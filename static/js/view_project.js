@@ -151,10 +151,10 @@ function loadData(projects) {
 
     if (projects.architecture.publishing){
         const internalPub = Array.isArray(projects.architecture.publishing.main)
-            ? projects.architecture.publishing.main.map(escapeHtml).join(', ')
+            ? projects.architecture.publishing.main.map(SummaryUtils.escapeHtml).join(', ')
             : '';
         const externalPub = Array.isArray(projects.architecture.publishing.others)
-            ? projects.architecture.publishing.others.map(escapeHtml).join(', ')
+            ? projects.architecture.publishing.others.map(SummaryUtils.escapeHtml).join(', ')
             : '';
         if (internalPub && externalPub) {
             publishingText = `${internalPub}, ${externalPub}`;
@@ -211,17 +211,4 @@ if (Array.isArray(misc) && misc.length > 0) {
 } else {
     miscContainer.textContent = 'N/A';
 }
-}
-
-// Rule: To prevent XSS - Security
-function escapeHtml(str) {
-    if (!str) return '';
-    const escapeMap = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    };
-    return str.replace(/[&<>"']/g, match => escapeMap[match]);
 }

@@ -147,18 +147,24 @@ function loadData(projects) {
         formatList(projects.architecture.infrastructure.others);
 
     // Publishing
-    const internalPub = projects.architecture.publishing.main.join(', ');
-    const externalPub = projects.architecture.publishing.others.join(', ');
-    let publishingText = '';
-    if (internalPub && externalPub) {
-        publishingText = `${internalPub}, ${externalPub}`;
-    } else if (internalPub) {
-        publishingText = internalPub;
-    } else if (externalPub) {
-        publishingText = externalPub;
-    } else {
-        publishingText = 'N/A';
+    let publishingText = 'N/A';
+
+    if (projects.architecture.publishing){
+        const internalPub = Array.isArray(projects.architecture.publishing.main)
+            ? projects.architecture.publishing.main.map(escapeHtml).join(', ')
+            : '';
+        const externalPub = Array.isArray(projects.architecture.publishing.others)
+            ? projects.architecture.publishing.others.map(escapeHtml).join(', ')
+            : '';
+        if (internalPub && externalPub) {
+            publishingText = `${internalPub}, ${externalPub}`;
+        } else if (internalPub) {
+            publishingText = internalPub;
+        } else if (externalPub) {
+            publishingText = externalPub;
+        }
     }
+
     document.getElementById('publishing_row').querySelector('dd').querySelector('span').textContent = publishingText;
 
     // Code Editors
@@ -205,4 +211,17 @@ if (Array.isArray(misc) && misc.length > 0) {
 } else {
     miscContainer.textContent = 'N/A';
 }
+}
+
+// Rule: Defensive coding, Security
+function escapeHtml(str) {
+    if (!str) return '';
+    const escapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return str.replace(/[&<>"']/g, match => escapeMap[match]);
 }

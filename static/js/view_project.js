@@ -213,7 +213,7 @@ if (Array.isArray(misc) && misc.length > 0) {
 }
 }
 
-// Rule: Defensive coding, Security
+// Rule: To prevent XSS - Security
 function escapeHtml(str) {
     if (!str) return '';
     const escapeMap = {

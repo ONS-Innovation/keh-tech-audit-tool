@@ -164,7 +164,6 @@ function loadData(projects) {
             publishingText = externalPub;
         }
     }
-
     document.getElementById('publishing_row').querySelector('dd').querySelector('span').textContent = publishingText;
 
     // Code Editors

@@ -151,10 +151,10 @@ function loadData(projects) {
 
     if (projects.architecture.publishing){
         const internalPub = Array.isArray(projects.architecture.publishing.main)
-            ? projects.architecture.publishing.main.map(SummaryUtils.escapeHtml).join(', ')
+            ? projects.architecture.publishing.main.join(', ')
             : '';
         const externalPub = Array.isArray(projects.architecture.publishing.others)
-            ? projects.architecture.publishing.others.map(SummaryUtils.escapeHtml).join(', ')
+            ? projects.architecture.publishing.others.join(', ')
             : '';
         if (internalPub && externalPub) {
             publishingText = `${internalPub}, ${externalPub}`;

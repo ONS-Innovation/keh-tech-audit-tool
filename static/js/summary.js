@@ -598,8 +598,8 @@ class SupportingToolsSummaryManager {
 
     loadData() {
         const processors = {
-            'code_editor_details': 'code-editors-details',
-            'user_interface_details': 'user-interface-details',
+            'code_editor_details': 'code_editors-data',
+            'user_interface_details': 'user_interface-data',
             'diagram_details': 'diagrams-data',
             'documentation_details': 'documentation-data',
             'communication_details': 'communication-data',

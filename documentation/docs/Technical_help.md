@@ -136,7 +136,7 @@ example:
 
 ```js
 {
-    "id": "new_data_details",
+    "id": "new-data-details",
     "title": "New Data Title",
     "itemsList": [
         {
@@ -188,7 +188,7 @@ example:
 ```js
 {
     "title": "Project",
-    "id": "project_details_row",
+    "id": "project-details-row",
     "itemsList": [
         {
             "id": "project-details",

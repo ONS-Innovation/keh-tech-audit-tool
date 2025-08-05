@@ -9,7 +9,7 @@ class SummaryUtils {
             '"': '&quot;',
             "'": '&#39;'
         };
-        return str.replace(/[&<>"']/g, match => escapeMap[match]);
+        return str.replace(/[&"']/g, match => escapeMap[match]);
     }
 
     static safeJsonParse(data, defaultValue = null) {
@@ -24,7 +24,7 @@ class SummaryUtils {
     static updateElement(elementId, content) {
         const element = document.getElementById(elementId)?.querySelector('dd.ons-summary__values span.ons-summary__text');
         if (element) {
-            element.innerHTML = content;
+            element.innerHTML = SummaryUtils.escapeHtml(content);
         }
     }
 }
@@ -304,7 +304,7 @@ class SourceControlProcessor extends SectionProcessor {
             const data = SummaryUtils.safeJsonParse(sourceControlData);
             if (!data) return '';
 
-            let sourceControlHtml = `${data.source_control}`;
+            let sourceControlHtml = `${SummaryUtils.escapeHtml(data.source_control)}`;
             
             if (data.links && data.links.length > 0) {
                 data.links.forEach(link => {

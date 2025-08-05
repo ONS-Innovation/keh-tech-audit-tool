@@ -24,7 +24,7 @@ class SummaryUtils {
     static updateElement(elementId, content) {
         const element = document.getElementById(elementId)?.querySelector('dd.ons-summary__values span.ons-summary__text');
         if (element) {
-            element.innerHTML = SummaryUtils.escapeHtml(content);
+            element.innerHTML = content;
         }
     }
 }
@@ -493,7 +493,7 @@ class ToolsProcessor extends SectionProcessor {
             const data = SummaryUtils.safeJsonParse(toolData);
             if (!data || !data.others) return '';
  
-            return data.others.map(item => SummaryUtils.escapeHtml(item)).join(', ');
+            return data.others.join(', ');
         } catch (e) {
             console.error('Error processing tool data:', e);
             return '';
@@ -598,8 +598,8 @@ class SupportingToolsSummaryManager {
 
     loadData() {
         const processors = {
-            'code_editor_details': 'code_editors-data',
-            'user_interface_details': 'user_interface-data',
+            'code_editor_details': 'code-editors-details',
+            'user_interface_details': 'user-interface-details',
             'diagram_details': 'diagrams-data',
             'documentation_details': 'documentation-data',
             'communication_details': 'communication-data',
@@ -612,7 +612,8 @@ class SupportingToolsSummaryManager {
             const details = this.toolsProcessor.processData(
                 localStorage.getItem(storageKey)
             );
-            this.toolsProcessor.updateUI(elementId, details);
+            console.log(elementId);
+            this.toolsProcessor.updateUI(elementId.replace('_', '-'), details);
         }
 
         const miscellaneousDetails = this.miscellaneousProcessor.processData(

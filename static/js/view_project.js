@@ -147,17 +147,22 @@ function loadData(projects) {
         formatList(projects.architecture.infrastructure.others);
 
     // Publishing
-    const internalPub = projects.architecture.publishing.main.join(', ');
-    const externalPub = projects.architecture.publishing.others.join(', ');
-    let publishingText = '';
-    if (internalPub && externalPub) {
-        publishingText = `${internalPub}, ${externalPub}`;
-    } else if (internalPub) {
-        publishingText = internalPub;
-    } else if (externalPub) {
-        publishingText = externalPub;
-    } else {
-        publishingText = 'N/A';
+    let publishingText = 'N/A';
+
+    if (projects.architecture.publishing){
+        const internalPub = Array.isArray(projects.architecture.publishing.main)
+            ? projects.architecture.publishing.main.map(SummaryUtils.escapeHtml).join(', ')
+            : '';
+        const externalPub = Array.isArray(projects.architecture.publishing.others)
+            ? projects.architecture.publishing.others.map(SummaryUtils.escapeHtml).join(', ')
+            : '';
+        if (internalPub && externalPub) {
+            publishingText = `${internalPub}, ${externalPub}`;
+        } else if (internalPub) {
+            publishingText = internalPub;
+        } else if (externalPub) {
+            publishingText = externalPub;
+        }
     }
     document.getElementById('publishing_row').querySelector('dd').querySelector('span').textContent = publishingText;
 

@@ -152,12 +152,12 @@
             var incidentManagementData = localStorage.getItem('incident_management-data');
             var miscellaneousData = localStorage.getItem('miscellaneous-data');
             
-            changeBtnURL(contactTechData, contactManagerData, projectData, 
+            changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
             sourceControlData, databaseData, languagesData, 
-            frameworksData, integrationsData, infrastructureData, 
+            frameworksData, integrationsData, infrastructureData, publishingData, 
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
-            collaborationData, incidentManagementData);
+            collaborationData, incidentManagementData, miscellaneousData);
             updateSectionStatus('user-details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
             updateSectionStatus('project-details', [sourceControlData, hostingData, databaseData]);
             updateSectionStatus('developed-details', [frameworksData, infrastructureData, integrationsData, languagesData]);

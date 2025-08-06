@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
     loadData();
 });
 
+const mapping = {
+    "Outsourced": "outsourced",
+    "Partnership": "partnership",
+    "In House": "in-house"
+};
+
+const reverseMapping = Object.fromEntries(
+    Object.entries(mapping).map(([k, v]) => [v, k])
+);
+
 /**
  * Stores the "developed" data in localStorage
  * Captures the selected radio button value and any associated company name
@@ -13,7 +23,8 @@ function storeData() {
     const selectedRadio = document.querySelector('input[name="developed"]:checked');
     if (!selectedRadio) return;
 
-    const developed = selectedRadio.value;
+    const id = selectedRadio.id;
+    const developed = reverseMapping[id] || selectedRadio.value;
     let companyName = '';
 
     // Get company name based on selection
@@ -30,8 +41,6 @@ function storeData() {
             }
         }
     }
-
-    console.log(`Saving developed: ${developed}, company: ${companyName}`);
 
     // Create data array
     const data = [developed];
@@ -52,12 +61,6 @@ function storeData() {
  * Sets the appropriate radio button and populates company name if applicable
  */
 function loadData() {
-    const mapping = {
-        "Outsourced": "outsourced",
-        "Partnership": "partnership",
-        "In House": "in-house"
-    };
-
     // Get data from localStorage
     const storageKey = JSON.parse(localStorage.getItem('edit')) ? 
         'developed-data-edit' : 'developed-data';
@@ -68,22 +71,33 @@ function loadData() {
     try {
         // Handle both array and object formats
         if (Array.isArray(data)) {
-            const radioId = mapping[data[0]];
-            if (radioId) {
-                document.getElementById(radioId).checked = true;
-                
-                // Set company name if applicable
-                if (data[0] === "Outsourced" || data[0] === "Partnership") {
-                    // Trigger the "other" field to show
-                    const radioInput = document.getElementById(radioId);
-                    if (radioInput) {
-                        // Force the "other" field to expand
-                        const otherWrap = document.getElementById(`${radioId}-other-wrap`);
-                        if (otherWrap) {
-                            otherWrap.style.display = 'block';
-                            const input = otherWrap.querySelector('input[type="text"]');
-                            if (input) {
+                var data_id = data[0];
+        } else {
+            var data_id = data["developed"];
+        }
+        const radioId = mapping[data_id];
+        if (radioId) {
+            document.getElementById(radioId).checked = true;
+            
+            // Set company name if applicable
+            if ((data_id) === "Outsourced" || (data_id) === "Partnership") {
+                // Trigger the "other" field to show
+                const radioInput = document.getElementById(radioId);
+                if (radioInput) {
+                    // Force the "other" field to expand
+                    const otherWrap = document.getElementById(`${radioId}-other-wrap`);
+                    if (otherWrap) {
+                        otherWrap.style.display = 'block';
+                        const input = otherWrap.querySelector('input[type="text"]');
+                        if (input) {
+
+                            if (Array.isArray(data)) {
                                 input.value = data[1] || "";
+                            } else if (data_id == "Outsourced") { 
+                                input.value = data["outsource_company"] || "";
+                            } else {
+                                input.value = data["partnership_company"] || "";
+
                             }
                         }
                     }

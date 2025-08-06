@@ -31,7 +31,10 @@ function storeContactData(keyBase) {
         role = idRoleMap[selectedId] || selectedId;
     }
 
-    const complete = contactEmail && role;
+    let complete = false;
+    if (contactEmail != '' && role != '') {
+        complete = true;
+    }
 
     const data = {
         contactEmail,
@@ -292,7 +295,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         { 
             data: projectData, 
             url: '/survey/project', 
-            validationFn: (data) => validateMultipleFields(data, ['project_name', 'project_short_name', 'project_description', 'doc_link'])
+            validationFn: (data) => validateMultipleFields(data, ['name', 'short_name', 'project_description', 'documentation_link'])
         },
         { 
             data: projectDependenciesData, 

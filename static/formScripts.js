@@ -255,7 +255,7 @@ function validateMultipleFields(data, fields) {
     return fields.every(field => {
       const val = data[field];
       // you can also enforce non-empty strings/arrays here:
-      return val !== undefined && val !== null;
+      return val !== undefined && val !== null && val !== '';
     });
   }
 
@@ -295,8 +295,9 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         { 
             data: projectData, 
             url: '/survey/project', 
-            validationFn: (data) => validateMultipleFields(data, ['name', 'short_name', 'project_description', 'documentation_link'])
+            validationFn: (data) => validateMultipleFields(data, ['name', 'short_name', 'project_description', 'documentation_link', 'programme_name', 'programme_short_name'])
         },
+        // Developed + Stage missing validation
         { 
             data: projectDependenciesData, 
             url: '/survey/project_dependencies', 

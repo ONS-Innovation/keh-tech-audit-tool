@@ -258,7 +258,7 @@ function validateMultipleFields(data, fields) {
 
 function changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
     sourceControlData, databaseData, languagesData, 
-    frameworksData, integrationsData, infrastructureData, 
+    frameworksData, integrationsData, infrastructureData, publishingData, 
     codeEditorsData, uiToolsData, diagramToolsData, 
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData, miscellaneousData) {

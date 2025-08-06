@@ -261,7 +261,7 @@ function validateMultipleFields(data, fields) {
 
 function changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
     sourceControlData, databaseData, languagesData, 
-    frameworksData, integrationsData, infrastructureData, publishingData, 
+    frameworksData, integrationsData, infrastructureData, publishingData, environmentsData,
     codeEditorsData, uiToolsData, diagramToolsData, 
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData, miscellaneousData) {
@@ -331,6 +331,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             data: integrationsData, 
             url: '/survey/integrations', 
             validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: environmentsData, 
+            url: '/survey/environments', 
+            validationFn: (data) => validateObjectField(data, 'environments')
         },
         { 
             data: infrastructureData, 

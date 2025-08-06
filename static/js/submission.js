@@ -372,6 +372,7 @@ const DataNormalizer = {
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.cicd,
+            environments: data.architecture.environments,
             infrastructure: data.architecture.infrastructure,
             publishing: data.architecture.publishing,
             code_editors: data.supporting_tools.code_editors,
@@ -459,6 +460,7 @@ const DataNormalizer = {
             }],
             architecture: {
                 frameworks: cleanedData.frameworks || { main: [], others: [] },
+                environments: cleanedData.environments || '',
                 infrastructure: cleanedData.infrastructure || { main: [], others: [] },
                 publishing: cleanedData.publishing || { main: [], others: [] },
                 integrations: cleanedData.integrations || { main: [], others: [] },
@@ -562,6 +564,12 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.frameworks, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.frameworks, 'others', [])
             ]),
+            'environments-details': DataUtils.arrToList([
+                Object.keys(data.architecture.environments)
+                .filter(key => data.architecture.environments[key] === true)
+                .map(key => key === 'preprod' ? 'PREPROD (STAGING)' : key.toUpperCase())
+                .join(', ')
+            ]),
             'integration-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.integrations, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.integrations, 'others', [])
@@ -570,7 +578,7 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'others', [])
             ]),
-            publishing_details: DataUtils.arrToList([
+            'publishing-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.publishing, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.publishing, 'others', [])
             ]),
@@ -625,6 +633,7 @@ const UIUpdater = {
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.integrations,
+            environments: data.architecture.environments,
             infrastructure: data.architecture.infrastructure,
             publishing: data.architecture.publishing,
             stage: data.stage,
@@ -664,7 +673,7 @@ const AppController = {
         return [
             `contact_tech-data${suffix}`, `contact_manager-data${suffix}`, `project-data${suffix}`, 
             `developed-data${suffix}`, `stage-data${suffix}`, `project_dependencies-data${suffix}`, 
-            `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
+            `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, `environments-data${suffix}`,
             `infrastructure-data${suffix}`, `publishing-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
@@ -711,6 +720,7 @@ const AppController = {
             languages: ErrorHandler.validateData(storedData['languages'], 'Languages'),
             frameworks: ErrorHandler.validateData(storedData['frameworks'], 'Frameworks'),
             integrations: ErrorHandler.validateData(storedData['integrations'], 'CI/CD'),
+            environments: ErrorHandler.validateData(storedData['environments'], 'Environments'),
             infrastructure: ErrorHandler.validateData(storedData['infrastructure'], 'Infrastructure'),
             publishing: ErrorHandler.validateData(storedData['publishing'], 'Publishing'),
             code_editors: ErrorHandler.validateData(storedData['code_editors'], 'Code Editors'),

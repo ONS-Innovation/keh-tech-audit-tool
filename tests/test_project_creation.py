@@ -198,7 +198,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             self.publishing
-            in driver.find_element(By.XPATH, "//div[@id='publishing_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='publishing-details']").text
         )
 
         assert (

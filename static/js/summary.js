@@ -486,6 +486,31 @@ class PublishingProcessor extends SectionProcessor {
     }
 }
 
+class EnvironmentsProcessor extends SectionProcessor {
+    processData(environmentsData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(environmentsData);
+            if (!data || typeof data !== 'object') return '';
+
+            const selectedEnvs = Object.keys(data)
+                .filter(key => data[key] === true);
+
+            const displayEnvs = selectedEnvs.map(env => 
+                env === 'preprod'
+                    ? `${SummaryUtils.escapeHtml(env.toUpperCase())} (STAGING)`
+                    : SummaryUtils.escapeHtml(env.toUpperCase())
+            );
+
+            return displayEnvs.length > 0
+                ? displayEnvs.join(', ')
+                : '';
+        } catch (e) {
+            console.error('Error processing environments data:', e);
+            return '';
+        }
+    }
+}
+
 // Supporting Tools Processors
 class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
@@ -553,6 +578,7 @@ class TechSummaryManager {
         this.errorManager = new ErrorManager('error-panel', 'error-label');
         this.languagesProcessor = new LanguagesProcessor(this.errorManager);
         this.frameworksProcessor = new FrameworksProcessor(this.errorManager);
+        this.environmentsProcessor = new EnvironmentsProcessor(this.errorManager);
         this.integrationsProcessor = new IntegrationsProcessor(this.errorManager);
         this.infrastructureProcessor = new InfrastructureProcessor(this.errorManager);
         this.publishingProcessor = new PublishingProcessor(this.errorManager);
@@ -569,6 +595,11 @@ class TechSummaryManager {
         );
         this.frameworksProcessor.updateUI('framework-details', frameworkDetails);
 
+        const environmentsDetails = this.environmentsProcessor.processData(
+            localStorage.getItem('environments-data')
+        );
+        this.environmentsProcessor.updateUI('environments-details', environmentsDetails);
+
         const integrationDetails = this.integrationsProcessor.processData(
             localStorage.getItem('integrations-data')
         );
@@ -582,7 +613,7 @@ class TechSummaryManager {
         const publishingDetails = this.publishingProcessor.processData(
             localStorage.getItem('publishing-data')
         );
-        this.publishingProcessor.updateUI('publishing_details', publishingDetails);
+        this.publishingProcessor.updateUI('publishing-details', publishingDetails);
     }
 }
 

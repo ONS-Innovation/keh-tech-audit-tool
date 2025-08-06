@@ -22,9 +22,9 @@
     }) }}
     {% endcall %}
     <br>
-        <h1>Environment</h1>
+        <h1>Environments</h1>
         {{ onsAccordion({
-        "id": "environment-information",
+        "id": "environments-information",
         "itemsList": [
             {
                 "title": "More info",
@@ -39,13 +39,11 @@
             }
         ]
     }) }}
-        
-            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
             <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
-            <form action="{{ url_for('survey') }}" method="GET">
+            <form id="environments" action="{{ url_for('survey') }}" method="GET">
                 {%
                     call onsQuestion({
-                        "title": "What devices do you own?",
+                        "title": "What environments are in use for the project?",
                         "legendIsQuestionTitle": true,
                         "classes": "ons-u-mt-no"
                     })
@@ -54,49 +52,48 @@
                         onsCheckboxes({
                             "checkboxesLabel": "Select all that apply",
                             "dontWrap": true,
-                            "name": "environment",
                             "checkboxes": [
                                 {
-                                    "id": "environment-dev",
+                                    "id": "dev",
                                     "label": {
                                         "text": "DEV"
                                     },
                                     "value": "dev"
                                 },
                                 {
-                                    "id": "environment-int",
+                                    "id": "int",
                                     "label": {
                                         "text": "INT"
                                     },
                                     "value": "int"
                                 },
                                 {
-                                    "id": "environment-uat",
+                                    "id": "uat",
                                     "label": {
                                         "text": "UAT"
                                     },
                                     "value": "uat"
                                 },
                                 {
-                                    "id": "environment-pre-prod",
+                                    "id": "preprod",
                                     "label": {
                                         "text": "PRE-PROD (STAGING)"
                                     },
-                                    "value": "pre-prod"
+                                    "value": "preprod"
                                 },
                                 {
-                                    "id": "environment-prod",
+                                    "id": "prod",
                                     "label": {
                                         "text": "PROD"
                                     },
                                     "value": "prod"
                                 },
                                 {
-                                    "id": "environment-post-prod",
+                                    "id": "postprod",
                                     "label": {
                                         "text": "POST-PROD"
                                     },
-                                    "value": "post-prod"
+                                    "value": "postprod"
                                 },
                             ]
                         })
@@ -113,9 +110,59 @@
                                 "onclick": "storeData();"
                             }
                         }) }}
+
+                        <script>
+                            function storeData() { 
+                                // Store data about environments in local storage
+                                // Get the values of the checkboxes
+                                // and set the complete flag to true
+                                var dev = document.getElementById('dev').checked
+                                var int = document.getElementById('int').checked
+                                var uat = document.getElementById('uat').checked
+                                var preprod = document.getElementById('preprod').checked
+                                var prod = document.getElementById('prod').checked
+                                var postprod = document.getElementById('postprod').checked
+                                var newData = {
+                                    "dev": dev,
+                                    "int": int,
+                                    "uat": uat,
+                                    "preprod": preprod,
+                                    "prod": prod,
+                                    "postprod": postprod,
+                                };
+
+                                
+                                var name = 'environments-data';
+                                if (JSON.parse(localStorage.getItem('edit'))) {
+                                    name = 'environments-data-edit';
+                                }
+                                var existingData = JSON.parse(localStorage.getItem(name)) || {};
+                                // Merge new data with existing data
+                                var updatedData = {
+                                    ... existingData,
+                                    ... newData
+                                };
+                                localStorage.setItem(name, JSON.stringify(updatedData));
+                            }
+                            function loadData() {
+                                var name = 'environments-data';
+                                if (JSON.parse(localStorage.getItem('edit'))) {
+                                    name = 'environments-data-edit';
+                                }
+                                    var data = JSON.parse(localStorage.getItem(name));
+                                    if (data) {
+                                        var options = ['dev', 'int', 'uat', 'preprod', 'prod', 'postprod'];
+                                        options.forEach(function(option) {
+                                            if (data[option]) {
+                                                document.getElementById(option).checked = true;
+                                            } else {
+                                                document.getElementById(option).checked = false;
+                                            }
+                                        });
+                                    }
+                                
+                            }
+                            loadData();
+                        </script>
             </form>
-            <script>
-                loadData();
-                redirectToPrevious();
-            </script>
         {% endblock %}

@@ -31,7 +31,10 @@ function storeContactData(keyBase) {
         role = idRoleMap[selectedId] || selectedId;
     }
 
-    const complete = contactEmail && role;
+    let complete = false;
+    if (contactEmail != '' && role != '') {
+        complete = true;
+    }
 
     const data = {
         contactEmail,
@@ -252,13 +255,13 @@ function validateMultipleFields(data, fields) {
     return fields.every(field => {
       const val = data[field];
       // you can also enforce non-empty strings/arrays here:
-      return val !== undefined && val !== null;
+      return val !== undefined && val !== null && val !== '';
     });
   }
 
 function changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
     sourceControlData, databaseData, languagesData, 
-    frameworksData, integrationsData, infrastructureData, 
+    frameworksData, integrationsData, infrastructureData, publishingData, 
     codeEditorsData, uiToolsData, diagramToolsData, 
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData, miscellaneousData) {
@@ -279,6 +282,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
     
     // Define all validation checks with their URLs and validation functions
     const validations = [
+        // Project Details
         { 
             data: contactTechData, 
             url: '/survey/contact_tech', 
@@ -292,23 +296,27 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         { 
             data: projectData, 
             url: '/survey/project', 
-            validationFn: (data) => validateMultipleFields(data, ['project_name', 'project_short_name', 'project_description', 'doc_link'])
+            validationFn: (data) => validateMultipleFields(data, ['name', 'short_name', 'project_description', 'documentation_link', 'programme_name', 'programme_short_name'])
         },
+        // TODO: Developed + Stage missing validation
         { 
             data: projectDependenciesData, 
             url: '/survey/project_dependencies', 
             validationFn: (data) => Array.isArray(data) && data.length > 0
         },
+        // Code and Architecture
         { 
             data: sourceControlData, 
             url: '/survey/source_control', 
             validationFn: (data) => validateObjectField(data, 'source_control')
         },
+        // TODO: Hosting missing validation
         { 
             data: databaseData, 
             url: '/survey/database', 
             validationFn: (data) => data.others && data.others.length > 0
         },
+        // Technology
         { 
             data: languagesData, 
             url: '/survey/languages', 
@@ -334,6 +342,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             url: '/survey/publishing', 
             validationFn: (data) => (data.main && data.main.length > 0) || (data.others && data.others.length > 0)
         },
+        // Supporting Tools
         { 
             data: codeEditorsData, 
             url: '/survey/code_editors', 

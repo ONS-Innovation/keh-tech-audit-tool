@@ -1,5 +1,33 @@
 # Tech Audit Tool - UI
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Authentication](#authentication)
+- [Testing the UI](#testing-the-ui)
+  - [Setting Up](#setting-up)
+  - [Running the Application](#running-the-application)
+  - [Setting up with Docker](#setting-up-with-docker)
+- [Deployment to AWS](#deployment-to-aws)
+  - [Deployment Prerequisites](#deployment-prerequisites)
+  - [Underlying AWS Infrastructure](#underlying-aws-infrastructure)
+  - [Bootstrap IAM User Groups, Users and an ECSTaskExecutionRole](#bootstrap-iam-user-groups-users-and-an-ecstaskexecutionrole)
+  - [Bootstrap for Terraform](#bootstrap-for-terraform)
+  - [Bootstrap for Secrets Manager](#bootstrap-for-secrets-manager)
+  - [Running the Terraform](#running-the-terraform)
+  - [Updating the running service using Terraform](#updating-the-running-service-using-terraform)
+  - [Destroy the Main Service Resources](#destroy-the-main-service-resources)
+  - [Deployments with Concourse](#deployments-with-concourse)
+    - [Allowlisting your IP](#allowlisting-your-ip)
+    - [Setting up a pipeline](#setting-up-a-pipeline)
+    - [Triggering a pipeline](#triggering-a-pipeline)
+- [Linting](#linting)
+- [Testing](#testing)
+  - [Setting Up Test Environment Variables](#setting-up-test-environment-variables)
+  - [Running Tests](#running-tests)
+    - [Project Creation Tests](#project-creation-tests)
+- [Project layout](#project-layout)
+
 ## Overview
 The Tech Audit Tool is a tool used to survey out information such as the tools, languages and frameworks that are used by various projects within Digital Services and Technology (DST).
 

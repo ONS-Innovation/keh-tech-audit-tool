@@ -31,10 +31,10 @@ To run locally, import these credentials into the app:
 ```bash
 export AWS_ACCESS_KEY_ID=<KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-export API_BUCKET_NAME=<sdp-dev-tech-audit-tool-api-testing/sdp-dev-tech-audit-tool-api> # The latter bucket should be used when deploying (switch to dev/sandbox/prod where appropriate)
+export API_BUCKET_NAME=<sdp-dev-tech-audit-tool-api-testing/sdp-dev-tech-audit-tool-api> # The latter bucket should be used when deploying (switch to dev/prod where appropriate)
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
-export AWS_ACCOUNT_NAME=<sdp-sandbox/sdp-dev/sdp-prod>
+export AWS_ACCOUNT_NAME=<sdp-dev/sdp-prod>
 export LOCALHOST=<true/false>
 ```
 
@@ -46,7 +46,7 @@ The API_URL is set to the production URL to get the latest, working version of t
 
 The REDIRECT_URI changes dynamically based on what is set by the LOCALHOST environment variable. When running locally, set `LOCALHOST=TRUE`. When running in production, LOCALHOST will be set to FALSE, and will instead retrieve the REDIRECT_URI from AWS Secrets Manager. Do not attempt to run the project locally with LOCALHOST=FALSE, this is meant for production only and you will run into an HTTP 403.
 
-The AWS_ACCOUNT_NAME environment variable states which AWS environment tech-audit-tool is running on. This is important as the Cognito token URLs will change depending on the environment. You can choose between `sdp-sandbox`, `sdp-dev` and `sdp-prod`
+The AWS_ACCOUNT_NAME environment variable states which AWS environment tech-audit-tool is running on. This is important as the Cognito token URLs will change depending on the environment. You can choose between `sdp-dev` and `sdp-prod`
 
 On AWS, these environment variables will be set in the task definition on ECS.
 
@@ -163,7 +163,7 @@ There are associated README files in each of the Terraform modules in this repos
 Depending upon which environment you are deploying to you will want to run your terraform by pointing at an appropriate environment tfvars file.  
 
 Example service tfvars file:
-[service/env/sandbox/example_tfvars.txt](./terraform/service/env/sandbox/example_tfvars.txt)
+[service/env/dev/example_tfvars.txt](./terraform/service/env/dev/example_tfvars.txt)
 
 ### Updating the running service using Terraform
 
@@ -176,7 +176,7 @@ If the application has been modified then the following can be performed to upda
   cd terraform/service
   ```
 
-- In the appropriate environment variable file env/sandbox/sandbox.tfvars, env/dev/dev.tfvars or env/prod/prod.tfvars
+- In the appropriate environment variable file `env/dev/dev.tfvars` or `env/prod/prod.tfvars`
   - Change the _container_ver_ variable to the new version of your container.
   - Change the _force_deployment_ variable to _true_.
 

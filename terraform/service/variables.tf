@@ -32,7 +32,7 @@ variable "api_bucket_name" {
 }
 
 variable "aws_account_name" {
-  description = "AWS Environment e.g sandbox, dev, prod"
+  description = "AWS Environment (dev/prod)"
   type        = string
   default     = "sdp-dev"
 }
@@ -70,7 +70,7 @@ variable "service_subdomain" {
 variable "domain" {
   description = "Domain"
   type        = string
-  default     = "sdp-sandbox"
+  default     = "sdp-dev"
 }
 
 variable "domain_extension" {

@@ -18,7 +18,6 @@ _dsTemplate.njk
 *.tfstate.*
 
 .terraform/
-!env/*/sandbox.tfvars
 .terraform.lock.hcl
 
 # Crash log files

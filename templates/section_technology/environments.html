@@ -129,11 +129,11 @@
                                 }
                             }
                             function loadData() {
-                                var name = 'environments-data';
+                                let name = 'environments-data';
                                 if (JSON.parse(localStorage.getItem('edit'))) {
                                     name = 'environments-data-edit';
                                 }
-                                    var data = JSON.parse(localStorage.getItem(name));
+                                    let data = JSON.parse(localStorage.getItem(name));
                                     if (data) {
                                         const options = ['dev', 'int', 'uat', 'preprod', 'prod', 'postprod'];
                                         options.forEach(option => {

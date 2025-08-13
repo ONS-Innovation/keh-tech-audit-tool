@@ -460,7 +460,7 @@ const DataNormalizer = {
             }],
             architecture: {
                 frameworks: cleanedData.frameworks || { main: [], others: [] },
-                environments: cleanedData.environments || '',
+                environments: cleanedData.environments || '{}',
                 infrastructure: cleanedData.infrastructure || { main: [], others: [] },
                 publishing: cleanedData.publishing || { main: [], others: [] },
                 integrations: cleanedData.integrations || { main: [], others: [] },
@@ -564,12 +564,12 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.frameworks, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.frameworks, 'others', [])
             ]),
-            'environments-details': DataUtils.arrToList([
-                Object.keys(data.architecture.environments)
+            'environments-details': Object.keys(data.architecture.environments)
                 .filter(key => data.architecture.environments[key] === true)
                 .map(key => key === 'preprod' ? 'PREPROD (STAGING)' : key.toUpperCase())
                 .join(', ')
-            ]),
+                || 'No Environments Selected'
+            ,
             'integration-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.integrations, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.integrations, 'others', [])

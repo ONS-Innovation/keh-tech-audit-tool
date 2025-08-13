@@ -432,7 +432,7 @@ def map_form_data(form):
         {"key": "languages", "default": []},
         {"key": "frameworks", "default": []},
         {"key": "integrations", "default": []},
-        {"key": "environments", "default": ""},
+        {"key": "environments", "default": {}},
         {"key": "infrastructure", "default": []},
         {"key": "publishing", "default": []},
         {"key": "stage", "default": ""},
@@ -567,11 +567,7 @@ def survey():
             "languages": form_data.get("languages", ""),
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
-            "environments": (
-                form_data.get("environments", {}).get("environments", "")
-                if isinstance(form_data.get("environments"), dict)
-                else form_data.get("environments", "")
-            ),
+            "environments":  ensure_bool_dict(form_data.get("environments", {})),
             "infrastructure": form_data.get("infrastructure", ""),
             "publishing": form_data.get("publishing", ""),
         },
@@ -827,6 +823,11 @@ def project_names_list():
     names = read_project_names_data()
     return json.dumps(names), 200, {'Content-Type': 'application/json'}
 
+def ensure_bool_dict(d):
+    # Rule: Ensure all values in the dict are booleans
+    if not isinstance(d, dict):
+        return {}
+    return {k: bool(v) for k, v in d.items()}
 
 if __name__ == "__main__":
     app.run(debug=False)

@@ -45,6 +45,14 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.database_provider = self.generate_words(1, "")
         self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
         self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
+        self.environments = {
+                "dev": random.choice([True, False]),
+                "int" : random.choice([True, False]),
+                "uat": random.choice([True, False]),
+                "preprod": random.choice([True, False]),
+                "prod": random.choice([True, False]),
+                "postprod": random.choice([True, False]),
+        }
         self.integration = random.choice(
             ["Github Actions", "Jenkins", "Travis CI", "Circle CI"]
         )
@@ -105,6 +113,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_languages(driver)
             self.complete_frameworks(driver)
             self.complete_integrations(driver)
+            self.complete_environments(driver)
             self.complete_infrastructure(driver)
             self.complete_publishing(driver)
             self.complete_code_editors(driver)
@@ -191,6 +200,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             self.integration
             in driver.find_element(By.XPATH, "//div[@id='integration-details']").text
+        )
+        assert (
+            environments_to_string(self.environments)
+            in driver.find_element(By.XPATH, "//div[@id='environments-details']").text
         )
         assert (
             self.infrastructure
@@ -305,48 +318,52 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
         )
         assert (
-            self.infrastructure
+            environments_to_string(self.environments)
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
         )
         assert (
-            self.publishing
+            self.infrastructure
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
         )
         assert (
-            "VSCode"
+            self.publishing
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
         )
         assert (
-            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
+            "VSCode"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
+        )
+        assert (
+            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
         )
         assert (
             "Draw"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text) > 0
         )
         assert (
             "Confluence"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
         )
         assert (
-            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
+            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
         )
         assert (
             "Github"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text) > 0
         )
         assert (
             "Matchcode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[23].text
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[24].text
         )
 
     def complete_contact_details(self, driver):
@@ -653,6 +670,21 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
 
+    def complete_environments(self, driver):
+        """Completes the environments section of the project creation process.
+
+        Args:
+            driver (webdriver.Chrome): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_environments...")
+        driver.implicitly_wait(10)
+        for env in self.environments:  # Iterate through the environments dictionary
+            if self.environments[env]:
+                environment_selected = driver.find_element(By.ID, env)
+                self.wait.until(EC.element_to_be_clickable(environment_selected)).click()
+                continue
+        self.click_link(driver, "Save and continue")
+
     def complete_infrastructure(self, driver):
         """Completes the infrastructure section of the project creation process.
 
@@ -898,6 +930,13 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.wait.until(EC.element_to_be_clickable(other_input)).click()
             other_input.send_keys("Zendesk")
         self.click_link(driver, "Save and continue")
+
+def environments_to_string(environments):
+    """Convert the environments dictionary to a string for assertion"""
+    environments_selected = ", ".join([env for env, selected in environments.items() if selected])
+    if "preprod" in environments_selected:
+        environments_selected = environments_selected.replace("preprod", "preprod (staging)")
+    return environments_selected.upper()
 
 
 if __name__ == "__main__":

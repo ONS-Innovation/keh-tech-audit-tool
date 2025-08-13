@@ -335,7 +335,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         { 
             data: environmentsData, 
             url: '/survey/environments', 
-            validationFn: (data) => validateObjectField(data, 'environments')
+            validationFn: (data) => data.environments.length > 0
         },
         { 
             data: infrastructureData, 

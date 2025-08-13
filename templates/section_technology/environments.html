@@ -113,36 +113,20 @@
 
                         <script>
                             function storeData() { 
-                                // Store data about environments in local storage
-                                // Get the values of the checkboxes
-                                // and set the complete flag to true
-                                var dev = document.getElementById('dev').checked
-                                var int = document.getElementById('int').checked
-                                var uat = document.getElementById('uat').checked
-                                var preprod = document.getElementById('preprod').checked
-                                var prod = document.getElementById('prod').checked
-                                var postprod = document.getElementById('postprod').checked
-                                var newData = {
-                                    "dev": dev,
-                                    "int": int,
-                                    "uat": uat,
-                                    "preprod": preprod,
-                                    "prod": prod,
-                                    "postprod": postprod,
-                                };
+                                 // Get the values of the checkboxes
+                                let dev = document.getElementById('dev') ? document.getElementById('dev').checked : false;
+                                let int = document.getElementById('int') ? document.getElementById('int').checked : false;
+                                let uat = document.getElementById('uat') ? document.getElementById('uat').checked : false;
+                                let preprod = document.getElementById('preprod') ? document.getElementById('preprod').checked : false;
+                                let prod = document.getElementById('prod') ? document.getElementById('prod').checked : false;
+                                let postprod = document.getElementById('postprod') ? document.getElementById('postprod').checked : false;
+                                let newData = { dev, int, uat, preprod, prod, postprod, complete: true };
 
-                                
-                                var name = 'environments-data';
                                 if (JSON.parse(localStorage.getItem('edit'))) {
-                                    name = 'environments-data-edit';
+                                    localStorage.setItem('environments-data-edit', JSON.stringify(newData));
+                                } else {
+                                    localStorage.setItem('environments-data', JSON.stringify(newData));
                                 }
-                                var existingData = JSON.parse(localStorage.getItem(name)) || {};
-                                // Merge new data with existing data
-                                var updatedData = {
-                                    ... existingData,
-                                    ... newData
-                                };
-                                localStorage.setItem(name, JSON.stringify(updatedData));
                             }
                             function loadData() {
                                 var name = 'environments-data';
@@ -151,18 +135,15 @@
                                 }
                                     var data = JSON.parse(localStorage.getItem(name));
                                     if (data) {
-                                        var options = ['dev', 'int', 'uat', 'preprod', 'prod', 'postprod'];
-                                        options.forEach(function(option) {
-                                            if (data[option]) {
-                                                document.getElementById(option).checked = true;
-                                            } else {
-                                                document.getElementById(option).checked = false;
-                                            }
+                                        const options = ['dev', 'int', 'uat', 'preprod', 'prod', 'postprod'];
+                                        options.forEach(option => {
+                                            document.getElementById(option).checked = !!data[option];
                                         });
                                     }
                                 
                             }
                             loadData();
+                            redirectToPrevious();
                         </script>
             </form>
         {% endblock %}

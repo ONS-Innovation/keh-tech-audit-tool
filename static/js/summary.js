@@ -490,7 +490,7 @@ class EnvironmentsProcessor extends SectionProcessor {
     processData(environmentsData) {
         try {
             const data = SummaryUtils.safeJsonParse(environmentsData);
-            if (!data || typeof data !== 'object') return '';
+            if (!data || typeof data !== 'object') return {};
 
             const selectedEnvs = Object.keys(data)
                 .filter(key => data[key] === true);

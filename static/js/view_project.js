@@ -3,7 +3,16 @@ function formatList(items) {
     return items.join(', ');
 }
 
+function environmentsToString(environments) {
+    // Rule: Only include keys where value is true, show PREPROD (STAGING) if selected, all uppercase
+    const selected = Object.keys(environments)
+        .filter(env => environments[env])
+        .map(env => env === 'preprod' ? 'PREPROD (STAGING)' : env.toUpperCase());
+    return selected.join(', ');
+}
+
 function loadData(projects) {
+    console.log("Loaded project data from backend:", projects);
     try {
     // Technical Contact
     document.getElementById('technical-contact-row').querySelector('dd').querySelector('span').textContent = 
@@ -141,6 +150,14 @@ function loadData(projects) {
     // CI/CD
     document.getElementById('cicd-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.cicd.others);
+
+    // Environments
+    let environmentsList = 'N/A';
+    if (projects.architecture.environments) {
+        environmentsList = environmentsToString(projects.architecture.environments)
+    }
+    document.getElementById('environments-row').querySelector('dd').querySelector('span').textContent = 
+        environmentsList;
 
     // Infrastructure
     document.getElementById('infrastructure-row').querySelector('dd').querySelector('span').textContent = 

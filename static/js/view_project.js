@@ -12,7 +12,6 @@ function environmentsToString(environments) {
 }
 
 function loadData(projects) {
-    console.log("Loaded project data from backend:", projects);
     try {
     // Technical Contact
     document.getElementById('technical-contact-row').querySelector('dd').querySelector('span').textContent = 
@@ -152,12 +151,12 @@ function loadData(projects) {
         formatList(projects.architecture.cicd.others);
 
     // Environments
-    let environmentsList = 'N/A';
+    let environmentsList = '';
     if (projects.architecture.environments) {
         environmentsList = environmentsToString(projects.architecture.environments)
     }
     document.getElementById('environments-row').querySelector('dd').querySelector('span').textContent = 
-        environmentsList;
+        environmentsList || 'No Environments Selected';
 
     // Infrastructure
     document.getElementById('infrastructure-row').querySelector('dd').querySelector('span').textContent = 

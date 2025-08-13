@@ -317,10 +317,11 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.integration
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
         )
-        assert (
-            environments_to_string(self.environments)
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
-        )
+        # Convert environments to string for comparison
+        # assert environment
+        expected_envs = environments_to_string(self.environments)
+        actual_envs = driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
+        assert_environments_equal(expected_envs, actual_envs)
         assert (
             self.infrastructure
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
@@ -363,7 +364,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[24].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[23].text
         )
 
     def complete_contact_details(self, driver):
@@ -932,11 +933,18 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.click_link(driver, "Save and continue")
 
 def environments_to_string(environments):
-    """Convert the environments dictionary to a string for assertion"""
-    environments_selected = ", ".join([env for env, selected in environments.items() if selected])
-    if "preprod" in environments_selected:
-        environments_selected = environments_selected.replace("preprod", "preprod (staging)")
-    return environments_selected.upper()
+    selected = [
+        'PREPROD (STAGING)' if env == 'preprod' else env.upper()
+        for env, value in environments.items()
+        if value is True
+    ]
+    return ', '.join(selected)
+
+
+def assert_environments_equal(str1, str2):
+    set1 = set(map(str.strip, str1.upper().split(',')))
+    set2 = set(map(str.strip, str2.upper().split(',')))
+    assert set1 == set2, f"Environments do not match: {set1} != {set2}"
 
 
 if __name__ == "__main__":

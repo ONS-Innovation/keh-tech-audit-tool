@@ -30,11 +30,11 @@
                 "title": "More info",
                 "content": "<p>Please list the environments used in your project (If the project is using sandbox > staging > production, then pre-prod for staging is acceptable.):</p>
                             <ul><li>Dev (sandbox)</li>
-                            <li>INT</li>
-                            <li>UAT</li>
-                            <li>Pre-Prod (staging)</li>
-                            <li>Prod</li>
-                            <li>Post-Prod</li></ul>
+                            <li>INT - Integration Testing</li>
+                            <li>UAT -  User Acceptance Testing</li>
+                            <li>Pre-Prod (staging) - Pre-production</li>
+                            <li>Prod - Production</li>
+                            <li>Post-Prod - Post-production</li></ul>
                         "
             }
         ]
@@ -120,7 +120,7 @@
                                 let preprod = document.getElementById('preprod') ? document.getElementById('preprod').checked : false;
                                 let prod = document.getElementById('prod') ? document.getElementById('prod').checked : false;
                                 let postprod = document.getElementById('postprod') ? document.getElementById('postprod').checked : false;
-                                let newData = { dev, int, uat, preprod, prod, postprod, complete: true };
+                                let newData = { dev, int, uat, preprod, prod, postprod };
 
                                 if (JSON.parse(localStorage.getItem('edit'))) {
                                     localStorage.setItem('environments-data-edit', JSON.stringify(newData));

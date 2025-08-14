@@ -126,7 +126,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_incident_management(driver)
             self.complete_miscellaneous(driver)
 
-            self.click_link(driver, "Continue to Submission")
+            self.click_link(driver, "Continue to submission")
 
             self.assert_validation_page()
 

@@ -323,7 +323,7 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         { 
             data: environmentsData, 
             url: '/survey/environments', 
-            validationFn: (data) => validateEnvironmentsData(data)
+            validationFn: (data) => data.complete ? true : false
         },
         // Technology
         { 

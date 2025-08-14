@@ -491,6 +491,11 @@ class EnvironmentsProcessor extends SectionProcessor {
         try {
             const data = SummaryUtils.safeJsonParse(environmentsData);
             if (!data || typeof data !== 'object') return {};
+            
+            // Rule: Data integrity, Minimal change
+            if ('complete' in data) {
+                delete data.complete;
+            }
 
             const selectedEnvs = Object.keys(data)
                 .filter(key => data[key] === true);
@@ -503,7 +508,7 @@ class EnvironmentsProcessor extends SectionProcessor {
 
             return displayEnvs.length > 0
                 ? displayEnvs.join(', ')
-                : '';
+                : 'No Environments Selected';
         } catch (e) {
             console.error('Error processing environments data:', e);
             return '';

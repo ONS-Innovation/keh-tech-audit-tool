@@ -120,7 +120,10 @@
                                 let preprod = document.getElementById('preprod') ? document.getElementById('preprod').checked : false;
                                 let prod = document.getElementById('prod') ? document.getElementById('prod').checked : false;
                                 let postprod = document.getElementById('postprod') ? document.getElementById('postprod').checked : false;
-                                let newData = { dev, int, uat, preprod, prod, postprod };
+                                let newData = {dev, int, uat, preprod, prod, postprod}
+                                if (newData.dev || newData.int || newData.uat || newData.preprod || newData.prod || newData.postprod) {
+                                    newData.complete = true;
+                                } 
 
                                 if (JSON.parse(localStorage.getItem('edit'))) {
                                     localStorage.setItem('environments-data-edit', JSON.stringify(newData));

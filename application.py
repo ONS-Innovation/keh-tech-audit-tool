@@ -152,6 +152,7 @@ codeNavItems = [
     {"text": "Source Control", "url": "/survey/source_control"},
     {"text": "Hosting", "url": "/survey/hosting"},
     {"text": "Database", "url": "/survey/database"},
+    {"text": "Environments", "url": "/survey/environments"},
     {"text": "Summary", "url": "/survey/architecture_summary"},
 ]
 
@@ -428,6 +429,7 @@ def map_form_data(form):
         {"key": "source_control", "default": ""},
         {"key": "hosting", "default": ""},
         {"key": "database", "default": ""},
+        {"key": "environments", "default": {}},
         {"key": "languages", "default": []},
         {"key": "frameworks", "default": []},
         {"key": "integrations", "default": []},
@@ -562,6 +564,7 @@ def survey():
         "architecture": {
             "hosting": form_data.get("hosting", ""),
             "database": form_data.get("database", ""),
+            "environments":  ensure_bool_dict(form_data.get("environments", {})),
             "languages": form_data.get("languages", ""),
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
@@ -701,6 +704,10 @@ def hosting():
 def database():
     return render_template("/section_code/database.html")
 
+@app.route("/survey/environments", methods=["GET"])
+def environments():
+    return render_template("/section_code/environments.html")
+
 
 # ------------------------
 # TECHNOLOGY SECTION RENDERING
@@ -720,7 +727,6 @@ def frameworks():
 @app.route("/survey/integrations", methods=["GET"])
 def integrations():
     return render_template("/section_technology/integrations.html")
-
 
 @app.route("/survey/infrastructure", methods=["GET"])
 def infrastructure():
@@ -817,6 +823,11 @@ def project_names_list():
     names = read_project_names_data()
     return json.dumps(names), 200, {'Content-Type': 'application/json'}
 
+def ensure_bool_dict(d):
+    # Rule: Ensure all values in the dict are booleans
+    if not isinstance(d, dict):
+        return {}
+    return {k: bool(v) for k, v in d.items()}
 
 if __name__ == "__main__":
     app.run(debug=False)

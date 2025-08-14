@@ -486,6 +486,36 @@ class PublishingProcessor extends SectionProcessor {
     }
 }
 
+class EnvironmentsProcessor extends SectionProcessor {
+    processData(environmentsData) {
+        try {
+            const data = SummaryUtils.safeJsonParse(environmentsData);
+            if (!data || typeof data !== 'object') return {};
+            
+            //delete complete key for Summary Display
+            if ('complete' in data) {
+                delete data.complete;
+            }
+
+            const selectedEnvs = Object.keys(data)
+                .filter(key => data[key] === true);
+
+            const displayEnvs = selectedEnvs.map(env => 
+                env === 'preprod'
+                    ? `${SummaryUtils.escapeHtml(env.toUpperCase())} (STAGING)`
+                    : SummaryUtils.escapeHtml(env.toUpperCase())
+            );
+
+            return displayEnvs.length > 0
+                ? displayEnvs.join(', ')
+                : 'No Environments Selected';
+        } catch (e) {
+            console.error('Error processing environments data:', e);
+            return '';
+        }
+    }
+}
+
 // Supporting Tools Processors
 class ToolsProcessor extends SectionProcessor {
     processData(toolData) {
@@ -527,6 +557,7 @@ class ArchitectureSummaryManager {
         this.sourceControlProcessor = new SourceControlProcessor(this.errorManager);
         this.hostingProcessor = new HostingProcessor(this.errorManager);
         this.databaseProcessor = new DatabaseProcessor(this.errorManager);
+        this.environmentsProcessor = new EnvironmentsProcessor(this.errorManager);
     }
 
     loadData() {
@@ -544,6 +575,11 @@ class ArchitectureSummaryManager {
             localStorage.getItem('database-data')
         );
         this.databaseProcessor.updateUI('database-details', databaseDetails);
+        
+        const environmentsDetails = this.environmentsProcessor.processData(
+            localStorage.getItem('environments-data')
+        );
+        this.environmentsProcessor.updateUI('environments-details', environmentsDetails);
     }
 }
 
@@ -582,7 +618,7 @@ class TechSummaryManager {
         const publishingDetails = this.publishingProcessor.processData(
             localStorage.getItem('publishing-data')
         );
-        this.publishingProcessor.updateUI('publishing_details', publishingDetails);
+        this.publishingProcessor.updateUI('publishing-details', publishingDetails);
     }
 }
 

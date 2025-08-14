@@ -1,0 +1,152 @@
+{% extends "core.html" %}
+{% from "components/button/_macro.njk" import onsButton %}
+{% from "components/accordion/_macro.njk" import onsAccordion %}
+{% from "components/label/_macro.njk" import onsLabel %}
+{% from "components/question/_macro.njk" import onsQuestion %}
+{% from "components/checkboxes/_macro.njk" import onsCheckboxes %}
+{% block main %}
+    {% from "components/panel/_macro.njk" import onsPanel %}
+    {% from "components/list/_macro.njk" import onsList %}
+    {% call onsPanel({
+        "id": "error-panel",
+        "title": 'Error',
+        "variant": 'error',
+        "type": "error",
+        "classes": "ons-u-hidden"
+
+    }) %}
+    {{ onsLabel({
+        "id": 'label',
+        "for": "some-input",
+        "text": 'Item already added.'
+    }) }}
+    {% endcall %}
+    <br>
+        <h1>Environments</h1>
+        {{ onsAccordion({
+        "id": "environments-information",
+        "itemsList": [
+            {
+                "title": "More info",
+                "content": "<p>Please list the environments used in your project (If the project is using sandbox > staging > production, then pre-prod for staging is acceptable.):</p>
+                            <ul><li>Dev (sandbox)</li>
+                            <li>INT - Integration Testing</li>
+                            <li>UAT -  User Acceptance Testing</li>
+                            <li>Pre-Prod (staging) - Pre-production</li>
+                            <li>Prod - Production</li>
+                            <li>Post-Prod - Post-production</li></ul>
+                        "
+            }
+        ]
+    }) }}
+            <script src="{{ url_for('static', filename='formScripts.js') }}"></script>
+            <form id="environments" action="{{ url_for('survey') }}" method="GET">
+                {%
+                    call onsQuestion({
+                        "title": "What environments are in use for the project?",
+                        "legendIsQuestionTitle": true,
+                        "classes": "ons-u-mt-no"
+                    })
+                %}
+                    {{
+                        onsCheckboxes({
+                            "checkboxesLabel": "Select all that apply",
+                            "dontWrap": true,
+                            "checkboxes": [
+                                {
+                                    "id": "dev",
+                                    "label": {
+                                        "text": "DEV"
+                                    },
+                                    "value": "dev"
+                                },
+                                {
+                                    "id": "int",
+                                    "label": {
+                                        "text": "INT"
+                                    },
+                                    "value": "int"
+                                },
+                                {
+                                    "id": "uat",
+                                    "label": {
+                                        "text": "UAT"
+                                    },
+                                    "value": "uat"
+                                },
+                                {
+                                    "id": "preprod",
+                                    "label": {
+                                        "text": "PRE-PROD (STAGING)"
+                                    },
+                                    "value": "preprod"
+                                },
+                                {
+                                    "id": "prod",
+                                    "label": {
+                                        "text": "PROD"
+                                    },
+                                    "value": "prod"
+                                },
+                                {
+                                    "id": "postprod",
+                                    "label": {
+                                        "text": "POST-PROD"
+                                    },
+                                    "value": "postprod"
+                                },
+                            ]
+                        })
+                    }}
+                {% endcall %}
+                
+                {{ onsButton({
+                            "id": "save-values-button",
+                            "url": url_for('architecture_summary'),
+                            "text": "Save and continue",
+                            "iconType": "arrow-next",
+                            "iconPosition": "after",
+                            "attributes": {
+                                "onclick": "storeData();"
+                            }
+                        }) }}
+
+                        <script>
+                            function storeData() { 
+                                 // Get the values of the checkboxes
+                                let dev = document.getElementById('dev') ? document.getElementById('dev').checked : false;
+                                let int = document.getElementById('int') ? document.getElementById('int').checked : false;
+                                let uat = document.getElementById('uat') ? document.getElementById('uat').checked : false;
+                                let preprod = document.getElementById('preprod') ? document.getElementById('preprod').checked : false;
+                                let prod = document.getElementById('prod') ? document.getElementById('prod').checked : false;
+                                let postprod = document.getElementById('postprod') ? document.getElementById('postprod').checked : false;
+                                let newData = {dev, int, uat, preprod, prod, postprod}
+                                if (newData.dev || newData.int || newData.uat || newData.preprod || newData.prod || newData.postprod) {
+                                    newData.complete = true;
+                                } 
+
+                                if (JSON.parse(localStorage.getItem('edit'))) {
+                                    localStorage.setItem('environments-data-edit', JSON.stringify(newData));
+                                } else {
+                                    localStorage.setItem('environments-data', JSON.stringify(newData));
+                                }
+                            }
+                            function loadData() {
+                                let name = 'environments-data';
+                                if (JSON.parse(localStorage.getItem('edit'))) {
+                                    name = 'environments-data-edit';
+                                }
+                                    let data = JSON.parse(localStorage.getItem(name));
+                                    if (data) {
+                                        const options = ['dev', 'int', 'uat', 'preprod', 'prod', 'postprod'];
+                                        options.forEach(option => {
+                                            document.getElementById(option).checked = !!data[option];
+                                        });
+                                    }
+                                
+                            }
+                            loadData();
+                            redirectToPrevious();
+                        </script>
+            </form>
+        {% endblock %}

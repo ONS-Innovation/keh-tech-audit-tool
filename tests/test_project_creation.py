@@ -43,6 +43,14 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.source_control_description = self.generate_words(5)
         self.hosting_provider = self.generate_words(1, "")
         self.database_provider = self.generate_words(1, "")
+        self.environments = {
+                "dev": random.choice([True, False]),
+                "int" : random.choice([True, False]),
+                "uat": random.choice([True, False]),
+                "preprod": random.choice([True, False]),
+                "prod": random.choice([True, False]),
+                "postprod": random.choice([True, False]),
+        }
         self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
         self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
         self.integration = random.choice(
@@ -96,6 +104,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_source_control(driver)
             self.complete_hosting(driver)
             self.complete_database(driver)
+            self.complete_environments(driver)
 
             driver.implicitly_wait(10)
             link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
@@ -117,7 +126,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_incident_management(driver)
             self.complete_miscellaneous(driver)
 
-            self.click_link(driver, "Continue to Submission")
+            self.click_link(driver, "Continue to submission")
 
             self.assert_validation_page()
 
@@ -179,7 +188,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.database_provider
             in driver.find_element(By.XPATH, "//div[@id='database-details']").text
         )
-
+        assert (
+            environments_to_string(self.environments)
+            in driver.find_element(By.XPATH, "//div[@id='environments-details']").text
+        )
         assert (
             self.language
             in driver.find_element(By.XPATH, "//div[@id='languages-details']").text
@@ -198,7 +210,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         assert (
             self.publishing
-            in driver.find_element(By.XPATH, "//div[@id='publishing_details']").text
+            in driver.find_element(By.XPATH, "//div[@id='publishing-details']").text
         )
 
         assert (
@@ -291,62 +303,68 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.database_provider
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[8].text
         )
+        # Convert environments to string for comparison
+        # assert environment
+        expected_envs = environments_to_string(self.environments)
+        actual_envs = driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
+        assert_environments_equal(expected_envs, actual_envs)
+
         assert (
             self.framework
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
         )
 
         assert (
             self.language
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
-        )
-        assert (
-            self.integration
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
         )
         assert (
-            self.infrastructure
+            self.integration
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
         )
         assert (
-            self.publishing
+            self.infrastructure
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
         )
         assert (
-            "VSCode"
+            self.publishing
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[14].text
         )
         assert (
-            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
+            "VSCode"
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[15].text
+        )
+        assert (
+            "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
         )
         assert (
             "Draw"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text) > 0
         )
         assert (
             "Confluence"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
         )
         assert (
-            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[19].text
+            "Slack" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
         )
         assert (
             "Github"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[20].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text
         )
         assert (
-            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[21].text) > 0
+            len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text) > 0
         )
         assert (
             "Matchcode"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[23].text
         )
         assert (
             "A code-matching tool"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[22].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[23].text
         )
 
     def complete_contact_details(self, driver):
@@ -574,7 +592,21 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
 
         self.click_link(driver, "Save and continue")
+    
+    def complete_environments(self, driver):
+        """Completes the environments section of the project creation process.
 
+        Args:
+            driver (webdriver.Chrome): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_environments...")
+        driver.implicitly_wait(10)
+        for env in self.environments:  # Iterate through the environments dictionary
+            if self.environments[env]:
+                environment_selected = driver.find_element(By.ID, env)
+                self.wait.until(EC.element_to_be_clickable(environment_selected)).click()
+                continue
+        self.click_link(driver, "Save and continue")
         self.click_link(driver, "Finish section")
 
     def complete_languages(self, driver):
@@ -898,6 +930,20 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.wait.until(EC.element_to_be_clickable(other_input)).click()
             other_input.send_keys("Zendesk")
         self.click_link(driver, "Save and continue")
+
+def environments_to_string(environments):
+    selected = [
+        'PREPROD (STAGING)' if env == 'preprod' else env.upper()
+        for env, value in environments.items()
+        if value is True
+    ]
+    return ', '.join(selected)
+
+
+def assert_environments_equal(str1, str2):
+    set1 = set(map(str.strip, str1.upper().split(',')))
+    set2 = set(map(str.strip, str2.upper().split(',')))
+    assert set1 == set2, f"Environments do not match: {set1} != {set2}"
 
 
 if __name__ == "__main__":

@@ -3,6 +3,14 @@ function formatList(items) {
     return items.join(', ');
 }
 
+function environmentsToString(environments) {
+    // Only include keys where value is true, show PREPROD (STAGING) if selected, all uppercase
+    const selected = Object.keys(environments)
+        .filter(env => environments[env])
+        .map(env => env === 'preprod' ? 'PREPROD (STAGING)' : env.toUpperCase());
+    return selected.join(', ');
+}
+
 function loadData(projects) {
     try {
     // Technical Contact
@@ -118,6 +126,14 @@ function loadData(projects) {
     // Database
     document.getElementById('database-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.database.others);
+
+    // Environments
+    let environmentsList = '';
+    if (projects.architecture.environments) {
+        environmentsList = environmentsToString(projects.architecture.environments)
+    }
+    document.getElementById('environments-row').querySelector('dd').querySelector('span').textContent = 
+        environmentsList || 'No Environments Selected';
 
     // Frameworks
     document.getElementById('frameworks-row').querySelector('dd').querySelector('span').textContent = 

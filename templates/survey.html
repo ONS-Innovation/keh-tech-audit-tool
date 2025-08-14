@@ -135,6 +135,7 @@
             var sourceControlData = localStorage.getItem('source_control-data');
             var hostingData = localStorage.getItem('hosting-data');
             var databaseData = localStorage.getItem('database-data');
+            var environmentsData = localStorage.getItem('environments-data');
             // Technology Details
             var frameworksData = localStorage.getItem('frameworks-data');
             var infrastructureData = localStorage.getItem('infrastructure-data');
@@ -153,14 +154,14 @@
             var miscellaneousData = localStorage.getItem('miscellaneous-data');
             
             changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
-            sourceControlData, databaseData, languagesData, 
-            frameworksData, integrationsData, infrastructureData, publishingData, 
+            sourceControlData, databaseData, environmentsData, languagesData,
+            frameworksData, integrationsData, infrastructureData, publishingData,
             codeEditorsData, uiDesignData, diagramsData, 
             projectTrackingData, documentationData, communicationData, 
             collaborationData, incidentManagementData, miscellaneousData);
             updateSectionStatus('user-details', [contactTechData, contactManagerData, projectData, developedData, stageData]);
-            updateSectionStatus('project-details', [sourceControlData, hostingData, databaseData]);
-            updateSectionStatus('developed-details', [frameworksData, infrastructureData, integrationsData, languagesData]);
+            updateSectionStatus('project-details', [sourceControlData, hostingData, databaseData, environmentsData]);
+            updateSectionStatus('developed-details', [frameworksData, infrastructureData, integrationsData, languagesData, publishingData]);
             updateSectionStatus('supporting-tools', [codeEditorsData, uiDesignData, diagramsData, projectTrackingData, documentationData, communicationData, collaborationData, incidentManagementData]);
         }
         load_data();

@@ -259,9 +259,14 @@ function validateMultipleFields(data, fields) {
     });
   }
 
+function validateEnvironmentsData(data) {
+    if (!data.complete) return false;
+    return data.complete
+}
+
 function changeBtnURL(contactTechData, contactManagerData, projectData, projectDependenciesData, 
-    sourceControlData, databaseData, languagesData, 
-    frameworksData, integrationsData, infrastructureData, publishingData, 
+    sourceControlData, databaseData, environmentsData, languagesData, 
+    frameworksData, integrationsData, infrastructureData, publishingData,
     codeEditorsData, uiToolsData, diagramToolsData, 
     projectTrackingData, documentationData, communicationData, 
     collaborationData, incidentManagementData, miscellaneousData) {
@@ -279,7 +284,6 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
         submitBtnSpan.style.display = 'flex';
         submitBtnSpan.querySelector('svg').style.marginTop = '4px';
     }
-    
     // Define all validation checks with their URLs and validation functions
     const validations = [
         // Project Details
@@ -315,6 +319,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             data: databaseData, 
             url: '/survey/database', 
             validationFn: (data) => data.others && data.others.length > 0
+        },
+        { 
+            data: environmentsData, 
+            url: '/survey/environments', 
+            validationFn: (data) => data.complete ? true : false
         },
         // Technology
         { 

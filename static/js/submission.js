@@ -369,6 +369,7 @@ const DataNormalizer = {
             source_control: sourceControl,
             hosting: hosting,
             database: data.architecture.database,
+            environments: data.architecture.environments,
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.cicd,
@@ -470,6 +471,7 @@ const DataNormalizer = {
                     details: cleanedData.hosting?.others || []
                 },
                 database: cleanedData.database || { main: [], others: [] },
+                environments: cleanedData.environments || '{}',
             },
             stage: cleanedData.stage?.stage || '',
             project_dependencies: cleanedData.project_dependencies,
@@ -554,6 +556,12 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.database, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.database, 'others', [])
             ]),
+            'environments-details': Object.keys(data.architecture.environments)
+                .filter(key => data.architecture.environments[key] === true)
+                .map(key => key === 'preprod' ? 'PREPROD (STAGING)' : key.toUpperCase())
+                .join(', ')
+                || 'No Environments Selected'
+            ,
             'languages-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.languages, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.languages, 'others', [])
@@ -570,7 +578,7 @@ const UIUpdater = {
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.infrastructure, 'others', [])
             ]),
-            publishing_details: DataUtils.arrToList([
+            'publishing-details': DataUtils.arrToList([
                 ...DataUtils.safeGet(data.architecture.publishing, 'main', []), 
                 ...DataUtils.safeGet(data.architecture.publishing, 'others', [])
             ]),
@@ -622,6 +630,7 @@ const UIUpdater = {
             source_control: data.source_control,
             hosting: data.architecture.hosting,
             database: data.architecture.database,
+            environments: data.architecture.environments,
             languages: data.architecture.languages,
             frameworks: data.architecture.frameworks,
             integrations: data.architecture.integrations,
@@ -664,7 +673,7 @@ const AppController = {
         return [
             `contact_tech-data${suffix}`, `contact_manager-data${suffix}`, `project-data${suffix}`, 
             `developed-data${suffix}`, `stage-data${suffix}`, `project_dependencies-data${suffix}`, 
-            `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `frameworks-data${suffix}`, 
+            `source_control-data${suffix}`, `hosting-data${suffix}`, `database-data${suffix}`, `environments-data${suffix}`, `frameworks-data${suffix}`,
             `infrastructure-data${suffix}`, `publishing-data${suffix}`, `integrations-data${suffix}`, `languages-data${suffix}`, 
             `code_editors-data${suffix}`, `user_interface-data${suffix}`, `diagrams-data${suffix}`, 
             `project_tracking-data${suffix}`, `documentation-data${suffix}`, `communication-data${suffix}`, 
@@ -708,6 +717,7 @@ const AppController = {
             source_control: DataUtils.safeJsonParse(storedData['source_control']),
             hosting: DataUtils.safeJsonParse(storedData['hosting']),
             database: ErrorHandler.validateData(storedData['database'], 'Databases'),
+            environments: ErrorHandler.validateData(storedData['environments'], 'Environments'),
             languages: ErrorHandler.validateData(storedData['languages'], 'Languages'),
             frameworks: ErrorHandler.validateData(storedData['frameworks'], 'Frameworks'),
             integrations: ErrorHandler.validateData(storedData['integrations'], 'CI/CD'),

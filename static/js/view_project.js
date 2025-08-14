@@ -4,7 +4,7 @@ function formatList(items) {
 }
 
 function environmentsToString(environments) {
-    // Rule: Only include keys where value is true, show PREPROD (STAGING) if selected, all uppercase
+    // Only include keys where value is true, show PREPROD (STAGING) if selected, all uppercase
     const selected = Object.keys(environments)
         .filter(env => environments[env])
         .map(env => env === 'preprod' ? 'PREPROD (STAGING)' : env.toUpperCase());

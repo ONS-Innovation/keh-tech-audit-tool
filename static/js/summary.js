@@ -492,7 +492,7 @@ class EnvironmentsProcessor extends SectionProcessor {
             const data = SummaryUtils.safeJsonParse(environmentsData);
             if (!data || typeof data !== 'object') return {};
             
-            // Rule: Data integrity, Minimal change
+            //delete complete key for Summary Display
             if ('complete' in data) {
                 delete data.complete;
             }

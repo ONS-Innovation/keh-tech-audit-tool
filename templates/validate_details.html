@@ -233,6 +233,27 @@
                                     ]
                                 },
                                 {
+                                    "id":"environments-details",
+                                    "title": "Environments",
+                                    "itemsList": [
+                                        {
+                                        "valueList": [
+                                            {
+                                                "text": ""
+                                            }
+                                        ],
+                              
+                                            "actions": [
+                                                {
+                                                    "text": "Change",
+                                                    "ariaLabel": "Change environments details",
+                                                    "url": url_for('environments')
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
                                     "id":"languages-details",
                                     "title": "Languages",
                                     "itemsList": [
@@ -289,27 +310,6 @@
                                                     "text": "Change",
                                                     "ariaLabel": "Change integration details",
                                                     "url": url_for('integrations')
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id":"environments-details",
-                                    "title": "Environments",
-                                    "itemsList": [
-                                        {
-                                        "valueList": [
-                                            {
-                                                "text": ""
-                                            }
-                                        ],
-                              
-                                            "actions": [
-                                                {
-                                                    "text": "Change",
-                                                    "ariaLabel": "Change environments details",
-                                                    "url": url_for('environments')
                                                 }
                                             ]
                                         }
@@ -556,11 +556,10 @@
     <input id="source_control" type="hidden" name="source_control">
     <input id="hosting" type="hidden" name="hosting">
     <input id="database" type="hidden" name="database">
+    <input id="environments" type="hidden" name="environments">
     <input id="languages" type="hidden" name="languages">
     <input id="frameworks" type="hidden" name="frameworks">
-
     <input id="integrations" type="hidden" name="integrations">
-    <input id="environments" type="hidden" name="environments">
     <input id="infrastructure" type="hidden" name="infrastructure">
     <input id="publishing" type="hidden" name="publishing">
     <input id="stage" type="hidden" name="stage">

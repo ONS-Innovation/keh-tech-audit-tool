@@ -316,6 +316,11 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             url: '/survey/database', 
             validationFn: (data) => data.others && data.others.length > 0
         },
+        { 
+            data: environmentsData, 
+            url: '/survey/environments', 
+            validationFn: (data) => data.environments.length > 0
+        },
         // Technology
         { 
             data: languagesData, 
@@ -331,11 +336,6 @@ function changeBtnURL(contactTechData, contactManagerData, projectData, projectD
             data: integrationsData, 
             url: '/survey/integrations', 
             validationFn: (data) => data.others && data.others.length > 0
-        },
-        { 
-            data: environmentsData, 
-            url: '/survey/environments', 
-            validationFn: (data) => data.environments.length > 0
         },
         { 
             data: infrastructureData, 

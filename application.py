@@ -152,6 +152,7 @@ codeNavItems = [
     {"text": "Source Control", "url": "/survey/source_control"},
     {"text": "Hosting", "url": "/survey/hosting"},
     {"text": "Database", "url": "/survey/database"},
+    {"text": "Environments", "url": "/survey/environments"},
     {"text": "Summary", "url": "/survey/architecture_summary"},
 ]
 
@@ -161,7 +162,6 @@ techNavItems = [
     {"text": "Languages", "url": "/survey/languages"},
     {"text": "Frameworks", "url": "/survey/frameworks"},
     {"text": "Build and Deployment", "url": "/survey/integrations"},
-    {"text": "Environments", "url": "/survey/environments"},
     {"text": "Infrastructure", "url": "/survey/infrastructure"},
     {"text": "Publishing", "url": "/survey/publishing"},
     {"text": "Summary", "url": "/survey/tech_summary"},
@@ -429,10 +429,10 @@ def map_form_data(form):
         {"key": "source_control", "default": ""},
         {"key": "hosting", "default": ""},
         {"key": "database", "default": ""},
+        {"key": "environments", "default": {}},
         {"key": "languages", "default": []},
         {"key": "frameworks", "default": []},
         {"key": "integrations", "default": []},
-        {"key": "environments", "default": {}},
         {"key": "infrastructure", "default": []},
         {"key": "publishing", "default": []},
         {"key": "stage", "default": ""},
@@ -564,10 +564,10 @@ def survey():
         "architecture": {
             "hosting": form_data.get("hosting", ""),
             "database": form_data.get("database", ""),
+            "environments":  ensure_bool_dict(form_data.get("environments", {})),
             "languages": form_data.get("languages", ""),
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
-            "environments":  ensure_bool_dict(form_data.get("environments", {})),
             "infrastructure": form_data.get("infrastructure", ""),
             "publishing": form_data.get("publishing", ""),
         },
@@ -704,6 +704,10 @@ def hosting():
 def database():
     return render_template("/section_code/database.html")
 
+@app.route("/survey/environments", methods=["GET"])
+def environments():
+    return render_template("/section_code/environments.html")
+
 
 # ------------------------
 # TECHNOLOGY SECTION RENDERING
@@ -723,10 +727,6 @@ def frameworks():
 @app.route("/survey/integrations", methods=["GET"])
 def integrations():
     return render_template("/section_technology/integrations.html")
-
-@app.route("/survey/environments", methods=["GET"])
-def environments():
-    return render_template("/section_technology/environments.html")
 
 @app.route("/survey/infrastructure", methods=["GET"])
 def infrastructure():

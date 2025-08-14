@@ -43,8 +43,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.source_control_description = self.generate_words(5)
         self.hosting_provider = self.generate_words(1, "")
         self.database_provider = self.generate_words(1, "")
-        self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
-        self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
         self.environments = {
                 "dev": random.choice([True, False]),
                 "int" : random.choice([True, False]),
@@ -53,6 +51,8 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
                 "prod": random.choice([True, False]),
                 "postprod": random.choice([True, False]),
         }
+        self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
+        self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
         self.integration = random.choice(
             ["Github Actions", "Jenkins", "Travis CI", "Circle CI"]
         )
@@ -104,6 +104,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_source_control(driver)
             self.complete_hosting(driver)
             self.complete_database(driver)
+            self.complete_environments(driver)
 
             driver.implicitly_wait(10)
             link = driver.find_elements(By.CLASS_NAME, "ons-summary__button")[2]
@@ -113,7 +114,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.complete_languages(driver)
             self.complete_frameworks(driver)
             self.complete_integrations(driver)
-            self.complete_environments(driver)
             self.complete_infrastructure(driver)
             self.complete_publishing(driver)
             self.complete_code_editors(driver)
@@ -188,7 +188,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.database_provider
             in driver.find_element(By.XPATH, "//div[@id='database-details']").text
         )
-
+        assert (
+            environments_to_string(self.environments)
+            in driver.find_element(By.XPATH, "//div[@id='environments-details']").text
+        )
         assert (
             self.language
             in driver.find_element(By.XPATH, "//div[@id='languages-details']").text
@@ -200,10 +203,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         assert (
             self.integration
             in driver.find_element(By.XPATH, "//div[@id='integration-details']").text
-        )
-        assert (
-            environments_to_string(self.environments)
-            in driver.find_element(By.XPATH, "//div[@id='environments-details']").text
         )
         assert (
             self.infrastructure
@@ -304,24 +303,25 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.database_provider
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[8].text
         )
+        # Convert environments to string for comparison
+        # assert environment
+        expected_envs = environments_to_string(self.environments)
+        actual_envs = driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
+        assert_environments_equal(expected_envs, actual_envs)
+
         assert (
             self.framework
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[9].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
         )
 
         assert (
             self.language
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[10].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
         )
         assert (
             self.integration
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[11].text
+            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
         )
-        # Convert environments to string for comparison
-        # assert environment
-        expected_envs = environments_to_string(self.environments)
-        actual_envs = driver.find_elements(By.CLASS_NAME, "ons-summary__text")[12].text
-        assert_environments_equal(expected_envs, actual_envs)
         assert (
             self.infrastructure
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[13].text
@@ -592,7 +592,21 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
 
         self.click_link(driver, "Save and continue")
+    
+    def complete_environments(self, driver):
+        """Completes the environments section of the project creation process.
 
+        Args:
+            driver (webdriver.Chrome): The driver that interacts with the browser
+        """
+        logging.info("Testing complete_environments...")
+        driver.implicitly_wait(10)
+        for env in self.environments:  # Iterate through the environments dictionary
+            if self.environments[env]:
+                environment_selected = driver.find_element(By.ID, env)
+                self.wait.until(EC.element_to_be_clickable(environment_selected)).click()
+                continue
+        self.click_link(driver, "Save and continue")
         self.click_link(driver, "Finish section")
 
     def complete_languages(self, driver):
@@ -669,21 +683,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
         )
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
-        self.click_link(driver, "Save and continue")
-
-    def complete_environments(self, driver):
-        """Completes the environments section of the project creation process.
-
-        Args:
-            driver (webdriver.Chrome): The driver that interacts with the browser
-        """
-        logging.info("Testing complete_environments...")
-        driver.implicitly_wait(10)
-        for env in self.environments:  # Iterate through the environments dictionary
-            if self.environments[env]:
-                environment_selected = driver.find_element(By.ID, env)
-                self.wait.until(EC.element_to_be_clickable(environment_selected)).click()
-                continue
         self.click_link(driver, "Save and continue")
 
     def complete_infrastructure(self, driver):

@@ -127,6 +127,14 @@ function loadData(projects) {
     document.getElementById('database-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.database.others);
 
+    // Environments
+    let environmentsList = '';
+    if (projects.architecture.environments) {
+        environmentsList = environmentsToString(projects.architecture.environments)
+    }
+    document.getElementById('environments-row').querySelector('dd').querySelector('span').textContent = 
+        environmentsList || 'No Environments Selected';
+
     // Frameworks
     document.getElementById('frameworks-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.frameworks.others);
@@ -149,14 +157,6 @@ function loadData(projects) {
     // CI/CD
     document.getElementById('cicd-row').querySelector('dd').querySelector('span').textContent = 
         formatList(projects.architecture.cicd.others);
-
-    // Environments
-    let environmentsList = '';
-    if (projects.architecture.environments) {
-        environmentsList = environmentsToString(projects.architecture.environments)
-    }
-    document.getElementById('environments-row').querySelector('dd').querySelector('span').textContent = 
-        environmentsList || 'No Environments Selected';
 
     // Infrastructure
     document.getElementById('infrastructure-row').querySelector('dd').querySelector('span').textContent = 

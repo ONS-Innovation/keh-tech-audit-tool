@@ -552,6 +552,7 @@ class ArchitectureSummaryManager {
         this.sourceControlProcessor = new SourceControlProcessor(this.errorManager);
         this.hostingProcessor = new HostingProcessor(this.errorManager);
         this.databaseProcessor = new DatabaseProcessor(this.errorManager);
+        this.environmentsProcessor = new EnvironmentsProcessor(this.errorManager);
     }
 
     loadData() {
@@ -569,6 +570,11 @@ class ArchitectureSummaryManager {
             localStorage.getItem('database-data')
         );
         this.databaseProcessor.updateUI('database-details', databaseDetails);
+        
+        const environmentsDetails = this.environmentsProcessor.processData(
+            localStorage.getItem('environments-data')
+        );
+        this.environmentsProcessor.updateUI('environments-details', environmentsDetails);
     }
 }
 
@@ -578,7 +584,6 @@ class TechSummaryManager {
         this.errorManager = new ErrorManager('error-panel', 'error-label');
         this.languagesProcessor = new LanguagesProcessor(this.errorManager);
         this.frameworksProcessor = new FrameworksProcessor(this.errorManager);
-        this.environmentsProcessor = new EnvironmentsProcessor(this.errorManager);
         this.integrationsProcessor = new IntegrationsProcessor(this.errorManager);
         this.infrastructureProcessor = new InfrastructureProcessor(this.errorManager);
         this.publishingProcessor = new PublishingProcessor(this.errorManager);
@@ -594,11 +599,6 @@ class TechSummaryManager {
             localStorage.getItem('frameworks-data')
         );
         this.frameworksProcessor.updateUI('framework-details', frameworkDetails);
-
-        const environmentsDetails = this.environmentsProcessor.processData(
-            localStorage.getItem('environments-data')
-        );
-        this.environmentsProcessor.updateUI('environments-details', environmentsDetails);
 
         const integrationDetails = this.integrationsProcessor.processData(
             localStorage.getItem('integrations-data')

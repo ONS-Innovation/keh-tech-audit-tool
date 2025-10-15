@@ -122,7 +122,7 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
-items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
+items = [{"id": "user_account", "text": "", "url": "/user_groups", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
 # For the _template.njk to load info into the header of the page.
@@ -195,7 +195,7 @@ def get_id_token():
 def inject_header():
     # IMPORTANT | MAY REVISE
     # Each page load, make sure the user is logged in.
-    user_auth = get_email()
+    user_auth = get_user()
     if not user_auth:
         flash("Please re-login to authenticate your account.")
         return dict(items=items_none, currentPath=[], navItems=[])
@@ -241,7 +241,7 @@ def home():
                 token_response["refresh_token"],
             )
             # Once set in session, get email.
-            get_email()
+            get_user()
             # Goes to dashboard with tokens stored in session.
             flash("You have successfully logged in with Cognito")
             return redirect(url_for("dashboard"))
@@ -310,7 +310,15 @@ def exchange_code_for_tokens(code):
         return response.json()
 
 
-def get_email():
+def get_user():
+    """Fetch user information from the API and store it in the session.
+
+    Returns:
+        bool: True if user information was successfully retrieved and stored, False otherwise.
+
+    Raises:
+        Exception: If there is an error during the API request or JSON parsing.
+    """
     try:
         headers = {"Authorization": f"{session['id_token']}"}
         user_request = requests.get(
@@ -320,7 +328,9 @@ def get_email():
         if user_request.status_code != HTTPStatus.OK:
             return False
         else:
-            session["email"] = user_request.json()["email"]
+            req = user_request.json()
+            session["email"] = req["email"]
+            session["groups"] = req.get("groups", [])
             return True
     except Exception as error:
         logger.error(f"{error.__class__.__name__}: {error}")

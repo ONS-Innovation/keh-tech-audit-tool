@@ -122,7 +122,7 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
-items = [{"id": "user_account", "text": "", "url": "/user_groups", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
+items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
 # For the _template.njk to load info into the header of the page.

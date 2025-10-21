@@ -208,9 +208,6 @@ def inject_header():
     user_email = session.get("email", "No email found")
     user_groups = session.get("groups", [])
 
-    for i in range(len(user_groups)):
-        user_groups[i] = user_groups[i].capitalize()
-
     # Injecting the user's email into the header and sorting navigation
     # based on the current page.
     injected_items = items.copy()
@@ -344,7 +341,7 @@ def get_user():
         else:
             req = user_request.json()
             session["email"] = req["email"]
-            session["groups"] = req.get("groups", [])
+            session["groups"] = [group.capitalize() for group in req.get("groups", [])]
             return True
     except Exception as error:
         logger.error(f"{error.__class__.__name__}: {error}")
@@ -401,7 +398,7 @@ def view_project(project_name):
 
     edit = False  # Boolean to check if the user can edit the project
     for user in projects["user"]:
-        if user["email"] == user_email:
+        if user["email"] == user_email or "Admin" in session.get("groups", []):
             edit = True
             break
     try:
@@ -433,7 +430,7 @@ def edit_project(project_name):
     user_email = session.get("email", "No email found")
     users = [user["email"] for user in project["user"]]
 
-    if user_email not in users:
+    if user_email not in users and "Admin" not in session.get("groups", []):
         flash("You do not have permission to edit this project.")
         return redirect(url_for("dashboard"))
 

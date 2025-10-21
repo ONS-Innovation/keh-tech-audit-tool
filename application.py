@@ -122,7 +122,11 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
-items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
+
+# First item is the user's email, second is the groups they belong to,
+# third is the sign out link.
+# These get populated in the inject_header() function.
+items = [{"text": "", "iconType": "person"}, {"text": ""}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
 # For the _template.njk to load info into the header of the page.
@@ -202,11 +206,21 @@ def inject_header():
 
     # Reaching this point means the user is logged in. This should not error.
     user_email = session.get("email", "No email found")
+    user_groups = session.get("groups", [])
+
+    for i in range(len(user_groups)):
+        user_groups[i] = user_groups[i].capitalize()
 
     # Injecting the user's email into the header and sorting navigation
     # based on the current page.
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
+
+    if user_groups:
+        injected_items[1]["text"] = ", ".join(user_groups)
+    else:
+        injected_items[1]["text"] = "Standard User"
+
     current_url = request.path
     if current_url == "/dashboard":
         navItems = []

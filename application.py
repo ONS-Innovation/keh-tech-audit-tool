@@ -297,7 +297,7 @@ def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
     AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
-    token_url = f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
+    token_url = f"https://{AWS_ENV}-tech-audit-tool-api.auth.eu-west-2.amazoncognito.com/oauth2/token"
     payload = {
         "grant_type": "authorization_code",
         "code": f"{code}",

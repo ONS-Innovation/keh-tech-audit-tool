@@ -63,7 +63,7 @@ terraform-task: &terraform-task
     timeout: 30m
 
 re-deploy-api-task: &redeploy_api
-  task: terraform-deploy
+  task: redeploy-api
   privileged: true
   config:
     platform: linux
@@ -83,7 +83,7 @@ re-deploy-api-task: &redeploy_api
           ./resource-repo/concourse/scripts/redeploy_api.sh
     timeout: 30m
 
- 
+
 jobs:
   - name: calculate-tag
     public: true

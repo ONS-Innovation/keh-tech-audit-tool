@@ -60,7 +60,24 @@ terraform-task: &terraform-task
           fi
           chmod u+x ./resource-repo/concourse/scripts/terraform_infra.sh
           ./resource-repo/concourse/scripts/terraform_infra.sh
+    timeout: 30m
 
+re-deploy-api-task: &redeploy_api
+  task: terraform-deploy
+  privileged: true
+  config:
+    platform: linux
+    image_resource:
+      type: docker-image
+      source:
+        repository: hashicorp/terraform
+    inputs:
+      - name: resource-repo
+    run:
+      path: sh
+      args:
+        - -cx
+        - |
           # Redeploy API after infrastructure changes
           chmod u+x ./resource-repo/concourse/scripts/redeploy_api.sh
           ./resource-repo/concourse/scripts/redeploy_api.sh
@@ -161,6 +178,7 @@ jobs:
         github_access_token: ((github_access_token))
         env: dev
         secrets: ((sdp_((env))_secrets_tat_ui))
+    - <<: *redeploy_api
 
   - name: deploy-after-github-release-prod
     public: true
@@ -213,3 +231,4 @@ jobs:
         github_access_token: ((github_access_token))
         env: prod
         secrets: ((sdp_prod_secrets_tat_ui))
+    - <<: *redeploy_api

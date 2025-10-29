@@ -251,7 +251,8 @@ def home():
                 token_response["id_token"],
                 token_response["refresh_token"],
             )
-            # Once set in session, get email.
+            # Once set in session, get user information
+            # This includes their email and groups they belong to
             get_user()
             # Goes to dashboard with tokens stored in session.
             flash("You have successfully logged in with Cognito")

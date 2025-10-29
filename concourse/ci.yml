@@ -181,6 +181,8 @@ jobs:
         env: dev
         secrets: ((sdp_((env))_secrets_tat_ui))
     - <<: *redeploy_api
+      params:
+        env: dev
 
   - name: deploy-after-github-release-prod
     public: true
@@ -234,3 +236,5 @@ jobs:
         env: prod
         secrets: ((sdp_prod_secrets_tat_ui))
     - <<: *redeploy_api
+      params:
+        env: prod

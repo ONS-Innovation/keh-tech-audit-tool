@@ -11,15 +11,14 @@ FROM python:3.12-alpine
 WORKDIR /app
 
 # Create a non-root user and group
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN apk update && \
+    apk add shadow make curl jq unzip && \
+    groupadd -r appuser && useradd -r -g appuser appuser
 
 RUN pip install poetry==1.8.3
 
 # Copy the source code into the container.
 COPY .  /app
-
-RUN apk update && \
-    apk add make curl jq unzip
 
 RUN make load-design
 

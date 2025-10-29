@@ -73,6 +73,8 @@ re-deploy-api-task: &redeploy_api
         repository: hashicorp/terraform
     inputs:
       - name: resource-repo
+    params:
+      env: ((env))
     run:
       path: sh
       args:

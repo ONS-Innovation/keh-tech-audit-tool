@@ -70,7 +70,7 @@ re-deploy-api-task: &redeploy_api
     image_resource:
       type: docker-image
       source:
-        repository: hashicorp/terraform
+        repository: amazon/aws-cli
     inputs:
       - name: resource-repo
     params:

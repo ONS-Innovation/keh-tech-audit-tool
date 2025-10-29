@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Create a non-root user and group
 RUN apk update && \
-    apk add shadow make curl jq unzip && \
+    apk add shadow make curl jq unzip bash && \
     groupadd -r appuser && useradd -r -g appuser appuser
 
 RUN pip install poetry==1.8.3

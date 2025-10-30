@@ -122,7 +122,11 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 
 # For the _template.njk to load info into the header of the page.
 # Automatically loads the user's email into the header.
-items = [{"text": "", "iconType": "person"}, {"text": "Sign Out", "url": "/sign-out"}]
+
+# First item is the user's email, second is the groups they belong to,
+# third is the sign out link.
+# These get populated in the inject_header() function.
+items = [{"text": "", "iconType": "person"}, {"text": ""}, {"text": "Sign Out", "url": "/sign-out"}]
 items_none = []
 
 # For the _template.njk to load info into the header of the page.
@@ -195,18 +199,25 @@ def get_id_token():
 def inject_header():
     # IMPORTANT | MAY REVISE
     # Each page load, make sure the user is logged in.
-    user_auth = get_email()
+    user_auth = get_user()
     if not user_auth:
         flash("Please re-login to authenticate your account.")
         return dict(items=items_none, currentPath=[], navItems=[])
 
     # Reaching this point means the user is logged in. This should not error.
     user_email = session.get("email", "No email found")
+    user_groups = session.get("groups", [])
 
     # Injecting the user's email into the header and sorting navigation
     # based on the current page.
     injected_items = items.copy()
     injected_items[0]["text"] = user_email
+
+    if user_groups:
+        injected_items[1]["text"] = ", ".join(user_groups)
+    else:
+        injected_items[1]["text"] = "Standard User"
+
     current_url = request.path
     if current_url == "/dashboard":
         navItems = []
@@ -240,8 +251,9 @@ def home():
                 token_response["id_token"],
                 token_response["refresh_token"],
             )
-            # Once set in session, get email.
-            get_email()
+            # Once set in session, get user information
+            # This includes their email and groups they belong to
+            get_user()
             # Goes to dashboard with tokens stored in session.
             flash("You have successfully logged in with Cognito")
             return redirect(url_for("dashboard"))
@@ -286,7 +298,7 @@ def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
     AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
-    token_url = f"https://tech-audit-tool-api-{AWS_ENV}.auth.eu-west-2.amazoncognito.com/oauth2/token"
+    token_url = f"https://{AWS_ENV}-tech-audit-tool-api.auth.eu-west-2.amazoncognito.com/oauth2/token"
     payload = {
         "grant_type": "authorization_code",
         "code": f"{code}",
@@ -310,7 +322,15 @@ def exchange_code_for_tokens(code):
         return response.json()
 
 
-def get_email():
+def get_user():
+    """Fetch user information from the API and store it in the session.
+
+    Returns:
+        bool: True if user information was successfully retrieved and stored, False otherwise.
+
+    Raises:
+        Exception: If there is an error during the API request or JSON parsing.
+    """
     try:
         headers = {"Authorization": f"{session['id_token']}"}
         user_request = requests.get(
@@ -320,7 +340,9 @@ def get_email():
         if user_request.status_code != HTTPStatus.OK:
             return False
         else:
-            session["email"] = user_request.json()["email"]
+            req = user_request.json()
+            session["email"] = req["email"]
+            session["groups"] = [group.capitalize() for group in req.get("groups", [])]
             return True
     except Exception as error:
         logger.error(f"{error.__class__.__name__}: {error}")
@@ -377,7 +399,7 @@ def view_project(project_name):
 
     edit = False  # Boolean to check if the user can edit the project
     for user in projects["user"]:
-        if user["email"] == user_email:
+        if user["email"] == user_email or "Admin" in session.get("groups", []):
             edit = True
             break
     try:
@@ -409,7 +431,7 @@ def edit_project(project_name):
     user_email = session.get("email", "No email found")
     users = [user["email"] for user in project["user"]]
 
-    if user_email not in users:
+    if user_email not in users and "Admin" not in session.get("groups", []):
         flash("You do not have permission to edit this project.")
         return redirect(url_for("dashboard"))
 

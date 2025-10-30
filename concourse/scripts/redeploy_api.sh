@@ -12,11 +12,10 @@ if [[ -n "${aws_role_arn:-}" ]]; then
   fi
 fi
 
-api_name="tech-audit-tool-api"
-stage_name="dev"
+api_name="tech-audit-tool"
 
 api_id=$(aws apigateway get-rest-apis \
-  --query "items[?contains(name, '${api_name}')].id" \
+  --query "items[?name && contains(name, '${api_name}')].id" \
   --output text)
 
 if [[ -z "$api_id" ]]; then
@@ -27,6 +26,9 @@ fi
 echo "Found API Gateway REST API ID: ${api_id} (name: ${api_name})"
 
 echo "Triggering redeployment for API Gateway REST API: ${api_id}, stage: dev"
-aws apigateway create-deployment --rest-api-id "${api_id}" --stage-name dev
+aws apigateway create-deployment \
+  --rest-api-id "${api_id}" \
+  --stage-name dev \
+  --description "Pipeline redeploy via cicd pipeline on $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 echo "API Gateway redeploy complete."

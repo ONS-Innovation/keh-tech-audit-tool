@@ -1,34 +1,58 @@
 # syntax=docker/dockerfile:1
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
+########################################
+# Builder stage
+########################################
+FROM python:3.12-alpine AS build
 
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
-FROM python:3.11-slim-bullseye
+ENV POETRY_VERSION=1.8.3 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Create a non-root user and group
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN apk add --no-cache build-base curl jq unzip bash
 
-RUN pip install poetry==1.8.3
+COPY pyproject.toml poetry.lock ./
 
-# Copy the source code into the container.
-COPY .  /app
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION" && \
+    poetry export -f requirements.txt --only main --without-hashes -o requirements.txt
 
-RUN apt update && \
-    apt install -y make curl jq unzip
+COPY application.py ./
+COPY templates ./templates
+COPY static ./static
 
-RUN make load-design
+########################################
+# Runtime stage
+########################################
+FROM python:3.12-alpine AS runtime
 
-RUN poetry install
-# Change ownership of the application files to the non-root user
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_DEBUG=0 \
+    GUNICORN_WORKERS=3 \
+    GUNICORN_BIND=0.0.0.0:8000
+
+WORKDIR /app
+
+# Add wget for healthcheck (or switch to curl)
+RUN apk add --no-cache bash wget
+
+RUN addgroup -S appuser && adduser -S appuser -G appuser
+
+COPY --from=build /app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir gunicorn
+
+COPY --from=build /app /app
+
 RUN chown -R appuser:appuser /app
+USER appuser
 
-# Expose the port that the application listens on.
 EXPOSE 8000
 
-# Run the application.
-CMD poetry run flask --app application run --host=0.0.0.0 -p 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8000/health || exit 1
+
+CMD gunicorn application:app --workers $GUNICORN_WORKERS --bind $GUNICORN_BIND --access-logfile - --error-logfile -

@@ -845,6 +845,11 @@ def project_names_list():
     names = read_project_names_data()
     return json.dumps(names), 200, {'Content-Type': 'application/json'}
 
+
+@app.route('/health', methods=['GET'])
+def health():
+    return 'OK', 200
+
 def ensure_bool_dict(d):
     # Rule: Ensure all values in the dict are booleans
     if not isinstance(d, dict):

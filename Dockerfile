@@ -13,7 +13,7 @@ RUN apk add --no-cache shadow make curl jq unzip bash && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 
 ENV HOME=/home/appuser
-
+USER appuser
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 COPY . /app
@@ -24,7 +24,7 @@ RUN make load-design
 RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 
 RUN chown -R appuser:appuser /app
-USER appuser
+
 
 EXPOSE 8000
 # Use Gunicorn for production instead of Flask dev server

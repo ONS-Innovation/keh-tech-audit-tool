@@ -7,6 +7,16 @@ resource "aws_lb_target_group" "tech_audit_tool_fargate_tg" {
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = data.terraform_remote_state.ecs_infrastructure.outputs.vpc_id
+
+  health_check {
+    path                = "/health"
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+  }
 }
 
 # Use the module to get highest current priority

@@ -20,9 +20,10 @@ RUN apk add --no-cache shadow make curl jq unzip bash && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
-USER appuser
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+
+USER appuser
 
 # Copy source
 COPY . /app

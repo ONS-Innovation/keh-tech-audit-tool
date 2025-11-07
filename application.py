@@ -18,65 +18,22 @@ from flask import (
     request,
     session,
     url_for,
+    jsonify,
 )
 from jinja2 import ChainableUndefined
 
 load_dotenv()
-# Basic logging information
-# logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+
 
 # AWS S3 bucket settings
 api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
 
+# Basic logging information
 logging.basicConfig(level=logging.WARNING)
+# global logger
 logger = logging.getLogger(__name__)
-
-# Standard flask initialisation
-app = Flask(__name__)
-app.secret_key = os.getenv("APP_SECRET_KEY")
-app.jinja_env.undefined = ChainableUndefined
-app.jinja_env.add_extension("jinja2.ext.do")
-
-
-# GET auto complete data from S3 bucket using boto3
-def read_auto_complete_data():
-    try:
-        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
-        array_data = json.loads(response["Body"].read().decode("utf-8"))
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            array_data = {}
-        else:
-            abort(500, description=f"Error reading client keys: {e}")
-    return array_data
-
-#Get project names data from S3 bucket using boto3
-def read_project_names_data():
-    """Reads project names from a JSON file in an S3 bucket."""
-    try:
-        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
-        project_names_data = json.loads(response["Body"].read().decode("utf-8"))
-        # Collect project names from each project in the list
-        project_names = []
-        for project in project_names_data.get("projects", []):
-            # Look for the name in the details key (which is a list or dict)
-            name = None
-            details = project.get("details")
-            if isinstance(details, list) and details:
-                name = details[0].get("name")
-            elif isinstance(details, dict):
-                name = details.get("name")
-            if name:
-                project_names.append(name)
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            project_names = []
-        else:
-            abort(500, description=f"Error reading project names data: {e}")
-    return sorted(project_names)
 
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):
@@ -113,6 +70,49 @@ app = Flask(__name__)
 app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))["APP_SECRET_KEY"]
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
+
+
+# GET auto complete data from S3 bucket using boto3
+def read_auto_complete_data(logger):
+    try:
+        logger.info("Reading auto complete data from S3 bucket")
+        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
+        array_data = json.loads(response["Body"].read().decode("utf-8"))
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            array_data = {}
+        else:
+            logger.error(f"Error reading array data: {e}")
+            abort(500, description=f"Error reading client keys: {e}")
+    return array_data
+
+#Get project names data from S3 bucket using boto3
+def read_project_names_data():
+    """Reads project names from a JSON file in an S3 bucket."""
+    try:
+        logger.info(f"Reading project data from S3 bucket: {api_bucket_name}")
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
+        project_names_data = json.loads(response["Body"].read().decode("utf-8"))
+        # Collect project names from each project in the list
+        project_names = []
+        for project in project_names_data.get("projects", []):
+            # Look for the name in the details key (which is a list or dict)
+            name = None
+            details = project.get("details")
+            if isinstance(details, list) and details:
+                name = details[0].get("name")
+            elif isinstance(details, dict):
+                name = details.get("name")
+            if name:
+                project_names.append(name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            project_names = []
+        else:
+            logger.error(f"Error reading project names data: {e}")
+            abort(500, description=f"Error reading project names data: {e}")
+    return sorted(project_names)
+
 
 
 # SET client keys from S3 bucket using boto3
@@ -348,6 +348,9 @@ def get_user():
         logger.error(f"{error.__class__.__name__}: {error}")
         return False
 
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"}), 200
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
@@ -609,6 +612,7 @@ def survey():
 
     try:
         if form_data.get("project_name"):
+            logger.info(f"Updating existing project: {form_data['project_name']}")
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
@@ -620,6 +624,7 @@ def survey():
             )
         else:
             # This is a new project creation
+            logger.info("Creating new project")
             requests.post(
                 f"{API_URL}/api/v1/projects",
                 json=data,

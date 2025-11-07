@@ -1,34 +1,31 @@
 # syntax=docker/dockerfile:1
-
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
 FROM python:3.12-alpine
 
 WORKDIR /app
 
-# Create a non-root user and group
-RUN apk update && \
-    apk add shadow make curl jq unzip bash && \
-    groupadd -r appuser && useradd -r -g appuser appuser
+ENV POETRY_VERSION=1.8.3 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    PYTHONUNBUFFERED=1
 
-RUN pip install poetry==1.8.3
+RUN apk add --no-cache shadow make curl jq unzip bash && \
+    groupadd -r appuser && useradd -r -g appuser appuser && \
+    mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 
-# Copy the source code into the container.
-COPY .  /app
+ENV HOME=/home/appuser
+
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+
+COPY . /app
 
 RUN make load-design
 
-RUN poetry install && pip install --no-cache-dir gunicorn
-# Change ownership of the application files to the non-root user
+# Install deps into system site-packages (no venv)
+RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
+
 RUN chown -R appuser:appuser /app
 USER appuser
 
-# Expose the port that the application listens on.
 EXPOSE 8000
-
-# Use Gunicorn instead of Flask dev server
+# Use Gunicorn for production instead of Flask dev server
 CMD poetry run gunicorn application:app --bind 0.0.0.0:8000 --workers 3 --access-logfile - --error-logfile -

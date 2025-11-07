@@ -22,12 +22,13 @@ COPY .  /app
 
 RUN make load-design
 
-RUN poetry install
+RUN poetry install && pip install --no-cache-dir gunicorn
 # Change ownership of the application files to the non-root user
 RUN chown -R appuser:appuser /app
+USER appuser
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-# Run the application.
-CMD poetry run flask --app application run --host=0.0.0.0 -p 8000
+# Use Gunicorn instead of Flask dev server
+CMD poetry run gunicorn application:app --bind 0.0.0.0:8000 --workers 3 --access-logfile - --error-logfile -

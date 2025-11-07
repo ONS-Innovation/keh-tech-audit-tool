@@ -20,6 +20,7 @@ RUN apk add --no-cache shadow make curl jq unzip bash && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
+USER appuser
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
@@ -33,7 +34,6 @@ RUN make load-design
 RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 
 RUN chown -R appuser:appuser /app
-USER appuser
 
 # Expose the port that the application listens on.
 EXPOSE 8000

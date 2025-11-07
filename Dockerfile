@@ -6,7 +6,7 @@
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-FROM python:3.11-slim-bullseye
+FROM python:3.12-alpine
 
 WORKDIR /app
 
@@ -18,8 +18,8 @@ RUN pip install poetry==1.8.3
 # Copy the source code into the container.
 COPY .  /app
 
-RUN apt update && \
-    apt install -y make curl jq unzip gunicorn
+RUN apk update && \
+    apk add -y make curl jq unzip gunicorn
 
 RUN make load-design
 

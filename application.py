@@ -612,7 +612,7 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            logger.info(f"Updating existing project: {form_data['project_name']}")
+            logger.info(f"Updating existing project: {(form_data['project_name']).replace('\r\n','').replace('\n','')}")
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,

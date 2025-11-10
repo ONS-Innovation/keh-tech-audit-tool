@@ -45,7 +45,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.database_provider = self.generate_words(1, "")
         self.environments = {
                 "dev": random.choice([True, False]),
-                "int" : random.choice([True, False]),
+                "int": random.choice([True, False]),
                 "uat": random.choice([True, False]),
                 "preprod": random.choice([True, False]),
                 "prod": random.choice([True, False]),
@@ -286,7 +286,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             or "Bitbucket"
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[4].text
         )
-        assert (    
+        assert (
             "Test Project"
             in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[5].text
         )
@@ -474,7 +474,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.wait.until(EC.element_to_be_clickable(desc_input)).click()
         desc_input.send_keys("Automated test dependency description")
         # Click the Add button
-                # the Add button is the searchButton in the macro
+        # the Add button is the searchButton in the macro
         add_btn = driver.find_element(
             By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
         )
@@ -592,7 +592,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         driver.implicitly_wait(10)
 
         self.click_link(driver, "Save and continue")
-    
+
     def complete_environments(self, driver):
         """Completes the environments section of the project creation process.
 
@@ -742,7 +742,6 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
         self.click_link(driver, "Finish section")
 
-
     def complete_code_editors(self, driver):
         """Completes the code editors section of the project creation process.
 
@@ -882,7 +881,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         )
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
         self.click_link(driver, "Save and continue")
-    
+
     def complete_miscellaneous(self, driver):
         """
             Complete the miscellaneous tools section.
@@ -890,13 +889,11 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         Args:
             driver (webdriver): the Selenium driver
             tools (List[Tuple[str,str]]): list of (name, description) to add
-        
         """
         logging.info("Testing complete_miscellaneous...")
         driver.implicitly_wait(10)
 
-
-        #Find the two inputs
+        # Find the two inputs
         name_input = driver.find_element(By.ID, "miscellaneous-input")
         desc_input = driver.find_element(By.ID, "miscellaneous_desc-input")
 
@@ -909,11 +906,10 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
         )
         self.wait.until(EC.element_to_be_clickable(add_btn)).click()
-        
+
         # 4) Finally click Save and continue
         self.click_link(driver, "Save and continue")
         self.click_link(driver, "Finish section")
-
 
     def complete_incident_management(self, driver):
         """Completes the incident management section of the project creation process.
@@ -930,6 +926,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             self.wait.until(EC.element_to_be_clickable(other_input)).click()
             other_input.send_keys("Zendesk")
         self.click_link(driver, "Save and continue")
+
 
 def environments_to_string(environments):
     selected = [

@@ -35,6 +35,7 @@ logging.basicConfig(level=logging.WARNING)
 # global logger
 logger = logging.getLogger(__name__)
 
+
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):
     secret_name = os.getenv(env)
@@ -86,7 +87,8 @@ def read_auto_complete_data(logger):
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
-#Get project names data from S3 bucket using boto3
+
+# Get project names data from S3 bucket using boto3
 def read_project_names_data():
     """Reads project names from a JSON file in an S3 bucket."""
     try:
@@ -112,7 +114,6 @@ def read_project_names_data():
             logger.error(f"Error reading project names data: {e}")
             abort(500, description=f"Error reading project names data: {e}")
     return sorted(project_names)
-
 
 
 # SET client keys from S3 bucket using boto3
@@ -348,9 +349,11 @@ def get_user():
         logger.error(f"{error.__class__.__name__}: {error}")
         return False
 
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"}), 200
+
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
@@ -562,7 +565,6 @@ def survey():
 
     # Ensure project_dependencies is always a list, never None
     project_dependencies = form_data.get("project_dependencies", [])
-    
     data = {
         "user": new_users,
         "details": [
@@ -612,7 +614,7 @@ def survey():
 
     try:
         if form_data.get("project_name"):
-            logger.info(f"Updating existing project: {(form_data['project_name']).replace('\r\n','').replace('\n','')}")
+            logger.info(f"Updating existing project: {form_data['project_name'].replace('\r\n', '').replace('\n', '')}")
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
@@ -692,9 +694,11 @@ def project():
 def stage():
     return render_template("/section_project/stage.html")
 
+
 @app.route("/survey/project_dependencies", methods=["GET"])
 def project_dependencies():
     return render_template("/section_project/project_dependencies.html")
+
 
 @app.route("/survey/developed", methods=["GET"])
 def developed():
@@ -731,6 +735,7 @@ def hosting():
 def database():
     return render_template("/section_code/database.html")
 
+
 @app.route("/survey/environments", methods=["GET"])
 def environments():
     return render_template("/section_code/environments.html")
@@ -755,9 +760,11 @@ def frameworks():
 def integrations():
     return render_template("/section_technology/integrations.html")
 
+
 @app.route("/survey/infrastructure", methods=["GET"])
 def infrastructure():
     return render_template("/section_technology/infrastructure.html")
+
 
 @app.route("/survey/publishing", methods=["GET"])
 def publishing():
@@ -798,13 +805,16 @@ def documentation():
 def communication():
     return render_template("/section_supporting_tools/communication.html")
 
+
 @app.route("/survey/collaboration", methods=["GET"])
 def collaboration():
     return render_template("/section_supporting_tools/collaboration.html")
 
+
 @app.route("/survey/incident_management", methods=["GET"])
 def incident_management():
     return render_template("/section_supporting_tools/incident_management.html")
+
 
 @app.route("/survey/miscellaneous", methods=["GET"])
 def miscellaneous():
@@ -850,11 +860,13 @@ def project_names_list():
     names = read_project_names_data()
     return json.dumps(names), 200, {'Content-Type': 'application/json'}
 
+
 def ensure_bool_dict(d):
     # Rule: Ensure all values in the dict are booleans
     if not isinstance(d, dict):
         return {}
     return {k: bool(v) for k, v in d.items()}
+
 
 if __name__ == "__main__":
     app.run(debug=False)

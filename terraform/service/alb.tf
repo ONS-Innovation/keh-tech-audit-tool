@@ -12,7 +12,7 @@ resource "aws_lb_target_group" "tech_audit_tool_fargate_tg" {
     path                = "/health"
     protocol            = "HTTP"
     matcher             = "200"
-    interval            = 30
+    interval            = 120
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 3

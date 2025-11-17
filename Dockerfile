@@ -1,59 +1,39 @@
 # syntax=docker/dockerfile:1
 
-########################################
-# Builder stage
-########################################
-FROM python:3.12-alpine AS build
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
 
-ENV POETRY_VERSION=1.8.3 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+
+FROM python:3.12-slim-bullseye
 
 WORKDIR /app
 
-RUN apk add --no-cache build-base curl jq unzip bash
+# Create a non-root user and group
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-COPY pyproject.toml poetry.lock ./
+RUN pip install poetry==1.8.3
 
-RUN pip install --no-cache-dir "poetry==$POETRY_VERSION" && \
-    poetry export -f requirements.txt --only main --without-hashes -o requirements.txt
+# Copy the source code into the container.
+COPY .  /app
 
-COPY application.py ./
-COPY templates ./templates
-COPY static ./static
+RUN apt update && \
+    apt install -y make curl jq unzip wget
 
-########################################
-# Runtime stage
-########################################
-FROM python:3.12-alpine AS runtime
+RUN make load-design
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    FLASK_DEBUG=0 \
-    GUNICORN_WORKERS=3 \
+RUN pip install --upgrade pip && poetry install
+# Change ownership of the application files to the non-root user
+RUN chown -R appuser:appuser /app
+ENV GUNICORN_WORKERS=3 \
     GUNICORN_BIND=0.0.0.0:8000
 
-WORKDIR /app
-
-# Add wget for healthcheck (or switch to curl)
-RUN apk add --no-cache bash wget
-
-RUN addgroup -S appuser && adduser -S appuser -G appuser
-
-COPY --from=build /app/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir gunicorn
-
-COPY --from=build /app /app
-
-RUN chown -R appuser:appuser /app
-USER appuser
-
+# Expose the port that the application listens on.
 EXPOSE 8000
 
 # check if the app is running every 2 minutes
 HEALTHCHECK --interval=120s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- http://127.0.0.1:8000/health || exit 1
 
-CMD gunicorn application:app --workers $GUNICORN_WORKERS --bind $GUNICORN_BIND --access-logfile - --error-logfile -
+CMD  poetry run gunicorn application:app --workers $GUNICORN_WORKERS --bind $GUNICORN_BIND --access-logfile - --error-logfile -

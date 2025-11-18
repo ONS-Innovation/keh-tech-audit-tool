@@ -185,7 +185,7 @@ jobs:
         env: dev
         secrets: ((sdp_dev_secrets_tat_ui))
 
-  - name: deploy-after-github-release-prod
+  - name: release-build-and-push-prod
     public: true
     plan:
     - get: resource-repo

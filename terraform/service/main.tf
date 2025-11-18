@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       ],
       healthCheck = {
         command     = ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8000/health\", timeout=4)' || exit 1"]
-        interval    = 120   # seconds between checks
+        interval    = 300   # seconds between checks
         timeout     = 5     # seconds before considering the check failed
         retries     = 3     # consecutive failures before marking unhealthy
         startPeriod = 20    # warm-up before health checks count

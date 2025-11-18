@@ -13,12 +13,12 @@ from flask import (
     Flask,
     abort,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
     session,
     url_for,
-    jsonify,
 )
 from jinja2 import ChainableUndefined
 
@@ -38,6 +38,33 @@ logger = logging.getLogger(__name__)
 
 # GET secrets from AWS Secrets Manager using boto3
 def get_secret(env):
+    """
+    Retrieve a secret value from AWS Secrets Manager.
+
+    Parameters:
+        env (str): Name of an environment variable whose value is the Secrets Manager
+                   secret identifier (e.g. 'UI_SECRET_NAME'). The environment variable
+                   must be set; its value is passed directly to Secrets Manager.
+
+    Returns:
+        str: The raw secret string (JSON or plain text) stored under the given secret id.
+             Returns an empty string if the SecretString field is absent.
+
+    Raises:
+        botocore.exceptions.ClientError: Propagated if AWS Secrets Manager get_secret_value
+            fails for reasons other than handled upstream (e.g. AccessDeniedException,
+            ResourceNotFoundException).
+
+    Security:
+        - The secret content is not logged.
+        - Callers are responsible for parsing (e.g. json.loads) and for not re‑logging
+          sensitive fields.
+        - Ensure IAM permissions allow secretsmanager:GetSecretValue only on required ARNs.
+
+    Notes:
+        - Region is hardcoded to eu-west-2
+        - Binary secrets are ignored (only SecretString is returned).
+    """
     secret_name = os.getenv(env)
     region_name = "eu-west-2"
 
@@ -127,7 +154,11 @@ AWS_COGNITO_CLIENT_SECRET = cognito_settings["COGNITO_CLIENT_SECRET"]
 # First item is the user's email, second is the groups they belong to,
 # third is the sign out link.
 # These get populated in the inject_header() function.
-items = [{"text": "", "iconType": "person"}, {"text": ""}, {"text": "Sign Out", "url": "/sign-out"}]
+items = [
+    {"text": "", "iconType": "person"},
+    {"text": ""},
+    {"text": "Sign Out", "url": "/sign-out"},
+]
 items_none = []
 
 # For the _template.njk to load info into the header of the page.
@@ -397,8 +428,14 @@ def view_project(project_name):
 
     try:
         projects = projects.json()
-        sanitized_projects = {key: value for key, value in projects.items() if key not in ["user", "sensitive_field"]}
-        logger.info(f"view_project: number of sanitized fields = {len(sanitized_projects)}")
+        sanitized_projects = {
+            key: value
+            for key, value in projects.items()
+            if key not in ["user", "sensitive_field"]
+        }
+        logger.info(
+            f"view_project: number of sanitized fields = {len(sanitized_projects)}"
+        )
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
@@ -591,7 +628,7 @@ def survey():
         "architecture": {
             "hosting": form_data.get("hosting", ""),
             "database": form_data.get("database", ""),
-            "environments":  ensure_bool_dict(form_data.get("environments", {})),
+            "environments": ensure_bool_dict(form_data.get("environments", {})),
             "languages": form_data.get("languages", ""),
             "frameworks": form_data.get("frameworks", ""),
             "cicd": form_data.get("integrations", ""),
@@ -608,13 +645,15 @@ def survey():
             "communication": form_data.get("communication", ""),
             "collaboration": form_data.get("collaboration", ""),
             "incident_management": form_data.get("incident_management", ""),
-            "miscellaneous": form_data.get("miscellaneous", "")
+            "miscellaneous": form_data.get("miscellaneous", ""),
         },
     }
 
     try:
         if form_data.get("project_name"):
-            logger.info(f"Updating existing project: {form_data['project_name'].replace('\r\n', '').replace('\n', '')}")
+            logger.info(
+                f"Updating existing project: {form_data['project_name'].replace('\r\n', '').replace('\n', '')}"
+            )
             requests.put(
                 f"{API_URL}/api/v1/projects/{form_data['project_name']}",
                 json=data,
@@ -820,6 +859,7 @@ def incident_management():
 def miscellaneous():
     return render_template("/section_supporting_tools/miscellaneous.html")
 
+
 # ------------------------
 # SUMMARY SECTION RENDERING
 # ------------------------
@@ -855,10 +895,10 @@ def validate_details():
     return render_template("validate_details.html")
 
 
-@app.route('/project_names_list')
+@app.route("/project_names_list")
 def project_names_list():
     names = read_project_names_data()
-    return json.dumps(names), 200, {'Content-Type': 'application/json'}
+    return json.dumps(names), 200, {"Content-Type": "application/json"}
 
 
 def ensure_bool_dict(d):

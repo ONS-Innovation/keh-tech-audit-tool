@@ -44,12 +44,12 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         self.hosting_provider = self.generate_words(1, "")
         self.database_provider = self.generate_words(1, "")
         self.environments = {
-                "dev": random.choice([True, False]),
-                "int": random.choice([True, False]),
-                "uat": random.choice([True, False]),
-                "preprod": random.choice([True, False]),
-                "prod": random.choice([True, False]),
-                "postprod": random.choice([True, False]),
+            "dev": random.choice([True, False]),
+            "int": random.choice([True, False]),
+            "uat": random.choice([True, False]),
+            "preprod": random.choice([True, False]),
+            "prod": random.choice([True, False]),
+            "postprod": random.choice([True, False]),
         }
         self.language = random.choice(["Python", "JavaScript", "C++", "Java", "Rust"])
         self.framework = random.choice(["Django", "React", "Angular", "Vue", "Flask"])
@@ -57,7 +57,9 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             ["Github Actions", "Jenkins", "Travis CI", "Circle CI"]
         )
         self.infrastructure = random.choice(["AWS", "Azure", "GCP"])
-        self.publishing = random.choice(["Github", "PyPi", "AWS ECR Public", "AWS ECR Private"])
+        self.publishing = random.choice(
+            ["Github", "PyPi", "AWS ECR Public", "AWS ECR Private"]
+        )
         self._test_passed = False
 
     def generate_words(self, num_words, delimiter=" "):
@@ -222,8 +224,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             in driver.find_element(By.XPATH, "//div[@id='user-interface-details']").text
         )
         assert (
-            "Draw"
-            in driver.find_element(By.XPATH, "//div[@id='diagram-details']").text
+            "Draw" in driver.find_element(By.XPATH, "//div[@id='diagram-details']").text
         )
         assert (
             len(
@@ -338,8 +339,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             "Figma" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[16].text
         )
         assert (
-            "Draw"
-            in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
+            "Draw" in driver.find_elements(By.CLASS_NAME, "ons-summary__text")[17].text
         )
         assert (
             len(driver.find_elements(By.CLASS_NAME, "ons-summary__text")[18].text) > 0
@@ -604,7 +604,9 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
         for env in self.environments:  # Iterate through the environments dictionary
             if self.environments[env]:
                 environment_selected = driver.find_element(By.ID, env)
-                self.wait.until(EC.element_to_be_clickable(environment_selected)).click()
+                self.wait.until(
+                    EC.element_to_be_clickable(environment_selected)
+                ).click()
                 continue
         self.click_link(driver, "Save and continue")
         self.click_link(driver, "Finish section")
@@ -723,7 +725,7 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
             # If the publishing target is Github or AWS ECR Private, select the main target representing internal target
             add_btn = driver.find_element(
                 By.XPATH, '//button[@class="ons-btn ons-search__btn ons-btn--small"]'
-                )
+            )
             self.wait.until(EC.element_to_be_clickable(add_btn)).click()
             driver.implicitly_wait(10)
             internal_target = driver.find_element(By.XPATH, '//input[@value="main"]')
@@ -930,16 +932,16 @@ class TestProjectCreation(unittest.TestCase, TestUtil):
 
 def environments_to_string(environments):
     selected = [
-        'PREPROD (STAGING)' if env == 'preprod' else env.upper()
+        "PREPROD (STAGING)" if env == "preprod" else env.upper()
         for env, value in environments.items()
         if value is True
     ]
-    return ', '.join(selected)
+    return ", ".join(selected)
 
 
 def assert_environments_equal(str1, str2):
-    set1 = set(map(str.strip, str1.upper().split(',')))
-    set2 = set(map(str.strip, str2.upper().split(',')))
+    set1 = set(map(str.strip, str1.upper().split(",")))
+    set2 = set(map(str.strip, str2.upper().split(",")))
     assert set1 == set2, f"Environments do not match: {set1} != {set2}"
 
 

@@ -1,3 +1,9 @@
+resource_types:
+  - name: key-value
+    type: registry-image
+    source:
+      repository: gstack/keyval-resource
+
 resources:
 - name: resource-repo
   type: git
@@ -6,73 +12,231 @@ resources:
     uri: https://github.com/ONS-Innovation/keh-tech-audit-tool
     branch: ((branch))
     access_token: ((github_access_token))
+- name: github-release
+  type: github-release
+  source:
+    owner: ONS-Innovation
+    repository: keh-tech-audit-tool
+    access_token: ((github_access_token))
+- name: github-release-tag
+  type: key-value
+  source:
+    file: tag-output/tag
 
-jobs:
-- name:  build-and-push
-  public: true
-  plan:
-  - get: resource-repo
-    timeout: 5m
-  - task: build-image
-    privileged: true
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: hashicorp/terraform
-      inputs:
+# Define the common terraform task as an anchor
+terraform-task: &terraform-task
+  task: terraform-deploy
+  privileged: true
+  config:
+    platform: linux
+    image_resource:
+      type: docker-image
+      source:
+        repository: hashicorp/terraform
+    inputs:
       - name: resource-repo
-      params:
-        aws_account_id: ((aws_account_sdp_((env))))
-        aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
-        secrets: ((sdp_((env))_secrets_tat_ui))
-      run: # binary used to build the image
-        path: sh
-        args:
+      - name: github-release-tag
+    params:
+      secrets: ((sdp_((env))_secrets_tat_ui))
+      github_access_token: ((github_access_token))
+      env: ((env))
+      branch: ((branch))
+    run:
+      path: sh
+      args:
         - -cx
         - |
-          apk add --no-cache aws-cli podman jq iptables curl
-
-          if [[ "((env))" == "prod" ]]; then
-            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
-            export tag
-          else
-            export tag=((tag))
+          echo "DEBUG: Environment is ${env}"
+          echo "DEBUG: Tag is ${tag}"
+          export tag=$(cat github-release-tag/tag)
+          if [[ "$env" == "prod" ]] && [[ "$branch" != "main" && "$branch" != "master" ]]; then
+            echo "Not on main branch, skipping terraform for prod."
+            exit 0
           fi
-          git rev-parse --abbrev-ref HEAD
-          chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-          chmod u+x ./resource-repo/concourse/scripts/build_image.sh
-          source ./resource-repo/concourse/scripts/assume_role.sh
-          ./resource-repo/concourse/scripts/build_image.sh
-    timeout: 10m
-  - task: terraform
-    privileged: true
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: hashicorp/terraform}
-      inputs:
-      - name: resource-repo
-      params:
-        secrets: ((sdp_((env))_secrets_tat_ui))
-        github_access_token: ((github_access_token))
-      run:
-        path: sh
-        args:
-        - -cx
-        - |
           apk add --no-cache jq curl
-
-          if [[ "((env))" == "prod" ]]; then
-            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool/releases" | jq -r '.[0].tag_name')
-            export tag
-          else 
-            export tag=((tag))
+          if [[ "$env" == "prod" && ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ERROR: Tag '$tag' is not in semantic versioning format (vX.Y.Z)"
+            exit 1
           fi
           chmod u+x ./resource-repo/concourse/scripts/terraform_infra.sh
-          export env=((env))
           ./resource-repo/concourse/scripts/terraform_infra.sh
     timeout: 30m
-            
+
+re-deploy-api-task: &redeploy_api
+  task: redeploy-api
+  privileged: true
+  config:
+    platform: linux
+    image_resource:
+      type: docker-image
+      source:
+        repository: amazon/aws-cli
+    inputs:
+      - name: resource-repo
+    params:
+      env: ((env))
+    run:
+      path: sh
+      args:
+        - -cx
+        - |
+          # Redeploy API after infrastructure changes
+          chmod u+x resource-repo/concourse/scripts/redeploy_api.sh
+          ./resource-repo/concourse/scripts/redeploy_api.sh
+    timeout: 30m
+
+
+jobs:
+  - name: calculate-tag
+    public: true
+    plan:
+      - get: github-release
+        trigger: true
+      - get: resource-repo
+        trigger: false
+      - task: calculate-tag
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+          inputs:
+            - name: resource-repo
+            - name: github-release
+          outputs:
+            - name: tag-output
+          params:
+            branch: ((branch))
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                apk add --no-cache git
+                echo "Calculating tag for branch: ${branch}"
+                if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+                  # Get the latest tag that matches the format vX.Y.Z
+                  tag=$(git -C resource-repo tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1)
+                  if [[ -z "$tag" ]]; then
+                    echo "No valid semantic versioning tags (vX.Y.Z) found. Cannot set pipeline."
+                    exit 1
+                  fi
+                else
+                  # Remove non-alphanumeric characters and take the first 7 characters
+                  tag=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
+                fi
+                echo "Calculated tag: ${tag}"
+                # Write the tag to a file for output
+                echo "${tag}" > tag-output/tag
+      - put: github-release-tag
+        params:
+          directory: tag-output
+
+  - name:  deploy-after-github-release-dev
+    public: true
+    plan:
+    - get: github-release-tag
+      passed: [calculate-tag]
+      trigger: true
+    - get: resource-repo
+      timeout: 5m
+    - task: deploy-release
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: hashicorp/terraform
+        inputs:
+          - name: resource-repo
+          - name: github-release-tag
+        params:
+          aws_account_id: ((aws_account_sdp_dev))
+          aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+          secrets: ((sdp_((env))_secrets_tat_ui))
+          env: dev
+          tag: github-release-tag/tag # Use the release tag from the resource
+          repo_name: ((repo_name))
+        run:
+          path: sh
+          args:
+            - -cx
+            - |
+              apk add --no-cache aws-cli podman jq iptables curl
+              export repo_name=((repo_name))
+              export tag=$(cat github-release-tag/tag)
+              # Write the tag to a file for output
+              echo "${tag}" > release-tag-output/tag
+              echo "Using tag: ${tag}"
+              chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+              chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+              source ./resource-repo/concourse/scripts/assume_role.sh
+              ./resource-repo/concourse/scripts/build_image.sh
+      timeout: 15m
+    - <<: *terraform-task
+      params:
+        github_access_token: ((github_access_token))
+        env: dev
+        secrets: ((sdp_((env))_secrets_tat_ui))
+    - <<: *redeploy_api
+      params:
+        env: dev
+        secrets: ((sdp_dev_secrets_tat_ui))
+
+  - name: release-build-and-push-prod
+    public: true
+    plan:
+    - get: resource-repo
+      passed: [deploy-after-github-release-dev]
+      trigger: false # Manual trigger only
+      timeout: 5m
+    - get: github-release-tag
+      passed: [deploy-after-github-release-dev]
+    - task: build-image
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: hashicorp/terraform
+        inputs:
+          - name: resource-repo
+          - name: github-release-tag
+        params:
+          aws_account_id: ((aws_account_sdp_prod))
+          aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
+          secrets: ((sdp_prod_secrets_tat_ui))
+          env: prod
+          tag: github-release-tag/tag
+          repo_name: ((repo_name))
+          branch: ((branch))
+        run:
+          path: sh
+          args:
+            - -cx
+            - |
+              if [[ "$branch" != "main" ]]; then
+                echo "Not on main branch, skipping build."
+                exit 0
+              fi
+              apk add --no-cache aws-cli podman jq iptables curl
+              export repo_name=((repo_name))
+              export tag=$(cat github-release-tag/tag)
+              echo "Using release tag: ${tag}"
+              chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+              chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+              source ./resource-repo/concourse/scripts/assume_role.sh
+              ./resource-repo/concourse/scripts/build_image.sh
+      timeout: 10m
+    - <<: *terraform-task
+      params:
+        github_access_token: ((github_access_token))
+        env: prod
+        secrets: ((sdp_prod_secrets_tat_ui))
+    - <<: *redeploy_api
+      params:
+        env: prod
+        secrets: ((sdp_prod_secrets_tat_ui))

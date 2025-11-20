@@ -30,11 +30,9 @@ COPY . /app
 RUN make load-design
 
 # Install only main (prod) deps and gunicorn
-RUN  pip install --upgrade pip && poetry install --only main --no-root && pip install --no-cache-dir gunicorn
+RUN  pip install --upgrade pip && poetry install --only main --no-root
 
 RUN chown -R appuser:appuser /app
-ENV GUNICORN_WORKERS=3 \
-    GUNICORN_BIND=0.0.0.0:8000
 
 USER appuser
 
@@ -44,5 +42,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=300s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- http://127.0.0.1:8000/health || exit 1
 
-CMD gunicorn application:app --bind GUNICORN_BIND --workers GUNICORN_WORKERS --access-logfile - --error-logfile -
+CMD gunicorn application:app --bind 0.0.0.0:8000 --workers 3 --access-logfile - --error-logfile -
 

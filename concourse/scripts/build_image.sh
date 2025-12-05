@@ -12,3 +12,6 @@ podman build -t ${container_image}:${tag} resource-repo
 podman tag ${container_image}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image}:${tag}
 
 podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image}:${tag}
+
+echo "Saving image as tar for next task..."
+podman save --format=oci-dir "${container_image}:${tag}" -o built-images/tech_audit_tool.tar

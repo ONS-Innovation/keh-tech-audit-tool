@@ -1,0 +1,13 @@
+# Do NOT commit the real tfvars file to Github
+aws_account_id        = "99999999999"
+aws_access_key_id     = "AWSACCCESSKEYID"
+aws_secret_access_key = "AWSSECRETASSOCIATEDWITHACCESSKEY"
+ui_secret_name       = "UISECRETNAME" # secret name for the UI found in secrets manager
+api_secret_name      = "APISECRETNAME" # secret name for the API found in secrets manager
+api_bucket_name      = "APIBUCKETNAME" # api bucket name found in secrets manager
+domain               = "sdp-prod"
+localhost            = "false"
+domain                = "sdp-prod"
+container_image       = "tech-audit-tool"
+container_ver         = "v0.0.1"
+force_deployment      = "true"

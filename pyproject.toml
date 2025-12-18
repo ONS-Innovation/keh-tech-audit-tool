@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Tech Audit Tool UI"
 version = "0.1.0"
-description = "This project is a demo of design system implemented using Python and Flask."
+description = "This is the UI for the Tech Audit Tool, used to survey the technology landscape of the ONS"
 authors = ["ONS-Innovation keh-dev"]
 readme = "README.md"
 package-mode = false

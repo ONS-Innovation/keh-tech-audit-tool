@@ -34,10 +34,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       ],
       healthCheck = {
         command     = ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8000/health\", timeout=4)' || exit 1"]
-        interval    = 300   # seconds between checks
-        timeout     = 5     # seconds before considering the check failed
-        retries     = 3     # consecutive failures before marking unhealthy
-        startPeriod = 20    # warm-up before health checks count
+        interval    = 300 # seconds between checks
+        timeout     = 5   # seconds before considering the check failed
+        retries     = 3   # consecutive failures before marking unhealthy
+        startPeriod = 20  # warm-up before health checks count
       },
       environment = [
         {
@@ -57,19 +57,19 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.domain
         },
         {
-          name = "UI_SECRET_NAME"
+          name  = "UI_SECRET_NAME"
           value = var.ui_secret_name
         },
         {
-          name = "API_SECRET_NAME"
+          name  = "API_SECRET_NAME"
           value = var.api_secret_name
         },
         {
-          name = "API_BUCKET_NAME"
+          name  = "API_BUCKET_NAME"
           value = var.api_bucket_name
         },
         {
-          name = "LOCALHOST"
+          name  = "LOCALHOST"
           value = var.localhost
         }
       ],
@@ -128,4 +128,51 @@ resource "aws_ecs_service" "application" {
     assign_public_ip = true
   }
 
+}
+
+
+# Cloudwatch alarm that sounds when we have >0 A-ELB 5xx errors.
+resource "aws_cloudwatch_metric_alarm" "Application-ELB_5xx_alarm" {
+  alarm_name                = "TAT_UI_Application_ELB_5xx_alarm"
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = 1
+  metric_name               = "HTTPCode_ELB_5XX_Count"
+  namespace                 = "AWS/ApplicationELB"
+  period                    = 60
+  statistic                 = "Sum"
+  threshold                 = 0
+  alarm_description         = "Alarm when Application ELB produces 5xx Errors"
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+  dimensions                = { LoadBalancer = "${var.domain}-service-lb" }
+}
+
+
+# Cloudwatch metric filter which checks if the backend health check endpoint is called, if so return 0, else add 1 to current failure count
+resource "aws_cloudwatch_log_metric_filter" "Health_check_filter" {
+  name           = "TAT_UI_health_check_filter"
+  pattern        = "[ip, ident, user, timestamp, request=\"GET /health HTTP/1.1\", status=200, bytes, referrer, agent]" # Filters out to ensure that the health check is called and a 200 status code is recieved
+  log_group_name = aws_cloudwatch_log_group.ecs_service_logs.name
+
+  metric_transformation {
+    name          = "HealthCheckFailureCount"
+    namespace     = "ECS/ContainerInsights"
+    value         = "0"
+    default_value = "1"
+  }
+}
+
+
+# Cloudwatch alarm that sounds when we have >0 health checks fail, or if there is no data every 5 minutes, it sounds
+resource "aws_cloudwatch_metric_alarm" "Health_check_alarm" {
+  alarm_name          = "TAT_UI_health_alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "HealthCheckFailureCount"
+  namespace           = "ECS/ContainerInsights"
+  period              = 600
+  statistic           = "Sum"
+  threshold           = 0
+  alarm_description   = "Alarm when ECS service has unhealthy tasks"
+  treat_missing_data  = "breaching"
 }

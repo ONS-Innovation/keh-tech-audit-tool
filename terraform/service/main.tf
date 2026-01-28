@@ -34,10 +34,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       ],
       healthCheck = {
         command     = ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8000/health\", timeout=4)' || exit 1"]
-        interval    = 300   # seconds between checks
-        timeout     = 5     # seconds before considering the check failed
-        retries     = 3     # consecutive failures before marking unhealthy
-        startPeriod = 20    # warm-up before health checks count
+        interval    = 300 # seconds between checks
+        timeout     = 5   # seconds before considering the check failed
+        retries     = 3   # consecutive failures before marking unhealthy
+        startPeriod = 20  # warm-up before health checks count
       },
       environment = [
         {
@@ -57,19 +57,19 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.domain
         },
         {
-          name = "UI_SECRET_NAME"
+          name  = "UI_SECRET_NAME"
           value = var.ui_secret_name
         },
         {
-          name = "API_SECRET_NAME"
+          name  = "API_SECRET_NAME"
           value = var.api_secret_name
         },
         {
-          name = "API_BUCKET_NAME"
+          name  = "API_BUCKET_NAME"
           value = var.api_bucket_name
         },
         {
-          name = "LOCALHOST"
+          name  = "LOCALHOST"
           value = var.localhost
         }
       ],
@@ -129,7 +129,6 @@ resource "aws_ecs_service" "application" {
   }
 
 }
-
 
 
 # Cloudwatch metric filter which checks if the backend health check endpoint is called, if so return 0, else add 1 to current failure count

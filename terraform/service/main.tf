@@ -131,6 +131,23 @@ resource "aws_ecs_service" "application" {
 }
 
 
+# Cloudwatch alarm that sounds when we have >0 A-ELB 5xx errors.
+resource "aws_cloudwatch_metric_alarm" "Application-ELB_5xx_alarm" {
+  alarm_name                = "TAT_UI_Application_ELB_5xx_alarm"
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = 1
+  metric_name               = "HTTPCode_ELB_5XX_Count"
+  namespace                 = "AWS/ApplicationELB"
+  period                    = 60
+  statistic                 = "Sum"
+  threshold                 = 0
+  alarm_description         = "Alarm when Application ELB produces 5xx Errors"
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+  dimensions                = { LoadBalancer = "${var.domain}-service-lb" }
+}
+
+
 # Cloudwatch metric filter which checks if the backend health check endpoint is called, if so return 0, else add 1 to current failure count
 resource "aws_cloudwatch_log_metric_filter" "Health_check_filter" {
   name           = "TAT_UI_health_check_filter"

@@ -100,7 +100,6 @@ resource "aws_iam_user_group_membership" "user_group_attach" {
 }
 
 # IAM Key Rotation Module
-
 module "iam_key_rotation" {
   source = "git::https://github.com/ONS-Innovation/keh-aws-iam-key-rotation.git"
 

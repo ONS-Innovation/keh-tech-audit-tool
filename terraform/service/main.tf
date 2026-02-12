@@ -77,6 +77,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
     }
   ])
   execution_role_arn       = "arn:aws:iam::${var.aws_account_id}:role/ecsTaskExecutionRole"
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.service_cpu

@@ -41,14 +41,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       },
       environment = [
         {
-          name  = "AWS_ACCESS_KEY_ID"
-          value = var.aws_access_key_id
-        },
-        {
-          name  = "AWS_SECRET_ACCESS_KEY"
-          value = var.aws_secret_access_key
-        },
-        {
           name  = "AWS_DEFAULT_REGION"
           value = var.region
         },

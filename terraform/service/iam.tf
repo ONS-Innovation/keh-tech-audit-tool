@@ -102,7 +102,7 @@ resource "aws_iam_user_group_membership" "user_group_attach" {
 # IAM Key Rotation Module
 
 module "iam_key_rotation" {
-  source = "git::https://github.com/ONSdigital/aws-iam-key-rotation.git"
+  source = "git::https://github.com/ONS-Innovation/keh-aws-iam-key-rotation.git"
 
   iam_username          = aws_iam_user.user.name
   access_key_secret_arn = aws_secretsmanager_secret.access_key.arn

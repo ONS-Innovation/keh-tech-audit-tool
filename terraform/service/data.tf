@@ -6,7 +6,7 @@ data "terraform_remote_state" "ecs_infrastructure" {
     key    = "${var.domain}-ecs-infra/terraform.tfstate"
     region = "eu-west-2"
   }
-} 
+}
 data "aws_route53_zone" "route53_domain" {
   name = local.url
 }

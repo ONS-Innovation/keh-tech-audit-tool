@@ -14,21 +14,21 @@ variable "aws_secret_access_key" {
 }
 
 variable "ui_secret_name" {
-    description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
-    type        = string
-    default="tech-audit-tool/secrets"
+  description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
+  type        = string
+  default     = "tech-audit-tool/secrets"
 }
 
 variable "api_secret_name" {
   description = "The path to the AWS Secret Manager resource which contains the secrets for UI"
   type        = string
-  default="sdp-tech-audit-tool-api/secrets"
+  default     = "sdp-tech-audit-tool-api/secrets"
 }
 
 variable "api_bucket_name" {
   description = "The path to the S3 bucket resource which contains the json files needed by the UI"
   type        = string
-  default="sdp-dev-tech-audit-tool-api"
+  default     = "sdp-dev-tech-audit-tool-api"
 }
 
 variable "aws_account_name" {

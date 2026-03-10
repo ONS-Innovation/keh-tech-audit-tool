@@ -21,6 +21,9 @@ RUN apk add --no-cache shadow make curl jq unzip bash && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
 
+# Ensure packaging toolchain exists (fixes missing packaging/tags.py)
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel packaging
+
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 # Copy source

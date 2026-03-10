@@ -19,6 +19,7 @@
 - [Project layout](#project-layout)
 
 ## Overview
+
 The Tech Audit Tool is a tool used to survey out information such as the tools, languages and frameworks that are used by various projects within Digital Services and Technology (DST).
 
 This data is used in the Tech Radar on the Digital Landscape to help ONS understand more about technology trends across the organisation.
@@ -180,20 +181,27 @@ changes to Concourse instance itself. Make sure to export all necessary environm
 When setting up our pipelines, we use ecs-infra-user on sdp-dev to be able to interact with our infrastructure on AWS. The credentials for this are stored on
 AWS Secrets Manager so you do not need to set up anything yourself.
 To set the pipeline, run the following script:
+
 ```bash
 chmod u+x ./concourse/scripts/set_pipeline.sh
 ./concourse/scripts/set_pipeline.sh KEH-TAT-UI
 ```
+
 Note that you only have to run chmod the first time running the script in order to give permissions.
 This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
 The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
 If you wish to set a pipeline for another branch without checking out, you can run the following:
+
 ```bash
 ./concourse/scripts/set_pipeline.sh KEH-TAT-UI <branch_name>
 ```
+
 If the branch you are deploying is "main" or "master", it will trigger a deployment to the sdp-prod environment. To set the ECR image tag, you must draft a Github release pointing to the latest release of the main/master branch that has a tag in the form of vX.Y.Z. Drafting up a release will automatically deploy the latest version of the main/master branch with the associated release tag, but you can also manually trigger a build through the Concourse UI or the terminal prompt.
+
 #### Triggering a pipeline
+
 Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
+
 ```bash
 fly -t aws-sdp trigger-job -j KEH-TAT-UI-<branch-name>/build-and-push
 ```

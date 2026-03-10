@@ -22,7 +22,8 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       name      = "${var.service_subdomain}-task-application"
       image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}"
       cpu       = 0,
-      essential = true
+      essential = true,
+      readonlyRootFilesystem = true,
       portMappings = [
         {
           name          = "${var.service_subdomain}-${var.container_port}-tcp",

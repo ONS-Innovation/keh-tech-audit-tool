@@ -16,7 +16,7 @@ requests = "^2.32.3"
 python-dotenv = "^1.0.1"
 mkdocs = "^1.6.1"
 selenium = "^4.27.1"
-pytest = "^8.4.0"
+pytest = "^9.0.2"
 keh-teams-alert = {git = "https://github.com/ONS-Innovation/keh-teams-alert"}
 
 [tool.poetry.group.dev.dependencies]

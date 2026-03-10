@@ -16,7 +16,7 @@ ENV POETRY_VERSION=1.8.3 \
     PYTHONUNBUFFERED=1
 
 # Tools + non-root user + home dir
-RUN apk add --no-cache shadow make curl jq unzip bash && \
+RUN apk add --no-cache shadow make curl jq unzip bash git && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser

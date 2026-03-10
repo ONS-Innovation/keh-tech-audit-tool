@@ -232,7 +232,7 @@ jobs:
             args:
               - -cx
               - |
-                apk add --no-cache aws-cli podman jq iptables curl
+                apk add --no-cache aws-cli podman jq iptables curl git
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
                 # Write the tag to a file for output

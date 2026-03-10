@@ -611,7 +611,7 @@ azure-core = ">=1.38.2,<2.0.0"
 
 [package.source]
 type = "git"
-url = "https://github.com/ONS-Innovation/keh-teams-alert.git"
+url = "https://github.com/ONS-Innovation/keh-teams-alert"
 reference = "HEAD"
 resolved_reference = "f975bcb0f47c0b4a91dffa845b7611ab4fcecc38"
 
@@ -1434,4 +1434,4 @@ h11 = ">=0.16.0,<1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "97cf7c2450f26f208bacf5cb86dda6e20672783087751bf89ec1392521f8824d"
+content-hash = "aff10b3f6dad364f812166fdea6eaae2999267c22dca7a38e57334da59483890"

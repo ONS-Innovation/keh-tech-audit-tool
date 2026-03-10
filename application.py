@@ -21,6 +21,7 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from keh_teams_alert import TeamsAlertClient
 
 load_dotenv()
 
@@ -83,6 +84,52 @@ def get_secret(env):
 
     return secret
 
+# Initialize Teams Alert Client
+
+azure_secret_name = json.loads(get_secret("AZURE_SECRET_NAME"))
+if azure_secret_name:
+    logger.info("Initializing Teams Alert Client with Azure credentials")
+else:
+    logger.warning("Azure credentials not found. Teams alerts will not be sent.")
+
+tenant_id = azure_secret_name["AZURE_TENANT_ID"]
+client_id = azure_secret_name["AZURE_CLIENT_ID"]
+client_secret = azure_secret_name["AZURE_CLIENT_SECRET"]
+scope = azure_secret_name["AZURE_SCOPE"]
+alert_url = azure_secret_name["TEAMS_ALERT_URL"]
+
+def get_teams_alert_client():
+    try:
+        teams_alert_client = TeamsAlertClient(
+            tenant_id=tenant_id,
+            client_id=client_id,
+            client_secret=client_secret,
+            scope=scope,
+        )
+        return teams_alert_client
+    except Exception as e:
+        logger.error(f"Failed to initialize TeamsAlertClient: {e}")
+        return None
+    
+def setup_alert_message(message):
+    alert_message = {
+        "channel" : "KEH Alerts",
+        "message" : "🚨 Tech Audit Tool 🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - "/{message}/"",   
+    }
+    return alert_message
+
+def send_teams_alert(message):
+    teams_alert_client = get_teams_alert_client()
+    if teams_alert_client:
+        try:
+            alert_message = setup_alert_message(message)
+            teams_alert_client.post_to_webhook(alert_url,alert_message)
+            logger.info("Alert sent successfully to Teams Channel.")
+        except Exception as e:
+            logger.error(f"Failed to send alert to Teams alert: {e}")
+    else:
+        logger.error("TeamsAlertClient is not available. Alert not sent.")
+
 
 # SETTING OF API URL: Change if moving to production
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
@@ -99,7 +146,6 @@ app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))["APP_SECRET_KEY"]
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
 
-
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data(logger):
     try:
@@ -111,6 +157,7 @@ def read_auto_complete_data(logger):
             array_data = {}
         else:
             logger.error(f"Error reading array data: {e}")
+            send_teams_alert(f"Error reading array data: {e}")
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
@@ -139,6 +186,7 @@ def read_project_names_data():
             project_names = []
         else:
             logger.error(f"Error reading project names data: {e}")
+            send_teams_alert(f"Error reading project names data: {e}")
             abort(500, description=f"Error reading project names data: {e}")
     return sorted(project_names)
 
@@ -673,6 +721,7 @@ def survey():
             )
     except Exception as e:
         logger.error(f"Request was not blocked but returned: {e}")
+        send_teams_alert(f"Error saving project: {e}")
         flash("An error occurred while saving the project")
         return redirect(url_for("dashboard"))
 

@@ -30,7 +30,8 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Action = "secretsmanager:GetSecretValue"
         Resource = [
           "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.ui_secret_name}*",
-          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.api_secret_name}*"
+          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.api_secret_name}*",
+          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.azure_secret_name}*"
         ]
       }
     ]

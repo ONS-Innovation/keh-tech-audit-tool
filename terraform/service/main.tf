@@ -57,6 +57,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.api_secret_name
         },
         {
+          name  = "AZURE_SECRET_NAME"
+          value = var.azure_secret_name
+        },
+        {
           name  = "API_BUCKET_NAME"
           value = var.api_bucket_name
         },

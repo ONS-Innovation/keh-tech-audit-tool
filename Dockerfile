@@ -20,6 +20,12 @@ RUN apk add --no-cache shadow make curl jq unzip bash git && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
+# Prefer app-owned temp dir (for tempfile + many libs)
+ENV TMPDIR=/tmp
+ENV TEMP=/tmp
+ENV TMP=/tmp
+
+VOLUME ["/var/run", "/tmp"]
 
 # Create writable temp directories for runtime (owned by appuser)
 # - /tmp is conventional; sticky bit 1777 is standard
@@ -63,12 +69,8 @@ RUN --mount=type=secret,id=github_token \
 #     chown -R appuser:appuser /home/appuser/.tmp && \
 #     chmod 700 /home/appuser/.tmp
 
-# Prefer app-owned temp dir (for tempfile + many libs)
-ENV TMPDIR=/tmp
-ENV TEMP=/tmp
-ENV TMP=/tmp
 
-VOLUME ["/var/run", "/tmp"]
+
 
 USER appuser
 

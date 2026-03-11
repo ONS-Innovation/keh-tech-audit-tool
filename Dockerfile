@@ -64,9 +64,9 @@ RUN mkdir -p /home/appuser/.tmp && \
     chmod 700 /home/appuser/.tmp
 
 # Prefer app-owned temp dir (for tempfile + many libs)
-ENV TMPDIR=/home/appuser/.tmp
-ENV TEMP=/home/appuser/.tmp
-ENV TMP=/home/appuser/.tmp
+ENV TMPDIR=/tmp
+ENV TEMP=/tmp
+ENV TMP=/tmp
 
 USER appuser
 

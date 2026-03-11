@@ -24,6 +24,15 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,
+      linuxParameters = {
+        tmpfs = [
+          {
+            containerPath = "/home/appuser/.tmp"
+            size          = 64
+            mountOptions  = ["nodev", "nosuid", "noexec"]
+          }
+        ]
+      },
       portMappings = [
         {
           name          = "${var.service_subdomain}-${var.container_port}-tcp",
@@ -68,6 +77,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "LOCALHOST"
           value = var.localhost
+        },
+        { 
+          name = "TMPDIR"
+          value = "/home/appuser/.tmp" 
         }
       ],
       logConfiguration = {

@@ -18,6 +18,8 @@ mkdocs = "^1.6.1"
 selenium = "^4.27.1"
 pytest = "^9.0.2"
 keh-teams-alert = {git = "https://github.com/ONS-Innovation/keh-teams-alert"}
+azure-identity = "^1.25.2"
+azure-core = "^1.38.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"

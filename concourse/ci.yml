@@ -227,6 +227,7 @@ jobs:
             env: dev
             tag: github-release-tag/tag # Use the release tag from the resource
             repo_name: ((repo_name))
+            github_access_token: ((github_access_token))
           run:
             path: sh
             args:
@@ -297,6 +298,7 @@ jobs:
             tag: github-release-tag/tag
             repo_name: ((repo_name))
             branch: ((branch))
+            github_access_token: ((github_access_token))
           run:
             path: sh
             args:
@@ -306,7 +308,7 @@ jobs:
                   echo "Not on main branch, skipping build."
                   exit 0
                 fi
-                apk add --no-cache aws-cli podman jq iptables curl
+                apk add --no-cache aws-cli podman jq iptables curl git
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
                 echo "Using release tag: ${tag}"

@@ -24,9 +24,9 @@ ENV HOME=/home/appuser
 # Create writable temp directories for runtime (owned by appuser)
 # - /tmp is conventional; sticky bit 1777 is standard
 # - /home/appuser/.tmp is an app-owned temp fallback
-RUN mkdir -p /tmp /var/tmp /home/appuser/.tmp && \
-    chmod 1777 /tmp /var/tmp && \
-    chown -R appuser:appuser /home/appuser/.tmp
+# RUN mkdir -p /tmp /var/tmp /home/appuser/.tmp && \
+#     chmod 1777 /tmp /var/tmp && \
+#     chown -R appuser:appuser /home/appuser/.tmp
 
 # Prefer app-owned temp dir (avoids relying on /tmp if hardened runtime changes it)
 ENV TMPDIR=/home/appuser/.tmp

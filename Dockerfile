@@ -29,7 +29,7 @@ ENV HOME=/home/appuser
 #     chown -R appuser:appuser /home/appuser/.tmp
 
 # Prefer app-owned temp dir (avoids relying on /tmp if hardened runtime changes it)
-ENV TMPDIR=/home/appuser/.tmp
+# ENV TMPDIR=/home/appuser/.tmp
 
 # Ensure packaging toolchain exists (fixes missing packaging/tags.py)
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel packaging
@@ -64,9 +64,9 @@ RUN --mount=type=secret,id=github_token \
 #     chmod 700 /home/appuser/.tmp
 
 # Prefer app-owned temp dir (for tempfile + many libs)
-# ENV TMPDIR=/tmp
-# ENV TEMP=/tmp
-# ENV TMP=/tmp
+ENV TMPDIR=/tmp
+ENV TEMP=/tmp
+ENV TMP=/tmp
 
 VOLUME ["/var/run", "/tmp"]
 

@@ -32,6 +32,10 @@ COPY . /app
 # Design assets (ensure .design-system-version not empty)
 RUN make load-design
 
+# Ensure a temp dir exists and is writable
+RUN mkdir -p /tmp && chmod 1777 /tmp
+ENV TMPDIR=/tmp
+
 # Install only main (prod) deps and gunicorn
 # RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 RUN --mount=type=secret,id=github_token \

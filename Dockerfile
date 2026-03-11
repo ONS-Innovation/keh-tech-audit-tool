@@ -21,6 +21,16 @@ RUN apk add --no-cache shadow make curl jq unzip bash git && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
 
+# Create writable temp directories for runtime (owned by appuser)
+# - /tmp is conventional; sticky bit 1777 is standard
+# - /home/appuser/.tmp is an app-owned temp fallback
+RUN mkdir -p /tmp /var/tmp /home/appuser/.tmp && \
+    chmod 1777 /tmp /var/tmp && \
+    chown -R appuser:appuser /home/appuser/.tmp
+
+# Prefer app-owned temp dir (avoids relying on /tmp if hardened runtime changes it)
+ENV TMPDIR=/home/appuser/.tmp
+
 # Ensure packaging toolchain exists (fixes missing packaging/tags.py)
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel packaging
 
@@ -29,12 +39,11 @@ RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 # Copy source
 COPY . /app
 
+# Ensure appuser can write where needed (if anything writes under /app)
+RUN chown -R appuser:appuser /app
+
 # Design assets (ensure .design-system-version not empty)
 RUN make load-design
-
-# Ensure a temp dir exists and is writable
-RUN mkdir -p /tmp && chmod 1777 /tmp
-ENV TMPDIR=/tmp
 
 # Install only main (prod) deps and gunicorn
 # RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
@@ -48,7 +57,7 @@ RUN --mount=type=secret,id=github_token \
     rm -f /root/.gitconfig 2>/dev/null || true; \
     pip install --no-cache-dir gunicorn
 
-RUN chown -R appuser:appuser /app
+# RUN chown -R appuser:appuser /app
 
 USER appuser
 

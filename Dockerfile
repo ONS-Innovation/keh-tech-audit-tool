@@ -19,11 +19,12 @@ ENV POETRY_VERSION=1.8.3 \
 RUN apk add --no-cache shadow make curl jq unzip bash git && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
-ENV HOME=/home/appuser
+# ENV HOME=/home/appuser
 # Prefer app-owned temp dir (for tempfile + many libs)
 ENV TMPDIR=/tmp
 ENV TEMP=/tmp
 ENV TMP=/tmp
+ENV HOME=/tmp
 
 VOLUME ["/var/run", "/tmp"]
 

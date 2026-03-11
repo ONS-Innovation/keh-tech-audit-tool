@@ -20,7 +20,11 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
 
   # Add a task volume (Fargate-compatible)
   volume {
-    name = "tmp"
+    name = "tmp-storage"
+  }
+
+  volume{
+    name = "run-storage"
   }
 
   container_definitions = jsonencode([
@@ -34,8 +38,13 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       # Mount the writable task volume at /tmp
       mountPoints = [
         {
-          sourceVolume  = "tmp"
+          sourceVolume  = "tmp-storage"
           containerPath = "/tmp"
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "run-storage"
+          containerPath = "/var/run"
           readOnly      = false
         }
       ]

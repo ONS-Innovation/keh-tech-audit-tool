@@ -57,16 +57,18 @@ RUN --mount=type=secret,id=github_token \
     rm -f /root/.gitconfig 2>/dev/null || true; \
     pip install --no-cache-dir gunicorn
 
-# RUN chown -R appuser:appuser /app
-# Create writable temp directories for runtime (owned by appuser)
-RUN mkdir -p /home/appuser/.tmp && \
-    chown -R appuser:appuser /home/appuser/.tmp && \
-    chmod 700 /home/appuser/.tmp
+RUN chown -R appuser:appuser /app
+# # Create writable temp directories for runtime (owned by appuser)
+# RUN mkdir -p /home/appuser/.tmp && \
+#     chown -R appuser:appuser /home/appuser/.tmp && \
+#     chmod 700 /home/appuser/.tmp
 
 # Prefer app-owned temp dir (for tempfile + many libs)
-ENV TMPDIR=/tmp
-ENV TEMP=/tmp
-ENV TMP=/tmp
+# ENV TMPDIR=/tmp
+# ENV TEMP=/tmp
+# ENV TMP=/tmp
+
+VOLUME ["/var/run", "/tmp"]
 
 USER appuser
 

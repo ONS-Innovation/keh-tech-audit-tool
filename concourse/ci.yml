@@ -287,6 +287,8 @@ jobs:
           inputs:
             - name: resource-repo
             - name: github-release-tag
+          outputs:
+            - name: built-images
           params:
             aws_account_id: ((aws_account_sdp_prod))
             aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod

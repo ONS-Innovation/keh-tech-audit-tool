@@ -89,14 +89,14 @@ def get_secret(env):
 azure_secret_name = json.loads(get_secret("AZURE_SECRET_NAME"))
 if azure_secret_name:
     logger.info("Initializing Teams Alert Client with Azure credentials")
+    tenant_id = azure_secret_name["azure_tenant_id"]
+    client_id = azure_secret_name["azure_client_id"]
+    client_secret = azure_secret_name["azure_client_secret"]
+    scope = azure_secret_name["azure_scope"]
+    alert_url = azure_secret_name["azure_webhook_url"]
 else:
     logger.warning("Azure credentials not found. Teams alerts will not be sent.")
 
-tenant_id = azure_secret_name["AZURE_TENANT_ID"]
-client_id = azure_secret_name["AZURE_CLIENT_ID"]
-client_secret = azure_secret_name["AZURE_CLIENT_SECRET"]
-scope = azure_secret_name["AZURE_SCOPE"]
-alert_url = azure_secret_name["TEAMS_ALERT_URL"]
 
 def get_teams_alert_client():
     try:

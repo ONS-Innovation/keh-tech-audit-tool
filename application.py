@@ -426,6 +426,8 @@ def get_user():
             return True
     except Exception as error:
         logger.error(f"{error.__class__.__name__}: {error}")
+        send_teams_alert(f"Error fetching user information: {error}")
+        session.clear()  # Clear session to prevent further issues
         return False
 
 

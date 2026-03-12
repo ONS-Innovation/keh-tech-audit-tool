@@ -34,7 +34,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,
-      user = "0"
 
       # Mount the writable task volume at /tmp
       mountPoints = [

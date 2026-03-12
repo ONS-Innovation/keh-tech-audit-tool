@@ -48,6 +48,9 @@ RUN chown -R appuser:appuser /app
 
 RUN mkdir -p /tmp && chmod 1777 /tmp
 
+# Declare writable mount points (runtime should mount these as writable with readonly root FS)
+VOLUME ["/tmp", "/var/run"]
+
 ENV HOME=/tmp \
     TMPDIR=/tmp \
     TEMP=/tmp \
@@ -55,6 +58,7 @@ ENV HOME=/tmp \
     XDG_CACHE_HOME=/tmp/.cache
 
 USER appuser
+
 
 # Expose the port that the application listens on.
 EXPOSE 8000

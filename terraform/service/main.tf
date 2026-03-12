@@ -34,6 +34,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,
+      user = "0"
 
       # Mount the writable task volume at /tmp
       mountPoints = [
@@ -44,7 +45,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         },
         {
           sourceVolume  = "run-storage"
-          containerPath = "/app"
+          containerPath = "/var/run"
           readOnly      = false
         }
       ]
@@ -105,10 +106,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "TMP"
           value = "/tmp"
-        },
-        {
-          name  = "APP"
-          value = "/app"
         }
       ],
       logConfiguration = {

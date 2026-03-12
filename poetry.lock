@@ -692,19 +692,21 @@ name = "keh-teams-alert"
 version = "1.0.0"
 description = "Python Module for MS Teams"
 optional = false
-python-versions = ">=3.12,<4.0"
+python-versions = ">=3.12"
 groups = ["main"]
 files = []
 develop = false
 
 [package.dependencies]
 azure-core = ">=1.38.2,<2.0.0"
+azure-identity = ">=1.25.2,<2.0.0"
+requests = ">=2.31,<3.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/ONS-Innovation/keh-teams-alert"
 reference = "HEAD"
-resolved_reference = "f975bcb0f47c0b4a91dffa845b7611ab4fcecc38"
+resolved_reference = "8cd6d313ed23f7aa521381f63dc315bb171666b9"
 
 [[package]]
 name = "markdown"

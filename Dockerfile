@@ -16,7 +16,7 @@ ENV POETRY_VERSION=1.8.3 \
     PYTHONUNBUFFERED=1
 
 # Tools + non-root user + home dir
-RUN apk add --no-cache shadow make curl jq unzip bash && \
+RUN apk add --no-cache shadow make curl jq unzip bash git && \
     groupadd -r appuser && useradd -r -g appuser appuser && \
     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
 ENV HOME=/home/appuser
@@ -36,6 +36,11 @@ RUN make load-design
 RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 
 RUN chown -R appuser:appuser /app
+
+ENV TMPDIR=/tmp \
+    TEMP=/tmp \
+    TMP=/tmp \
+    XDG_CACHE_HOME=/tmp/.cache
 
 USER appuser
 

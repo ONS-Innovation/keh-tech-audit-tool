@@ -46,6 +46,8 @@ RUN --mount=type=secret,id=github_token \
 
 RUN chown -R appuser:appuser /app
 
+RUN mkdir -p /tmp && chmod 1777 /tmp
+
 ENV HOME=/tmp \
     TMPDIR=/tmp \
     TEMP=/tmp \

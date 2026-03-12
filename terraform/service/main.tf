@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         },
         {
           sourceVolume  = "run-storage"
-          containerPath = "/var/run"
+          containerPath = "/app"
           readOnly      = false
         }
       ]
@@ -105,6 +105,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "TMP"
           value = "/tmp"
+        },
+        {
+          name  = "APP"
+          value = "/app"
         }
       ],
       logConfiguration = {

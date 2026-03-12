@@ -46,7 +46,8 @@ RUN --mount=type=secret,id=github_token \
 
 RUN chown -R appuser:appuser /app
 
-ENV TMPDIR=/tmp \
+ENV HOME=/tmp \
+    TMPDIR=/tmp \
     TEMP=/tmp \
     TMP=/tmp \
     XDG_CACHE_HOME=/tmp/.cache

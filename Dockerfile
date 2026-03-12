@@ -51,11 +51,11 @@ RUN mkdir -p /tmp && chmod 1777 /tmp
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
 VOLUME ["/tmp", "/var/run"]
 
-ENV HOME=/tmp \
-    TMPDIR=/tmp \
-    TEMP=/tmp \
-    TMP=/tmp \
-    XDG_CACHE_HOME=/tmp/.cache
+# ENV HOME=/tmp \
+#     TMPDIR=/tmp \
+#     TEMP=/tmp \
+#     TMP=/tmp \
+#     XDG_CACHE_HOME=/tmp/.cache
 
 USER appuser
 

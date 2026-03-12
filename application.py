@@ -417,6 +417,8 @@ def get_user():
             f"{API_URL}/api/v1/user",
             headers=headers,
         )
+        logger.info(f"get_user: API response => {user_request}")
+        logger.info(f"headers => {headers}")
         if user_request.status_code != HTTPStatus.OK:
             return False
         else:
@@ -426,8 +428,6 @@ def get_user():
             return True
     except Exception as error:
         logger.error(f"{error.__class__.__name__}: {error}")
-        send_teams_alert(f"Error fetching user information: {error}")
-        session.clear()  # Clear session to prevent further issues
         return False
 
 

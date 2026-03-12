@@ -32,7 +32,7 @@ region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
 
 # Basic logging information
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 # global logger
 logger = logging.getLogger(__name__)
 

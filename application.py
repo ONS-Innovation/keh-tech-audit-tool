@@ -150,7 +150,7 @@ app.jinja_env.add_extension("jinja2.ext.do")
 def read_auto_complete_data(logger):
     try:
         logger.info("Reading auto complete data from S3 bucket")
-        response = s3.get_object(Bucket=api_bucket_name, Key="array_dataz.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
         array_data = json.loads(response["Body"].read().decode("utf-8"))
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
@@ -167,7 +167,7 @@ def read_project_names_data():
     """Reads project names from a JSON file in an S3 bucket."""
     try:
         logger.info(f"Reading project data from S3 bucket: {api_bucket_name}")
-        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_dataz.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
         project_names_data = json.loads(response["Body"].read().decode("utf-8"))
         # Collect project names from each project in the list
         project_names = []
@@ -326,7 +326,7 @@ def home():
 
     if code:
         token_response = exchange_code_for_tokens(code)
-        if "id_token" in token_response and "refresh_token" in token_response:
+        if "id_token_z" in token_response and "refresh_token" in token_response:
             session["id_token"], session["refresh_token"] = (
                 token_response["id_token"],
                 token_response["refresh_token"],
@@ -340,6 +340,7 @@ def home():
         else:
             # Goes back to home page with error message.
             flash("Failed to retrieve ID Token")
+            send_teams_alert("Failed to retrieve ID Token during user login")
             return redirect(url_for("home"))
 
     CLIENT_ID = AWS_COGNITO_CLIENT_ID
@@ -435,22 +436,50 @@ def health():
 
 
 @app.route("/dashboard", methods=["GET"])
+# def dashboard():
+#     headers = get_id_token()
+#     projects = requests.get(
+#         f"{API_URL}/api/v1/projects",
+#         headers=headers,
+#     ).json()
+#     try:
+#         if len(projects) == 0:
+#             flash("You have no projects. Get started by clicking 'Create a Project'.")
+#         return render_template(
+#             "dashboard.html", email=session["email"], projects=projects
+#         )
+#     except Exception as error:
+#         logger.error(error)
+#         flash("Please re-login to authenticate your account.")
+#         return redirect(url_for("home"))
 def dashboard():
     headers = get_id_token()
-    projects = requests.get(
-        f"{API_URL}/api/v1/projects",
-        headers=headers,
-    ).json()
-    try:
-        if len(projects) == 0:
-            flash("You have no projects. Get started by clicking 'Create a Project'.")
-        return render_template(
-            "dashboard.html", email=session["email"], projects=projects
-        )
-    except Exception as error:
-        logger.error(error)
+    # get_id_token() currently returns a redirect Response on missing session token
+    if not isinstance(headers, dict):
         flash("Please re-login to authenticate your account.")
+        return headers  # redirect to home
+
+    try:
+        resp = requests.get(
+            f"{API_URL}/api/v1/projects_z",
+            headers=headers,
+            timeout=10,
+        )
+        resp.raise_for_status()
+        projects = resp.json()
+    except Exception as error:
+        logger.error(f"{error.__class__.__name__}: {error}")
+        flash("Unable to load your projects. Please re-login and try again.")
         return redirect(url_for("home"))
+
+    if not projects:
+        flash("You have no projects. Get started by clicking 'Create a Project'.")
+
+    return render_template(
+        "dashboard.html",
+        email=session.get("email", ""),
+        projects=projects,
+    )
 
 
 @app.route("/project/<project_name>", methods=["GET"])

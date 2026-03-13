@@ -30,6 +30,7 @@ load_dotenv()
 api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
+AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
 
 # Basic logging information
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -100,6 +101,7 @@ else:
 
 def get_teams_alert_client():
     try:
+        logger.info("Creating TeamsAlertClient instance")
         teams_alert_client = TeamsAlertClient(
             tenant_id=tenant_id,
             client_id=client_id,
@@ -111,10 +113,10 @@ def get_teams_alert_client():
         logger.error(f"Failed to initialize TeamsAlertClient: {e}")
         return None
     
-def setup_alert_message(message):
+def setup_alert_message(message, AWS_ENV):
     alert_message = {
         "channel" : "KEH Alerts",
-        "message" : "🚨 Tech Audit Tool 🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - "/{message}/"",   
+        "message" : "🚨 Tech Audit Tool "/{AWS_ENV}/"🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - "/{message}/"",   
     }
     return alert_message
 
@@ -269,7 +271,7 @@ supportingNavItems = [
 
 def get_id_token():
     try:
-        headers = {"Authorization": f"{session['id_token_z']}"}
+        headers = {"Authorization": f"{session['id_tokenƒ']}"}
     except KeyError:
         send_teams_alert("Session token missing during get_id_token()")
         return redirect(url_for("home"))
@@ -323,7 +325,6 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
-    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
 
     if code:
         token_response = exchange_code_for_tokens(code)
@@ -379,7 +380,6 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
-    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
     token_url = f"https://{AWS_ENV}-tech-audit-tool-api.auth.eu-west-2.amazoncognito.com/oauth2/token"
     payload = {
         "grant_type": "authorization_code",

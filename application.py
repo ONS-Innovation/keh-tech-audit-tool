@@ -32,7 +32,7 @@ region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
 
 # Basic logging information
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 # global logger
 logger = logging.getLogger(__name__)
 
@@ -269,8 +269,9 @@ supportingNavItems = [
 
 def get_id_token():
     try:
-        headers = {"Authorization": f"{session['id_token']}"}
+        headers = {"Authorization": f"{session['id_token_z']}"}
     except KeyError:
+        send_teams_alert("Session token missing during get_id_token()")
         return redirect(url_for("home"))
     return headers
 
@@ -326,7 +327,7 @@ def home():
 
     if code:
         token_response = exchange_code_for_tokens(code)
-        if "id_token_z" in token_response and "refresh_token" in token_response:
+        if "id_token" in token_response and "refresh_token" in token_response:
             session["id_token"], session["refresh_token"] = (
                 token_response["id_token"],
                 token_response["refresh_token"],
@@ -461,7 +462,7 @@ def dashboard():
 
     try:
         resp = requests.get(
-            f"{API_URL}/api/v1/projects_z",
+            f"{API_URL}/api/v1/projects",
             headers=headers,
             timeout=10,
         )

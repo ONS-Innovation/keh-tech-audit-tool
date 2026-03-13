@@ -514,6 +514,9 @@ def view_project(project_name):
         logger.info(
             f"view_project: number of sanitized fields = {len(sanitized_projects)}"
         )
+        send_teams_alert(  
+            f"Project accessed: {project_name} by {user_email}. Sanitized fields count: {len(sanitized_projects)}"
+        )
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))

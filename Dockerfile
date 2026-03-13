@@ -33,23 +33,24 @@ COPY . /app
 RUN make load-design
 
 # Install only main (prod) deps and gunicorn
-RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
-# RUN --mount=type=secret,id=github_token \
-#     set -e; \
-#     if [ -f /run/secrets/github_token ]; then \
-#       GITHUB_TOKEN="$(cat /run/secrets/github_token)"; \
-#       git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"; \
-#     fi; \
-#     poetry install --only main --no-root; \
-#     rm -f /root/.gitconfig 2>/dev/null || true; \
-#     pip install --no-cache-dir gunicorn
+# RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
+RUN --mount=type=secret,id=github_token \
+    set -e; \
+    if [ -f /run/secrets/github_token ]; then \
+      GITHUB_TOKEN="$(cat /run/secrets/github_token)"; \
+      git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"; \
+    fi; \
+    poetry install --only main --no-root; \
+    rm -f /root/.gitconfig 2>/dev/null || true; \
+    pip install --no-cache-dir gunicorn
 
 RUN chown -R appuser:appuser /app
 
 RUN mkdir -p /tmp && chmod 1777 /tmp
 
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
-VOLUME ["/tmp", "/var/run"]
+# VOLUME ["/tmp", "/var/run"]
+VOLUME [ "/tmp" ]
 
 # ENV HOME=/tmp \
 #     TMPDIR=/tmp \

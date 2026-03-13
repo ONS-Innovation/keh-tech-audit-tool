@@ -99,7 +99,7 @@ else:
     logger.warning("Azure credentials not found. Teams alerts will not be sent.")
 
 
-def get_teams_alert_client():
+def get_teams_alert_client() -> TeamsAlertClient:
     try:
         logger.info("Creating TeamsAlertClient instance")
         teams_alert_client = TeamsAlertClient(
@@ -113,14 +113,15 @@ def get_teams_alert_client():
         logger.error(f"Failed to initialize TeamsAlertClient: {e}")
         return None
     
-def setup_alert_message(message, AWS_ENV):
+def setup_alert_message(message, AWS_ENV) -> dict:
     alert_message = {
         "channel" : "KEH Alerts",
         "message" : "🚨 Tech Audit Tool "/{AWS_ENV}/"🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - "/{message}/"",   
     }
     return alert_message
 
-def send_teams_alert(message):
+def send_teams_alert(message) -> None:
+    logger.info("Preparing to send alert to Teams Channel")
     teams_alert_client = get_teams_alert_client()
     if teams_alert_client:
         try:

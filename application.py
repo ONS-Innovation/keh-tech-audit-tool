@@ -150,7 +150,7 @@ app.jinja_env.add_extension("jinja2.ext.do")
 def read_auto_complete_data(logger):
     try:
         logger.info("Reading auto complete data from S3 bucket")
-        response = s3.get_object(Bucket=api_bucket_name, Key="array_data.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="array_dataz.json")
         array_data = json.loads(response["Body"].read().decode("utf-8"))
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
@@ -167,7 +167,7 @@ def read_project_names_data():
     """Reads project names from a JSON file in an S3 bucket."""
     try:
         logger.info(f"Reading project data from S3 bucket: {api_bucket_name}")
-        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_dataz.json")
         project_names_data = json.loads(response["Body"].read().decode("utf-8"))
         # Collect project names from each project in the list
         project_names = []
@@ -417,8 +417,6 @@ def get_user():
             f"{API_URL}/api/v1/user",
             headers=headers,
         )
-        logger.info(f"get_user: API response => {user_request}")
-        logger.info(f"headers => {headers}")
         if user_request.status_code != HTTPStatus.OK:
             return False
         else:

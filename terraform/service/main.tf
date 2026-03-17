@@ -93,18 +93,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "LOCALHOST"
           value = var.localhost
-        },
-        {
-          name  = "TMPDIR"
-          value = "/tmp"
-        },
-        {
-          name  = "TEMP"
-          value = "/tmp"
-        },
-        {
-          name  = "TMP"
-          value = "/tmp"
         }
       ],
       logConfiguration = {

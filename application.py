@@ -114,7 +114,7 @@ def get_teams_alert_client() -> TeamsAlertClient:
         return None
     
 def setup_alert_message(message: str , aws_env: str | None = None) -> dict:
-    env = aws_env or AWS_ENV if aws_env else "Unknown Environment"
+    env = aws_env or AWS_ENV or "Unknown Environment"
     return {
         "channel" : "KEH Alerts",
         "message" : f"🚨 Tech Audit Tool {env}🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - {message}",   

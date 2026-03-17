@@ -273,7 +273,7 @@ supportingNavItems = [
 
 def get_id_token():
     try:
-        headers = {"Authorization": f"{session['id_tokenƒ']}"}
+        headers = {"Authorization": f"{session['id_token']}"}
         send_teams_alert("Session token successfully retrieved in get_id_token()")
     except KeyError:
         send_teams_alert("Session token missing during get_id_token()")
@@ -440,49 +440,50 @@ def health():
 
 
 @app.route("/dashboard", methods=["GET"])
-def dashboard():
-    headers = get_id_token()
-    projects = requests.get(
-        f"{API_URL}/api/v1/projects",
-        headers=headers,
-    ).json()
-    try:
-        if len(projects) == 0:
-            flash("You have no projects. Get started by clicking 'Create a Project'.")
-        return render_template(
-            "dashboard.html", email=session["email"], projects=projects
-        )
-    except Exception as error:
-        logger.error(error)
-        flash("Please re-login to authenticate your account.")
-        return redirect(url_for("home"))
 # def dashboard():
 #     headers = get_id_token()
-#     # get_id_token() currently returns a redirect Response on missing session token
-#     if not isinstance(headers, dict):
-#         flash("Please re-login to authenticate your account.")
-#         return headers  # redirect to home
-
+#     projects = requests.get(
+#         f"{API_URL}/api/v1/projects",
+#         headers=headers,
+#     ).json()
 #     try:
-#         resp = requests.get(
-#             f"{API_URL}/api/v1/projects",
-#             headers=headers,
-#             timeout=10,
+#         if len(projects) == 0:
+#             flash("You have no projects. Get started by clicking 'Create a Project'.")
+#         return render_template(
+#             "dashboard.html", email=session["email"], projects=projects
 #         )
-#         resp.raise_for_status()
-#         projects = resp.json()
 #     except Exception as error:
-#         logger.error(f"{error.__class__.__name__}: {error}")
-#         flash("Unable to load your projects. Please re-login and try again.")
+#         logger.error(error)
+#         flash("Please re-login to authenticate your account.")
 #         return redirect(url_for("home"))
-    # if not projects:
-    #     flash("You have no projects. Get started by clicking 'Create a Project'.")
+def dashboard():
+    headers = get_id_token()
+    # get_id_token() currently returns a redirect Response on missing session token
+    if not isinstance(headers, dict):
+        flash("Please re-login to authenticate your account.")
+        return headers  # redirect to home
 
-    # return render_template(
-    #     "dashboard.html",
-    #     email=session.get("email", ""),
-    #     projects=projects,
-    # )
+    try:
+        resp = requests.get(
+            f"{API_URL}/api/v1/projects",
+            headers=headers,
+            timeout=10,
+        )
+        resp.raise_for_status()
+        projects = resp.json()
+    except Exception as error:
+        logger.error(f"{error.__class__.__name__}: {error}")
+        flash("Unable to load your projects. Please re-login and try again.")
+        return redirect(url_for("home"))
+
+    if not projects:
+        flash("You have no projects. Get started by clicking 'Create a Project'.")
+
+    return render_template(
+        "dashboard.html",
+        email=session.get("email", ""),
+        projects=projects,
+    )
 
 
 @app.route("/project/<project_name>", methods=["GET"])

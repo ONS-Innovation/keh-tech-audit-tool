@@ -24,8 +24,6 @@ ENV HOME=/home/appuser
 # Ensure packaging toolchain exists (fixes missing packaging/tags.py)
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel packaging "poetry==$POETRY_VERSION"
 
-# RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
-
 # Copy source
 COPY . /app
 
@@ -33,7 +31,6 @@ COPY . /app
 RUN make load-design
 
 # Install only main (prod) deps and gunicorn
-# RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 RUN --mount=type=secret,id=github_token \
     set -e; \
     if [ -f /run/secrets/github_token ]; then \
@@ -49,17 +46,9 @@ RUN chown -R appuser:appuser /app
 RUN mkdir -p /tmp && chmod 1777 /tmp
 
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
-# VOLUME ["/tmp", "/var/run"]
 VOLUME [ "/tmp" ]
 
-# ENV HOME=/tmp \
-#     TMPDIR=/tmp \
-#     TEMP=/tmp \
-#     TMP=/tmp \
-#     XDG_CACHE_HOME=/tmp/.cache
-
 USER appuser
-
 
 # Expose the port that the application listens on.
 EXPOSE 8000

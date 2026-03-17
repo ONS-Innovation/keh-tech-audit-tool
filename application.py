@@ -116,7 +116,7 @@ def get_teams_alert_client() -> TeamsAlertClient:
 def setup_alert_message(message, AWS_ENV) -> dict:
     alert_message = {
         "channel" : "KEH Alerts",
-        "message" : "🚨 Tech Audit Tool "/{AWS_ENV}/"🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - "/{message}/"",   
+        "message" : f"🚨 Tech Audit Tool {AWS_ENV}🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - {message}",   
     }
     return alert_message
 

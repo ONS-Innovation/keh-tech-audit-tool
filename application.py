@@ -126,8 +126,8 @@ def send_teams_alert(message) -> None:
     if teams_alert_client:
         try:
             alert_message = setup_alert_message(message)
-            msg_post = teams_alert_client.post_to_webhook(alert_url,alert_message)
-            logger.info(f"Alert sent successfully to Teams Channel: {msg_post.json()}")
+            teams_alert_client.post_to_webhook(alert_url,alert_message)
+            logger.info(f"Alert sent successfully to Teams Channel")
         except Exception as e:
             logger.error(f"Failed to send alert to Teams alert: {e}")
     else:
@@ -440,50 +440,49 @@ def health():
 
 
 @app.route("/dashboard", methods=["GET"])
-# def dashboard():
-#     headers = get_id_token()
-#     projects = requests.get(
-#         f"{API_URL}/api/v1/projects",
-#         headers=headers,
-#     ).json()
-#     try:
-#         if len(projects) == 0:
-#             flash("You have no projects. Get started by clicking 'Create a Project'.")
-#         return render_template(
-#             "dashboard.html", email=session["email"], projects=projects
-#         )
-#     except Exception as error:
-#         logger.error(error)
-#         flash("Please re-login to authenticate your account.")
-#         return redirect(url_for("home"))
 def dashboard():
     headers = get_id_token()
-    # get_id_token() currently returns a redirect Response on missing session token
-    if not isinstance(headers, dict):
-        flash("Please re-login to authenticate your account.")
-        return headers  # redirect to home
-
+    projects = requests.get(
+        f"{API_URL}/api/v1/projects",
+        headers=headers,
+    ).json()
     try:
-        resp = requests.get(
-            f"{API_URL}/api/v1/projects",
-            headers=headers,
-            timeout=10,
+        if len(projects) == 0:
+            flash("You have no projects. Get started by clicking 'Create a Project'.")
+        return render_template(
+            "dashboard.html", email=session["email"], projects=projects
         )
-        resp.raise_for_status()
-        projects = resp.json()
     except Exception as error:
-        logger.error(f"{error.__class__.__name__}: {error}")
-        flash("Unable to load your projects. Please re-login and try again.")
+        logger.error(error)
+        flash("Please re-login to authenticate your account.")
         return redirect(url_for("home"))
+# def dashboard():
+#     headers = get_id_token()
+#     # get_id_token() currently returns a redirect Response on missing session token
+#     if not isinstance(headers, dict):
+#         flash("Please re-login to authenticate your account.")
+#         return headers  # redirect to home
 
-    if not projects:
-        flash("You have no projects. Get started by clicking 'Create a Project'.")
+#     try:
+#         resp = requests.get(
+#             f"{API_URL}/api/v1/projects",
+#             headers=headers,
+#             timeout=10,
+#         )
+#         resp.raise_for_status()
+#         projects = resp.json()
+#     except Exception as error:
+#         logger.error(f"{error.__class__.__name__}: {error}")
+#         flash("Unable to load your projects. Please re-login and try again.")
+#         return redirect(url_for("home"))
+    # if not projects:
+    #     flash("You have no projects. Get started by clicking 'Create a Project'.")
 
-    return render_template(
-        "dashboard.html",
-        email=session.get("email", ""),
-        projects=projects,
-    )
+    # return render_template(
+    #     "dashboard.html",
+    #     email=session.get("email", ""),
+    #     projects=projects,
+    # )
 
 
 @app.route("/project/<project_name>", methods=["GET"])

@@ -170,7 +170,7 @@ def read_project_names_data():
     """Reads project names from a JSON file in an S3 bucket."""
     try:
         logger.info(f"Reading project data from S3 bucket: {api_bucket_name}")
-        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data_z.json")
         project_names_data = json.loads(response["Body"].read().decode("utf-8"))
         # Collect project names from each project in the list
         project_names = []
@@ -186,6 +186,7 @@ def read_project_names_data():
                 project_names.append(name)
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
+            send_teams_alert("Project names data file not found in S3 bucket. Returning empty project list.")
             project_names = []
         else:
             logger.error(f"Error reading project names data: {e}")
@@ -273,6 +274,7 @@ supportingNavItems = [
 def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_tokenƒ']}"}
+        send_teams_alert("Session token successfully retrieved in get_id_token()")
     except KeyError:
         send_teams_alert("Session token missing during get_id_token()")
         return redirect(url_for("home"))

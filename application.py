@@ -113,19 +113,19 @@ def get_teams_alert_client() -> TeamsAlertClient:
         logger.error(f"Failed to initialize TeamsAlertClient: {e}")
         return None
     
-def setup_alert_message(message, AWS_ENV) -> dict:
-    alert_message = {
+def setup_alert_message(message: str , aws_env: str | None = None) -> dict:
+    env = aws_env or AWS_ENV if aws_env else "Unknown Environment"
+    return {
         "channel" : "KEH Alerts",
-        "message" : f"🚨 Tech Audit Tool {AWS_ENV}🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - {message}",   
+        "message" : f"🚨 Tech Audit Tool {env}🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - {message}",   
     }
-    return alert_message
 
 def send_teams_alert(message) -> None:
     logger.info("Preparing to send alert to Teams Channel")
     teams_alert_client = get_teams_alert_client()
     if teams_alert_client:
         try:
-            alert_message = setup_alert_message(message, AWS_ENV)
+            alert_message = setup_alert_message(message)
             msg_post = teams_alert_client.post_to_webhook(alert_url,alert_message)
             logger.info(f"Alert sent successfully to Teams Channel: {msg_post.json()}")
         except Exception as e:

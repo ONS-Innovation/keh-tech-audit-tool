@@ -170,7 +170,7 @@ def read_project_names_data():
     """Reads project names from a JSON file in an S3 bucket."""
     try:
         logger.info(f"Reading project data from S3 bucket: {api_bucket_name}")
-        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data_z.json")
+        response = s3.get_object(Bucket=api_bucket_name, Key="new_project_data.json")
         project_names_data = json.loads(response["Body"].read().decode("utf-8"))
         # Collect project names from each project in the list
         project_names = []
@@ -274,7 +274,6 @@ supportingNavItems = [
 def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
-        send_teams_alert("Session token successfully retrieved in get_id_token()")
     except KeyError:
         send_teams_alert("Session token missing during get_id_token()")
         return redirect(url_for("home"))
@@ -456,34 +455,6 @@ def dashboard():
         logger.error(error)
         flash("Please re-login to authenticate your account.")
         return redirect(url_for("home"))
-# def dashboard():
-#     headers = get_id_token()
-#     # get_id_token() currently returns a redirect Response on missing session token
-#     if not isinstance(headers, dict):
-#         flash("Please re-login to authenticate your account.")
-#         return headers  # redirect to home
-
-#     try:
-#         resp = requests.get(
-#             f"{API_URL}/api/v1/projects",
-#             headers=headers,
-#             timeout=10,
-#         )
-#         resp.raise_for_status()
-#         projects = resp.json()
-#     except Exception as error:
-#         logger.error(f"{error.__class__.__name__}: {error}")
-#         flash("Unable to load your projects. Please re-login and try again.")
-#         return redirect(url_for("home"))
-
-#     if not projects:
-#         flash("You have no projects. Get started by clicking 'Create a Project'.")
-
-#     return render_template(
-#         "dashboard.html",
-#         email=session.get("email", ""),
-#         projects=projects,
-#     )
 
 
 @app.route("/project/<project_name>", methods=["GET"])
@@ -518,7 +489,7 @@ def view_project(project_name):
             f"view_project: number of sanitized fields = {len(sanitized_projects)}"
         )
         send_teams_alert(  
-            f"Project accessed: {project_name} by {user_email}. Sanitized fields count: {len(sanitized_projects)}"
+            f"Project accessed: {project_name} by {user_email}."
         )
     except Exception:
         flash("Something went wrong. Please try again.")

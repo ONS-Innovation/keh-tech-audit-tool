@@ -30,7 +30,8 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
   container_definitions = jsonencode([
     {
       name      = "${var.service_subdomain}-task-application"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}"
+      # image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}@${data.aws_ecr_image.tech_audit_tool_image.image_digest}"
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,

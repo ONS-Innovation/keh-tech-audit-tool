@@ -94,6 +94,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "LOCALHOST"
           value = var.localhost
+        },
+        {
+          name = "BRANCH_NAME"
+          value = var.branch_name
         }
       ],
       logConfiguration = {

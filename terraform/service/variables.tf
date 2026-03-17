@@ -145,6 +145,11 @@ variable "localhost" {
   default     = "false"
 }
 
+variable "branch_name" {
+  description = "Branch name for the deployment"
+  type        = string
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"

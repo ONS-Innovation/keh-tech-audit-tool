@@ -31,6 +31,7 @@ api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
 AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
+branch_name = os.getenv("BRANCH_NAME", "")
 
 # Basic logging information
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -117,13 +118,13 @@ def setup_alert_message(message: str , aws_env: str | None = None) -> dict:
     env = aws_env or AWS_ENV or "Unknown Environment"
     return {
         "channel" : "KEH Alerts",
-        "message" : f"🚨 Tech Audit Tool {env}🚨 <br> An error occurred in the Tech Audit Tool UI <br> Please investigate the issue - {message}",   
+        "message" : f"🚨 Tech Audit Tool {env}🚨 <br> Description: {message}", 
     }
 
 def send_teams_alert(message) -> None:
     logger.info("Preparing to send alert to Teams Channel")
     teams_alert_client = get_teams_alert_client()
-    if teams_alert_client:
+    if teams_alert_client and branch_name == "main":  # Only send alerts if client is initialized and on main branch
         try:
             alert_message = setup_alert_message(message)
             teams_alert_client.post_to_webhook(alert_url,alert_message)

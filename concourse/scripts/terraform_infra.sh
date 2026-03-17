@@ -18,6 +18,8 @@ localhost=$(echo "$secrets" | jq -r .localhost)
 container_image=$(echo "$secrets" | jq -r .container_image)
 force_deployment=$(echo "$secrets" | jq -r .force_deployment)
 
+branch_name =$branch
+
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
@@ -43,4 +45,5 @@ terraform apply \
 -var "localhost=$localhost" \
 -var "container_image=$container_image" \
 -var "force_deployment=$force_deployment" \
+-var "branch_name=$branch_name" \
 -auto-approve

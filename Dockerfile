@@ -33,7 +33,7 @@ COPY . /app
 RUN make load-design
 
 # Install only main (prod) deps and gunicorn
-RUN --mount=type=secret,id=github_token poetry install --only main --no-root && pip install --no-cache-dir gunicorn
+RUN poetry install --only main --no-root && pip install --no-cache-dir gunicorn
 # RUN --mount=type=secret,id=github_token \
 #     set -e; \
 #     if [ -f /run/secrets/github_token ]; then \

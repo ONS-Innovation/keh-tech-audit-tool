@@ -125,7 +125,7 @@ def send_teams_alert(message) -> None:
     teams_alert_client = get_teams_alert_client()
     if teams_alert_client:
         try:
-            alert_message = setup_alert_message(message)
+            alert_message = setup_alert_message(message, AWS_ENV)
             msg_post = teams_alert_client.post_to_webhook(alert_url,alert_message)
             logger.info(f"Alert sent successfully to Teams Channel: {msg_post.json()}")
         except Exception as e:

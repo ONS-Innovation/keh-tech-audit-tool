@@ -19,13 +19,13 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
   family = "ecs-service-${var.service_subdomain}-application"
 
   # Add a task volume (Fargate-compatible)
-  volume {
-    name = "tmp-storage"
-  }
+  # volume {
+  #   name = "tmp-storage"
+  # }
 
-  volume{
-    name = "run-storage"
-  }
+  # volume{
+  #   name = "run-storage"
+  # }
 
   container_definitions = jsonencode([
     {

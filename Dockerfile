@@ -46,7 +46,7 @@ RUN chown -R appuser:appuser /app
 RUN mkdir -p /tmp && chmod 1777 /tmp
 
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
-VOLUME [ "/tmp" ]
+# VOLUME [ "/tmp" ]
 
 USER appuser
 

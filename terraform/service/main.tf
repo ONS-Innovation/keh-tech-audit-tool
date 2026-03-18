@@ -36,18 +36,18 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       readonlyRootFilesystem = true,
 
       # Mount the writable task volume at /tmp
-      mountPoints = [
-        {
-          sourceVolume  = "tmp-storage"
-          containerPath = "/tmp"
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "run-storage"
-          containerPath = "/var/run"
-          readOnly      = false
-        }
-      ]
+      # mountPoints = [
+      #   {
+      #     sourceVolume  = "tmp-storage"
+      #     containerPath = "/tmp"
+      #     readOnly      = false
+      #   },
+      #   {
+      #     sourceVolume  = "run-storage"
+      #     containerPath = "/var/run"
+      #     readOnly      = false
+      #   }
+      # ]
 
       portMappings = [
         {

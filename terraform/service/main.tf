@@ -152,7 +152,7 @@ resource "aws_ecs_service" "application" {
 
     # TODO: The container fails to launch unless a public IP is assigned
     # For a private ip, you would need to use a NAT Gateway?
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
 }

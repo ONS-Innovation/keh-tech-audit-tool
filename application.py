@@ -130,7 +130,7 @@ def send_teams_alert(message) -> None:
     logger.info("Preparing to send alert to Teams Channel")
     teams_alert_client = get_teams_alert_client()
     if (
-        teams_alert_client and branch_name != "main"
+        teams_alert_client and branch_name == "main"
     ):  # Only send alerts if client is initialized and on main branch
         try:
             alert_message = setup_alert_message(message)

@@ -128,7 +128,7 @@ def send_teams_alert(message) -> None:
         try:
             alert_message = setup_alert_message(message)
             teams_alert_client.post_to_webhook(alert_url,alert_message)
-            logger.info(f"Alert sent successfully to Teams Channel")
+            logger.info("Alert sent successfully to Teams Channel")
         except Exception as e:
             logger.error(f"Failed to send alert to Teams alert: {e}")
     else:

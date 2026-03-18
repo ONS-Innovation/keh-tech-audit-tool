@@ -41,7 +41,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          |
           git config --global url."https://x-access-token:${{secrets.PAT || secrets.GITHUB_TOKEN   }}@github.com/".insteadOf "https://github.com/"
           make install-dev
 

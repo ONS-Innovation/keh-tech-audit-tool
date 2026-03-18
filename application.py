@@ -34,7 +34,9 @@ AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
 branch_name = os.getenv("BRANCH_NAME", "")
 
 # Basic logging information
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 # global logger
 logger = logging.getLogger(__name__)
 
@@ -86,6 +88,7 @@ def get_secret(env):
 
     return secret
 
+
 # Initialize Teams Alert Client
 
 azure_secret_name = json.loads(get_secret("AZURE_SECRET_NAME"))
@@ -113,21 +116,25 @@ def get_teams_alert_client() -> TeamsAlertClient:
     except Exception as e:
         logger.error(f"Failed to initialize TeamsAlertClient: {e}")
         return None
-    
-def setup_alert_message(message: str , aws_env: str | None = None) -> dict:
+
+
+def setup_alert_message(message: str, aws_env: str | None = None) -> dict:
     env = aws_env or AWS_ENV or "Unknown Environment"
     return {
-        "channel" : "KEH Alerts",
-        "message" : f"🚨 Tech Audit Tool {env}🚨 <br> Description: {message}", 
+        "channel": "KEH Alerts",
+        "message": f"🚨 Tech Audit Tool {env}🚨 <br> Description: {message}",
     }
+
 
 def send_teams_alert(message) -> None:
     logger.info("Preparing to send alert to Teams Channel")
     teams_alert_client = get_teams_alert_client()
-    if teams_alert_client and branch_name == "main":  # Only send alerts if client is initialized and on main branch
+    if (
+        teams_alert_client and branch_name == "main"
+    ):  # Only send alerts if client is initialized and on main branch
         try:
             alert_message = setup_alert_message(message)
-            teams_alert_client.post_to_webhook(alert_url,alert_message)
+            teams_alert_client.post_to_webhook(alert_url, alert_message)
             logger.info("Alert sent successfully to Teams Channel")
         except Exception as e:
             logger.error(f"Failed to send alert to Teams alert: {e}")
@@ -149,6 +156,7 @@ app = Flask(__name__)
 app.secret_key = json.loads(get_secret("UI_SECRET_NAME"))["APP_SECRET_KEY"]
 app.jinja_env.undefined = ChainableUndefined
 app.jinja_env.add_extension("jinja2.ext.do")
+
 
 # GET auto complete data from S3 bucket using boto3
 def read_auto_complete_data(logger):
@@ -187,7 +195,9 @@ def read_project_names_data():
                 project_names.append(name)
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
-            send_teams_alert("Project names data file not found in S3 bucket. Returning empty project list.")
+            send_teams_alert(
+                "Project names data file not found in S3 bucket. Returning empty project list."
+            )
             project_names = []
         else:
             logger.error(f"Error reading project names data: {e}")
@@ -489,9 +499,7 @@ def view_project(project_name):
         logger.info(
             f"view_project: number of sanitized fields = {len(sanitized_projects)}"
         )
-        send_teams_alert(  
-            f"Project accessed: {project_name} by {user_email}."
-        )
+        send_teams_alert(f"Project accessed: {project_name} by {user_email}.")
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))

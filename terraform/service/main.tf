@@ -19,9 +19,9 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
   family = "ecs-service-${var.service_subdomain}-application"
 
   # Add a task volume (Fargate-compatible)
-  # volume {
-  #   name = "tmp-storage"
-  # }
+  volume {
+    name = "tmp-storage"
+  }
 
   # volume{
   #   name = "run-storage"
@@ -36,18 +36,18 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       readonlyRootFilesystem = true,
 
       # Mount the writable task volume at /tmp
-      # mountPoints = [
-      #   {
-      #     sourceVolume  = "tmp-storage"
-      #     containerPath = "/tmp"
-      #     readOnly      = false
-      #   },
+      mountPoints = [
+        {
+          sourceVolume  = "tmp-storage"
+          containerPath = "/tmp"
+          readOnly      = false
+        },
       #   {
       #     sourceVolume  = "run-storage"
       #     containerPath = "/var/run"
       #     readOnly      = false
       #   }
-      # ]
+      ]
 
       portMappings = [
         {

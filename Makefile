@@ -32,7 +32,7 @@ install:
 	poetry install --only main --no-root
 
 install-dev: 
-	poetry install --no-root
+	poetry install --only dev --no-root
 
 docker-build:
 	docker build -t tech-audit-tool .

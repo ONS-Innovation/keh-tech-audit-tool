@@ -21,6 +21,7 @@ from flask import (
     url_for,
 )
 from jinja2 import ChainableUndefined
+from keh_teams_alert import TeamsAlertClient
 
 load_dotenv()
 
@@ -29,9 +30,13 @@ load_dotenv()
 api_bucket_name = os.getenv("API_BUCKET_NAME")
 region_name = "eu-west-2"
 s3 = boto3.client("s3", region_name=region_name)
+AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
+branch_name = os.getenv("BRANCH_NAME", "")
 
 # Basic logging information
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 # global logger
 logger = logging.getLogger(__name__)
 
@@ -84,6 +89,66 @@ def get_secret(env):
     return secret
 
 
+# Initialize Teams Alert Client
+
+azure_secret_name = json.loads(get_secret("AZURE_SECRET_NAME"))
+if azure_secret_name:
+    logger.info("Initializing Teams Alert Client with Azure credentials")
+    tenant_id = azure_secret_name["azure_tenant_id"]
+    client_id = azure_secret_name["azure_client_id"]
+    client_secret = azure_secret_name["azure_client_secret"]
+    scope = azure_secret_name["azure_scope"]
+    alert_url = azure_secret_name["azure_webhook_url"]
+else:
+    logger.warning("Azure credentials not found. Teams alerts will not be sent.")
+
+
+def get_teams_alert_client() -> TeamsAlertClient:
+    try:
+        logger.info("Creating TeamsAlertClient instance")
+        teams_alert_client = TeamsAlertClient(
+            tenant_id=tenant_id,
+            client_id=client_id,
+            client_secret=client_secret,
+            scope=scope,
+        )
+        return teams_alert_client
+    except Exception as e:
+        logger.error(f"Failed to initialize TeamsAlertClient: {e}")
+        return None
+
+
+def setup_alert_message(message: str, aws_env: str | None = None) -> dict:
+    env = aws_env or AWS_ENV or "Unknown Environment"
+    return {
+        "channel": "KEH Alerts",
+        "message": f"🚨 Tech Audit Tool {env}🚨 <br> Description: {message}",
+    }
+
+
+def send_teams_alert(message) -> None:
+    logger.info("Preparing to send alert to Teams Channel")
+    teams_alert_client = get_teams_alert_client()
+    if (
+        teams_alert_client and branch_name == "main"
+    ):  # Only send alerts if client is initialized and on main branch
+        try:
+            alert_message = setup_alert_message(message)
+            teams_alert_client.post_to_webhook(alert_url, alert_message)
+            logger.info("Alert sent successfully to Teams Channel")
+        except Exception as e:
+            logger.error(f"Failed to send alert to Teams alert: {e}")
+    else:
+        if not teams_alert_client:
+            logger.warning("TeamsAlertClient is not initialized. Cannot send alert.")
+        elif branch_name != "main":
+            logger.warning(
+                f"Current branch is '{branch_name}'. Alerts are only sent from 'main' branch. Alert not sent."
+            )
+        else:
+            logger.error("TeamsAlertClient is not available. Alert not sent.")
+
+
 # SETTING OF API URL: Change if moving to production
 ui_secret = json.loads(get_secret("UI_SECRET_NAME"))
 if os.getenv("LOCALHOST", "false").lower() == "true":
@@ -111,6 +176,7 @@ def read_auto_complete_data(logger):
             array_data = {}
         else:
             logger.error(f"Error reading array data: {e}")
+            send_teams_alert(f"Error reading array data: {e}")
             abort(500, description=f"Error reading client keys: {e}")
     return array_data
 
@@ -136,9 +202,13 @@ def read_project_names_data():
                 project_names.append(name)
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
+            send_teams_alert(
+                "Project names data file not found in S3 bucket. Returning empty project list."
+            )
             project_names = []
         else:
             logger.error(f"Error reading project names data: {e}")
+            send_teams_alert(f"Error reading project names data: {e}")
             abort(500, description=f"Error reading project names data: {e}")
     return sorted(project_names)
 
@@ -223,6 +293,7 @@ def get_id_token():
     try:
         headers = {"Authorization": f"{session['id_token']}"}
     except KeyError:
+        send_teams_alert("Session token missing during get_id_token()")
         return redirect(url_for("home"))
     return headers
 
@@ -274,7 +345,6 @@ def home():
     # This is the login page. If there is URL/code=<code> then it will
     # attempt exchange the code for tokens (ID and refresh).
     code = request.args.get("code")
-    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
 
     if code:
         token_response = exchange_code_for_tokens(code)
@@ -292,6 +362,7 @@ def home():
         else:
             # Goes back to home page with error message.
             flash("Failed to retrieve ID Token")
+            send_teams_alert("Failed to retrieve ID Token during user login")
             return redirect(url_for("home"))
 
     CLIENT_ID = AWS_COGNITO_CLIENT_ID
@@ -329,7 +400,6 @@ def autocomplete(search):
 def exchange_code_for_tokens(code):
     # Hit AWS Cognito auth endpoint with specific payload for exchange tokens.
     # This is the endpoint for the AWS Cognito user pool. It will not change.
-    AWS_ENV = os.getenv("AWS_ACCOUNT_NAME")
     token_url = f"https://{AWS_ENV}-tech-audit-tool-api.auth.eu-west-2.amazoncognito.com/oauth2/token"
     payload = {
         "grant_type": "authorization_code",
@@ -436,6 +506,7 @@ def view_project(project_name):
         logger.info(
             f"view_project: number of sanitized fields = {len(sanitized_projects)}"
         )
+        send_teams_alert(f"Project accessed: {project_name} by {user_email}.")
     except Exception:
         flash("Something went wrong. Please try again.")
         return redirect(url_for("dashboard"))
@@ -673,6 +744,7 @@ def survey():
             )
     except Exception as e:
         logger.error(f"Request was not blocked but returned: {e}")
+        send_teams_alert(f"Error saving project: {e}")
         flash("An error occurred while saving the project")
         return redirect(url_for("dashboard"))
 

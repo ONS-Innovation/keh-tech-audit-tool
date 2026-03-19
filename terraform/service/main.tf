@@ -17,13 +17,15 @@ resource "aws_cloudwatch_log_group" "ecs_service_logs" {
 
 resource "aws_ecs_task_definition" "ecs_service_definition" {
   family = "ecs-service-${var.service_subdomain}-application"
+
   container_definitions = jsonencode([
     {
       name      = "${var.service_subdomain}-task-application"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.container_image}:${var.container_ver}@${data.aws_ecr_image.tech_audit_tool_image.image_digest}"
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,
+
       portMappings = [
         {
           name          = "${var.service_subdomain}-${var.container_port}-tcp",
@@ -58,12 +60,20 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.api_secret_name
         },
         {
+          name  = "AZURE_SECRET_NAME"
+          value = var.azure_secret_name
+        },
+        {
           name  = "API_BUCKET_NAME"
           value = var.api_bucket_name
         },
         {
           name  = "LOCALHOST"
           value = var.localhost
+        },
+        {
+          name = "BRANCH_NAME"
+          value = var.branch_name
         }
       ],
       logConfiguration = {

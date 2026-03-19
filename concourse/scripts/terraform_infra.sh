@@ -10,12 +10,15 @@ domain=$(echo "$secrets" | jq -r .domain)
 
 api_bucket_name=$(echo "$secrets" | jq -r .api_bucket_name)
 ui_secret_name=$(echo "$secrets" | jq -r .ui_secret_name)
+azure_secret_name=$(echo "$secrets" | jq -r .azure_secret_name)
 
 aws_account_name=$(echo "$secrets" | jq -r .aws_account_name)
 localhost=$(echo "$secrets" | jq -r .localhost)
 
 container_image=$(echo "$secrets" | jq -r .container_image)
 force_deployment=$(echo "$secrets" | jq -r .force_deployment)
+
+branch_name=$branch
 
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
@@ -37,8 +40,10 @@ terraform apply \
 -var "container_ver=${tag}" \
 -var "api_bucket_name=$api_bucket_name" \
 -var "ui_secret_name=$ui_secret_name" \
+-var "azure_secret_name=$azure_secret_name" \
 -var "aws_account_name=$aws_account_name" \
 -var "localhost=$localhost" \
 -var "container_image=$container_image" \
 -var "force_deployment=$force_deployment" \
+-var "branch_name=$branch_name" \
 -auto-approve

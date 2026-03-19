@@ -92,6 +92,63 @@ re-deploy-api-task: &redeploy_api
           ./resource-repo/concourse/scripts/redeploy_api.sh
     timeout: 30m
 
+notify-azure-webhook-task: &notify-azure-webhook-task
+  config:
+    platform: linux
+    params:
+      secrets: ((sdp_azure_webhook_secrets))
+      branch: ((branch))
+      env: ((env))
+    image_resource:
+      type: registry-image
+      source:
+        repository: alpine
+        tag: latest
+    run:
+      path: sh
+      args:
+        - -euc
+        - |
+          if [ "$branch" != "main" ]; then
+            echo "Branch is '${branch}', skipping webhook notification."
+            exit 0
+          fi
+          apk add --no-cache curl jq
+
+          AZURE_CLIENT_ID=$(echo "$secrets" | jq -r .azure_client_id)
+          AZURE_CLIENT_SECRET=$(echo "$secrets" | jq -r .azure_client_secret)
+          AZURE_SCOPE=$(echo "$secrets" | jq -r .azure_scope)
+          AZURE_TENANT_ID=$(echo "$secrets" | jq -r .azure_tenant_id)
+          AZURE_WEBHOOK_URL=$(echo "$secrets" | jq -r .azure_webhook_url)
+          CHANNEL_ID=$(echo "$secrets" | jq -r .channel_id)
+
+          token_json="$(curl -sS -X POST \
+            "https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data-urlencode "client_id=${AZURE_CLIENT_ID}" \
+            --data-urlencode "client_secret=${AZURE_CLIENT_SECRET}" \
+            --data-urlencode "grant_type=client_credentials" \
+            --data-urlencode "scope=${AZURE_SCOPE}")"
+
+          access_token="$(printf '%s' "$token_json" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')"
+          if [ -z "$access_token" ]; then
+            echo "Failed to get access token. Response:"
+            echo "$token_json"
+            exit 1
+          fi
+
+          pipeline_msg="status:🚨 Concourse failure<br>service: Tech Audit Tool<br> event: Pipeline failure in the ${env} environment."
+
+          payload="$(cat <<JSON
+          {"channel":"${CHANNEL_ID}","message":"${pipeline_msg}"}
+          JSON
+          )"
+
+          curl -sS -X POST "$AZURE_WEBHOOK_URL" \
+            -H "Authorization: Bearer ${access_token}" \
+            -H "Content-Type: application/json" \
+            -d "$payload"
+
 
 jobs:
   - name: calculate-tag
@@ -143,117 +200,135 @@ jobs:
   - name:  deploy-after-github-release-dev
     public: true
     plan:
-    - get: github-release-tag
-      passed: [calculate-tag]
-      trigger: true
-    - get: resource-repo
-      timeout: 5m
-    - task: deploy-release
-      privileged: true
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: hashicorp/terraform
+    - do:
+      - get: github-release-tag
+        passed: [calculate-tag]
+        trigger: true
+      - get: resource-repo
+        timeout: 5m
+      - task: deploy-release
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: hashicorp/terraform
+          inputs:
+            - name: resource-repo
+            - name: github-release-tag
+          outputs:
+              - name: built-images
+              - name: release-tag-output
+          params:
+            aws_account_id: ((aws_account_sdp_dev))
+            aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+            secrets: ((sdp_((env))_secrets_tat_ui))
+            env: dev
+            tag: github-release-tag/tag # Use the release tag from the resource
+            repo_name: ((repo_name))
+            github_access_token: ((github_access_token))
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                apk add --no-cache aws-cli podman jq iptables curl git
+                export repo_name=((repo_name))
+                export tag=$(cat github-release-tag/tag)
+                # Write the tag to a file for output
+                echo "${tag}" > release-tag-output/tag
+                echo "Using tag: ${tag}"
+                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+                source ./resource-repo/concourse/scripts/assume_role.sh
+                ./resource-repo/concourse/scripts/build_image.sh
+        timeout: 15m
+      - put: images-to-shared-ecr
         inputs:
-          - name: resource-repo
-          - name: github-release-tag
-        outputs:
-            - name: built-images
-            - name: release-tag-output
+          - built-images
+          - release-tag-output
         params:
-          aws_account_id: ((aws_account_sdp_dev))
-          aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
-          secrets: ((sdp_((env))_secrets_tat_ui))
+          image: built-images/tech_audit_tool.tar
+          additional_tags: release-tag-output/tag
+      - <<: *terraform-task
+        params:
+          github_access_token: ((github_access_token))
           env: dev
-          tag: github-release-tag/tag # Use the release tag from the resource
-          repo_name: ((repo_name))
-        run:
-          path: sh
-          args:
-            - -cx
-            - |
-              apk add --no-cache aws-cli podman jq iptables curl
-              export repo_name=((repo_name))
-              export tag=$(cat github-release-tag/tag)
-              # Write the tag to a file for output
-              echo "${tag}" > release-tag-output/tag
-              echo "Using tag: ${tag}"
-              chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-              chmod u+x ./resource-repo/concourse/scripts/build_image.sh
-              source ./resource-repo/concourse/scripts/assume_role.sh
-              ./resource-repo/concourse/scripts/build_image.sh
-      timeout: 15m
-    - put: images-to-shared-ecr
-      inputs:
-        - built-images
-        - release-tag-output
-      params:
-        image: built-images/tech_audit_tool.tar
-        additional_tags: release-tag-output/tag
-    - <<: *terraform-task
-      params:
-        github_access_token: ((github_access_token))
-        env: dev
-        secrets: ((sdp_((env))_secrets_tat_ui))
-    - <<: *redeploy_api
-      params:
-        env: dev
-        secrets: ((sdp_dev_secrets_tat_ui))
+          secrets: ((sdp_((env))_secrets_tat_ui))
+      - <<: *redeploy_api
+        params:
+          env: dev
+          secrets: ((sdp_dev_secrets_tat_ui))
+    on_failure:
+      do:
+        - task: notify-azure-webhook
+          <<: *notify-azure-webhook-task
+          params:
+            env: dev
 
   - name: release-build-and-push-prod
     public: true
     plan:
-    - get: resource-repo
-      passed: [deploy-after-github-release-dev]
-      trigger: false # Manual trigger only
-      timeout: 5m
-    - get: github-release-tag
-      passed: [deploy-after-github-release-dev]
-    - task: build-image
-      privileged: true
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: hashicorp/terraform
-        inputs:
-          - name: resource-repo
-          - name: github-release-tag
+    - do:
+      - get: resource-repo
+        passed: [deploy-after-github-release-dev]
+        trigger: false # Manual trigger only
+        timeout: 5m
+      - get: github-release-tag
+        passed: [deploy-after-github-release-dev]
+      - task: build-image
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: hashicorp/terraform
+          inputs:
+            - name: resource-repo
+            - name: github-release-tag
+          outputs:
+            - name: built-images
+          params:
+            aws_account_id: ((aws_account_sdp_prod))
+            aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
+            secrets: ((sdp_prod_secrets_tat_ui))
+            env: prod
+            tag: github-release-tag/tag
+            repo_name: ((repo_name))
+            branch: ((branch))
+            github_access_token: ((github_access_token))
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                if [[ "$branch" != "main" ]]; then
+                  echo "Not on main branch, skipping build."
+                  exit 0
+                fi
+                apk add --no-cache aws-cli podman jq iptables curl git
+                export repo_name=((repo_name))
+                export tag=$(cat github-release-tag/tag)
+                echo "Using release tag: ${tag}"
+                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+                source ./resource-repo/concourse/scripts/assume_role.sh
+                ./resource-repo/concourse/scripts/build_image.sh
+        timeout: 10m
+      - <<: *terraform-task
         params:
-          aws_account_id: ((aws_account_sdp_prod))
-          aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
-          secrets: ((sdp_prod_secrets_tat_ui))
+          github_access_token: ((github_access_token))
           env: prod
-          tag: github-release-tag/tag
-          repo_name: ((repo_name))
-          branch: ((branch))
-        run:
-          path: sh
-          args:
-            - -cx
-            - |
-              if [[ "$branch" != "main" ]]; then
-                echo "Not on main branch, skipping build."
-                exit 0
-              fi
-              apk add --no-cache aws-cli podman jq iptables curl
-              export repo_name=((repo_name))
-              export tag=$(cat github-release-tag/tag)
-              echo "Using release tag: ${tag}"
-              chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-              chmod u+x ./resource-repo/concourse/scripts/build_image.sh
-              source ./resource-repo/concourse/scripts/assume_role.sh
-              ./resource-repo/concourse/scripts/build_image.sh
-      timeout: 10m
-    - <<: *terraform-task
-      params:
-        github_access_token: ((github_access_token))
-        env: prod
-        secrets: ((sdp_prod_secrets_tat_ui))
-    - <<: *redeploy_api
-      params:
-        env: prod
-        secrets: ((sdp_prod_secrets_tat_ui))
+          secrets: ((sdp_prod_secrets_tat_ui))
+      - <<: *redeploy_api
+        params:
+          env: prod
+          secrets: ((sdp_prod_secrets_tat_ui))
+    on_failure:
+      do:
+        - task: notify-azure-webhook
+          <<: *notify-azure-webhook-task
+          params:
+            env: prod

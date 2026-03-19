@@ -8,7 +8,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-Flask = "^3.0.3"
+Flask = "^3.1.3"
 python-frontmatter = "^1.1.0"
 pre-commit = "^3.7.1"
 boto3 = "^1.35.33"
@@ -17,6 +17,7 @@ python-dotenv = "^1.0.1"
 mkdocs = "^1.6.1"
 selenium = "^4.27.1"
 pytest = "^9.0.2"
+keh-teams-alert = {git = "https://github.com/ONS-Innovation/keh-teams-alert"}
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"

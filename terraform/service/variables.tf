@@ -25,6 +25,12 @@ variable "api_secret_name" {
   default     = "sdp-tech-audit-tool-api/secrets"
 }
 
+variable "azure_secret_name" {
+  description = "The path to the AWS Secret Manager resource which contains the Azure secrets for UI"
+  type        = string
+  default     = "sdp-keh-team-azure/secrets"
+}
+
 variable "api_bucket_name" {
   description = "The path to the S3 bucket resource which contains the json files needed by the UI"
   type        = string
@@ -137,6 +143,11 @@ variable "localhost" {
   description = "Localhost"
   type        = string
   default     = "false"
+}
+
+variable "branch_name" {
+  description = "Branch name for the deployment"
+  type        = string
 }
 
 locals {

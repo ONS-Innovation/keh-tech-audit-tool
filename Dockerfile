@@ -16,10 +16,11 @@ ENV POETRY_VERSION=1.8.3 \
     PYTHONUNBUFFERED=1
 
 # Tools + non-root user + home dir
-RUN apk add --no-cache shadow make curl jq unzip bash git && \
-    groupadd -r appuser && useradd -r -g appuser appuser && \
-    mkdir -p /home/appuser && chown appuser:appuser /home/appuser
-ENV HOME=/home/appuser
+RUN apk add --no-cache shadow make curl jq unzip bash git
+# RUN apk add --no-cache shadow make curl jq unzip bash git && \
+#     groupadd -r appuser && useradd -r -g appuser appuser && \
+#     mkdir -p /home/appuser && chown appuser:appuser /home/appuser
+# ENV HOME=/home/appuser
 
 # Ensure packaging toolchain exists (fixes missing packaging/tags.py)
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel packaging "poetry==$POETRY_VERSION"
@@ -41,12 +42,14 @@ RUN --mount=type=secret,id=github_token \
     rm -f /root/.gitconfig 2>/dev/null || true; \
     pip install --no-cache-dir gunicorn
 
-RUN chown -R appuser:appuser /app
+# RUN chown -R appuser:appuser /app
 
-RUN mkdir -p /tmp && chmod 1777 /tmp
+# RUN mkdir -p /tmp && chmod 1777 /tmp
 
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
-VOLUME [ "/tmp" ]
+# VOLUME [ "/tmp" ]
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 USER appuser
 

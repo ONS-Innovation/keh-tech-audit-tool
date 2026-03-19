@@ -47,7 +47,7 @@ RUN --mount=type=secret,id=github_token \
 # RUN mkdir -p /tmp && chmod 1777 /tmp
 
 # Declare writable mount points (runtime should mount these as writable with readonly root FS)
-# VOLUME [ "/tmp" ]
+VOLUME [ "/tmp" ]
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 

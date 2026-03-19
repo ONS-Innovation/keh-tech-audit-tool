@@ -18,15 +18,6 @@ resource "aws_cloudwatch_log_group" "ecs_service_logs" {
 resource "aws_ecs_task_definition" "ecs_service_definition" {
   family = "ecs-service-${var.service_subdomain}-application"
 
-  # Add a task volume (Fargate-compatible)
-  # volume {
-  #   name = "tmp-storage"
-  # }
-
-  # volume{
-  #   name = "run-storage"
-  # }
-
   container_definitions = jsonencode([
     {
       name      = "${var.service_subdomain}-task-application"
@@ -34,20 +25,6 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       cpu       = 0,
       essential = true,
       readonlyRootFilesystem = true,
-
-      # Mount the writable task volume at /tmp
-      # mountPoints = [
-      #   {
-      #     sourceVolume  = "tmp-storage"
-      #     containerPath = "/tmp"
-      #     readOnly      = false
-      #   },
-      #   {
-      #     sourceVolume  = "run-storage"
-      #     containerPath = "/var/run"
-      #     readOnly      = false
-      #   }
-      # ]
 
       portMappings = [
         {

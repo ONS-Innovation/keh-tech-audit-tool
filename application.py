@@ -139,7 +139,14 @@ def send_teams_alert(message) -> None:
         except Exception as e:
             logger.error(f"Failed to send alert to Teams alert: {e}")
     else:
-        logger.error("TeamsAlertClient is not available. Alert not sent.")
+        if not teams_alert_client:
+            logger.warning("TeamsAlertClient is not initialized. Cannot send alert.")
+        elif branch_name != "main":
+            logger.warning(
+                f"Current branch is '{branch_name}'. Alerts are only sent from 'main' branch. Alert not sent."
+            )
+        else:
+            logger.error("TeamsAlertClient is not available. Alert not sent.")
 
 
 # SETTING OF API URL: Change if moving to production

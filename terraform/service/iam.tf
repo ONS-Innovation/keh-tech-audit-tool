@@ -107,5 +107,5 @@ module "iam_key_rotation" {
   iam_username          = aws_iam_user.user.name
   access_key_secret_arn = aws_secretsmanager_secret.access_key.arn
   secret_key_secret_arn = aws_secretsmanager_secret.secret_key.arn
-  rotation_in_days      = 90
+  rotation_in_days      = 45
 }

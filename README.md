@@ -39,11 +39,21 @@ Install necessary dependencies using the command:
 make install
 ```
 
-To run, please import these credentials into the app:
+Sign in with AWS SSO, and export the correct profile for this service:
 
+```bash
+aws sso login
+
+export AWS_PROFILE=keh-tech-audit-tool
 ```
-export AWS_ACCESS_KEY_ID=<KEY_ID>
-export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
+
+This allows you to assume the AWS IAM role for the service, enabling the most secure development experience. This also means you will have limited permissions until you exit out of the profile.
+
+**Note:** See the Developer Onboarding Guide on the "Using AWS SSO for Local Development" page on Confluence to set up service profile selection on your local machine.
+
+Then export the required environment variables:
+
+```bash
 export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets

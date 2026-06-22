@@ -2,18 +2,20 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Authentication](#authentication)
-- [Testing the UI](#testing-the-ui)
-  - [Setting Up](#setting-up)
-  - [Running the Application](#running-the-application)
-  - [Setting up with Docker](#setting-up-with-docker)
-- [Linting](#linting)
-- [Testing](#testing)
-  - [Setting Up Test Environment Variables](#setting-up-test-environment-variables)
+- [TECH AUDIT TOOL - UI](#tech-audit-tool---ui)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Authentication](#authentication)
+  - [Testing the UI](#testing-the-ui)
+    - [Setting Up](#setting-up)
+    - [Running the Application](#running-the-application)
+    - [Setting up with Docker](#setting-up-with-docker)
+    - [Linting](#linting)
+  - [Testing](#testing)
+    - [Setting Up Test Environment Variables](#setting-up-test-environment-variables)
   - [Running Tests](#running-tests)
     - [Project Creation Tests](#project-creation-tests)
-- [Further Documentation](#further-documentation)
+  - [Further Documentation](#further-documentation)
 
 ## Overview
 
@@ -57,6 +59,7 @@ Then export the required environment variables:
 export API_BUCKET_NAME=sdp-dev-tech-audit-tool-api
 export API_SECRET_NAME=sdp-dev-tech-audit-tool-api/secrets
 export UI_SECRET_NAME=tech-audit-tool-ui/secrets
+export AZURE_SECRET_NAME=sdp-keh-team-azure/secrets
 export AWS_ACCOUNT_NAME=<sdp-dev/sdp-prod>
 export LOCALHOST=<true/false>
 ```

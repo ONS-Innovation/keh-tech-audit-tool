@@ -8,7 +8,6 @@ azure_secret_name    = "AZURESECRETNAME" # secret name for Azure found in secret
 api_bucket_name      = "APIBUCKETNAME" # api bucket name found in secrets manager
 domain               = "sdp-prod"
 localhost            = "false"
-domain                = "sdp-prod"
 container_image       = "tech-audit-tool"
 container_ver         = "v0.0.1"
 force_deployment      = "true"

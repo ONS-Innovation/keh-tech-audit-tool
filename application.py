@@ -506,9 +506,9 @@ def view_project(project_name):
         logger.info(
             f"view_project: number of sanitized fields = {len(sanitized_projects)}"
         )
-        send_teams_alert(f"Project accessed: {project_name} by {user_email}.")
-    except Exception:
+    except Exception as e:
         flash("Something went wrong. Please try again.")
+        send_teams_alert(f"Error parsing project data: {e}. Project name: {project_name}. User email: {user_email}")
         return redirect(url_for("dashboard"))
 
     edit = False  # Boolean to check if the user can edit the project

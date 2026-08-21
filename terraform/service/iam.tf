@@ -16,12 +16,12 @@ resource "aws_iam_role" "ecs_task_role" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${var.aws_account_id}:root"
+          AWS = "arn:aws:iam::${local.account_id}:root"
         }
         Condition = {
           ArnLike = {
             "aws:PrincipalArn" = [
-              "arn:aws:iam::${var.aws_account_id}:role/aws-reserved/sso.amazonaws.com/eu-west-2/AWSReservedSSO_Standard_Administrator_Access_*"
+              "arn:aws:iam::${local.account_id}:role/aws-reserved/sso.amazonaws.com/eu-west-2/AWSReservedSSO_Standard_Administrator_Access_*"
             ]
           }
         }
@@ -43,9 +43,9 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Effect = "Allow"
         Action = "secretsmanager:GetSecretValue"
         Resource = [
-          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.ui_secret_name}*",
-          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.api_secret_name}*",
-          "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.azure_secret_name}*"
+          "arn:aws:secretsmanager:${var.region}:${local.account_id}:secret:${var.ui_secret_name}*",
+          "arn:aws:secretsmanager:${var.region}:${local.account_id}:secret:${var.api_secret_name}*",
+          "arn:aws:secretsmanager:${var.region}:${local.account_id}:secret:${var.azure_secret_name}*"
         ]
       }
     ]

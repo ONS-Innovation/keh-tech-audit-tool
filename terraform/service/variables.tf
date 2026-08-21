@@ -1,8 +1,3 @@
-variable "aws_account_id" {
-  description = "AWS Account ID"
-  type        = string
-}
-
 variable "aws_access_key_id" {
   description = "AWS Access Key ID"
   type        = string
@@ -35,12 +30,6 @@ variable "api_bucket_name" {
   description = "The path to the S3 bucket resource which contains the json files needed by the UI"
   type        = string
   default     = "sdp-dev-tech-audit-tool-api"
-}
-
-variable "aws_account_name" {
-  description = "AWS Environment (dev/prod)"
-  type        = string
-  default     = "sdp-dev"
 }
 
 variable "container_image" {
@@ -151,6 +140,7 @@ variable "branch_name" {
 }
 
 locals {
+  account_id  = data.aws_caller_identity.current.account_id
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"
 }

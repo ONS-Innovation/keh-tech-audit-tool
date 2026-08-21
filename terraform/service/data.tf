@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 # Get the ecs infrastructure outputs from the remote state data source
 data "terraform_remote_state" "ecs_infrastructure" {
   backend = "s3"

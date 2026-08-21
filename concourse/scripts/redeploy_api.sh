@@ -3,14 +3,6 @@ set -euo pipefail
 
 echo "Redeploying API in ${env}"
 
-# Extract credentials from secrets JSON
-aws_account_id=$(echo "$secrets" | jq -r .aws_account_id)
-aws_access_key_id=$(echo "$secrets" | jq -r .aws_access_key_id)
-aws_secret_access_key=$(echo "$secrets" | jq -r .aws_secret_access_key)
-
-export AWS_ACCESS_KEY_ID=$aws_access_key_id
-export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
-
 api_name="tech-audit-tool"
 
 api_id=$(aws apigateway get-rest-apis \

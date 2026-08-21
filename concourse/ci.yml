@@ -85,14 +85,30 @@ re-deploy-api-task: &redeploy_api
       - name: resource-repo
     params:
       env: ((env))
+      aws_role_arn: ((aws_role_arn))
     run:
       path: sh
       args:
         - -cx
         - |
+          if [ -z "${aws_role_arn:-}" ]; then
+            echo "Error: aws_role_arn is not set."
+            exit 1
+          fi
+
+          aws sts assume-role --output text \
+            --role-arn "${aws_role_arn}" \
+            --role-session-name concourse-pipeline-run \
+            --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" |
+            awk -F '\t' '{print $1 > ("AccessKeyId")}{print $2 > ("SecretAccessKey")}{print $3 > ("SessionToken")}'
+
+          export AWS_ACCESS_KEY_ID="$(cat AccessKeyId)"
+          export AWS_SECRET_ACCESS_KEY="$(cat SecretAccessKey)"
+          export AWS_SESSION_TOKEN="$(cat SessionToken)"
+
           # Redeploy API after infrastructure changes
           chmod u+x resource-repo/concourse/scripts/redeploy_api.sh
-          ./resource-repo/concourse/scripts/redeploy_api.sh
+          resource-repo/concourse/scripts/redeploy_api.sh
     timeout: 30m
 
 notify-azure-webhook-task: &notify-azure-webhook-task
@@ -262,7 +278,7 @@ jobs:
       - <<: *redeploy_api
         params:
           env: dev
-          secrets: ((sdp_dev_secrets_tat_ui))
+          aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
     on_failure:
       do:
         - task: notify-azure-webhook
@@ -328,7 +344,7 @@ jobs:
       - <<: *redeploy_api
         params:
           env: prod
-          secrets: ((sdp_prod_secrets_tat_ui))
+          aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
     on_failure:
       do:
         - task: notify-azure-webhook

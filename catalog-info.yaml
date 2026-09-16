@@ -9,3 +9,5 @@ spec:
   type: website
   lifecycle: production
   owner: keh-dev
+  dependsOn:
+    - component:default/keh-tech-audit-tool-api

@@ -5,6 +5,15 @@ metadata:
   description: Authenticated web application for surveying the tools, languages, and frameworks used across Digital Services and Technology.
   annotations:
     github.com/project-slug: ONS-Innovation/keh-tech-audit-tool
+  tags:
+    - python
+    - flask
+    - aws-ecs
+    - aws-fargate
+    - aws-cognito
+  links:
+    - url: mailto:knowledge.exchange.hub@ons.gov.uk
+      title: Contact
 spec:
   type: website
   lifecycle: production
